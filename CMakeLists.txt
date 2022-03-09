@@ -13,7 +13,7 @@ find_package(Qt6 COMPONENTS
         Widgets
         REQUIRED)
 
-add_executable(proj main.cpp mainwindow.cpp)
+add_executable(proj main.cpp mainwindow.cpp editorinterface.cpp)
 target_link_libraries(proj
         Qt::Core
         Qt::Gui

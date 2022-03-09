@@ -21,7 +21,9 @@ mainWindow::~mainWindow()
 
 void mainWindow::on_create_clicked()
 {
-    return;
+    hide();
+    editor_window = new editorInterface(this);
+    editor_window->show();
 }
 
 

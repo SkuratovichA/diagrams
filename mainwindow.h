@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include "editorinterface.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class mainWindow; }
@@ -22,5 +23,6 @@ private slots:
 
 private:
     Ui::mainWindow *ui;
+    editorInterface *editor_window;
 };
 #endif // MAINWINDOW_H
