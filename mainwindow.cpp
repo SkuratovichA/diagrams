@@ -53,7 +53,7 @@ mainWindow::mainWindow(QWidget *parent)
     ui->setupUi(this);
     this->setWindowTitle("diagrams");
 
-    // TODO: generalize
+    // TODO: generalize andrei will do this
     QString dirname = "/Users/suka/vut/sem4/icp/diagrams/examples";
     QDir directory(dirname);
 
@@ -90,7 +90,7 @@ bool mainWindow::openEditor(QString filename) {
 
     QMessageBox::information(this, "title", "file: " + filename + "!");
 
-    if (file.open(QFile::ReadOnly)) {
+    if (file.open(QFile::ReadOnly) == false) {
         // FIXME: what the fuck? :)
         QMessageBox::warning(this, "title", "file not opened");
         return false;
@@ -143,7 +143,7 @@ void mainWindow::on_pushButton_clicked()
 {
     QString filename = ui->listWidget->currentItem()->text();
     QMessageBox::information(this, "filename:", filename);
-    // TODO: generalize
+    // TODO: generalize andrei fix that
     QString directory = "/Users/suka/vut/sem4/icp/diagrams/examples/";
     filename = directory + filename; // it must work
     QMessageBox::information(this, "filename:", filename);
