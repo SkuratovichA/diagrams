@@ -21,6 +21,13 @@ public:
 private slots:
     void on_create_clicked();
     void on_open_clicked();
+
+    // open editor with a filename
+    bool openEditor(QString filename);
+
+    // open editor without a filename
+    bool openEditor();
+
     // void newFile();
 
     // void open();
@@ -31,6 +38,8 @@ private slots:
 // #ifndef QT_NO_SESSIONMANAGER
     // void commitData(QSessionManager &);
 // #endif
+
+    void on_pushButton_clicked();
 
 private:
     Ui::mainWindow *ui;
