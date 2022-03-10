@@ -50,7 +50,7 @@ mainWindow::~mainWindow()
 void mainWindow::on_create_clicked()
 {
     // create a new file, so there will be need to SAVE AS
-    if (openEditor() == false) {
+    if (!openEditor()) {
         QMessageBox::warning(this, "title", "file cannot be loaded :(");
         return;
     }
