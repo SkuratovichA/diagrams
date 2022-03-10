@@ -7,31 +7,6 @@
 #include <filesystem>
 
 
-////******************************************************************
-//// create a separate file/class for working with files. Many funstions will need to read/modify/write/save files.
-//QString loadFile(QWidget *thisobj, const QString filename)
-//{
-//    if (filename == nullptr) {
-//        return nullptr;
-//    }
-//    QFile file(filename);
-
-//    QMessageBox::information(thisobj, "title", "file: " + filename + "!");
-
-//    if (file.open(QFile::ReadOnly)) {
-//        // FIXME: what the fuck? :)
-//        QMessageBox::warning(thisobj, "title", "file not opened");
-//        return nullptr;
-//    } else {
-//        QMessageBox::information(thisobj, "title", "file opened");
-//    }
-//    QTextStream in(&file);
-//    QString text = in.readAll();
-
-//    file.close();
-//    return text;
-//}
-
 QString browseFile(QWidget *obj)
 {
     QString filename = QFileDialog::getOpenFileName(obj, "Open a file", QDir::homePath());
@@ -57,9 +32,10 @@ mainWindow::mainWindow(QWidget *parent)
     QString dirname = "/Users/suka/vut/sem4/icp/diagrams/examples";
     QDir directory(dirname);
 
+    // create a list with examples
     foreach(QFileInfo filename, directory.entryInfoList()) {
         if (filename.isFile()) {
-            QListWidgetItem *item = new QListWidgetItem(filename.fileName());
+            auto *item = new QListWidgetItem(filename.fileName());
             ui->listWidget->addItem(item);
         }
     }
@@ -82,33 +58,29 @@ void mainWindow::on_create_clicked()
 
 // editor is opened with a given filename
 // so read a filename, process it and show
-bool mainWindow::openEditor(QString filename) {
+bool mainWindow::openEditor(const QString& filename) {
     if (filename == nullptr) {
         return false;
     }
     QFile file(filename);
 
-    QMessageBox::information(this, "title", "file: " + filename + "!");
-
-    if (file.open(QFile::ReadOnly) == false) {
-        // FIXME: what the fuck? :)
+    if (!file.open(QFile::ReadOnly)) {
         QMessageBox::warning(this, "title", "file not opened");
         return false;
     } else {
-        QMessageBox::information(this, "title", "file opened");
+        QMessageBox::information(this, "title", "file opened zaebumba");
     }
     QTextStream in(&file);
     QString text = in.readAll();
-
     file.close();
 
     // here parser will do the stuff.
     // Then, new window will be opened.
     // Then, an editation will be performed.
     // Then, we all will die :)
-    this->editor_window = new editorInterface(this);
+    // TODO: implement stuff. Both Save As and Save can be used.
 
-    // TODO: pass a parameter to say a window there will be need to save a file with a path
+    this->editor_window = new editorInterface(this);
     editor_window->show();
     return true;
 }
@@ -119,8 +91,8 @@ bool mainWindow::openEditor()
 {
     this->editor_window = new editorInterface(this);
     editor_window->show();
-
-    // TODO: edit and so on. MUST SAVE WITH SAVE AS
+    // TODO: pass a parameter to say a window there will be need to save a file with a path
+    // edit and so on. MUST SAVE WITH SAVE AS
     return true;
 }
 
@@ -129,16 +101,14 @@ bool mainWindow::openEditor()
 void mainWindow::on_open_clicked()
 {
     QString filename = browseFile(this);
-    if (openEditor(filename) == false) {
+    if (!openEditor(filename)) {
         QMessageBox::warning(this, "title", "SHIT!");
     }
-    //QString text = loadFile(this, filename);
-    // hide();
 }
 
 
 // open default template
-// when saving, the pathh will must be specified
+// when saving, the path will must be specified
 void mainWindow::on_pushButton_clicked()
 {
     QString filename = ui->listWidget->currentItem()->text();
@@ -146,10 +116,9 @@ void mainWindow::on_pushButton_clicked()
     // TODO: generalize andrei fix that
     QString directory = "/Users/suka/vut/sem4/icp/diagrams/examples/";
     filename = directory + filename; // it must work
-    QMessageBox::information(this, "filename:", filename);
 
-    if (openEditor(filename) == false) {
-        QMessageBox::warning(this, "title", "FUCK!");
+    if (!openEditor(filename)) {
+        QMessageBox::warning(this, "title", "cannot open template!");
     }
 }
 

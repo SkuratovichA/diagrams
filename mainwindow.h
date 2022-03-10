@@ -23,7 +23,7 @@ private slots:
     void on_open_clicked();
 
     // open editor with a filename
-    bool openEditor(QString filename);
+    bool openEditor(const QString& filename);
 
     // open editor without a filename
     bool openEditor();
