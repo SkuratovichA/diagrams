@@ -37,78 +37,39 @@ mainWindow::~mainWindow()
 }
 
 ////////////////////////////////////////////////////////////////////////////
+// create a new file.
+// filename will not be provided - just create a window with a default interface
 void mainWindow::on_create_clicked()
 {
     // create a new file, so there will be need to SAVE AS
-    if (!openEditor()) {
-        QMessageBox::warning(this, "title", "file cannot be loaded :(");
-        return;
+    try {
+        this->editor_window = new editorInterface(this, nullptr, editorInterface::NO_FILE);
+    } catch (const char* msg) {
+        QMessageBox::warning(this, "Error", msg);
     }
+    this->editor_window->show();
 }
 
-// editor is opened with a given filename
-// so read a filename, process it and show
-bool mainWindow::openEditor(const QString& filename) {
-    if (filename == nullptr) {
-        return false;
-    }
-    QFile file(filename);
-
-    if (!file.open(QFile::ReadOnly)) {
-        QMessageBox::warning(this, "title", "file not opened");
-        return false;
-    } else {
-        QMessageBox::information(this, "title", "file opened zaebumba");
-    }
-    QTextStream in(&file);
-    QString text = in.readAll();
-    file.close();
-
-    // here parser will do the stuff.
-    // Then, new window will be opened.
-    // Then, an editation will be performed.
-    // Then, we all will die :)
-    // TODO: implement stuff. Both Save As and Save can be used.
-
-    this->editor_window = new editorInterface(this);
-    editor_window->show();
-    return true;
-}
-
-// just open editor without a file, so when saving it
-// there will be need to specify the path
-bool mainWindow::openEditor()
-{
-    this->editor_window = new editorInterface(this);
-    editor_window->show();
-    // TODO: pass a parameter to say a window there will be need to save a file with a path
-    // edit and so on. MUST SAVE WITH SAVE AS
-    return true;
-}
-
-////////////////////////////////////////////////////////////////
 // open file from a given list
 void mainWindow::on_open_clicked()
 {
-    QString filename = QFileDialog::getOpenFileName(obj, "Open a file", QDir::homePath());
-    if (!openEditor(filename)) {
-        QMessageBox::warning(this, "title", "SHIT!");
+    try {
+         this->editor_window = new editorInterface(this, nullptr, editorInterface::OPEN_FILE);
+    } catch (const char* msg) {
+        QMessageBox::warning(this, "Error", msg);
     }
+    this->editor_window->show();
 }
 
-
-// open default template
+// open a canvas with a default template
 // when saving, the path will must be specified
 void mainWindow::on_pushButton_clicked()
 {
-    QString filename = ui->listWidget->currentItem()->text();
-    QMessageBox::information(this, "filename:", filename);
-    // TODO: generalize andrei fix that
-    QString directory = "/Users/suka/vut/sem4/icp/diagrams/examples/";
-    filename = directory + filename; // it must work
-
-    if (!openEditor(filename)) {
-        QMessageBox::warning(this, "title", "cannot open template!");
+    QString example_name = ui->listWidget->currentItem()->text();
+    try {
+        this->editor_window = new editorInterface(this, example_name, editorInterface::EXAMPLE_FILE);
+    } catch (const char* msg) {
+        QMessageBox::warning(this, "Error", msg);
     }
+    this->editor_window->show();
 }
-

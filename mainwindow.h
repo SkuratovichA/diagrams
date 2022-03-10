@@ -22,12 +22,6 @@ private slots:
     void on_create_clicked();
     void on_open_clicked();
 
-    // open editor with a filename
-    bool openEditor(const QString& filename);
-
-    // open editor without a filename
-    bool openEditor();
-
     // void newFile();
 
     // void open();

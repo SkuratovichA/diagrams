@@ -12,7 +12,26 @@ class editorInterface : public QMainWindow
     Q_OBJECT
 
 public:
-    explicit editorInterface(QWidget *parent = nullptr);
+    enum newWindowType {
+        // just open a new canvas with default template
+        NO_FILE,
+
+        // open a dialogue file window to open a file and edit it
+        OPEN_FILE,
+
+        // load one of the provided examples to open
+        EXAMPLE_FILE
+    };
+
+    explicit editorInterface(QWidget *parent = nullptr,
+                             // name of an example
+                             // Must be provided only if newType is EXAMPLE_FILE
+                             QString exampleName = nullptr,
+
+                             // default option for window is to create it
+                             // without a type - just a plain canvas
+                             newWindowType newType = NO_FILE
+                             );
     ~editorInterface();
 
     //void loadFile(const QString &filename);

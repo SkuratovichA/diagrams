@@ -2,11 +2,48 @@
 #include "ui_editorinterface.h"
 
 #include <QMessageBox>
+#include <QFile>
+#include <QFileDialog>
+#include <QDir>
 
-editorInterface::editorInterface(QWidget *parent) :
+editorInterface::editorInterface(
+        QWidget *parent,
+        QString exampleName,
+        newWindowType new_type
+        ) :
     QMainWindow(parent),
     ui(new Ui::editorInterface)
 {
+    QString text = "";
+    if (new_type == EXAMPLE_FILE) {
+        text = "example";
+    } else if (new_type == OPEN_FILE) {
+        QString filter = "All File (*.gae)";
+        QString filename = QFileDialog::getOpenFileName(this, "Open a file", QDir::homePath(), filter);
+        QFile file(filename);
+        if (!file.open(QFile::ReadOnly)) {
+            QMessageBox::warning(this, "title", "file not opened");
+            throw "Cannot open a file";
+        }
+        QTextStream in(&file);
+        text = in.readAll();
+        file.close();
+    } else if (new_type == NO_FILE) {
+        text = "default text";
+    } else {
+        throw "Unrecognized keyword";
+    }
+
+    ////////////////////////////////
+    // parse a text, craete objects
+
+    // here parser will do the stuff.
+    // Then, new window will be opened.
+    // Then, an editation will be performed.
+    // Then, we all will die :)
+    // TODO: implement stuff. Both Save As and Save can be used.
+
+    QMessageBox::information(this, "title", "text loaded");
     ui->setupUi(this);
     this->setWindowTitle("editor");
 }
@@ -24,6 +61,7 @@ void editorInterface::on_actionNew_Project_triggered()
 
 void editorInterface::on_actionOpen_triggered()
 {
+
    QMessageBox::information(this, "TODO", "open");
 }
 
@@ -116,4 +154,5 @@ void editorInterface::on_actionRedo_triggered()
 {
    QMessageBox::information(this, "TODO", "Redo");
 }
+
 
