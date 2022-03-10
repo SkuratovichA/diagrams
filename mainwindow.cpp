@@ -4,19 +4,25 @@
 #include <QFileDialog>
 #include <QMessageBox>
 #include <QDir>
+#include <filesystem>
 
 mainWindow::mainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::mainWindow)
 {
+
     ui->setupUi(this);
     this->setWindowTitle("diagrams");
-    ui->listWidget->addItem("list zhenshin, s kotorymi ya ebalsya za poslednie 2 goda");
-    ui->listWidget->addItem("--");
-    ui->listWidget->addItem("--");
-    ui->listWidget->addItem("--");
-    ui->listWidget->addItem("tvoja mama");
 
+    // TODO: generalize
+    QString dirname = "/Users/suka/vut/sem4/icp/diagrams/examples";
+    QDir directory(dirname);
+
+    foreach(QFileInfo filename, directory.entryInfoList()) {
+        if (filename.isFile()) {
+            ui->listWidget->addItem(filename.fileName());
+        }
+    }
 }
 
 mainWindow::~mainWindow()
@@ -43,9 +49,34 @@ QString browseFile(QWidget *obj)
     return filename;
 }
 
+QString loadFile(QWidget *thisobj, const QString filename)
+{
+    QFile file(filename);
+
+    QMessageBox::information(thisobj, "title", "file: " + filename + "!");
+
+    if (file.open(QFile::ReadOnly | QFile::Text)) {
+        // FIXME: what the fuck? :)
+        QMessageBox::warning(thisobj, "title", "file not opened");
+        return nullptr;
+    } else {
+        QMessageBox::information(thisobj, "title", "file opened");
+    }
+    QTextStream in(&file);
+    QString text = in.readAll();
+
+    file.close();
+    return text;
+}
 
 void mainWindow::on_open_clicked()
 {
     QString filename = browseFile(this);
+    QString text = loadFile(this, filename);
+    if (text == nullptr) {
+        QMessageBox::warning(this, "Error", "Cannot read the file" + filename);
+    }
+
+    // here parser will do the stuff.
 }
 
