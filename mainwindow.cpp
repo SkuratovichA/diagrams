@@ -7,16 +7,6 @@
 #include <filesystem>
 
 
-QString browseFile(QWidget *obj)
-{
-    QString filename = QFileDialog::getOpenFileName(obj, "Open a file", QDir::homePath());
-    QMessageBox::information(obj, "..", filename);
-    if (filename == nullptr) {
-        return nullptr;
-    }
-    return filename;
-}
-
 //******************************************************************
 
 
@@ -100,7 +90,7 @@ bool mainWindow::openEditor()
 // open file from a given list
 void mainWindow::on_open_clicked()
 {
-    QString filename = browseFile(this);
+    QString filename = QFileDialog::getOpenFileName(obj, "Open a file", QDir::homePath());
     if (!openEditor(filename)) {
         QMessageBox::warning(this, "title", "SHIT!");
     }
