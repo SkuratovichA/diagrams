@@ -15,6 +15,8 @@ public:
     explicit editorInterface(QWidget *parent = nullptr);
     ~editorInterface();
 
+    //void loadFile(const QString &filename);
+
 private:
     Ui::editorInterface *ui;
 };

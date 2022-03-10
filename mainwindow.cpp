@@ -21,16 +21,25 @@ mainWindow::~mainWindow()
 
 void mainWindow::on_create_clicked()
 {
-    hide();
+    // FIXME: closing editing window must not close a new window
     editor_window = new editorInterface(this);
     editor_window->show();
 }
 
 
+QString browseFile(QWidget *obj)
+{
+    QString filename = QFileDialog::getOpenFileName(obj, "Open a file", QDir::homePath());
+    QMessageBox::information(obj, "..", filename);
+    if (filename == nullptr) {
+        return nullptr;
+    }
+    return filename;
+}
+
+
 void mainWindow::on_open_clicked()
 {
-    QString filename = QFileDialog::getOpenFileName(this, "Open a file", QDir::homePath());
-    QMessageBox::information(this, "..", filename);
-
+    QString filename = browseFile(this);
 }
 

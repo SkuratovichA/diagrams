@@ -22,11 +22,17 @@
     <height>400</height>
    </size>
   </property>
+  <property name="mouseTracking">
+   <bool>false</bool>
+  </property>
   <property name="windowTitle">
    <string>mainWindow</string>
   </property>
   <property name="styleSheet">
    <string notr="true"/>
+  </property>
+  <property name="tabShape">
+   <enum>QTabWidget::Rounded</enum>
   </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QPushButton" name="create">
@@ -81,8 +87,15 @@
       </disabled>
      </palette>
     </property>
+    <property name="mouseTracking">
+     <bool>true</bool>
+    </property>
     <property name="autoFillBackground">
      <bool>true</bool>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">file:///Users/suka/Library/Group Containers/6N38VWS5BX.ru.keepcoder.Telegram/appstore/account-2598218230137681100/postbox/media/telegram-cloud-photo-size-2-5282843537274157833-x.jpg
+alternate-background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(42, 58, 80, 255), stop:1 rgba(255, 255, 255, 255));</string>
     </property>
     <property name="text">
      <string>new</string>
@@ -99,6 +112,9 @@
     </property>
     <property name="autoFillBackground">
      <bool>true</bool>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(42, 58, 80, 255), stop:1 rgba(255, 255, 255, 255));</string>
     </property>
     <property name="text">
      <string>browse</string>
