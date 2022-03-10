@@ -11,6 +11,12 @@ mainWindow::mainWindow(QWidget *parent)
 {
     ui->setupUi(this);
     this->setWindowTitle("diagrams");
+    ui->listWidget->addItem("list zhenshin, s kotorymi ya ebalsya za poslednie 2 goda");
+    ui->listWidget->addItem("--");
+    ui->listWidget->addItem("--");
+    ui->listWidget->addItem("--");
+    ui->listWidget->addItem("tvoja mama");
+
 }
 
 mainWindow::~mainWindow()
