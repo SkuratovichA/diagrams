@@ -73,6 +73,8 @@ private slots:
 
 private:
     Ui::editorInterface *ui;
+    QString filename = "";
+    QString filenameFilter = "Diagram Files (*.gae)";
 };
 
 #endif // EDITORINTERFACE_H

@@ -46,6 +46,7 @@ void mainWindow::on_create_clicked()
         this->editor_window = new editorInterface(this, nullptr, editorInterface::NO_FILE);
     } catch (const char* msg) {
         QMessageBox::warning(this, "Error", msg);
+        return;
     }
     this->editor_window->show();
 }
@@ -57,6 +58,7 @@ void mainWindow::on_open_clicked()
          this->editor_window = new editorInterface(this, nullptr, editorInterface::OPEN_FILE);
     } catch (const char* msg) {
         QMessageBox::warning(this, "Error", msg);
+        return;
     }
     this->editor_window->show();
 }
@@ -70,6 +72,7 @@ void mainWindow::on_pushButton_clicked()
         this->editor_window = new editorInterface(this, example_name, editorInterface::EXAMPLE_FILE);
     } catch (const char* msg) {
         QMessageBox::warning(this, "Error", msg);
+        return;
     }
     this->editor_window->show();
 }
