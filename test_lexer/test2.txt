@@ -1,0 +1,34 @@
+@startuml_diagram
+@class Role {
+}
+@class Adherent {
+}
+@class Materiel {
+}
+@class TypeMateriel {
+}
+@class Evenement {
+}
+@class Planning {
+}
+@class Tache {
+}
+@class Demande {
+}
+@class Question {
+}
+@class SMSGroupe {
+}
+Evenement "1" -- "0..1" Planning
+Evenement "1" -- "0..*" Adherent
+Tache "1..*" -- "1" Planning
+Tache "0..*" -- "0..*" Adherent
+Role "0..1" -- "0..*" Adherent
+Question "0..*" -- "1" Adherent
+Sms "1..*" -- "0..*" Adherent
+Role "0..*" -- "0..1" Role [dirige]
+Demande "0..*" -- "1" Evenement
+Adherent "0..*" -- "1" Demande
+Type "0..*" -- "1" Materiel
+Demande "1" -- "0..*" Materiel
+@enduml_diagram

@@ -1,8 +1,8 @@
-@startuml
+@startuml_diagram
 @class User {
-  attribute : -String id
-  attribute : -String name
-  method : +String [name()]
+    attribute : - String id
+    attribute : - String name
+    method : String [name()]
 }
 User <|-- SpecificUser
-@enduml
+@enduml_diagram

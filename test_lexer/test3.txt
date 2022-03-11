@@ -1,0 +1,17 @@
+@startuml
+@object Wearable01
+@object Wearable02
+@object Wearable03
+@object Wearable04
+@object Wearable05
+@object Wearable06
+@object MGDSPET_protocol
+@object UserData_server
+Wearable01 -- MGDSPET_protocol
+Wearable02 -- MGDSPET_protocol
+Wearable03 -- MGDSPET_protocol
+Wearable04 -- MGDSPET_protocol
+Wearable05 -- MGDSPET_protocol
+Wearable06 -- MGDSPET_protocol
+MGDSPET_protocol -- UserData_server
+@enduml

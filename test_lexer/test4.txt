@@ -1,0 +1,19 @@
+@startuml
+note
+ActiveRecord
+("save yourself")
+end note
+class DAO {
+	{static} method : Entity find(id)
+	{static} method : List<Entity> findBy(criteria for select)
+	method : update(Entity)
+	method : save(Entity)
+	method : delete(Entity)
+	{static} attribute : Finder
+}
+Ballot <|-- DAO
+note
+Ballot ballot = new Ballot( ... );
+ballot.save();
+end note
+@enduml
