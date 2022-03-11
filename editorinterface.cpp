@@ -6,6 +6,8 @@
 #include <QFileDialog>
 #include <QDir>
 
+
+////////////////////////////////
 editorInterface::editorInterface(
         QWidget *parent,
         QString exampleName,
@@ -40,7 +42,6 @@ editorInterface::editorInterface(
         throw "Unrecognized keyword";
     }
 
-    ////////////////////////////////
     // parse a text, craete objects
 
     // here parser will do the stuff.
@@ -48,8 +49,8 @@ editorInterface::editorInterface(
     // Then, an editation will be performed.
     // Then, we all will die :)
     // TODO: implement stuff. Both Save As and Save can be used.
-
     QMessageBox::information(parent, "title", "text loaded");
+
     ui->setupUi(this);
     this->setWindowTitle("editor");
 }
@@ -58,54 +59,39 @@ editorInterface::~editorInterface()
 {
     delete ui;
 }
+////////////////////////////////
 
-// TODO: add close
 
+////////////////////////////////
+// Creating
 void editorInterface::on_actionNew_Project_triggered()
 {
-    editorInterface *editor_window;
-    try {
-        editor_window = new editorInterface(this, nullptr, editorInterface::NO_FILE);
-    } catch (const char* msg) {
-        QMessageBox::warning(this, "Error", msg);
-        return;
-    }
-    editor_window->show();
+    // make "unsaved", "saved"
+    ui->tabWidget->addTab(new QWidget(), "New Diagram");
 }
-
 
 void editorInterface::on_actionOpen_triggered()
 {
-    editorInterface *editor_window;
-    try {
-        editor_window = new editorInterface(this, nullptr, editorInterface::OPEN_FILE);
-    } catch (const char* msg) {
-        QMessageBox::warning(this, "Error", msg);
+    QString filename = QFileDialog::getOpenFileName(this, "Import a file", QDir::homePath());
+    if (filename == nullptr || filename.isEmpty()) {
         return;
     }
-    editor_window->show();
-}
-
-
-void editorInterface::on_actionSave_triggered()
-{
-    if (this->filename == nullptr || this->filename == "") {
-        this->on_actionSave_As_triggered();
-        return;
-    }
-
-    QFile file(this->filename);
-    if (!file.open(QFile::WriteOnly)) {
+    QFile file(filename);
+    if (!file.open(QFile::ReadOnly)) {
         QMessageBox::warning(this, "Error", file.errorString());
         return;
     }
-    QTextStream in(&file);
-    QString gaeRepresentation = "TODO: convert an internal representation into a string\n";
-    in <<  gaeRepresentation;
 
+    // TODO: parse a file, create an intermediate representation
+    // open a tab
+    // import a diagram
+    //
+
+    ui->tabWidget->addTab(new QWidget(), filename);
 }
 
-
+////////////////////////////////
+//Selection
 void editorInterface::on_actionAll_triggered()
 {
     // TODO: select all objects and lines
@@ -125,8 +111,11 @@ void editorInterface::on_actionAll_Lines_triggered()
     // TODO: select all lines
     QMessageBox::information(this, "TODO", "select all lines");
 }
+////////////////////////////////
 
 
+////////////////////////////////
+// Zooming
 void editorInterface::on_actionZoom_In_triggered()
 {
     // TODO: zoom in
@@ -146,21 +135,41 @@ void editorInterface::on_actionReset_Zoom_triggered()
     // TODO: reset zoom
    QMessageBox::information(this, "TODO", "reset zoom   ");
 }
+////////////////////////////////
 
 
-//
+////////////////////////////////
+// Manipulate tabs
 void editorInterface::on_actionNew_Diagram_triggered()
 {
-    // TODO: open a new tab with a diagram in the existing window?
-   QMessageBox::information(this, "TODO", "new diagram");
+    // TODO: open a new tab with no diagrams
+    ui->tabWidget->addTab(new QWidget(), "new diagram");
+    //ui->tabWidget->addTab(new QWidget(), "new Diagram");
+    QMessageBox::information(this, "TODO", "new diagram");
 }
 
-
-void editorInterface::on_actionImport_diagram_triggered()
+void editorInterface::on_tabWidget_tabCloseRequested(int index)
 {
-   QMessageBox::information(this, "TODO", "import ");
+    // if modified, ask for saving
+    ui->tabWidget->removeTab(index);
 }
 
+void editorInterface::on_actionSave_triggered()
+{
+    if (this->filename == nullptr || this->filename == "") {
+        this->on_actionSave_As_triggered();
+        return;
+    }
+
+    QFile file(this->filename);
+    if (!file.open(QFile::WriteOnly)) {
+        QMessageBox::warning(this, "Error", file.errorString());
+        return;
+    }
+    QTextStream in(&file);
+    QString gaeRepresentation = "TODO: convert an internal representation into a string\n";
+    in <<  gaeRepresentation;
+}
 
 void editorInterface::on_actionSave_As_triggered()
 {
@@ -181,8 +190,11 @@ void editorInterface::on_actionSave_As_triggered()
     out << "Hello world";
     QMessageBox::information(this, "TODO", "save as");
 }
+////////////////////////////////
 
 
+////////////////////////////////
+// Editor
 void editorInterface::on_actionCopy_triggered()
 {
     // TODO: copy the selected object
@@ -216,5 +228,10 @@ void editorInterface::on_actionRedo_triggered()
     // TODO: https://stackoverflow.com/questions/14998836/implementing-undo-redo-functionality-in-qt
     QMessageBox::information(this, "TODO", "Redo");
 }
+////////////////////////////////
 
+void editorInterface::on_actionQuit_triggered()
+{
+    //editorInterface::close();
+}
 

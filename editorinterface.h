@@ -10,6 +10,7 @@ class editorInterface;
 class editorInterface : public QMainWindow
 {
     Q_OBJECT
+    //QTabWidget *tabWidget;
 
 public:
     enum newWindowType {
@@ -57,8 +58,6 @@ private slots:
 
     void on_actionNew_Diagram_triggered();
 
-    void on_actionImport_diagram_triggered();
-
     void on_actionSave_As_triggered();
 
     void on_actionCopy_triggered();
@@ -70,6 +69,10 @@ private slots:
     void on_actionUndo_triggered();
 
     void on_actionRedo_triggered();
+
+    void on_tabWidget_tabCloseRequested(int index);
+
+    void on_actionQuit_triggered();
 
 private:
     Ui::editorInterface *ui;
