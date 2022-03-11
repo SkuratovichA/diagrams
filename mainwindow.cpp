@@ -21,6 +21,9 @@ mainWindow::mainWindow(QWidget *parent)
     // TODO: generalize andrei will do this
     QString dirname = "/Users/suka/vut/sem4/icp/diagrams/examples";
     QDir directory(dirname);
+    if (directory.isEmpty()) {
+        return;
+    }
 
     // create a list with examples
     foreach(QFileInfo filename, directory.entryInfoList()) {

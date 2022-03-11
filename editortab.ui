@@ -13,16 +13,7 @@
   <property name="windowTitle">
    <string>Form</string>
   </property>
-  <widget class="QGraphicsView" name="graphicsView">
-   <property name="geometry">
-    <rect>
-     <x>60</x>
-     <y>40</y>
-     <width>256</width>
-     <height>192</height>
-    </rect>
-   </property>
-  </widget>
+  <layout class="QGridLayout" name="gridLayout"/>
   <widget class="Line" name="line">
    <property name="geometry">
     <rect>
