@@ -1,0 +1,8 @@
+@startuml
+@class User {
+  attribute : -String id
+  attribute : -String name
+  method : +String [name()]
+}
+User <|-- SpecificUser
+@enduml
