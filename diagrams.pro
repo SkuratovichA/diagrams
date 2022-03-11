@@ -10,15 +10,18 @@ CONFIG += c++11
 
 SOURCES += \
     editorinterface.cpp \
+    editortab.cpp \
     main.cpp \
     mainwindow.cpp
 
 HEADERS += \
     editorinterface.h \
+    editortab.h \
     mainwindow.h
 
 FORMS += \
     editorinterface.ui \
+    editortab.ui \
     mainwindow.ui
 
 # Default rules for deployment.

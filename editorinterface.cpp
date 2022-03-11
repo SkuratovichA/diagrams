@@ -6,6 +6,8 @@
 #include <QFileDialog>
 #include <QDir>
 
+#include "editortab.h"
+
 
 ////////////////////////////////
 editorInterface::editorInterface(
@@ -67,7 +69,8 @@ editorInterface::~editorInterface()
 void editorInterface::on_actionNew_Project_triggered()
 {
     // make "unsaved", "saved"
-    ui->tabWidget->addTab(new QWidget(), "New Diagram");
+    ui->tabWidget->addTab(new editorTab(), QString("Diagram %0").arg(ui->tabWidget->count()+1));
+    ui->tabWidget->setCurrentIndex(ui->tabWidget->count()-1);
 }
 
 void editorInterface::on_actionOpen_triggered()
@@ -87,7 +90,8 @@ void editorInterface::on_actionOpen_triggered()
     // import a diagram
     //
 
-    ui->tabWidget->addTab(new QWidget(), filename);
+    ui->tabWidget->addTab(new editorTab(), filename);
+    ui->tabWidget->setCurrentIndex(ui->tabWidget->count()-1);
 }
 
 ////////////////////////////////
@@ -143,9 +147,8 @@ void editorInterface::on_actionReset_Zoom_triggered()
 void editorInterface::on_actionNew_Diagram_triggered()
 {
     // TODO: open a new tab with no diagrams
-    ui->tabWidget->addTab(new QWidget(), "new diagram");
-    //ui->tabWidget->addTab(new QWidget(), "new Diagram");
-    QMessageBox::information(this, "TODO", "new diagram");
+    ui->tabWidget->addTab(new editorTab(), QString("Diagram %0").arg(ui->tabWidget->count()+1));
+    ui->tabWidget->setCurrentIndex(ui->tabWidget->count()-1);
 }
 
 void editorInterface::on_tabWidget_tabCloseRequested(int index)
