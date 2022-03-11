@@ -89,23 +89,20 @@ void editorInterface::on_actionOpen_triggered()
 
 void editorInterface::on_actionSave_triggered()
 {
-    QString fileName = QFileDialog::getSaveFileName(this,
-                                                    tr("Save Address Book"),
-                                                    QDir::homePath(),
-                                                    this->filenameFilter);
-    if (fileName.isEmpty()) {
+    if (this->filename == nullptr || this->filename == "") {
+        this->on_actionSave_As_triggered();
         return;
     }
 
-    QFile file(fileName);
-    if (!file.open(QIODevice::WriteOnly)) {
-        QMessageBox::information(this, tr("Unable to open file"),
-                                 file.errorString());
+    QFile file(this->filename);
+    if (!file.open(QFile::WriteOnly)) {
+        QMessageBox::warning(this, "Error", file.errorString());
         return;
     }
-    QDataStream out(&file);
-    // TODO write an internal representation to a file
-    out << "Hello world";
+    QTextStream in(&file);
+    QString gaeRepresentation = "TODO: convert an internal representation into a string\n";
+    in <<  gaeRepresentation;
+
 }
 
 
@@ -151,6 +148,7 @@ void editorInterface::on_actionReset_Zoom_triggered()
 }
 
 
+//
 void editorInterface::on_actionNew_Diagram_triggered()
 {
     // TODO: open a new tab with a diagram in the existing window?
@@ -167,6 +165,20 @@ void editorInterface::on_actionImport_diagram_triggered()
 void editorInterface::on_actionSave_As_triggered()
 {
     // TODO: chose a file and save it
+    QString fileName = QFileDialog::getSaveFileName(this, tr("Save Address Book"), QDir::homePath(), this->filenameFilter);
+    if (fileName == nullptr || fileName.isEmpty()) {
+        return;
+    }
+
+    QFile file(fileName);
+    if (!file.open(QIODevice::WriteOnly)) {
+        QMessageBox::information(this, tr("Unable to open file"),file.errorString());
+        return;
+    }
+    QTextStream out(&file);
+
+    // TODO write an internal representation to a file
+    out << "Hello world";
     QMessageBox::information(this, "TODO", "save as");
 }
 
