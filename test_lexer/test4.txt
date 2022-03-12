@@ -1,4 +1,4 @@
-@startuml
+@startuml_class
 note
 ActiveRecord
 ("save yourself")
@@ -16,4 +16,4 @@ note
 Ballot ballot = new Ballot( ... );
 ballot.save();
 end note
-@enduml
+@enduml_class

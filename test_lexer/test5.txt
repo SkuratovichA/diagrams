@@ -1,0 +1,15 @@
+@startuml_class
+@class Student {
+}
+@class FlashCards {
+}
+@class Questions {
+}
+@class Answers {
+}
+Student "1" -- "+" FlashCards [Interacts with] >
+FlashCards "1" o-- "1" Questions [has] >
+FlashCards "1" o-- "1" Answers [has] >
+Answers "1" *-- "1" Wrong [has] >
+Answers "1" *-- "1" Right [has] >
+@enduml_class

@@ -1,4 +1,4 @@
-@startuml
+@startuml_class
 @object Wearable01
 @object Wearable02
 @object Wearable03
@@ -14,4 +14,4 @@ Wearable04 -- MGDSPET_protocol
 Wearable05 -- MGDSPET_protocol
 Wearable06 -- MGDSPET_protocol
 MGDSPET_protocol -- UserData_server
-@enduml
+@enduml_class

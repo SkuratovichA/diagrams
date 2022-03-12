@@ -1,4 +1,4 @@
-@startuml_diagram
+@startuml_class
 @class Role {
 }
 @class Adherent {
@@ -31,4 +31,4 @@ Demande "0..*" -- "1" Evenement
 Adherent "0..*" -- "1" Demande
 Type "0..*" -- "1" Materiel
 Demande "1" -- "0..*" Materiel
-@enduml_diagram
+@enduml_class

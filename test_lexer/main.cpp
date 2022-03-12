@@ -9,8 +9,8 @@
 #include <fstream>
 
 enum terminals {
-    END_PROGRAM = -1, CLASS_T, STARTUML_T, ENDUML_T,
-    GENERALIZATION_T, UNEXPECTED_T,
+    END_PROGRAM = -1, CLASS_T, STARTUML_CLASS_T, ENDUML_CLASS_T,
+    GENERALIZATION_T, UNEXPECTED_T, STARTUML_SEQ_T, ENDUML_SEQ_T,
     ASSOCIATION_T, COMPOSITION_T, AGREGATION_T,
     ATTRIBUTE_T, METHOD_T, INTERFACE_T, NOTE_T,
     OF_T, END_T, PACKAGE_T, ABSTRACT_T, ENUM_T,
@@ -30,12 +30,13 @@ typedef struct Text {
 } text_t;
 
 std::vector<std::pair<std::string, terminals>> const _map_ {
+    { "^@enduml_seq$",     ENDUML_SEQ_T },     { "^@startuml_seq$",   STARTUML_SEQ_T },
     { "^\\+$",             PUBLIC_T },         { "^\\#$",             PROTECTED_T },
     { "^\\-$",             PRIVATE_T },        { "^\\~$",             PACKAGE_MOD_T },
-    { "^@class$",          CLASS_T },          { "^@startuml_diagram$", STARTUML_T },
-    { "^@enduml_diagram$", ENDUML_T },         { "^@<|--$",           GENERALIZATION_T },
-    { "^@--$",             ASSOCIATION_T },    { "^@o--$",            COMPOSITION_T },
-    { "^@*--$",            AGREGATION_T },     { "^attribute$",       ATTRIBUTE_T },
+    { "^@class$",          CLASS_T },          { "^@startuml_class$", STARTUML_CLASS_T },
+    { "^@enduml_class$",   ENDUML_CLASS_T },   { "^<\\|\\-\\-$",      GENERALIZATION_T },
+    { "^\\-\\-$",          ASSOCIATION_T },    { "^o\\-\\-$",        COMPOSITION_T },
+    { "^\\*--$",           AGREGATION_T },     { "^attribute$",       ATTRIBUTE_T },
     { "^method",           METHOD_T },         { "^@interface$",      INTERFACE_T },
     { "^note$",            NOTE_T },           { "^of$",              OF_T },
     { "^end$",             END_T },            { "^package$",         PACKAGE_T },
@@ -49,17 +50,18 @@ std::vector<std::pair<std::string, terminals>> const _map_ {
     { "^>$",               DIR_T },            { "^:$",               COLON_T },
     { "^\\{static\\}$",    STATIC_T },         { "^\\{$",             CURV_LEFT_T },
     { "^\\}$",             CURV_RIGHT_T },     { "^#[0-9a-fA-f]{6}$", COLOR_T },
-    { "^\".+\"$",          RELATION_T },       { "^\\[.+\\]$",            MSG_T },
+    { "^\".+\"$",          RELATION_T },       { "^\\[((.|\\s))+\\]$",  MSG_T },
     { "\\w",               NAME_T },
 };
 
+void dir(text_t &Text);
 void static_(text_t &Text);
 void mod(text_t &Text);
 void attrs(text_t &Text);
 void action(text_t &Text);
 void arrow(text_t &Text);
 void relation(text_t &Text);
-void stat_diagram(text_t &Text);
+void stat_class(text_t &Text);
 void program(text_t &Text);
 std::string get_str(int &i, text_t &Text);
 terminals check_regexp(std::string word);
@@ -76,15 +78,27 @@ void get_token(text_t &Text);
 
 void program(text_t &Text) {
     get_token(Text);
-    CHECK_TOKEN(Text.cur_token, STARTUML_T, Text,
-                "err program start uml\n");
-    CHECK_TOKEN(Text.cur_token, NL_T, Text,
-                "err program new line\n");
+    if (Text.cur_token == STARTUML_CLASS_T) {
+        get_token(Text);
+        CHECK_TOKEN(Text.cur_token, NL_T, Text,
+                    "err program new line\n");
 
-    stat_diagram(Text);
+        stat_class(Text);
+    }
+    else if (Text.cur_token == STARTUML_SEQ_T) {
+        get_token(Text);
+        CHECK_TOKEN(Text.cur_token, NL_T, Text,
+                    "err program new line\n");
+
+        //stat_seq(Text);
+    }
+    else {
+        printf("err with startuml\n");
+        exit(-1);
+    }
 }
 
-void stat_diagram(text_t &Text) {
+void stat_class(text_t &Text) {
     if (Text.cur_token == CLASS_T) {
         get_token(Text);
         CHECK_TOKEN(Text.cur_token, NAME_T, Text,
@@ -95,7 +109,7 @@ void stat_diagram(text_t &Text) {
                     "err stat_diagram new line\n");
 
         attrs(Text);
-        stat_diagram(Text);
+        stat_class(Text);
     }
     else if (Text.cur_token == NAME_T) {
         get_token(Text);
@@ -111,7 +125,22 @@ void stat_diagram(text_t &Text) {
         CHECK_TOKEN(Text.cur_token, NL_T, Text,
                     "err stat_diagram new line\n");
 
-        stat_diagram(Text);
+        stat_class(Text);
+    }
+    else if (Text.cur_token == OBJECT_T) {
+        get_token(Text);
+        CHECK_TOKEN(Text.cur_token, NAME_T, Text,
+                    "err stat_diagram name\n");
+        CHECK_TOKEN(Text.cur_token, NL_T, Text,
+                    "err stat_diagram new line\n");
+
+        stat_class(Text);
+    }
+    else if (Text.cur_token == ENDUML_CLASS_T) {
+        get_token(Text);
+        CHECK_TOKEN(Text.cur_token, NL_T, Text,
+                    "err stat_diagram new line\n");
+        return;
     }
 
 }
@@ -153,7 +182,7 @@ void attrs(text_t &Text) {
         CHECK_TOKEN(Text.cur_token, NL_T, Text,
                     "err stat_diagram new line\n");
 
-        stat_diagram(Text);
+        stat_class(Text);
     }
     else {
         if (Text.cur_token == HORIZONTAL_SEP_T) {
@@ -190,6 +219,9 @@ void attrs(text_t &Text) {
                             "err stat_diagram name\n");
                 CHECK_TOKEN(Text.cur_token, MSG_T, Text,
                             "err attr message name\n");
+
+                dir(Text);
+
                 CHECK_TOKEN(Text.cur_token, NL_T, Text,
                             "err stat_diagram new line\n");
 
@@ -214,6 +246,12 @@ void mod(text_t &Text) {
         get_token(Text);
     }
     else if (Text.cur_token == PUBLIC_T) {
+        get_token(Text);
+    }
+}
+
+void dir(text_t &Text) {
+    if (Text.cur_token == DIR_T) {
         get_token(Text);
     }
 }
