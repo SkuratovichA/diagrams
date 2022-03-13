@@ -5,26 +5,94 @@
 #include <algorithm>
 #include <map>
 #include <regex>
+
 #include <streambuf>
 #include <fstream>
+#include <iomanip>
 
-enum terminals {
-    END_PROGRAM = -1, CLASS_T, STARTUML_CLASS_T, ENDUML_CLASS_T,
-    GENERALIZATION_T, UNEXPECTED_T, STARTUML_SEQ_T, ENDUML_SEQ_T,
-    ASSOCIATION_T, COMPOSITION_T, AGREGATION_T,
-    ATTRIBUTE_T, METHOD_T, INTERFACE_T, NOTE_T,
-    OF_T, END_T, PACKAGE_T, ABSTRACT_T, ENUM_T,
-    HORIZONTAL_SEP_T, ACTOR_T, PARTICIPANT_T,
-    REQUEST_T, RESPONSE_T, ALT_T, ELSE_T,
-    ACTIVATE_T, DIACTIVATE_T, OVER_T, BOX_T,
-    COLOR_T, RELATION_T, MSG_T, NAME_T,
-    NL_T, DIR_T, CURV_LEFT_T, CURV_RIGHT_T,
-    COLON_T, OBJECT_T, STATIC_T, PUBLIC_T,
-    PROTECTED_T, PRIVATE_T, PACKAGE_MOD_T
+#define TERMS \
+X(END_PROGRAM, "END OF PROGRAM") \
+X(CLASS_T, "@CLASS") \
+X(INTERFACE_T, "@INTERFACE") \
+X(OBJECT_T, "@OBJECT") \
+X(ENUM_T, "@ENUM") \
+X(ABSTRACT_T, "@ABSTRACT") \
+X(STARTUML_CLASS_T, "STARTUML_CLASS") \
+X(ENDUML_CLASS_T, "ENDUML_CLASS") \
+X(STARTUML_SEQ_T, "STARTUML_SEQ") \
+X(ENDUML_SEQ_T, "ENDUML_SEQ") \
+X(GENERALIZATION_T, "GENERALIZATION <|--") \
+X(ASSOCIATION_T, "ASSOCIATION --") \
+X(COMPOSITION_T, "COMPOSITION o--") \
+X(AGREGATION_T, "AGREGATION *--") \
+X(PACKAGE_MOD_T, "PACKAGE_MOD ~") \
+X(PUBLIC_T, "PUBLIC_MOD +") \
+X(PROTECTED_T, "PROTECTED_MOD #") \
+X(PRIVATE_T, "PRIVATE_MOD -") \
+X(ACTIVATE_T, "@ACTIVATE") \
+X(DIACTIVATE_T, "@DIACTIVATE") \
+X(ATTRIBUTE_T, "@ATTRIBUTE") \
+X(METHOD_T, "@METHOD") \
+X(REQUEST_T, "REQUEST ->") \
+X(RESPONSE_T, "RESPONSE <--") \
+X(ACTOR_T, "@ACTOR") \
+X(PARTICIPANT_T, "@PARTICIPANT") \
+X(CURV_LEFT_T, "BRACE {") \
+X(CURV_RIGHT_T, "BRACE }") \
+X(COLON_T, "COLON :") \
+X(COLOR_T, "COLOR") \
+X(ALT_T, "@ALT") \
+X(ELSE_T, "@ELSE") \
+X(PACKAGE_T, "@PACKAGE") \
+X(BOX_T, "@BOX") \
+X(UNEXPECTED_T, "SOME ERROR") \
+X(HORIZONTAL_SEP_T, "HORIZONTAL_SEP ..") \
+X(RELATION_T, "RELATION \"...\"") \
+X(DIR_T, "DIR >") \
+X(STATIC_T, "@STATIC") \
+X(WORD_T, "WORD") \
+X(QUOTE_T, "QUOTE \"\"\"") \
+
+#define X(term, name) term,
+enum terminals : size_t
+{
+    TERMS
 };
+#undef X
+
+#define X(term, name) name,
+char const *term_name[] =
+{
+    TERMS
+};
+#undef X
+
+/*enum terminals {
+    END_PROGRAM = -1,
+    CLASS_T, INTERFACE_T, OBJECT_T, ENUM_T, ABSTRACT_T,
+    STARTUML_CLASS_T, ENDUML_CLASS_T,
+    GENERALIZATION_T, ASSOCIATION_T, COMPOSITION_T, AGREGATION_T,
+    STARTUML_SEQ_T, ENDUML_SEQ_T,
+    PACKAGE_MOD_T, PUBLIC_T, PROTECTED_T, PRIVATE_T,
+    ACTIVATE_T, DIACTIVATE_T,
+    ATTRIBUTE_T, METHOD_T,
+    REQUEST_T, RESPONSE_T,
+    ACTOR_T, PARTICIPANT_T,
+    CURV_LEFT_T, CURV_RIGHT_T
+    COLON_T, NL_T,
+    COLOR_T,
+    ALT_T, ELSE_T,
+    PACKAGE_T, BOX_T,
+    UNEXPECTED_T,
+    HORIZONTAL_SEP_T, RELATION_T, DIR_T, STATIC_T,
+    WORD_T, QUOTE_T
+};*/
 
 typedef struct Text {
     std::string text;
+    std::string token_to_push;
+    std::string cur_word;
+    char separator;
     int cur_idx;
     terminals cur_token;
 } text_t;
@@ -36,25 +104,26 @@ std::vector<std::pair<std::string, terminals>> const _map_ {
     { "^@class$",          CLASS_T },          { "^@startuml_class$", STARTUML_CLASS_T },
     { "^@enduml_class$",   ENDUML_CLASS_T },   { "^<\\|\\-\\-$",      GENERALIZATION_T },
     { "^\\-\\-$",          ASSOCIATION_T },    { "^o\\-\\-$",        COMPOSITION_T },
-    { "^\\*--$",           AGREGATION_T },     { "^attribute$",       ATTRIBUTE_T },
-    { "^method",           METHOD_T },         { "^@interface$",      INTERFACE_T },
-    { "^note$",            NOTE_T },           { "^of$",              OF_T },
-    { "^end$",             END_T },            { "^package$",         PACKAGE_T },
-    { "^abstract$",        ABSTRACT_T },       { "^@enum$",           ENUM_T },
+    { "^\\*\\-\\-$",       AGREGATION_T },     { "^@attribute$",       ATTRIBUTE_T },
+    { "^@method",           METHOD_T },         { "^@interface$",      INTERFACE_T },
+    { "^@package$",         PACKAGE_T },
+    { "^@abstract$",        ABSTRACT_T },       { "^@enum$",           ENUM_T },
     { "^\\.\\.$",          HORIZONTAL_SEP_T }, { "^@actor$",          ACTOR_T },
-    { "^@participant$",    PARTICIPANT_T },    { "^->$",              REQUEST_T },
-    { "^<--$",             RESPONSE_T },       { "^alt$",             ALT_T },
-    { "^else$",            ELSE_T },           { "^activate$",        ACTIVATE_T },
-    { "^diactivate$",      DIACTIVATE_T },     { "^over$",            OVER_T },
-    { "^@object$",         OBJECT_T } ,        { "^box$",             BOX_T },
-    { "^>$",               DIR_T },            { "^:$",               COLON_T },
-    { "^\\{static\\}$",    STATIC_T },         { "^\\{$",             CURV_LEFT_T },
+    { "^@participant$",    PARTICIPANT_T },    { "^\\-\\>$",              REQUEST_T },
+    { "^\\<\\-\\-$",        RESPONSE_T },       { "^@alt$",             ALT_T },
+    { "^@else$",            ELSE_T },           { "^@activate$",        ACTIVATE_T },
+    { "^@diactivate$",      DIACTIVATE_T },
+    { "^@object$",         OBJECT_T } ,        { "^@box$",             BOX_T },
+    { "^>$",               DIR_T },            { "^\\:$",               COLON_T },
+    { "^@static$",    STATIC_T },         { "^\\{$",             CURV_LEFT_T },
     { "^\\}$",             CURV_RIGHT_T },     { "^#[0-9a-fA-f]{6}$", COLOR_T },
-    { "^\".+\"$",          RELATION_T },       { "^\\[((.|\\s))+\\]$",  MSG_T },
-    { "\\w",               NAME_T },
+    { "^\\\"\\\"\\\"$", QUOTE_T } , { "^\".+\"$",          RELATION_T },
+    { "\\w",               WORD_T },
 };
 
+void msg(text_t &Text);
 void dir(text_t &Text);
+void abstract(text_t &Text);
 void static_(text_t &Text);
 void mod(text_t &Text);
 void attrs(text_t &Text);
@@ -63,7 +132,6 @@ void arrow(text_t &Text);
 void relation(text_t &Text);
 void stat_class(text_t &Text);
 void program(text_t &Text);
-std::string get_str(int &i, text_t &Text);
 terminals check_regexp(std::string word);
 void get_token(text_t &Text);
 
@@ -80,16 +148,10 @@ void program(text_t &Text) {
     get_token(Text);
     if (Text.cur_token == STARTUML_CLASS_T) {
         get_token(Text);
-        CHECK_TOKEN(Text.cur_token, NL_T, Text,
-                    "err program new line\n");
-
         stat_class(Text);
     }
     else if (Text.cur_token == STARTUML_SEQ_T) {
         get_token(Text);
-        CHECK_TOKEN(Text.cur_token, NL_T, Text,
-                    "err program new line\n");
-
         //stat_seq(Text);
     }
     else {
@@ -101,48 +163,55 @@ void program(text_t &Text) {
 void stat_class(text_t &Text) {
     if (Text.cur_token == CLASS_T) {
         get_token(Text);
-        CHECK_TOKEN(Text.cur_token, NAME_T, Text,
+
+        abstract(Text);
+        CHECK_TOKEN(Text.cur_token, WORD_T, Text,
                     "err stat_diagram name\n");
         CHECK_TOKEN(Text.cur_token, CURV_LEFT_T, Text,
                     "err stat_diagram left brace\n");
-        CHECK_TOKEN(Text.cur_token, NL_T, Text,
-                    "err stat_diagram new line\n");
 
         attrs(Text);
         stat_class(Text);
     }
-    else if (Text.cur_token == NAME_T) {
+    else if (Text.cur_token == WORD_T) {
         get_token(Text);
         relation(Text);
         arrow(Text);
         relation(Text);
 
-        CHECK_TOKEN(Text.cur_token, NAME_T, Text,
+        CHECK_TOKEN(Text.cur_token, WORD_T, Text,
                     "err stat_diagram name\n");
 
         action(Text);
-
-        CHECK_TOKEN(Text.cur_token, NL_T, Text,
-                    "err stat_diagram new line\n");
-
         stat_class(Text);
     }
     else if (Text.cur_token == OBJECT_T) {
         get_token(Text);
-        CHECK_TOKEN(Text.cur_token, NAME_T, Text,
+        CHECK_TOKEN(Text.cur_token, WORD_T, Text,
                     "err stat_diagram name\n");
-        CHECK_TOKEN(Text.cur_token, NL_T, Text,
-                    "err stat_diagram new line\n");
 
+        stat_class(Text);
+    }
+    else if (Text.cur_token == QUOTE_T) {
+        get_token(Text);
+        CHECK_TOKEN(Text.cur_token, WORD_T, Text,
+                    "err stat_diagram name\n");
+
+        msg(Text);
+        printf("%s\n", Text.cur_word.c_str());
         stat_class(Text);
     }
     else if (Text.cur_token == ENDUML_CLASS_T) {
         get_token(Text);
-        CHECK_TOKEN(Text.cur_token, NL_T, Text,
-                    "err stat_diagram new line\n");
         return;
     }
 
+}
+
+void abstract(text_t &Text) {
+    if (Text.cur_token == ABSTRACT_T) {
+        get_token(Text);
+    }
 }
 
 void relation(text_t &Text) {
@@ -171,25 +240,20 @@ void arrow(text_t &Text) {
 }
 
 void action(text_t &Text) {
-    if (Text.cur_token == MSG_T) {
+    if (Text.cur_token == QUOTE_T) {
         get_token(Text);
+        msg(Text);
     }
 }
 
 void attrs(text_t &Text) {
     if (Text.cur_token == CURV_RIGHT_T) {
         get_token(Text);
-        CHECK_TOKEN(Text.cur_token, NL_T, Text,
-                    "err stat_diagram new line\n");
-
         stat_class(Text);
     }
     else {
         if (Text.cur_token == HORIZONTAL_SEP_T) {
             get_token(Text);
-            CHECK_TOKEN(Text.cur_token, NL_T, Text,
-                        "err stat_diagram new line\n");
-
             attrs(Text);
         }
         else {
@@ -201,12 +265,10 @@ void attrs(text_t &Text) {
 
                 mod(Text);
 
-                CHECK_TOKEN(Text.cur_token, NAME_T, Text,
+                CHECK_TOKEN(Text.cur_token, WORD_T, Text,
                             "err stat_diagram name\n");
-                CHECK_TOKEN(Text.cur_token, NAME_T, Text,
+                CHECK_TOKEN(Text.cur_token, WORD_T, Text,
                             "err stat_diagram name\n");
-                CHECK_TOKEN(Text.cur_token, NL_T, Text,
-                            "err stat_diagram new line\n");
 
                 attrs(Text);
             }
@@ -215,16 +277,14 @@ void attrs(text_t &Text) {
 
                 CHECK_TOKEN(Text.cur_token, COLON_T, Text,
                             "err attr colon name\n");
-                CHECK_TOKEN(Text.cur_token, NAME_T, Text,
+
+                mod(Text);
+
+                CHECK_TOKEN(Text.cur_token, QUOTE_T, Text,
                             "err stat_diagram name\n");
-                CHECK_TOKEN(Text.cur_token, MSG_T, Text,
-                            "err attr message name\n");
 
+                msg(Text);
                 dir(Text);
-
-                CHECK_TOKEN(Text.cur_token, NL_T, Text,
-                            "err stat_diagram new line\n");
-
                 attrs(Text);
             }
             else {
@@ -250,6 +310,16 @@ void mod(text_t &Text) {
     }
 }
 
+void msg(text_t &Text) {
+    if (Text.cur_token == WORD_T) {
+        get_token(Text);
+        msg(Text);
+    }
+    else if (Text.cur_token == QUOTE_T) {
+        get_token(Text);
+    }
+}
+
 void dir(text_t &Text) {
     if (Text.cur_token == DIR_T) {
         get_token(Text);
@@ -263,23 +333,8 @@ void static_(text_t &Text) {
 }
 
 void print_word(std::string str, int idx) {
-    std::cout << str << " : " << idx << "\n";
-}
-
-std::string get_str(int &i, text_t &Text) {
-    std::string word;
-    char arr[4] = {'\t', '\n', ' ', '\0'};
-    char *tmp;
-
-    while(1) {
-        tmp = std::find(std::begin(arr), std::end(arr), Text.text[i]);
-        if (tmp != std::end(arr)) {
-            Text.cur_idx = i;
-            return word;
-        }
-
-        word.push_back(Text.text[i++]);
-    }
+    std::cout << "token = " << term_name[idx] << std::setw(22-strlen(term_name[idx]))
+              <<" : " << str << "\n";
 }
 
 terminals check_regexp(std::string word) {
@@ -293,42 +348,41 @@ terminals check_regexp(std::string word) {
     }
 
     return UNEXPECTED_T;
-    //std::cout << "\n\n\nI DONT KNOW THIS: " << word << "\n";
 }
 
 void get_token(text_t &Text) {
-    //printf("|%c| %d\n", Text.text[Text.cur_idx], Text.cur_idx);
+    Text.cur_word.clear();
     for (int i = Text.cur_idx; Text.text[i] != '\0'; i++) {
         switch(Text.text[i]) {
-            case ' ':case '\t':
-                break;
-            case '\n':
-                Text.cur_token = NL_T;
-                Text.cur_idx = ++i;
+            case ' ':case '\t':case '\n':
+                Text.separator = Text.text[i];
+                Text.cur_token = check_regexp(Text.cur_word);
+                Text.cur_idx = i + 1;
                 return;
-                //std::cout << "NEW LINE : " << NL_T << "\n";
-                //break;
             default:
-                Text.cur_token = check_regexp(get_str(i, Text));
-                return;
+                Text.cur_word.push_back(Text.text[i]);
         }
     }
-
-    std::cout << "\n\n\nALL_GOOD\n";
-
-    //return END_PROGRAM;
 }
+
+bool BothAreSpaces(char lhs, char rhs) { return (lhs == rhs) && (lhs == ' '); }
 
 int main(int argc, char **argv) {
     std::ifstream t(argv[1]);
     std::string text((std::istreambuf_iterator<char>(t)),
                      std::istreambuf_iterator<char>());
 
+    std::string::iterator new_end = std::unique(text.begin(), text.end(), BothAreSpaces);
+    text.erase(new_end, text.end());
+
     text_t Text;
     Text.text = text;
     Text.cur_idx = 0;
+    Text.cur_word = "";
+    Text.token_to_push = "";
 
     program(Text);
+    std::cout << "\n\n\nALL_GOOD\n";
 
     return 0;
 }
