@@ -1,9 +1,9 @@
 @startuml_class
 @class User
 {
-@attribute   : - String id
-@attribute : - String name
-@method : """ String name() """
+@attribute - String id
+@attribute - String name
+@method name() String @startmth @endmth
 }
 User <|-- SpecificUser
 @enduml_class

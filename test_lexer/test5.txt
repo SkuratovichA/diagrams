@@ -7,9 +7,9 @@
 }
 @class Answers {
 }
-Student "1" -- "+" FlashCards [Interacts with] >
-FlashCards "1" o-- "1" Questions [has] >
-FlashCards "1" o-- "1" Answers [has] >
-Answers "1" *-- "1" Wrong [has] >
-Answers "1" *-- "1" Right [has] >
+Student "1" -- "+" FlashCards @startaction Interacts with @endaction
+FlashCards "1" o-- "1" Questions @startaction has @endaction
+FlashCards "1" o-- "1" Answers @startaction has @endaction
+Answers "1" *-- "1" Wrong @startaction has @endaction
+Answers "1" *-- "1" Right @startaction has @endaction
 @enduml_class

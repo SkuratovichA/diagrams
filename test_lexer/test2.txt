@@ -26,7 +26,7 @@ Tache "0..*" -- "0..*" Adherent
 Role "0..1" -- "0..*" Adherent
 Question "0..*" -- "1" Adherent
 Sms "1..*" -- "0..*" Adherent
-Role "0..*" -- "0..1" Role """ dirige """
+Role "0..*" -- "0..1" Role @startaction dirige @endaction
 Demande "0..*" -- "1" Evenement
 Adherent "0..*" -- "1" Demande
 Type "0..*" -- "1" Materiel

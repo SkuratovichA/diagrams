@@ -21,6 +21,10 @@ X(STARTUML_CLASS_T, "STARTUML_CLASS") \
 X(ENDUML_CLASS_T, "ENDUML_CLASS") \
 X(STARTUML_SEQ_T, "STARTUML_SEQ") \
 X(ENDUML_SEQ_T, "ENDUML_SEQ") \
+X(STARTMTH_T, "STARTMTH") \
+X(ENDMTH_T, "ENDMTH") \
+X(STARTACTION_T, "STARTACTION") \
+X(ENDACTION_T, "ENDACTION") \
 X(GENERALIZATION_T, "GENERALIZATION <|--") \
 X(ASSOCIATION_T, "ASSOCIATION --") \
 X(COMPOSITION_T, "COMPOSITION o--") \
@@ -44,13 +48,14 @@ X(COLOR_T, "COLOR") \
 X(ALT_T, "@ALT") \
 X(ELSE_T, "@ELSE") \
 X(PACKAGE_T, "@PACKAGE") \
+X(STARTNOTE_T, "@STARTNOTE") \
+X(ENDNOTE_T, "@ENDNOTE") \
 X(BOX_T, "@BOX") \
 X(UNEXPECTED_T, "SOME ERROR") \
-X(HORIZONTAL_SEP_T, "HORIZONTAL_SEP ..") \
 X(RELATION_T, "RELATION \"...\"") \
-X(DIR_T, "DIR >") \
 X(STATIC_T, "@STATIC") \
 X(WORD_T, "WORD") \
+X(WORD_M_T, "WORD with brackets name()") \
 X(QUOTE_T, "QUOTE \"\"\"") \
 
 #define X(term, name) term,
@@ -99,6 +104,8 @@ typedef struct Text {
 
 std::vector<std::pair<std::string, terminals>> const _map_ {
     { "^@enduml_seq$",     ENDUML_SEQ_T },     { "^@startuml_seq$",   STARTUML_SEQ_T },
+    { "^@endmth$",     ENDMTH_T },     { "^@startmth$",      STARTMTH_T },
+    { "^@endaction$",     ENDACTION_T },     { "^@startaction$",      STARTACTION_T },
     { "^\\+$",             PUBLIC_T },         { "^\\#$",             PROTECTED_T },
     { "^\\-$",             PRIVATE_T },        { "^\\~$",             PACKAGE_MOD_T },
     { "^@class$",          CLASS_T },          { "^@startuml_class$", STARTUML_CLASS_T },
@@ -108,19 +115,25 @@ std::vector<std::pair<std::string, terminals>> const _map_ {
     { "^@method",           METHOD_T },         { "^@interface$",      INTERFACE_T },
     { "^@package$",         PACKAGE_T },
     { "^@abstract$",        ABSTRACT_T },       { "^@enum$",           ENUM_T },
-    { "^\\.\\.$",          HORIZONTAL_SEP_T }, { "^@actor$",          ACTOR_T },
+    { "^@actor$",          ACTOR_T },
     { "^@participant$",    PARTICIPANT_T },    { "^\\-\\>$",              REQUEST_T },
     { "^\\<\\-\\-$",        RESPONSE_T },       { "^@alt$",             ALT_T },
     { "^@else$",            ELSE_T },           { "^@activate$",        ACTIVATE_T },
+    { "^@startnote$",       STARTNOTE_T },      { "^@endnote$",         ENDNOTE_T },
     { "^@diactivate$",      DIACTIVATE_T },
     { "^@object$",         OBJECT_T } ,        { "^@box$",             BOX_T },
-    { "^>$",               DIR_T },            { "^\\:$",               COLON_T },
+    { "^\\:$",               COLON_T },
     { "^@static$",    STATIC_T },         { "^\\{$",             CURV_LEFT_T },
     { "^\\}$",             CURV_RIGHT_T },     { "^#[0-9a-fA-f]{6}$", COLOR_T },
     { "^\\\"\\\"\\\"$", QUOTE_T } , { "^\".+\"$",          RELATION_T },
+    { "\\w+\\(((\\w,)|\\w)*\\)$",               WORD_M_T },
     { "\\w",               WORD_T },
 };
 
+
+void note(text_t &Text);
+
+void msg_act(text_t &Text);
 void msg(text_t &Text);
 void dir(text_t &Text);
 void abstract(text_t &Text);
@@ -186,26 +199,34 @@ void stat_class(text_t &Text) {
         stat_class(Text);
     }
     else if (Text.cur_token == OBJECT_T) {
+        // creating of the object
         get_token(Text);
         CHECK_TOKEN(Text.cur_token, WORD_T, Text,
                     "err stat_diagram name\n");
 
         stat_class(Text);
     }
-    else if (Text.cur_token == QUOTE_T) {
+    else if (Text.cur_token == STARTNOTE_T) {
+        // note
         get_token(Text);
-        CHECK_TOKEN(Text.cur_token, WORD_T, Text,
-                    "err stat_diagram name\n");
-
-        msg(Text);
-        printf("%s\n", Text.cur_word.c_str());
+        note(Text);
         stat_class(Text);
     }
     else if (Text.cur_token == ENDUML_CLASS_T) {
+        // end of class file
+        return;
+    }
+}
+
+void note(text_t &Text) {
+    // if we find the end of note, end cycle
+    if (Text.cur_token == ENDNOTE_T) {
         get_token(Text);
         return;
     }
 
+    get_token(Text);
+    note(Text);
 }
 
 void abstract(text_t &Text) {
@@ -240,57 +261,53 @@ void arrow(text_t &Text) {
 }
 
 void action(text_t &Text) {
-    if (Text.cur_token == QUOTE_T) {
+    if (Text.cur_token == STARTACTION_T) {
         get_token(Text);
-        msg(Text);
+        msg_act(Text);
     }
 }
 
 void attrs(text_t &Text) {
+    printf("%s\n", Text.cur_word.c_str());
     if (Text.cur_token == CURV_RIGHT_T) {
         get_token(Text);
-        stat_class(Text);
     }
     else {
-        if (Text.cur_token == HORIZONTAL_SEP_T) {
+        static_(Text);
+
+        if (Text.cur_token == ATTRIBUTE_T) {
             get_token(Text);
+
+            mod(Text);
+
+            CHECK_TOKEN(Text.cur_token, WORD_T, Text,
+                        "err stat_diagram name\n");
+
+            CHECK_TOKEN(Text.cur_token, WORD_T, Text,
+                        "err stat_diagram name\n");
+
+            attrs(Text);
+        }
+        else if (Text.cur_token == METHOD_T) {
+            get_token(Text);
+
+            mod(Text);
+
+            CHECK_TOKEN(Text.cur_token, WORD_M_T, Text,
+                        "err stat_diagram name\n");
+
+            CHECK_TOKEN(Text.cur_token, WORD_T, Text,
+                        "err stat_diagram name\n");
+
+            CHECK_TOKEN(Text.cur_token, STARTMTH_T, Text,
+                        "err stat_diagram name\n");
+
+            msg(Text);
             attrs(Text);
         }
         else {
-            static_(Text);
-            if (Text.cur_token == ATTRIBUTE_T) {
-                get_token(Text);
-                CHECK_TOKEN(Text.cur_token, COLON_T, Text,
-                            "err attr colon name\n");
-
-                mod(Text);
-
-                CHECK_TOKEN(Text.cur_token, WORD_T, Text,
-                            "err stat_diagram name\n");
-                CHECK_TOKEN(Text.cur_token, WORD_T, Text,
-                            "err stat_diagram name\n");
-
-                attrs(Text);
-            }
-            else if (Text.cur_token == METHOD_T) {
-                get_token(Text);
-
-                CHECK_TOKEN(Text.cur_token, COLON_T, Text,
-                            "err attr colon name\n");
-
-                mod(Text);
-
-                CHECK_TOKEN(Text.cur_token, QUOTE_T, Text,
-                            "err stat_diagram name\n");
-
-                msg(Text);
-                dir(Text);
-                attrs(Text);
-            }
-            else {
-                printf("err attrs method/attr\n");
-                exit(-1);
-            }
+            printf("err attrs method/attr\n");
+            exit(-1);
         }
     }
 }
@@ -310,20 +327,22 @@ void mod(text_t &Text) {
     }
 }
 
-void msg(text_t &Text) {
-    if (Text.cur_token == WORD_T) {
+void msg_act(text_t &Text) {
+    if (Text.cur_token == ENDACTION_T) {
         get_token(Text);
-        msg(Text);
+        return;
     }
-    else if (Text.cur_token == QUOTE_T) {
-        get_token(Text);
-    }
+    get_token(Text);
+    msg_act(Text);
 }
 
-void dir(text_t &Text) {
-    if (Text.cur_token == DIR_T) {
+void msg(text_t &Text) {
+    if (Text.cur_token == ENDMTH_T) {
         get_token(Text);
+        return;
     }
+    get_token(Text);
+    msg(Text);
 }
 
 void static_(text_t &Text) {
