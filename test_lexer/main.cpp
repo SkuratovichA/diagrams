@@ -175,20 +175,22 @@ std::vector<std::pair<std::string, terminals>> const _map_ {
     { "\\w", WORD_T },
 };
 
+/*
+note
+msg_act
+msg
+sep_msg
+u_u
+cond_msg
+questmsg
+wordss
+*/
+void multiple_token(text_t &Text, terminals expected_term);
 
-void note(text_t &Text);
-
-void wordss(text_t &Text);
-void questmsg(text_t &Text);
-void cond_msg(text_t &Text);
-void sep_msg(text_t &Text);
 void type_(text_t &Text);
 void color(text_t &Text);
 void enum_(text_t &Text);
 void startmth(text_t &Text);
-void msg_act(text_t &Text);
-void msg(text_t &Text);
-void u_u(text_t &Text);
 void dir(text_t &Text);
 void abstract(text_t &Text);
 void static_(text_t &Text);
@@ -231,42 +233,27 @@ void program(text_t &Text) {
 void stat_class(text_t &Text) {
     if (Text.cur_token == CLASS_T) {
         get_token(Text);
-
         abstract(Text);
-        CHECK_TOKEN(Text.cur_token, WORD_T, Text,
-                    "err stat_diagram name\n");
-        CHECK_TOKEN(Text.cur_token, CURV_LEFT_T, Text,
-                    "err stat_diagram left brace\n");
-
-
+        CHECK_TOKEN(Text.cur_token, WORD_T, Text, "err class name\n");
+        CHECK_TOKEN(Text.cur_token, CURV_LEFT_T, Text, "err class left brace\n");
         attrs(Text);
         stat_class(Text);
     }
     else if (Text.cur_token == PACKAGE_T) {
         get_token(Text);
-
-        CHECK_TOKEN(Text.cur_token, WORD_T, Text,
-                    "err stat_diagram name\n");
-
+        CHECK_TOKEN(Text.cur_token, WORD_T, Text, "err package name\n");
+        color(Text);
         stat_class(Text);
     }
     else if (Text.cur_token == PACKAGEEND_T) {
         get_token(Text);
-
-        CHECK_TOKEN(Text.cur_token, WORD_T, Text,
-                    "err stat_diagram name\n");
-
-        color(Text);
+        CHECK_TOKEN(Text.cur_token, WORD_T, Text, "err packageend name\n");
         stat_class(Text);
     }
     else if (Text.cur_token == INTERFACE_T) {
         get_token(Text);
-
-        CHECK_TOKEN(Text.cur_token, WORD_T, Text,
-                    "err stat_diagram name\n");
-        CHECK_TOKEN(Text.cur_token, CURV_LEFT_T, Text,
-                    "err stat_diagram left brace\n");
-
+        CHECK_TOKEN(Text.cur_token, WORD_T, Text, "err interface name\n");
+        CHECK_TOKEN(Text.cur_token, CURV_LEFT_T, Text, "err interface left brace\n");
         attrs(Text);
         stat_class(Text);
     }
@@ -275,41 +262,29 @@ void stat_class(text_t &Text) {
         relation(Text);
         arrow(Text);
         relation(Text);
-
-        CHECK_TOKEN(Text.cur_token, WORD_T, Text,
-                    "err stat_diagram name\n");
-
+        CHECK_TOKEN(Text.cur_token, WORD_T, Text, "err relation 2nd name\n");
         action(Text);
         stat_class(Text);
     }
     else if (Text.cur_token == OBJECT_T) {
-        // creating of the object
         get_token(Text);
-        CHECK_TOKEN(Text.cur_token, WORD_T, Text,
-                    "err stat_diagram name\n");
-
+        CHECK_TOKEN(Text.cur_token, WORD_T, Text, "err object name\n");
         stat_class(Text);
     }
     else if (Text.cur_token == STARTNOTE_T) {
-        // note
         get_token(Text);
-        note(Text);
+        multiple_token(Text, ENDNOTE_T);
         stat_class(Text);
     }
     else if (Text.cur_token == ENUM_T) {
-        // note
         get_token(Text);
-
-        CHECK_TOKEN(Text.cur_token, WORD_T, Text,
-                    "err stat_diagram name\n");
-        CHECK_TOKEN(Text.cur_token, CURV_LEFT_T, Text,
-                    "err stat_diagram left brace\n");
-
+        CHECK_TOKEN(Text.cur_token, WORD_T, Text, "err enum name\n");
+        CHECK_TOKEN(Text.cur_token, CURV_LEFT_T, Text, "err enum left brace\n");
         enum_(Text);
         stat_class(Text);
     }
     else if (Text.cur_token == ENDUML_CLASS_T) {
-        // end of class file
+        // end of class diagram
         return;
     }
 }
@@ -317,24 +292,17 @@ void stat_class(text_t &Text) {
 void stat_seq(text_t &Text) {
     if (Text.cur_token == ACTOR_T) {
         get_token(Text);
-
-        CHECK_TOKEN(Text.cur_token, WORD_T, Text,
-                    "err stat_diagram name\n");
-
+        CHECK_TOKEN(Text.cur_token, WORD_T, Text, "err actor name\n");
         stat_seq(Text);
     }
     else if (Text.cur_token == PARTICIPANT_T) {
         get_token(Text);
-
-        CHECK_TOKEN(Text.cur_token, WORD_T, Text,
-                    "err stat_diagram name\n");
-
+        CHECK_TOKEN(Text.cur_token, WORD_T, Text, "err paticipant name\n");
         stat_seq(Text);
     }
     else if (Text.cur_token == STARTNOTE_T) {
-        // note
         get_token(Text);
-        note(Text);
+        multiple_token(Text, ENDNOTE_T);
         stat_seq(Text);
     }
     else if (Text.cur_token == CONTINUE_LINE_T) {
@@ -343,58 +311,42 @@ void stat_seq(text_t &Text) {
     }
     else if (Text.cur_token == START_SEP_T) {
         get_token(Text);
-        sep_msg(Text);
+        multiple_token(Text, END_SEP_T);
         stat_seq(Text);
     }
     else if (Text.cur_token == ACTIVATE_T) {
         get_token(Text);
-
-        CHECK_TOKEN(Text.cur_token, WORD_T, Text,
-                    "err stat_diagram name\n");
-
+        CHECK_TOKEN(Text.cur_token, WORD_T, Text, "err activate name\n");
         stat_seq(Text);
     }
     else if (Text.cur_token == DEACTIVATE_T) {
         get_token(Text);
-
-        CHECK_TOKEN(Text.cur_token, WORD_T, Text,
-                    "err stat_diagram name\n");
-
+        CHECK_TOKEN(Text.cur_token, WORD_T, Text, "err deactivate name\n");
         stat_seq(Text);
     }
     else if (Text.cur_token == WORD_T) {
         get_token(Text);
         type_(Text);
-
-        CHECK_TOKEN(Text.cur_token, WORD_T, Text,
-                    "err stat_diagram name\n");
-        CHECK_TOKEN(Text.cur_token, STARTACTMSG_T, Text,
-                    "err stat_seq actmsg\n");
-
-        u_u(Text);
+        CHECK_TOKEN(Text.cur_token, WORD_T, Text, "err act 2nd name\n");
+        CHECK_TOKEN(Text.cur_token, STARTACTMSG_T, Text, "err actmsg\n");
+        multiple_token(Text, ENDACTMSG_T);
         stat_seq(Text);
     }
     else if (Text.cur_token == SEQ_SEP_T) {
         get_token(Text);
-        wordss(Text);
+        multiple_token(Text, SEQ_SEP_T);
         stat_seq(Text);
     }
     else if (Text.cur_token == ALT_START_T) {
         get_token(Text);
-
-        CHECK_TOKEN(Text.cur_token, COND_START_T, Text,
-                    "err cond_start name\n");
-
-        cond_msg(Text);
+        CHECK_TOKEN(Text.cur_token, COND_START_T, Text, "err alt cond_start name\n");
+        multiple_token(Text, COND_END_T);
         stat_seq(Text);
     }
     else if (Text.cur_token == ELSE_T) {
         get_token(Text);
-
-        CHECK_TOKEN(Text.cur_token, COND_START_T, Text,
-                    "err cond_start name\n");
-
-        cond_msg(Text);
+        CHECK_TOKEN(Text.cur_token, COND_START_T, Text, "err else cond_start name\n");
+        multiple_token(Text, COND_END_T);
         stat_seq(Text);
     }
     else if (Text.cur_token == ALT_END_T) {
@@ -403,11 +355,8 @@ void stat_seq(text_t &Text) {
     }
     else if (Text.cur_token == BOX_START_T) {
         get_token(Text);
-
-        CHECK_TOKEN(Text.cur_token, NAME_START_T, Text,
-                    "err cond_start name\n");
-
-        questmsg(Text);
+        CHECK_TOKEN(Text.cur_token, NAME_START_T, Text, "err box name\n");
+        multiple_token(Text, NAME_END_T);
         color(Text);
         stat_seq(Text);
     }
@@ -416,59 +365,19 @@ void stat_seq(text_t &Text) {
         stat_seq(Text);
     }
     else if (Text.cur_token == ENDUML_SEQ_T) {
-        // end of class file
+        // end of sequence diagram
         return;
     }
 }
 
-void wordss(text_t &Text) {
-    if (Text.cur_token == SEQ_SEP_T) {
+void multiple_token(text_t &Text, terminals expected_term) {
+    if (Text.cur_token == expected_term) {
         get_token(Text);
         return;
     }
 
     get_token(Text);
-    wordss(Text);
-}
-
-void questmsg(text_t &Text) {
-    if (Text.cur_token == NAME_END_T) {
-        get_token(Text);
-        return;
-    }
-
-    get_token(Text);
-    questmsg(Text);
-}
-
-void cond_msg(text_t &Text) {
-    if (Text.cur_token == COND_END_T) {
-        get_token(Text);
-        return;
-    }
-
-    get_token(Text);
-    cond_msg(Text);
-}
-
-void sep_msg(text_t &Text) {
-    if (Text.cur_token == END_SEP_T) {
-        get_token(Text);
-        return;
-    }
-
-    get_token(Text);
-    sep_msg(Text);
-}
-
-void u_u(text_t &Text) {
-    if (Text.cur_token == ENDACTMSG_T) {
-        get_token(Text);
-        return;
-    }
-
-    get_token(Text);
-    u_u(Text);
+    multiple_token(Text, expected_term);
 }
 
 void type_(text_t &Text) {
@@ -490,21 +399,8 @@ void enum_(text_t &Text) {
         return;
     }
 
-    CHECK_TOKEN(Text.cur_token, WORD_T, Text,
-                "err stat_diagram name\n");
-
+    CHECK_TOKEN(Text.cur_token, WORD_T, Text, "err enum arg name\n");
     enum_(Text);
-}
-
-void note(text_t &Text) {
-    // if we find the end of note, end cycle
-    if (Text.cur_token == ENDNOTE_T) {
-        get_token(Text);
-        return;
-    }
-
-    get_token(Text);
-    note(Text);
 }
 
 void abstract(text_t &Text) {
@@ -541,7 +437,7 @@ void arrow(text_t &Text) {
 void action(text_t &Text) {
     if (Text.cur_token == STARTACTION_T) {
         get_token(Text);
-        msg_act(Text);
+        multiple_token(Text, ENDACTION_T);
     }
 }
 
@@ -552,51 +448,39 @@ void color(text_t &Text) {
 }
 
 void attrs(text_t &Text) {
-    printf("%s\n", Text.cur_word.c_str());
+
     if (Text.cur_token == CURV_RIGHT_T) {
         get_token(Text);
+        return;
+    }
+
+    static_(Text);
+
+    if (Text.cur_token == ATTRIBUTE_T) {
+        get_token(Text);
+        mod(Text);
+        CHECK_TOKEN(Text.cur_token, WORD_T, Text, "err attr type\n");
+        CHECK_TOKEN(Text.cur_token, WORD_T, Text, "err attr name\n");
+        attrs(Text);
+    }
+    else if (Text.cur_token == METHOD_T) {
+        get_token(Text);
+        mod(Text);
+        CHECK_TOKEN(Text.cur_token, WORD_M_T, Text, "err method name\n");
+        CHECK_TOKEN(Text.cur_token, WORD_T, Text, "err method type\n");
+        startmth(Text);
+        attrs(Text);
     }
     else {
-        static_(Text);
-
-        if (Text.cur_token == ATTRIBUTE_T) {
-            get_token(Text);
-
-            mod(Text);
-
-            CHECK_TOKEN(Text.cur_token, WORD_T, Text,
-                        "err stat_diagram name\n");
-
-            CHECK_TOKEN(Text.cur_token, WORD_T, Text,
-                        "err stat_diagram name\n");
-
-            attrs(Text);
-        }
-        else if (Text.cur_token == METHOD_T) {
-            get_token(Text);
-
-            mod(Text);
-
-            CHECK_TOKEN(Text.cur_token, WORD_M_T, Text,
-                        "err stat_diagram name\n");
-
-            CHECK_TOKEN(Text.cur_token, WORD_T, Text,
-                        "err stat_diagram name\n");
-
-            startmth(Text);
-            attrs(Text);
-        }
-        else {
-            printf("err attrs method/attr\n");
-            exit(-1);
-        }
+        printf("err attrs method/attr\n");
+        exit(-1);
     }
 }
 
 void startmth(text_t &Text) {
     if (Text.cur_token == STARTMTH_T) {
         get_token(Text);
-        msg(Text);
+        multiple_token(Text, ENDMTH_T);
     }
 }
 
@@ -613,24 +497,6 @@ void mod(text_t &Text) {
     else if (Text.cur_token == PUBLIC_T) {
         get_token(Text);
     }
-}
-
-void msg_act(text_t &Text) {
-    if (Text.cur_token == ENDACTION_T) {
-        get_token(Text);
-        return;
-    }
-    get_token(Text);
-    msg_act(Text);
-}
-
-void msg(text_t &Text) {
-    if (Text.cur_token == ENDMTH_T) {
-        get_token(Text);
-        return;
-    }
-    get_token(Text);
-    msg(Text);
 }
 
 void static_(text_t &Text) {
