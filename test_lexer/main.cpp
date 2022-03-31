@@ -23,6 +23,8 @@ X(STARTUML_SEQ_T, "STARTUML_SEQ") \
 X(ENDUML_SEQ_T, "ENDUML_SEQ") \
 X(STARTMTH_T, "STARTMTH") \
 X(ENDMTH_T, "ENDMTH") \
+X(STARTACTMSG_T, "STARTACTMSG") \
+X(ENDACTMSG_T, "ENDACTMSG_T") \
 X(STARTACTION_T, "STARTACTION") \
 X(ENDACTION_T, "ENDACTION") \
 X(GENERALIZATION_T, "GENERALIZATION <|--") \
@@ -110,6 +112,8 @@ std::vector<std::pair<std::string, terminals>> const _map_ {
     { "^@startmth$", STARTMTH_T },
     { "^@endaction$", ENDACTION_T },
     { "^@startaction$", STARTACTION_T },
+    { "^@startactmsg$", STARTACTMSG_T },
+    { "^@endactmsg$", ENDACTMSG_T },
     { "^\\+$", PUBLIC_T },
     { "^\\#$", PROTECTED_T },
     { "^\\-$", PRIVATE_T },
@@ -130,8 +134,8 @@ std::vector<std::pair<std::string, terminals>> const _map_ {
     { "^@enum$", ENUM_T },
     { "^@actor$", ACTOR_T },
     { "^@participant$", PARTICIPANT_T },
-    { "^\\-\\>$", REQUEST_T },
-    { "^\\<\\-\\-$", RESPONSE_T },
+    { "^(\\-\\>|\\<\\-)$", REQUEST_T },
+    { "^(\\<\\-\\-|\\-\\-\\>)$", RESPONSE_T },
     { "^@alt$", ALT_T },
     { "^@else$", ELSE_T },
     { "^@activate$", ACTIVATE_T },
@@ -154,15 +158,19 @@ std::vector<std::pair<std::string, terminals>> const _map_ {
 
 void note(text_t &Text);
 
+void type_(text_t &Text);
+void color(text_t &Text);
 void enum_(text_t &Text);
 void startmth(text_t &Text);
 void msg_act(text_t &Text);
 void msg(text_t &Text);
+void u_u(text_t &Text);
 void dir(text_t &Text);
 void abstract(text_t &Text);
 void static_(text_t &Text);
 void mod(text_t &Text);
 void attrs(text_t &Text);
+void stat_seq(text_t &Text);
 void action(text_t &Text);
 void arrow(text_t &Text);
 void relation(text_t &Text);
@@ -188,7 +196,7 @@ void program(text_t &Text) {
     }
     else if (Text.cur_token == STARTUML_SEQ_T) {
         get_token(Text);
-        //stat_seq(Text);
+        stat_seq(Text);
     }
     else {
         printf("err with startuml\n");
@@ -224,6 +232,7 @@ void stat_class(text_t &Text) {
         CHECK_TOKEN(Text.cur_token, WORD_T, Text,
                     "err stat_diagram name\n");
 
+        color(Text);
         stat_class(Text);
     }
     else if (Text.cur_token == INTERFACE_T) {
@@ -278,6 +287,64 @@ void stat_class(text_t &Text) {
     else if (Text.cur_token == ENDUML_CLASS_T) {
         // end of class file
         return;
+    }
+}
+
+void stat_seq(text_t &Text) {
+    if (Text.cur_token == ACTOR_T) {
+        get_token(Text);
+
+        CHECK_TOKEN(Text.cur_token, WORD_T, Text,
+                    "err stat_diagram name\n");
+
+        stat_seq(Text);
+    }
+    else if (Text.cur_token == PARTICIPANT_T) {
+        get_token(Text);
+
+        CHECK_TOKEN(Text.cur_token, WORD_T, Text,
+                    "err stat_diagram name\n");
+
+        stat_seq(Text);
+    }
+    else if (Text.cur_token == WORD_T) {
+        get_token(Text);
+        type_(Text);
+
+        CHECK_TOKEN(Text.cur_token, WORD_T, Text,
+                    "err stat_diagram name\n");
+        CHECK_TOKEN(Text.cur_token, STARTACTMSG_T, Text,
+                    "err stat_seq actmsg\n");
+
+        u_u(Text);
+        stat_seq(Text);
+    }
+    else if (Text.cur_token == ENDUML_SEQ_T) {
+        // end of class file
+        return;
+    }
+}
+
+void u_u(text_t &Text) {
+    if (Text.cur_token == ENDACTMSG_T) {
+        get_token(Text);
+        return;
+    }
+
+    get_token(Text);
+    u_u(Text);
+}
+
+void type_(text_t &Text) {
+    if (Text.cur_token == RESPONSE_T) {
+        get_token(Text);
+    }
+    else if (Text.cur_token == REQUEST_T) {
+        get_token(Text);
+    }
+    else {
+        printf("err type msg seq stat\n");
+        exit(-1);
     }
 }
 
@@ -339,6 +406,12 @@ void action(text_t &Text) {
     if (Text.cur_token == STARTACTION_T) {
         get_token(Text);
         msg_act(Text);
+    }
+}
+
+void color(text_t &Text) {
+    if (Text.cur_token == COLOR_T) {
+        get_token(Text);
     }
 }
 

@@ -34,7 +34,7 @@
 }
 Spec -- (quant)
 @packageend util
-@package model
+@package model #AFAFAF
 @interface Syncable
 {
 @attribute - void _lstn[]
