@@ -1,0 +1,15 @@
+@startuml_class
+@package java.io
+@interface Serializable {
+}
+@packageend java.io
+@package org.dedda.games.scheisse.service.transport
+@class org.dedda.games.scheisse.service.transport.LoginContainer
+{
+@attribute + String name
+@attribute + String password
+@method + Login(String,String) void
+}
+@packageend org.dedda.games.scheisse.service.transport
+Serializable <|-- LoginContainer
+@enduml_class

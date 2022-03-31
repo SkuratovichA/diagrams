@@ -1,0 +1,14 @@
+@startuml_class
+@class Server
+{
+@attribute - int __private
+@attribute - self this
+@method + Server(cb,scope) void
+@method + sandboxApi(call,args,cb) void
+@method + onBind(scope) void
+@method + onBlockchainReady() void
+@method + cleanup(cb) void
+@method + isLoaded() void
+@method + areModulesReady() void
+}
+@enduml_class

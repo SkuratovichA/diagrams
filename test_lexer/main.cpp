@@ -154,6 +154,7 @@ std::vector<std::pair<std::string, terminals>> const _map_ {
 
 void note(text_t &Text);
 
+void enum_(text_t &Text);
 void startmth(text_t &Text);
 void msg_act(text_t &Text);
 void msg(text_t &Text);
@@ -204,6 +205,7 @@ void stat_class(text_t &Text) {
                     "err stat_diagram name\n");
         CHECK_TOKEN(Text.cur_token, CURV_LEFT_T, Text,
                     "err stat_diagram left brace\n");
+
 
         attrs(Text);
         stat_class(Text);
@@ -261,10 +263,34 @@ void stat_class(text_t &Text) {
         note(Text);
         stat_class(Text);
     }
+    else if (Text.cur_token == ENUM_T) {
+        // note
+        get_token(Text);
+
+        CHECK_TOKEN(Text.cur_token, WORD_T, Text,
+                    "err stat_diagram name\n");
+        CHECK_TOKEN(Text.cur_token, CURV_LEFT_T, Text,
+                    "err stat_diagram left brace\n");
+
+        enum_(Text);
+        stat_class(Text);
+    }
     else if (Text.cur_token == ENDUML_CLASS_T) {
         // end of class file
         return;
     }
+}
+
+void enum_(text_t &Text) {
+    if (Text.cur_token == CURV_RIGHT_T) {
+        get_token(Text);
+        return;
+    }
+
+    CHECK_TOKEN(Text.cur_token, WORD_T, Text,
+                "err stat_diagram name\n");
+
+    enum_(Text);
 }
 
 void note(text_t &Text) {
