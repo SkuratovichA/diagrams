@@ -10,21 +10,21 @@
 @activate FC
 @activate RFC
 @activate DS
-DC <- RFC @startactmsg start @endactmsg
+DC <- RFC @actmsgstart start @actmsgend
 @activate DC
-DS <- DC @startactmsg connect @endactmsg
-DC -> RFC @startactmsg request registration @endactmsg
-FC <- RFC @startactmsg {RegistrationRequest} @endactmsg
-FC -> DS @startactmsg call for synchronisation @endactmsg
+DS <- DC @actmsgstart connect @actmsgend
+DC -> RFC @actmsgstart request registration @actmsgend
+FC <- RFC @actmsgstart {RegistrationRequest} @actmsgend
+FC -> DS @actmsgstart call for synchronisation @actmsgend
 @activate DS
-DS -> DC @startactmsg {Sychronisation} @endactmsg
-FC --> RFC @startactmsg {RegistrationRequestAcknowledgement} @endactmsg
-DC <- RFC @startactmsg registration requested @endactmsg
+DS -> DC @actmsgstart {Sychronisation} @actmsgend
+FC --> RFC @actmsgstart {RegistrationRequestAcknowledgement} @actmsgend
+DC <- RFC @actmsgstart registration requested @actmsgend
 ...
-DC --> RFC @startactmsg confirm synchronisation @endactmsg
-FC <- RFC @startactmsg {RegistrationSuccess} @endactmsg
-DS -> DC @startactmsg {Sychronisation} @endactmsg
-FC -> DS @startactmsg stop synchronisation @endactmsg
+DC --> RFC @actmsgstart confirm synchronisation @actmsgend
+FC <- RFC @actmsgstart {RegistrationSuccess} @actmsgend
+DS -> DC @actmsgstart {Sychronisation} @actmsgend
+FC -> DS @actmsgstart stop synchronisation @actmsgend
 @deactivate DS
-FC --> RFC @startactmsg {RegistrationSuccessAcknowledgement} @endactmsg
+FC --> RFC @actmsgstart {RegistrationSuccessAcknowledgement} @actmsgend
 @enduml_seq

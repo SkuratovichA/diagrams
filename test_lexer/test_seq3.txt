@@ -4,24 +4,24 @@
 @participant item
 @activate app
 @activate cm
-@startnote User enters media info page @endnote
-@startnote Check if item exists @endnote
-app -> cm @startactmsg findItem(itemId) @endactmsg
-cm -> cm @startactmsg lookup(itemId) @endactmsg
+@notestart User enters media info page @noteend
+@notestart Check if item exists @noteend
+app -> cm @actmsgstart findItem(itemId) @actmsgend
+cm -> cm @actmsgstart lookup(itemId) @actmsgend
 @altstart @condstart item found @condend
-cm --> app @startactmsg item @endactmsg
+cm --> app @actmsgstart item @actmsgend
 @else @condstart not found @condend
-cm --> app @startactmsg null @endactmsg
-app -> cm @startactmsg createItem(itemId, contentURL) @endactmsg
-cm -> item @startactmsg new(itemId, contentURL) @endactmsg
+cm --> app @actmsgstart null @actmsgend
+app -> cm @actmsgstart createItem(itemId, contentURL) @actmsgend
+cm -> item @actmsgstart new(itemId, contentURL) @actmsgend
 @activate item
-cm --> app @startactmsg item @endactmsg
-app -> cm @startactmsg loadMetadata() @endactmsg
-@startnote Download and parse manifest, save in db @endnote
-cm --> app @startactmsg onTracksAvailable @endactmsg
-cm --> app @startactmsg onDownloadMetadata @endactmsg
-@startnote See //track-selection// flow @endnote
+cm --> app @actmsgstart item @actmsgend
+app -> cm @actmsgstart loadMetadata() @actmsgend
+@notestart Download and parse manifest, save in db @noteend
+cm --> app @actmsgstart onTracksAvailable @actmsgend
+cm --> app @actmsgstart onDownloadMetadata @actmsgend
+@notestart See //track-selection// flow @noteend
 @altend
-@startnote app is ready to start downloading @endnote
-app -> item @startactmsg startDownload() @endactmsg
+@notestart app is ready to start downloading @noteend
+app -> item @actmsgstart startDownload() @actmsgend
 @enduml_seq

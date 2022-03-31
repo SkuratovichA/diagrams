@@ -1,20 +1,20 @@
 @startuml_class
-@startnote
+@notestart
 ActiveRecord
 ("save yourself")
-@endnote
+@noteend
 @class DAO
 {
-@static @method find(id) Entity @startmth @endmth
-@static @method findBy(criteria_for_select) List @startmth @endmth
-@method update(Entity) void @startmth @endmth
-@method save(Entity) void @startmth @endmth
-@method delete(Entity) void @startmth @endmth
+@static @method find(id) Entity
+@static @method findBy(criteria_for_select) List
+@method update(Entity) void
+@method save(Entity) void
+@method delete(Entity) void
 @static @attribute str Finder
 }
 Ballot <|-- DAO
-@startnote
+@notestart
 Ballot ballot = new Ballot( ... );
 ballot.save();
-@endnote
+@noteend
 @enduml_class

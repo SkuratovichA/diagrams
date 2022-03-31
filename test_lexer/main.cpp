@@ -17,16 +17,16 @@ X(INTERFACE_T, "@INTERFACE") \
 X(OBJECT_T, "@OBJECT") \
 X(ENUM_T, "@ENUM") \
 X(ABSTRACT_T, "@ABSTRACT") \
-X(STARTUML_CLASS_T, "STARTUML_CLASS") \
-X(ENDUML_CLASS_T, "ENDUML_CLASS") \
-X(STARTUML_SEQ_T, "STARTUML_SEQ") \
-X(ENDUML_SEQ_T, "ENDUML_SEQ") \
-X(STARTMTH_T, "STARTMTH") \
-X(ENDMTH_T, "ENDMTH") \
-X(STARTACTMSG_T, "STARTACTMSG") \
-X(ENDACTMSG_T, "ENDACTMSG_T") \
-X(STARTACTION_T, "STARTACTION") \
-X(ENDACTION_T, "ENDACTION") \
+X(STARTUML_CLASS_T, "@STARTUML_CLASS") \
+X(ENDUML_CLASS_T, "@ENDUML_CLASS") \
+X(STARTUML_SEQ_T, "@STARTUML_SEQ") \
+X(ENDUML_SEQ_T, "@ENDUML_SEQ") \
+X(MTHSTART_T, "@MTHSTART") \
+X(MTHEND_T, "@MTHEND_T") \
+X(ACTMSGSTART_T, "@ACTMSGSTART") \
+X(ACTMSGEND_T, "@ACTMSGEND_T") \
+X(ACTIONSTART_T, "@ACTIONSTART") \
+X(ACTIONEND_T, "@ACTIONEND") \
 X(GENERALIZATION_T, "GENERALIZATION <|--") \
 X(ASSOCIATION_T, "ASSOCIATION --") \
 X(COMPOSITION_T, "COMPOSITION o--") \
@@ -47,29 +47,28 @@ X(CURV_LEFT_T, "BRACE {") \
 X(CURV_RIGHT_T, "BRACE }") \
 X(COLON_T, "COLON :") \
 X(COLOR_T, "COLOR") \
-X(ALT_END_T, "@ALTEND") \
-X(ALT_START_T, "@ALTSTART") \
+X(ALTEND_T, "@ALTEND") \
+X(ALTSTART_T, "@ALTSTART") \
 X(ELSE_T, "@ELSE") \
 X(PACKAGE_T, "@PACKAGE") \
 X(PACKAGEEND_T, "@PACKAGEEND") \
 X(STARTNOTE_T, "@STARTNOTE") \
 X(ENDNOTE_T, "@ENDNOTE") \
-X(BOX_START_T, "@BOX_START") \
-X(BOX_END_T, "@BOX_END") \
+X(BOXSTART_T, "@BOXSTART") \
+X(BOXEND_T, "@BOXEND") \
 X(SEQ_SEP_T, "==") \
-X(NAME_START_T, "@NAME_START") \
-X(NAME_END_T, "@NAME_END") \
-X(COND_START_T, "@COND_START") \
-X(COND_END_T, "@COND_END") \
+X(NAMESTART_T, "@NAMESTART") \
+X(NAMEEND_T, "@NAMEEND") \
+X(CONDSTART_T, "@CONDSTART") \
+X(CONDEND_T, "@CONDEND") \
 X(CONTINUE_LINE_T, "... continue") \
 X(UNEXPECTED_T, "SOME ERROR") \
 X(RELATION_T, "RELATION \"...\"") \
 X(STATIC_T, "@STATIC") \
 X(WORD_T, "WORD") \
-X(START_SEP_T, "start sep") \
-X(END_SEP_T, "end sep") \
+X(SEPSTART_T, "@SEPSTART") \
+X(SEPEND_T, "@SEPEND") \
 X(WORD_M_T, "WORD with brackets name()") \
-X(QUOTE_T, "QUOTE \"\"\"") \
 
 #define X(term, name) term,
 enum terminals : size_t
@@ -85,27 +84,6 @@ char const *term_name[] =
 };
 #undef X
 
-/*enum terminals {
-    END_PROGRAM = -1,
-    CLASS_T, INTERFACE_T, OBJECT_T, ENUM_T, ABSTRACT_T,
-    STARTUML_CLASS_T, ENDUML_CLASS_T,
-    GENERALIZATION_T, ASSOCIATION_T, COMPOSITION_T, AGREGATION_T,
-    STARTUML_SEQ_T, ENDUML_SEQ_T,
-    PACKAGE_MOD_T, PUBLIC_T, PROTECTED_T, PRIVATE_T,
-    ACTIVATE_T, DIACTIVATE_T,
-    ATTRIBUTE_T, METHOD_T,
-    REQUEST_T, RESPONSE_T,
-    ACTOR_T, PARTICIPANT_T,
-    CURV_LEFT_T, CURV_RIGHT_T
-    COLON_T, NL_T,
-    COLOR_T,
-    ALT_T, ELSE_T,
-    PACKAGE_T, BOX_T,
-    UNEXPECTED_T,
-    HORIZONTAL_SEP_T, RELATION_T, DIR_T, STATIC_T,
-    WORD_T, QUOTE_T
-};*/
-
 typedef struct Text {
     std::string text;
     std::string token_to_push;
@@ -118,12 +96,12 @@ typedef struct Text {
 std::vector<std::pair<std::string, terminals>> const _map_ {
     { "^@enduml_seq$", ENDUML_SEQ_T },
     { "^@startuml_seq$", STARTUML_SEQ_T },
-    { "^@endmth$", ENDMTH_T },
-    { "^@startmth$", STARTMTH_T },
-    { "^@endaction$", ENDACTION_T },
-    { "^@startaction$", STARTACTION_T },
-    { "^@startactmsg$", STARTACTMSG_T },
-    { "^@endactmsg$", ENDACTMSG_T },
+    { "^@mthend$", MTHEND_T },
+    { "^@mthstart$", MTHSTART_T },
+    { "^@actionend$", ACTIONEND_T },
+    { "^@actionstart$", ACTIONSTART_T },
+    { "^@actmsgstart$", ACTMSGSTART_T },
+    { "^@actmsgend$", ACTMSGEND_T },
     { "^\\+$", PUBLIC_T },
     { "^\\#$", PROTECTED_T },
     { "^\\-$", PRIVATE_T },
@@ -146,30 +124,29 @@ std::vector<std::pair<std::string, terminals>> const _map_ {
     { "^@participant$", PARTICIPANT_T },
     { "^(\\-\\>|\\<\\-)$", REQUEST_T },
     { "^(\\<\\-\\-|\\-\\-\\>)$", RESPONSE_T },
-    { "^@altstart$", ALT_START_T },
-    { "^@altend$", ALT_END_T },
+    { "^@altstart$", ALTSTART_T },
+    { "^@altend$", ALTEND_T },
     { "^@else$", ELSE_T },
     { "^@activate$", ACTIVATE_T },
-    { "^@startnote$", STARTNOTE_T },
-    { "^@endnote$", ENDNOTE_T },
+    { "^@notestart$", STARTNOTE_T },
+    { "^@noteend$", ENDNOTE_T },
     { "^@deactivate$", DEACTIVATE_T },
     { "^@object$", OBJECT_T } ,
-    { "^@boxstart$", BOX_START_T },
-    { "^@boxend$", BOX_END_T },
-    { "^@condstart$", COND_START_T },
-    { "^@condend$", COND_END_T },
-    { "^@namestart$", NAME_START_T },
-    { "^@nameend$", NAME_END_T },
+    { "^@boxstart$", BOXSTART_T },
+    { "^@boxend$", BOXEND_T },
+    { "^@condstart$", CONDSTART_T },
+    { "^@condend$", CONDEND_T },
+    { "^@namestart$", NAMESTART_T },
+    { "^@nameend$", NAMEEND_T },
     { "^\\=\\=$", SEQ_SEP_T },
     { "^\\:$", COLON_T },
     { "^@static$", STATIC_T },
     { "^\\{$", CURV_LEFT_T },
     { "^\\}$", CURV_RIGHT_T },
     { "^\\.\\.\\.$", CONTINUE_LINE_T },
-    { "^@startsep$", START_SEP_T },
-    { "^@endsep$", END_SEP_T },
+    { "^@sepstart$", SEPSTART_T },
+    { "^@sepend$", SEPEND_T },
     { "^#[0-9a-fA-f]{6}$", COLOR_T },
-    { "^\\\"\\\"\\\"$", QUOTE_T } ,
     { "^\".+\"$", RELATION_T },
     { "\\w+\\(((\\w,)|\\w)*\\)$", WORD_M_T },
     { "\\w", WORD_T },
@@ -190,7 +167,7 @@ void multiple_token(text_t &Text, terminals expected_term);
 void type_(text_t &Text);
 void color(text_t &Text);
 void enum_(text_t &Text);
-void startmth(text_t &Text);
+void MTHSTART(text_t &Text);
 void dir(text_t &Text);
 void abstract(text_t &Text);
 void static_(text_t &Text);
@@ -309,9 +286,9 @@ void stat_seq(text_t &Text) {
         get_token(Text);
         stat_seq(Text);
     }
-    else if (Text.cur_token == START_SEP_T) {
+    else if (Text.cur_token == SEPSTART_T) {
         get_token(Text);
-        multiple_token(Text, END_SEP_T);
+        multiple_token(Text, SEPEND_T);
         stat_seq(Text);
     }
     else if (Text.cur_token == ACTIVATE_T) {
@@ -328,8 +305,8 @@ void stat_seq(text_t &Text) {
         get_token(Text);
         type_(Text);
         CHECK_TOKEN(Text.cur_token, WORD_T, Text, "err act 2nd name\n");
-        CHECK_TOKEN(Text.cur_token, STARTACTMSG_T, Text, "err actmsg\n");
-        multiple_token(Text, ENDACTMSG_T);
+        CHECK_TOKEN(Text.cur_token, ACTMSGSTART_T, Text, "err actmsg\n");
+        multiple_token(Text, ACTMSGEND_T);
         stat_seq(Text);
     }
     else if (Text.cur_token == SEQ_SEP_T) {
@@ -337,30 +314,30 @@ void stat_seq(text_t &Text) {
         multiple_token(Text, SEQ_SEP_T);
         stat_seq(Text);
     }
-    else if (Text.cur_token == ALT_START_T) {
+    else if (Text.cur_token == ALTSTART_T) {
         get_token(Text);
-        CHECK_TOKEN(Text.cur_token, COND_START_T, Text, "err alt cond_start name\n");
-        multiple_token(Text, COND_END_T);
+        CHECK_TOKEN(Text.cur_token, CONDSTART_T, Text, "err alt CONDSTART name\n");
+        multiple_token(Text, CONDEND_T);
         stat_seq(Text);
     }
     else if (Text.cur_token == ELSE_T) {
         get_token(Text);
-        CHECK_TOKEN(Text.cur_token, COND_START_T, Text, "err else cond_start name\n");
-        multiple_token(Text, COND_END_T);
+        CHECK_TOKEN(Text.cur_token, CONDSTART_T, Text, "err else CONDSTART name\n");
+        multiple_token(Text, CONDEND_T);
         stat_seq(Text);
     }
-    else if (Text.cur_token == ALT_END_T) {
+    else if (Text.cur_token == ALTEND_T) {
         get_token(Text);
         stat_seq(Text);
     }
-    else if (Text.cur_token == BOX_START_T) {
+    else if (Text.cur_token == BOXSTART_T) {
         get_token(Text);
-        CHECK_TOKEN(Text.cur_token, NAME_START_T, Text, "err box name\n");
-        multiple_token(Text, NAME_END_T);
+        CHECK_TOKEN(Text.cur_token, NAMESTART_T, Text, "err box name\n");
+        multiple_token(Text, NAMEEND_T);
         color(Text);
         stat_seq(Text);
     }
-    else if (Text.cur_token == BOX_END_T) {
+    else if (Text.cur_token == BOXEND_T) {
         get_token(Text);
         stat_seq(Text);
     }
@@ -435,9 +412,9 @@ void arrow(text_t &Text) {
 }
 
 void action(text_t &Text) {
-    if (Text.cur_token == STARTACTION_T) {
+    if (Text.cur_token == ACTIONSTART_T) {
         get_token(Text);
-        multiple_token(Text, ENDACTION_T);
+        multiple_token(Text, ACTIONEND_T);
     }
 }
 
@@ -468,7 +445,7 @@ void attrs(text_t &Text) {
         mod(Text);
         CHECK_TOKEN(Text.cur_token, WORD_M_T, Text, "err method name\n");
         CHECK_TOKEN(Text.cur_token, WORD_T, Text, "err method type\n");
-        startmth(Text);
+        MTHSTART(Text);
         attrs(Text);
     }
     else {
@@ -477,10 +454,10 @@ void attrs(text_t &Text) {
     }
 }
 
-void startmth(text_t &Text) {
-    if (Text.cur_token == STARTMTH_T) {
+void MTHSTART(text_t &Text) {
+    if (Text.cur_token == MTHSTART_T) {
         get_token(Text);
-        multiple_token(Text, ENDMTH_T);
+        multiple_token(Text, MTHEND_T);
     }
 }
 

@@ -9,12 +9,12 @@
 @participant acqBe
 @participant authBe
 @boxend
-terminal -> acqChaton @startactmsg demande @endactmsg
-acqChaton -> interbancaire @startactmsg demande @endactmsg
-interbancaire -> acqBe @startactmsg demande @endactmsg
-acqBe -> authBe @startactmsg demande @endactmsg
-authBe --> acqBe @startactmsg reponse @endactmsg
-acqBe --> interbancaire @startactmsg reponse @endactmsg
-interbancaire --> acqChaton @startactmsg reponse @endactmsg
-acqChaton --> terminal @startactmsg reponse @endactmsg
+terminal -> acqChaton @actmsgstart demande @actmsgend
+acqChaton -> interbancaire @actmsgstart demande @actmsgend
+interbancaire -> acqBe @actmsgstart demande @actmsgend
+acqBe -> authBe @actmsgstart demande @actmsgend
+authBe --> acqBe @actmsgstart reponse @actmsgend
+acqBe --> interbancaire @actmsgstart reponse @actmsgend
+interbancaire --> acqChaton @actmsgstart reponse @actmsgend
+acqChaton --> terminal @actmsgstart reponse @actmsgend
 @enduml_seq

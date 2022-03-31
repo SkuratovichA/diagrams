@@ -1,14 +1,14 @@
 @startuml_class
-@startnote 
+@notestart
 too many dependencies :-/
-@endnote
+@noteend
 @class GodObject {
 }
-GodObject -- A @startaction @endaction
-GodObject -- B @startaction @endaction
-GodObject -- C @startaction @endaction
-GodObject -- D @startaction @endaction
-GodObject -- E @startaction @endaction
-GodObject -- F @startaction @endaction
-GodObject -- G @startaction @endaction
+GodObject -- A @actionstart @actionend
+GodObject -- B @actionstart @actionend
+GodObject -- C @actionstart @actionend
+GodObject -- D @actionstart @actionend
+GodObject -- E @actionstart @actionend
+GodObject -- F @actionstart @actionend
+GodObject -- G @actionstart @actionend
 @enduml_class

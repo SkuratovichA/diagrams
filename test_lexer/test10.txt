@@ -8,8 +8,8 @@
 }
 @class Parent {
 }
-Parent o-- "0..1" ReferedTo @startaction ref @endaction
-Parent *-- "0..1" Child @startaction child @endaction
+Parent o-- "0..1" ReferedTo @actionstart ref @actionend
+Parent *-- "0..1" Child @actionstart child @actionend
 @class InterfaceConcept {
 }
 @packageend TestLanguage

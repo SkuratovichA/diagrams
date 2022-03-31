@@ -1,8 +1,8 @@
 @startuml_seq
 @actor Alice
 @actor Bob
-Alice -> Bob @startactmsg Authentication Request @endactmsg
-Bob --> Alice @startactmsg Authentication Response @endactmsg
-Alice -> Bob @startactmsg Another authentication Request @endactmsg
-Alice <-- Bob @startactmsg another authentication Response @endactmsg
+Alice -> Bob @actmsgstart Authentication Request @actmsgend
+Bob --> Alice @actmsgstart Authentication Response @actmsgend
+Alice -> Bob @actmsgstart Another authentication Request @actmsgend
+Alice <-- Bob @actmsgstart another authentication Response @actmsgend
 @enduml_seq
