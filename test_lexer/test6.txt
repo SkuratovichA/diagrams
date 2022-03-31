@@ -1,0 +1,14 @@
+@startuml_class
+@startnote 
+too many dependencies :-/
+@endnote
+@class GodObject {
+}
+GodObject -- A @startaction @endaction
+GodObject -- B @startaction @endaction
+GodObject -- C @startaction @endaction
+GodObject -- D @startaction @endaction
+GodObject -- E @startaction @endaction
+GodObject -- F @startaction @endaction
+GodObject -- G @startaction @endaction
+@enduml_class

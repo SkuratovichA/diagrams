@@ -48,6 +48,7 @@ X(COLOR_T, "COLOR") \
 X(ALT_T, "@ALT") \
 X(ELSE_T, "@ELSE") \
 X(PACKAGE_T, "@PACKAGE") \
+X(PACKAGEEND_T, "@PACKAGEEND") \
 X(STARTNOTE_T, "@STARTNOTE") \
 X(ENDNOTE_T, "@ENDNOTE") \
 X(BOX_T, "@BOX") \
@@ -103,36 +104,57 @@ typedef struct Text {
 } text_t;
 
 std::vector<std::pair<std::string, terminals>> const _map_ {
-    { "^@enduml_seq$",     ENDUML_SEQ_T },     { "^@startuml_seq$",   STARTUML_SEQ_T },
-    { "^@endmth$",     ENDMTH_T },     { "^@startmth$",      STARTMTH_T },
-    { "^@endaction$",     ENDACTION_T },     { "^@startaction$",      STARTACTION_T },
-    { "^\\+$",             PUBLIC_T },         { "^\\#$",             PROTECTED_T },
-    { "^\\-$",             PRIVATE_T },        { "^\\~$",             PACKAGE_MOD_T },
-    { "^@class$",          CLASS_T },          { "^@startuml_class$", STARTUML_CLASS_T },
-    { "^@enduml_class$",   ENDUML_CLASS_T },   { "^<\\|\\-\\-$",      GENERALIZATION_T },
-    { "^\\-\\-$",          ASSOCIATION_T },    { "^o\\-\\-$",        COMPOSITION_T },
-    { "^\\*\\-\\-$",       AGREGATION_T },     { "^@attribute$",       ATTRIBUTE_T },
-    { "^@method",           METHOD_T },         { "^@interface$",      INTERFACE_T },
-    { "^@package$",         PACKAGE_T },
-    { "^@abstract$",        ABSTRACT_T },       { "^@enum$",           ENUM_T },
-    { "^@actor$",          ACTOR_T },
-    { "^@participant$",    PARTICIPANT_T },    { "^\\-\\>$",              REQUEST_T },
-    { "^\\<\\-\\-$",        RESPONSE_T },       { "^@alt$",             ALT_T },
-    { "^@else$",            ELSE_T },           { "^@activate$",        ACTIVATE_T },
-    { "^@startnote$",       STARTNOTE_T },      { "^@endnote$",         ENDNOTE_T },
-    { "^@diactivate$",      DIACTIVATE_T },
-    { "^@object$",         OBJECT_T } ,        { "^@box$",             BOX_T },
-    { "^\\:$",               COLON_T },
-    { "^@static$",    STATIC_T },         { "^\\{$",             CURV_LEFT_T },
-    { "^\\}$",             CURV_RIGHT_T },     { "^#[0-9a-fA-f]{6}$", COLOR_T },
-    { "^\\\"\\\"\\\"$", QUOTE_T } , { "^\".+\"$",          RELATION_T },
-    { "\\w+\\(((\\w,)|\\w)*\\)$",               WORD_M_T },
-    { "\\w",               WORD_T },
+    { "^@enduml_seq$", ENDUML_SEQ_T },
+    { "^@startuml_seq$", STARTUML_SEQ_T },
+    { "^@endmth$", ENDMTH_T },
+    { "^@startmth$", STARTMTH_T },
+    { "^@endaction$", ENDACTION_T },
+    { "^@startaction$", STARTACTION_T },
+    { "^\\+$", PUBLIC_T },
+    { "^\\#$", PROTECTED_T },
+    { "^\\-$", PRIVATE_T },
+    { "^\\~$", PACKAGE_MOD_T },
+    { "^@class$",          CLASS_T },
+    { "^@startuml_class$", STARTUML_CLASS_T },
+    { "^@enduml_class$",ENDUML_CLASS_T },
+    { "^(\\<\\|\\-\\-|\\-\\-\\|\\>)$", GENERALIZATION_T },
+    { "^(\\-\\-|\\-\\-)$", ASSOCIATION_T },
+    { "^(o\\-\\-|\\-\\-o)$", COMPOSITION_T },
+    { "^(\\*\\-\\-|\\-\\-\\*)$", AGREGATION_T },
+    { "^@attribute$", ATTRIBUTE_T },
+    { "^@method", METHOD_T },
+    { "^@interface$", INTERFACE_T },
+    { "^@package$", PACKAGE_T },
+    { "^@packageend$", PACKAGEEND_T },
+    { "^@abstract$", ABSTRACT_T },
+    { "^@enum$", ENUM_T },
+    { "^@actor$", ACTOR_T },
+    { "^@participant$", PARTICIPANT_T },
+    { "^\\-\\>$", REQUEST_T },
+    { "^\\<\\-\\-$", RESPONSE_T },
+    { "^@alt$", ALT_T },
+    { "^@else$", ELSE_T },
+    { "^@activate$", ACTIVATE_T },
+    { "^@startnote$", STARTNOTE_T },
+    { "^@endnote$", ENDNOTE_T },
+    { "^@diactivate$", DIACTIVATE_T },
+    { "^@object$", OBJECT_T } ,
+    { "^@box$", BOX_T },
+    { "^\\:$", COLON_T },
+    { "^@static$", STATIC_T },
+    { "^\\{$", CURV_LEFT_T },
+    { "^\\}$", CURV_RIGHT_T },
+    { "^#[0-9a-fA-f]{6}$", COLOR_T },
+    { "^\\\"\\\"\\\"$", QUOTE_T } ,
+    { "^\".+\"$", RELATION_T },
+    { "\\w+\\(((\\w,)|\\w)*\\)$", WORD_M_T },
+    { "\\w", WORD_T },
 };
 
 
 void note(text_t &Text);
 
+void startmth(text_t &Text);
 void msg_act(text_t &Text);
 void msg(text_t &Text);
 void dir(text_t &Text);
@@ -178,6 +200,33 @@ void stat_class(text_t &Text) {
         get_token(Text);
 
         abstract(Text);
+        CHECK_TOKEN(Text.cur_token, WORD_T, Text,
+                    "err stat_diagram name\n");
+        CHECK_TOKEN(Text.cur_token, CURV_LEFT_T, Text,
+                    "err stat_diagram left brace\n");
+
+        attrs(Text);
+        stat_class(Text);
+    }
+    else if (Text.cur_token == PACKAGE_T) {
+        get_token(Text);
+
+        CHECK_TOKEN(Text.cur_token, WORD_T, Text,
+                    "err stat_diagram name\n");
+
+        stat_class(Text);
+    }
+    else if (Text.cur_token == PACKAGEEND_T) {
+        get_token(Text);
+
+        CHECK_TOKEN(Text.cur_token, WORD_T, Text,
+                    "err stat_diagram name\n");
+
+        stat_class(Text);
+    }
+    else if (Text.cur_token == INTERFACE_T) {
+        get_token(Text);
+
         CHECK_TOKEN(Text.cur_token, WORD_T, Text,
                     "err stat_diagram name\n");
         CHECK_TOKEN(Text.cur_token, CURV_LEFT_T, Text,
@@ -299,16 +348,20 @@ void attrs(text_t &Text) {
             CHECK_TOKEN(Text.cur_token, WORD_T, Text,
                         "err stat_diagram name\n");
 
-            CHECK_TOKEN(Text.cur_token, STARTMTH_T, Text,
-                        "err stat_diagram name\n");
-
-            msg(Text);
+            startmth(Text);
             attrs(Text);
         }
         else {
             printf("err attrs method/attr\n");
             exit(-1);
         }
+    }
+}
+
+void startmth(text_t &Text) {
+    if (Text.cur_token == STARTMTH_T) {
+        get_token(Text);
+        msg(Text);
     }
 }
 

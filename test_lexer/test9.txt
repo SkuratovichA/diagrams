@@ -1,0 +1,9 @@
+@startuml_class
+@package foo1.foo2
+@packageend foo1.foo2
+@package foo1.foo2.foo3
+@class Object {
+}
+@packageend foo1.foo2.foo3
+foo1.foo2 -- foo1.foo2.foo3
+@enduml_class

@@ -1,0 +1,27 @@
+@startuml_class
+@interface Command
+{
+@method execute() void
+@method undo() void
+}
+@class Invoker
+{
+@method setCommand() void
+}
+@class Client {
+}
+@class Receiver
+{
+@method action() void
+}
+@class ConcreteCommand
+{
+@method execute() void
+@method undo() void
+}
+Command -- ConcreteCommand
+Client -- Receiver
+Client -- ConcreteCommand
+Invoker -- Command
+Receiver -- ConcreteCommand
+@enduml_class
