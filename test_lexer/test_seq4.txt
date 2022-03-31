@@ -1,0 +1,28 @@
+@startuml_seq
+@actor UI
+@boxstart @namestart Kontroler @nameend #123456
+@participant Kontroler
+@participant kontrolerDB
+@boxend
+@boxstart @namestart Monitor @nameend #FAFAFA
+@participant Monitor
+@participant monitorDB
+@boxend
+UI -> Kontroler @startactmsg POST /host @endactmsg
+Kontroler -> Kontroler @startactmsg Walidacja danych @endactmsg
+@altstart @condstart dane poprawne @condend
+Kontroler -> kontrolerDB @startactmsg dodaj do bazy @endactmsg
+Kontroler -> Monitor @startactmsg POST /host @endactmsg
+Monitor -> Monitor @startactmsg Walidacja danych @endactmsg
+@altstart @condstart dane poprane @condend
+Monitor -> monitorDB @startactmsg Dodaj do bazy @endactmsg
+Monitor --> Kontroler @startactmsg status 201 @endactmsg
+Kontroler --> UI @startactmsg status 201 @endactmsg
+@else @condstart dane niepoprawne @condend
+Monitor -> Kontroler @startactmsg status 400 @endactmsg
+Kontroler --> UI @startactmsg status 400 @endactmsg
+@altend
+@else @condstart danie niepoprawne @condend
+Kontroler --> UI @startactmsg status 400 @endactmsg
+@altend
+@enduml_seq

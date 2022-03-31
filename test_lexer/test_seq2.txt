@@ -1,0 +1,22 @@
+@startuml_seq
+@actor user
+@participant browser
+@participant reseller_ui
+user -> browser @startactmsg Visit the Reseller UI login page
+browser -> reseller_ui @startactmsg Retrieve the Reseller UI login page
+browser <- reseller_ui @startactmsg Return the login page with form field \nusername, password, and One Time Password(OTP)
+user <- browser @startactmsg Display the page, wait for user input @endactmsg
+user -> user @startactmsg Recall username and password \nfrom memory @endactmsg
+user -> browser @startactmsg Fill in the username and password field @endactmsg
+user -> user @startactmsg Open Google Authenticator, \nread the OTP @endactmsg
+user -> browser @startactmsg Fill in the OTP, and hit the send button @endactmsg
+browser -> reseller_ui @startactmsg Send the username, password and OTP @endactmsg
+reseller_ui -> reseller_ui @startactmsg Verify the information is valid @endactmsg
+@altstart @condstart Login valid @condend
+browser <- reseller_ui @startactmsg Return the logged in page @endactmsg
+user <- browser @startactmsg Display the logged in page @endactmsg
+@else @condstart Login invalid @condend
+browser <- reseller_ui @startactmsg Return login failure page @endactmsg
+user <- browser @startactmsg Display the login failure page @endactmsg
+@altend
+@enduml_seq

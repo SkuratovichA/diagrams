@@ -1,0 +1,30 @@
+@startuml_seq
+@boxstart @namestart Source Endpoint @nameend
+@participant FC
+@participant DS
+@boxend
+@boxstart @namestart Sink Endpoint @nameend
+@participant DC
+@participant RFC
+@boxend
+@activate FC
+@activate RFC
+@activate DS
+DC <- RFC @startactmsg start @endactmsg
+@activate DC
+DS <- DC @startactmsg connect @endactmsg
+DC -> RFC @startactmsg request registration @endactmsg
+FC <- RFC @startactmsg {RegistrationRequest} @endactmsg
+FC -> DS @startactmsg call for synchronisation @endactmsg
+@activate DS
+DS -> DC @startactmsg {Sychronisation} @endactmsg
+FC --> RFC @startactmsg {RegistrationRequestAcknowledgement} @endactmsg
+DC <- RFC @startactmsg registration requested @endactmsg
+...
+DC --> RFC @startactmsg confirm synchronisation @endactmsg
+FC <- RFC @startactmsg {RegistrationSuccess} @endactmsg
+DS -> DC @startactmsg {Sychronisation} @endactmsg
+FC -> DS @startactmsg stop synchronisation @endactmsg
+@deactivate DS
+FC --> RFC @startactmsg {RegistrationSuccessAcknowledgement} @endactmsg
+@enduml_seq

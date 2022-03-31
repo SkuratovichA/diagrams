@@ -36,7 +36,7 @@ X(PUBLIC_T, "PUBLIC_MOD +") \
 X(PROTECTED_T, "PROTECTED_MOD #") \
 X(PRIVATE_T, "PRIVATE_MOD -") \
 X(ACTIVATE_T, "@ACTIVATE") \
-X(DIACTIVATE_T, "@DIACTIVATE") \
+X(DEACTIVATE_T, "@DEACTIVATE") \
 X(ATTRIBUTE_T, "@ATTRIBUTE") \
 X(METHOD_T, "@METHOD") \
 X(REQUEST_T, "REQUEST ->") \
@@ -47,17 +47,27 @@ X(CURV_LEFT_T, "BRACE {") \
 X(CURV_RIGHT_T, "BRACE }") \
 X(COLON_T, "COLON :") \
 X(COLOR_T, "COLOR") \
-X(ALT_T, "@ALT") \
+X(ALT_END_T, "@ALTEND") \
+X(ALT_START_T, "@ALTSTART") \
 X(ELSE_T, "@ELSE") \
 X(PACKAGE_T, "@PACKAGE") \
 X(PACKAGEEND_T, "@PACKAGEEND") \
 X(STARTNOTE_T, "@STARTNOTE") \
 X(ENDNOTE_T, "@ENDNOTE") \
-X(BOX_T, "@BOX") \
+X(BOX_START_T, "@BOX_START") \
+X(BOX_END_T, "@BOX_END") \
+X(SEQ_SEP_T, "==") \
+X(NAME_START_T, "@NAME_START") \
+X(NAME_END_T, "@NAME_END") \
+X(COND_START_T, "@COND_START") \
+X(COND_END_T, "@COND_END") \
+X(CONTINUE_LINE_T, "... continue") \
 X(UNEXPECTED_T, "SOME ERROR") \
 X(RELATION_T, "RELATION \"...\"") \
 X(STATIC_T, "@STATIC") \
 X(WORD_T, "WORD") \
+X(START_SEP_T, "start sep") \
+X(END_SEP_T, "end sep") \
 X(WORD_M_T, "WORD with brackets name()") \
 X(QUOTE_T, "QUOTE \"\"\"") \
 
@@ -136,18 +146,28 @@ std::vector<std::pair<std::string, terminals>> const _map_ {
     { "^@participant$", PARTICIPANT_T },
     { "^(\\-\\>|\\<\\-)$", REQUEST_T },
     { "^(\\<\\-\\-|\\-\\-\\>)$", RESPONSE_T },
-    { "^@alt$", ALT_T },
+    { "^@altstart$", ALT_START_T },
+    { "^@altend$", ALT_END_T },
     { "^@else$", ELSE_T },
     { "^@activate$", ACTIVATE_T },
     { "^@startnote$", STARTNOTE_T },
     { "^@endnote$", ENDNOTE_T },
-    { "^@diactivate$", DIACTIVATE_T },
+    { "^@deactivate$", DEACTIVATE_T },
     { "^@object$", OBJECT_T } ,
-    { "^@box$", BOX_T },
+    { "^@boxstart$", BOX_START_T },
+    { "^@boxend$", BOX_END_T },
+    { "^@condstart$", COND_START_T },
+    { "^@condend$", COND_END_T },
+    { "^@namestart$", NAME_START_T },
+    { "^@nameend$", NAME_END_T },
+    { "^\\=\\=$", SEQ_SEP_T },
     { "^\\:$", COLON_T },
     { "^@static$", STATIC_T },
     { "^\\{$", CURV_LEFT_T },
     { "^\\}$", CURV_RIGHT_T },
+    { "^\\.\\.\\.$", CONTINUE_LINE_T },
+    { "^@startsep$", START_SEP_T },
+    { "^@endsep$", END_SEP_T },
     { "^#[0-9a-fA-f]{6}$", COLOR_T },
     { "^\\\"\\\"\\\"$", QUOTE_T } ,
     { "^\".+\"$", RELATION_T },
@@ -158,6 +178,10 @@ std::vector<std::pair<std::string, terminals>> const _map_ {
 
 void note(text_t &Text);
 
+void wordss(text_t &Text);
+void questmsg(text_t &Text);
+void cond_msg(text_t &Text);
+void sep_msg(text_t &Text);
 void type_(text_t &Text);
 void color(text_t &Text);
 void enum_(text_t &Text);
@@ -307,6 +331,37 @@ void stat_seq(text_t &Text) {
 
         stat_seq(Text);
     }
+    else if (Text.cur_token == STARTNOTE_T) {
+        // note
+        get_token(Text);
+        note(Text);
+        stat_seq(Text);
+    }
+    else if (Text.cur_token == CONTINUE_LINE_T) {
+        get_token(Text);
+        stat_seq(Text);
+    }
+    else if (Text.cur_token == START_SEP_T) {
+        get_token(Text);
+        sep_msg(Text);
+        stat_seq(Text);
+    }
+    else if (Text.cur_token == ACTIVATE_T) {
+        get_token(Text);
+
+        CHECK_TOKEN(Text.cur_token, WORD_T, Text,
+                    "err stat_diagram name\n");
+
+        stat_seq(Text);
+    }
+    else if (Text.cur_token == DEACTIVATE_T) {
+        get_token(Text);
+
+        CHECK_TOKEN(Text.cur_token, WORD_T, Text,
+                    "err stat_diagram name\n");
+
+        stat_seq(Text);
+    }
     else if (Text.cur_token == WORD_T) {
         get_token(Text);
         type_(Text);
@@ -319,10 +374,91 @@ void stat_seq(text_t &Text) {
         u_u(Text);
         stat_seq(Text);
     }
+    else if (Text.cur_token == SEQ_SEP_T) {
+        get_token(Text);
+        wordss(Text);
+        stat_seq(Text);
+    }
+    else if (Text.cur_token == ALT_START_T) {
+        get_token(Text);
+
+        CHECK_TOKEN(Text.cur_token, COND_START_T, Text,
+                    "err cond_start name\n");
+
+        cond_msg(Text);
+        stat_seq(Text);
+    }
+    else if (Text.cur_token == ELSE_T) {
+        get_token(Text);
+
+        CHECK_TOKEN(Text.cur_token, COND_START_T, Text,
+                    "err cond_start name\n");
+
+        cond_msg(Text);
+        stat_seq(Text);
+    }
+    else if (Text.cur_token == ALT_END_T) {
+        get_token(Text);
+        stat_seq(Text);
+    }
+    else if (Text.cur_token == BOX_START_T) {
+        get_token(Text);
+
+        CHECK_TOKEN(Text.cur_token, NAME_START_T, Text,
+                    "err cond_start name\n");
+
+        questmsg(Text);
+        color(Text);
+        stat_seq(Text);
+    }
+    else if (Text.cur_token == BOX_END_T) {
+        get_token(Text);
+        stat_seq(Text);
+    }
     else if (Text.cur_token == ENDUML_SEQ_T) {
         // end of class file
         return;
     }
+}
+
+void wordss(text_t &Text) {
+    if (Text.cur_token == SEQ_SEP_T) {
+        get_token(Text);
+        return;
+    }
+
+    get_token(Text);
+    wordss(Text);
+}
+
+void questmsg(text_t &Text) {
+    if (Text.cur_token == NAME_END_T) {
+        get_token(Text);
+        return;
+    }
+
+    get_token(Text);
+    questmsg(Text);
+}
+
+void cond_msg(text_t &Text) {
+    if (Text.cur_token == COND_END_T) {
+        get_token(Text);
+        return;
+    }
+
+    get_token(Text);
+    cond_msg(Text);
+}
+
+void sep_msg(text_t &Text) {
+    if (Text.cur_token == END_SEP_T) {
+        get_token(Text);
+        return;
+    }
+
+    get_token(Text);
+    sep_msg(Text);
 }
 
 void u_u(text_t &Text) {

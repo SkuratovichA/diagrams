@@ -1,0 +1,27 @@
+@startuml_seq
+@actor Administrator
+== Create some Audit settings ==
+Administrator -> Watcher @startactmsg create new Audit Template (i.e. Audit settings : goal, scope, ...) @endactmsg
+Watcher -> Watcher @startactmsg save Audit Template in database @endactmsg
+Administrator <-- Watcher @startactmsg Audit Template UUID @endactmsg
+== Launch a new Audit ==
+Administrator -> Watcher @startactmsg launch new Audit of the Openstack infrastructure resources\nwith a previously created Audit Template @endactmsg
+Administrator <-- Watcher @startactmsg Audit UUID @endactmsg
+Administrator -> Watcher @startactmsg get the Audit state @endactmsg
+Administrator <-- Watcher @startactmsg ONGOING @endactmsg
+Watcher -> Watcher @startactmsg compute a solution to achieve optimization goal @endactmsg
+Administrator -> Watcher @startactmsg get the Audit state @endactmsg
+Administrator <-- Watcher @startactmsg SUCCEEDED @endactmsg
+== Get the result of the Audit ==
+Administrator -> Watcher @startactmsg get Action Plan @endactmsg
+Administrator <-- Watcher @startactmsg recommended Action Plan and estimated efficacy @endactmsg
+Administrator -> Administrator @startactmsg verify the recommended actions\nand evaluate the estimated gain vs aggressiveness of the solution @endactmsg
+== Launch the recommended Action Plan ==
+Administrator -> Watcher @startactmsg launch the Action Plan @endactmsg
+Administrator <-- Watcher @startactmsg Action Plan has been launched @endactmsg
+Watcher -> Watcher @startactmsg trigger Actions on Openstack services @endactmsg
+Administrator -> Watcher @startactmsg get the Action Plan state @endactmsg
+Administrator <-- Watcher @startactmsg ONGOING @endactmsg
+Administrator -> Watcher @startactmsg get the Action Plan state @endactmsg
+Administrator <-- Watcher @startactmsg SUCCEEDED @endactmsg
+@enduml_seq

@@ -1,0 +1,20 @@
+@startuml_seq
+@participant terminal
+@boxstart @namestart Credit Chaton @nameend #99CCFF
+@participant acqChaton
+@participant authChaton
+@boxend
+@participant interbancaire
+@boxstart @namestart Benepe @nameend #FFCC99
+@participant acqBe
+@participant authBe
+@boxend
+terminal -> acqChaton @startactmsg demande @endactmsg
+acqChaton -> interbancaire @startactmsg demande @endactmsg
+interbancaire -> acqBe @startactmsg demande @endactmsg
+acqBe -> authBe @startactmsg demande @endactmsg
+authBe --> acqBe @startactmsg reponse @endactmsg
+acqBe --> interbancaire @startactmsg reponse @endactmsg
+interbancaire --> acqChaton @startactmsg reponse @endactmsg
+acqChaton --> terminal @startactmsg reponse @endactmsg
+@enduml_seq

@@ -1,0 +1,27 @@
+@startuml_seq
+@participant app
+@participant cm
+@participant item
+@activate app
+@activate cm
+@startnote User enters media info page @endnote
+@startnote Check if item exists @endnote
+app -> cm @startactmsg findItem(itemId) @endactmsg
+cm -> cm @startactmsg lookup(itemId) @endactmsg
+@altstart @condstart item found @condend
+cm --> app @startactmsg item @endactmsg
+@else @condstart not found @condend
+cm --> app @startactmsg null @endactmsg
+app -> cm @startactmsg createItem(itemId, contentURL) @endactmsg
+cm -> item @startactmsg new(itemId, contentURL) @endactmsg
+@activate item
+cm --> app @startactmsg item @endactmsg
+app -> cm @startactmsg loadMetadata() @endactmsg
+@startnote Download and parse manifest, save in db @endnote
+cm --> app @startactmsg onTracksAvailable @endactmsg
+cm --> app @startactmsg onDownloadMetadata @endactmsg
+@startnote See //track-selection// flow @endnote
+@altend
+@startnote app is ready to start downloading @endnote
+app -> item @startactmsg startDownload() @endactmsg
+@enduml_seq
