@@ -167,7 +167,7 @@ void multiple_token(text_t &Text, terminals expected_term);
 void type_(text_t &Text);
 void color(text_t &Text);
 void enum_(text_t &Text);
-void MTHSTART(text_t &Text);
+void mthstart(text_t &Text);
 void dir(text_t &Text);
 void abstract(text_t &Text);
 void static_(text_t &Text);
@@ -349,10 +349,17 @@ void stat_seq(text_t &Text) {
 
 void multiple_token(text_t &Text, terminals expected_term) {
     if (Text.cur_token == expected_term) {
+        if (!Text.token_to_push.empty()) {
+            Text.token_to_push.pop_back();
+        }
+        printf("Whole token is |%s|\n", Text.token_to_push.c_str());
+        Text.token_to_push = "";
         get_token(Text);
         return;
     }
 
+    Text.token_to_push += Text.cur_word;
+    Text.token_to_push += std::string(1, Text.separator);
     get_token(Text);
     multiple_token(Text, expected_term);
 }
@@ -445,7 +452,7 @@ void attrs(text_t &Text) {
         mod(Text);
         CHECK_TOKEN(Text.cur_token, WORD_M_T, Text, "err method name\n");
         CHECK_TOKEN(Text.cur_token, WORD_T, Text, "err method type\n");
-        MTHSTART(Text);
+        mthstart(Text);
         attrs(Text);
     }
     else {
@@ -454,7 +461,7 @@ void attrs(text_t &Text) {
     }
 }
 
-void MTHSTART(text_t &Text) {
+void mthstart(text_t &Text) {
     if (Text.cur_token == MTHSTART_T) {
         get_token(Text);
         multiple_token(Text, MTHEND_T);

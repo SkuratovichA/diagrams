@@ -4,11 +4,11 @@ too many dependencies :-/
 @noteend
 @class GodObject {
 }
-GodObject -- A @actionstart @actionend
-GodObject -- B @actionstart @actionend
-GodObject -- C @actionstart @actionend
-GodObject -- D @actionstart @actionend
-GodObject -- E @actionstart @actionend
-GodObject -- F @actionstart @actionend
-GodObject -- G @actionstart @actionend
+GodObject -- A
+GodObject -- B
+GodObject -- C
+GodObject -- D
+GodObject -- E
+GodObject -- F
+GodObject -- G
 @enduml_class

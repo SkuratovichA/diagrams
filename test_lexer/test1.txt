@@ -3,7 +3,7 @@
 {
 @attribute - String id
 @attribute - String name
-@method name() String @mthstart @mthend
+@method name() String
 }
 User <|-- SpecificUser
 @enduml_class
