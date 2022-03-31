@@ -45,7 +45,6 @@ X(ACTOR_T, "@ACTOR") \
 X(PARTICIPANT_T, "@PARTICIPANT") \
 X(CURV_LEFT_T, "BRACE {") \
 X(CURV_RIGHT_T, "BRACE }") \
-X(COLON_T, "COLON :") \
 X(COLOR_T, "COLOR") \
 X(ALTEND_T, "@ALTEND") \
 X(ALTSTART_T, "@ALTSTART") \
@@ -139,7 +138,6 @@ std::vector<std::pair<std::string, terminals>> const _map_ {
     { "^@namestart$", NAMESTART_T },
     { "^@nameend$", NAMEEND_T },
     { "^\\=\\=$", SEQ_SEP_T },
-    { "^\\:$", COLON_T },
     { "^@static$", STATIC_T },
     { "^\\{$", CURV_LEFT_T },
     { "^\\}$", CURV_RIGHT_T },
@@ -152,18 +150,7 @@ std::vector<std::pair<std::string, terminals>> const _map_ {
     { "\\w", WORD_T },
 };
 
-/*
-note
-msg_act
-msg
-sep_msg
-u_u
-cond_msg
-questmsg
-wordss
-*/
 void multiple_token(text_t &Text, terminals expected_term);
-
 void type_(text_t &Text);
 void color(text_t &Text);
 void enum_(text_t &Text);
