@@ -17,17 +17,19 @@ json check_null(std::string val) {
 
 void Program::parse_file(const json file) {
     try {
-        obj_cl.fill_structure_class(file.at("class_dgrm").at("class"), diagram_class);
-        obj_cl.fill_structure_conct(file.at("class_dgrm").at("connections"), diagram_class);
-        this->fill_structure_note(file.at("class_dgrm").at("notes"), diagram_class.notes);
+        obj_cl.fill_structure_class(file.at("class_dgrm").at("class"), this->diagram_class);
+        obj_cl.fill_structure_conct(file.at("class_dgrm").at("connections"), this->diagram_class);
+        this->fill_structure_note(file.at("class_dgrm").at("notes"), this->diagram_class.notes);
 
-        // for (auto& seq : file.at("seq_dgrm")) {
-        //     this->fill_structure_actor(seq.at("actors"), diagram_sequence);
-        //     this->fill_structure_action(seq.at("actions"), diagram_sequence);
-        //     this->fill_structure_note(seq.at("notes"), diagram_sequence.notes);
-        //     this->fill_structure_activate(seq.at("activates"), diagram_sequence);
-        //     this->fill_structure_alt(seq.at("alts"), diagram_sequence);
-        // }
+        for (auto& seq : file.at("seq_dgrm")) {
+            dgrm_seq_t tmp;
+            obj_se.fill_structure_actor(seq.at("actors"), tmp);
+            obj_se.fill_structure_action(seq.at("actions"), tmp);
+            this->fill_structure_note(seq.at("notes"), tmp.notes);
+            obj_se.fill_structure_activate(seq.at("activates"), tmp);
+            obj_se.fill_structure_alt(seq.at("alts"), tmp);
+            this->diagram_sequence.push_back(tmp);
+        }
     } catch(nlohmann::detail::out_of_range) {
         std::cout << "The user is dolbaeb, menya ne ebet!" << std::endl;
     } catch(nlohmann::detail::type_error) {
@@ -55,7 +57,7 @@ void Program::add_note_to_file(json& j, std::vector<Note> no) {
     int i = 0;
 
     for (auto& x : no) {
-        j["class_dgrm"]["notes"][i++] =
+        j["notes"][i++] =
         {
             {"coords",
                 {
@@ -70,23 +72,26 @@ void Program::add_note_to_file(json& j, std::vector<Note> no) {
 
 void Program::fill_file() {
     json j;
-    DiagramClass obj;
 
     j["class_dgrm"]["class"] = nullptr;
     j["class_dgrm"]["connections"] = nullptr;
     j["class_dgrm"]["notes"] = nullptr;
 
-    obj_cl.add_class_to_file(j, this->diagram_class.classes);
-    obj_cl.add_connect_to_file(j, this->diagram_class.concts);
-    this->add_note_to_file(j, this->diagram_class.notes);
+    obj_cl.add_class_to_file(j["class_dgrm"], this->diagram_class.classes);
+    this->add_note_to_file(j["class_dgrm"], this->diagram_class.notes);
+    obj_cl.add_connect_to_file(j["class_dgrm"], this->diagram_class.concts);
 
-    j["seq_dgrm"]["actors"] = nullptr;
-    j["seq_dgrm"]["actions"] = nullptr;
-    j["seq_dgrm"]["notes"] = nullptr;
-    j["seq_dgrm"]["activates"] = nullptr;
-    j["seq_dgrm"]["alts"] = nullptr;
+    j["seq_dgrm"] = nullptr;
 
-
+    int i = 0;
+    for (auto& x : this->diagram_sequence) {
+        obj_se.add_actor_to_file(j["seq_dgrm"][i], x.actors);
+        obj_se.add_action_to_file(j["seq_dgrm"][i], x.actions);
+        this->add_note_to_file(j["seq_dgrm"][i], x.notes);
+        obj_se.add_activate_to_file(j["seq_dgrm"][i], x.activates);
+        obj_se.add_alt_to_file(j["seq_dgrm"][i], x.alts);
+        i++;
+    }
 
     std::ofstream o("pretty.json");
     o << std::setw(4) << j << std::endl;

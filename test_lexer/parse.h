@@ -26,7 +26,7 @@ json check_null(std::string val);
 class Program {
 public:
     dgrm_class_t diagram_class;
-    dgrm_seq_t diagram_sequence;
+    std::vector<dgrm_seq_t> diagram_sequence;
     DiagramClass obj_cl;
     DiagramSequence obj_se;
 

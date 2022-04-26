@@ -47,3 +47,63 @@ void DiagramSequence::fill_structure_alt(const json el, dgrm_seq_t& o) {
         o.alts.push_back(tmp);
     }
 }
+
+void DiagramSequence::add_actor_to_file(json& j, std::vector<std::string> ac) {
+    int i = 0;
+
+    for (auto& x : ac) {
+        j["actors"][i++] =
+        {
+            {"actor" ,  x }
+        };
+    }
+}
+
+void DiagramSequence::add_action_to_file(json& j, std::vector<Action> ac) {
+    int i = 0;
+
+    for (auto& x : ac) {
+        j["actions"][i++] =
+        {
+            {"from" ,  x.from },
+            {"to" , x.to },
+            {"arrow" , x.arrow },
+            {"msg", x.msg }
+        };
+    }
+}
+
+void DiagramSequence::add_activate_to_file(json& j, std::vector<Activate> ac) {
+    int i = 0;
+
+    for (auto& x : ac) {
+        j["activates"][i++] =
+        {
+            {"coords",
+                {
+                    {"x" , x.coords[0]},
+                    {"y" , x.coords[1]}
+                }
+            },
+            {"who" , x.who }
+        };
+    }
+}
+
+void DiagramSequence::add_alt_to_file(json& j, std::vector<Alt> al) {
+    int i = 0;
+
+    for (auto& x : al) {
+        j["alts"][i++] =
+        {
+            {"coords",
+                {
+                    {"x" , x.coords[0]},
+                    {"y" , x.coords[1]}
+                }
+            },
+            {"if_cond" , x.if_cond },
+            {"else_cond" , x.else_cond }
+        };
+    }
+}

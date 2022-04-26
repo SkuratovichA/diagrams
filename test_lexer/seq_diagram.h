@@ -48,4 +48,12 @@ public:
     void fill_structure_activate(const json el, dgrm_seq_t& o);
 
     void fill_structure_alt(const json el, dgrm_seq_t& o);
+
+    void add_actor_to_file(json& j, std::vector<std::string> ac);
+
+    void add_action_to_file(json& j, std::vector<Action> ac);
+
+    void add_activate_to_file(json& j, std::vector<Activate> ac);
+
+    void add_alt_to_file(json& j, std::vector<Alt> al);
 };

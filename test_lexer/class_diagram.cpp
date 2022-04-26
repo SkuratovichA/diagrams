@@ -59,7 +59,7 @@ void DiagramClass::add_connect_to_file(json& j, std::vector<Conct> cn) {
     int i = 0;
 
     for (auto& x : cn) {
-        j["class_dgrm"]["connections"][i++] =
+        j["connections"][i++] =
         {
             {"left_obj" ,  x.left_obj },
             {"left_num" , check_null(x.left_num) },
@@ -75,7 +75,7 @@ void DiagramClass::add_class_to_file(json& j, std::vector<Class> cl) {
     int i = 0;
 
     for (auto& x : cl) {
-        j["class_dgrm"]["class"][i++] =
+        j["class"][i++] =
         {
             {"color" , check_null(x.color) },
             {"name" , x.name },
@@ -90,7 +90,6 @@ void DiagramClass::add_class_to_file(json& j, std::vector<Class> cl) {
         };
     }
 }
-
 
 json DiagramClass::add_attrs(std::vector<attrs_t> x) {
     json tmp = nullptr;
