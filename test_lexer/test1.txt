@@ -1,9 +1,0 @@
-@startuml_class
-@class User
-{
-@attribute - String id
-@attribute - String name
-@method name() String
-}
-User <|-- SpecificUser
-@enduml_class

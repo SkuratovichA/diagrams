@@ -1,0 +1,84 @@
+{
+    "class_dgrm" : {
+        "class" : [
+            {
+                "attrs" : [
+                    {
+                        "name" : "id",
+                        "perm" : null,
+                        "type" : "string"
+                    },
+                    {
+                        "name" : "name",
+                        "perm" : null,
+                        "type" : "string"
+                    }
+                ],
+                "color" : null,
+                "coords" : {
+                    "x" : 1.0,
+                    "y" : 50.0
+                },
+                "methods" : [
+                    {
+                        "name" : "name()",
+                        "perm" : null,
+                        "type" : "string"
+                    }
+                ],
+                "name" : "User"
+            }
+        ],
+        "connections" : [
+            {
+                "left_obj" : "User",
+                "left_num" : null,
+                "arrow" : "<|--",
+                "right_obj" : "SpecificUser",
+                "right_num" : null,
+                "msg" : null
+            }
+        ],
+        "notes" : null
+    },
+    "class_seq" : [
+        {
+            "file_name" : "sex.json",
+            "actors" : [
+                {
+                    "actor" : "Andrei"
+                },
+                {
+                    "actor" : "Sasha"
+                },
+                {
+                    "actor" : "Maks"
+                }
+            ],
+            "actions" : [
+                {
+                    "from" : "Andrei",
+                    "to" : "Sasha",
+                    "arrow" : "->"
+                    "msg" : "have sex"
+                }
+            ],
+            "notes" : [
+                {
+                    "coords" : {
+                        "x" : 1.0,
+                        "y" : 50.0
+                    },
+                    "msg" = "pls wash your sraka"
+                }
+            ],
+            "activates" : [
+                {
+                    "who" : "Andrei",
+                    "start" : 0.2
+                    "end" : 0.89
+                }
+            ]
+        }
+    ]
+}

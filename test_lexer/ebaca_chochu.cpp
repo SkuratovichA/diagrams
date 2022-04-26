@@ -5,7 +5,7 @@
 #include <algorithm>
 #include <map>
 #include <regex>
-#include "single_include/nlohmann/json.hpp"
+#include "json.hpp"
 #include <typeinfo>
 #include <streambuf>
 #include <fstream>
@@ -101,11 +101,6 @@ public:
         this->msg       = tmp3;
     }
 };
-
-// add objects
-// add interface
-// add sequence action
-
 
 class Program {
 public:

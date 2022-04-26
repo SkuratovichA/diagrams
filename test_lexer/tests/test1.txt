@@ -1,0 +1,49 @@
+{
+    "class_dgrm" :
+    {
+        "class" :
+        [
+            {
+                "color" : null,
+                "coords" :
+                {
+                    "x" : 123,
+                    "y" : 50
+                },
+                "name" : "User",
+                "attrs" :
+                [
+                    {
+                        "perm" : "",
+                        "type" : "string",
+                        "name" : "id"
+                    },
+                    {
+                        "perm" : "",
+                        "type" : "string",
+                        "name" : "name"
+                    }
+                ],
+                "methods" :
+                [
+                    {
+                        "perm" : "",
+                        "type" : "string",
+                        "name" : "name()"
+                    }
+                ]
+            }
+        ],
+        "connections" :
+        [
+            {
+                "left_obj" : "User",
+                "left_num" : "",
+                "arrow" : "<|--",
+                "right_obj" : "SpecificUser",
+                "right_num" : "",
+                "msg" : ""
+            }
+        ]
+    }
+}
