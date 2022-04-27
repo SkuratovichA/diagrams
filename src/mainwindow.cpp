@@ -70,6 +70,10 @@ void mainWindow::on_open_clicked()
 // when saving, the path will must be specified
 void mainWindow::on_pushButton_clicked()
 {
+    if (ui->listWidget->currentItem() == nullptr) {
+        QMessageBox::information(this, "No such file", "pizda");
+        return;
+    }
     QString example_name = ui->listWidget->currentItem()->text();
     try {
         this->editor_window = new editorInterface(this, example_name, editorInterface::EXAMPLE_FILE);

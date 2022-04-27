@@ -11,7 +11,6 @@ json check_null(std::string val) {
     if (val != "") {
         tmp = val;
     }
-
     return tmp;
 }
 
