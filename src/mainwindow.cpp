@@ -19,7 +19,8 @@ mainWindow::mainWindow(QWidget *parent)
     ui->setupUi(this);
     this->setWindowTitle("diagrams");
 
-    QDir directory(QDir::home()); // or you can use root()
+    // FIXME : change to the directory with the path to the images.
+    QDir directory(QDir::current()); // or you can use root()
     qDebug() << directory.absolutePath();
     if (directory.isEmpty()) {
         return;
@@ -32,6 +33,7 @@ mainWindow::mainWindow(QWidget *parent)
         qDebug() << it.fileName();
         auto *item = new QListWidgetItem(it.fileName());
         ui->listWidget->addItem(item);
+        it.next();
     } while(it.hasNext());
 }
 
@@ -45,7 +47,6 @@ mainWindow::~mainWindow()
 // filename will not be provided - just create a window with a default interface
 void mainWindow::on_create_clicked()
 {
-    // create a new file, so there will be need to SAVE AS
     try {
         this->editor_window = new editorInterface(this, nullptr, editorInterface::NO_FILE);
     } catch (const char* msg) {
