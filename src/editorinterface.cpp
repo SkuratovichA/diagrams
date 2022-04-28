@@ -71,22 +71,22 @@ void editorInterface::on_actionSave_triggered() {
 
 void editorInterface::on_actionSave_As_triggered() {
     // TODO: chose a file and save it
-    QString fileName = QFileDialog::getSaveFileName(this, tr("Save Address Book"), QDir::homePath(),
-                                                    this->filenameFilter);
-    if (fileName == nullptr || fileName.isEmpty()) {
-        return;
-    }
-
-    QFile file(fileName);
-    if (!file.open(QIODevice::WriteOnly)) {
-        QMessageBox::information(this, tr("Unable to open file"), file.errorString());
-        return;
-    }
-    QTextStream out(&file);
-
-    // TODO write an internal representation to a file
-    out << "Hello world";
-    QMessageBox::information(this, "TODO", "save as");
+//    QString fileName = QFileDialog::getSaveFileName(this, tr("Save Address Book"), QDir::homePath(),
+//                                                    this->filenameFilter);
+//    if (fileName == nullptr || fileName.isEmpty()) {
+//        return;
+//    }
+//
+//    QFile file(fileName);
+//    if (!file.open(QIODevice::WriteOnly)) {
+//        QMessageBox::information(this, tr("Unable to open file"), file.errorString());
+//        return;
+//    }
+//    QTextStream out(&file);
+//
+//    // TODO write an internal representation to a file
+//    out << "Hello world";
+//    QMessageBox::information(this, "TODO", "save as");
 }
 
 void editorInterface::on_actionQuit_triggered() {
