@@ -5,6 +5,7 @@
 #include <QMessageBox>
 #include <QDir>
 #include <filesystem>
+#include <QDirIterator>
 
 
 //******************************************************************
@@ -18,20 +19,20 @@ mainWindow::mainWindow(QWidget *parent)
     ui->setupUi(this);
     this->setWindowTitle("diagrams");
 
-    // TODO: generalize andrei will do this
-    QString dirname = "/Users/suka/vut/sem4/icp/diagrams/examples";
-    QDir directory(dirname);
+    QDir directory(QDir::home()); // or you can use root()
+    qDebug() << directory.absolutePath();
     if (directory.isEmpty()) {
         return;
     }
 
     // create a list with examples
-    foreach(QFileInfo filename, directory.entryInfoList()) {
-        if (filename.isFile()) {
-            auto *item = new QListWidgetItem(filename.fileName());
-            ui->listWidget->addItem(item);
-        }
-    }
+    QDirIterator it(directory.path(), QStringList() << "example*.json", QDir::Files, QDirIterator::Subdirectories);
+    it.next();
+    do {
+        qDebug() << it.fileName();
+        auto *item = new QListWidgetItem(it.fileName());
+        ui->listWidget->addItem(item);
+    } while(it.hasNext());
 }
 
 mainWindow::~mainWindow()
