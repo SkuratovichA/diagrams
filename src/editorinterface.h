@@ -33,6 +33,7 @@ public:
                              // without a type - just a plain canvas
                              newWindowType newType = NO_FILE
                              );
+
     ~editorInterface();
 
     //void loadFile(const QString &filename);
@@ -76,10 +77,26 @@ private slots:
     void on_actionQuit_triggered();
 
 private:
+    QToolBar *editToolBar;
+    QTabWidget *tabWidget;
 
     Ui::editorInterface *ui;
     QString filename = "";
     QString filenameFilter = "Diagram Files (*.gae)";
+
+    void createToolBars();
+    void createActions();
+
+    QAction *exitAction;
+    QAction *addEntityAction;
+    QAction *addConnectionAction;
+    QAction *deleteAction;
+    QAction *cutAction;
+    QAction *copyAction;
+    QAction *pasteAction;
+    QAction *bringToFrontAction;
+    QAction *propertiesAction;
+    QAction *sendToBackAction;
 };
 
 #endif // EDITORINTERFACE_H

@@ -8,18 +8,13 @@
 #include <QDirIterator>
 
 
-//******************************************************************
-
-
 mainWindow::mainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::mainWindow)
 {
-
     ui->setupUi(this);
     this->setWindowTitle("diagrams");
 
-    // FIXME : change to the directory with the path to the images.
     QDir directory(QDir::current()); // or you can use root()
     qDebug() << directory.absolutePath();
     if (directory.isEmpty()) {
@@ -39,7 +34,7 @@ mainWindow::mainWindow(QWidget *parent)
 
 mainWindow::~mainWindow()
 {
-    delete ui;
+//    delete ui;
 }
 
 ////////////////////////////////////////////////////////////////////////////
@@ -68,8 +63,10 @@ void mainWindow::on_open_clicked()
     this->editor_window->show();
 }
 
-// open a canvas with a default template
-// when saving, the path will must be specified
+/**
+ * Open a canvas with a default template
+ * when saving, the path will must be specified
+ */
 void mainWindow::on_pushButton_clicked()
 {
     if (ui->listWidget->currentItem() == nullptr) {

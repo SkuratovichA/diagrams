@@ -38,6 +38,7 @@ private slots:
 private:
     Ui::mainWindow *ui;
     editorInterface *editor_window;
+
     // void createActions();
     // void readSettings();
     // void writeSettings();

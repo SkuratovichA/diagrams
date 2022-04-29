@@ -11,11 +11,13 @@ CONFIG += c++17
 SOURCES += \
     src/editorinterface.cpp \
     src/main.cpp \
-    src/mainwindow.cpp
+    src/mainwindow.cpp \
+    src/tabcanvas.cpp
 
 HEADERS += \
     src/editorinterface.h \
-    src/mainwindow.h
+    src/mainwindow.h \
+    src/tabcanvas.h
 
 FORMS += \
     src/editorinterface.ui \
