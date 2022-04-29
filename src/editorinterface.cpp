@@ -131,12 +131,9 @@ void editorInterface::createActions() {
         connect((obj), SIGNAL(triggered()), tabWidget->currentWidget(), memberslot);\
     } while(0)
 
-//    addEntityAction= new QAction(tr("test"), this);
-//    addEntityAction->setShortcut(tr(KEY"X"));
-
-//    connect(addEntityAction, SIGNAL(triggered()), tabWidget->currentWidget(), SLOT(addEntity()));
-
-    assert(tabWidget->currentWidget() != nullptr);
+//    exitAction = new QAction(tr("Exit"), this);
+//    addEntityAction->setShortcut(tr(KEY"W"));
+//    connect(addEntityAction, SIGNAL(triggered()), this, SLOT(close());
 
     ADD_SIGNAL(addEntityAction,     "New &Entity",  "+",  KEY"N", SLOT(addEntity()));
     ADD_SIGNAL(addConnectionAction, "Connect",      "->", KEY"L", SLOT(addConnection()));
@@ -146,7 +143,7 @@ void editorInterface::createActions() {
     ADD_SIGNAL(pasteAction,         "Paste",        "v",  KEY"V", SLOT(paste()));
     ADD_SIGNAL(propertiesAction,    "Properties",   "i",  KEY"I", SLOT(properties()));
     ADD_SIGNAL(sendToBackAction,    "Send to back", "b",  KEY"B", SLOT(sendToBack()));
-    ADD_SIGNAL(bringToFrontAction,   "Send to front","f",  KEY"F", SLOT(sendToFront()));
+    ADD_SIGNAL(bringToFrontAction,  "Send to front","f",  KEY"F", SLOT(sendToFront()));
     #undef ADD_SIGNAL
 }
 ////////////////////////////////
