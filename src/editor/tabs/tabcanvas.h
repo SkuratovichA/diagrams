@@ -4,6 +4,7 @@
 #include <QWidget>
 #include <QToolBar>
 #include <QBoxLayout>
+#include "diagram/Diagrams.h"
 
 
 namespace SceneType {
@@ -24,6 +25,15 @@ public:
     explicit TabCanvas(QWidget *parent = nullptr, DiagramType diagramType = DIAGRAM_TYPE_DEFAULT);
     ~TabCanvas();
 
+private:
+    void create_scene();
+
+private:
+    Diagram* diagram;
+    QVBoxLayout *layout;
+    QGraphicsView *view;
+    QGraphicsScene *scene;
+
 /** Slots
  */
 public slots:
@@ -37,7 +47,6 @@ public slots:
     void sendToBack();
     void sendToFront();
 
-private:
 
 };
 

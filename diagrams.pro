@@ -9,18 +9,24 @@ CONFIG += c++17
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-    src/editorinterface.cpp \
     src/main.cpp \
     src/mainwindow.cpp \
-    src/tabcanvas.cpp
+    src/editor/editorinterface.cpp \
+    src/editor/tabs/tabcanvas.cpp \
+    src/editor/tabs/object.cpp \
+    src/editor/tabs/scene.cpp \
+    src/editor/tabs/diagram/Diagrams.cpp \
 
 HEADERS += \
-    src/editorinterface.h \
     src/mainwindow.h \
-    src/tabcanvas.h
+    src/editor/editorinterface.h \
+    src/editor/tabs/tabcanvas.h \
+    src/editor/tabs/object.h \
+    src/editor/tabs/scene.h \
+    src/editor/tabs/diagram/Diagrams.h) \
 
 FORMS += \
-    src/editorinterface.ui \
+    src/editor/editorinterface.ui \
     src/mainwindow.ui
 
 # Default rules for deployment.

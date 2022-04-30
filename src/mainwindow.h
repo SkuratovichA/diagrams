@@ -4,7 +4,7 @@
 #include <QMainWindow>
 #include <QSessionManager>
 
-#include "editorinterface.h"
+#include "editor/editorinterface.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class mainWindow; }

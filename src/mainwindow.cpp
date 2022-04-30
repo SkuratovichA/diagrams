@@ -13,7 +13,7 @@ mainWindow::mainWindow(QWidget *parent)
     , ui(new Ui::mainWindow)
 {
     ui->setupUi(this);
-    this->setWindowTitle("diagrams");
+    this->setWindowTitle("diagram");
 
     QDir directory(QDir::current()); // or you can use root()
     qDebug() << directory.absolutePath();
