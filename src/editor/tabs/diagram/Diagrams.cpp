@@ -30,18 +30,20 @@ void SequenceDiagram::sendToFront() {
  *
  */
 Object* SequenceDiagram::addEntity() {
-    return nullptr;
+    return Diagram::addEntity();
 }
 
 /**
  *
  */
 Object* SequenceDiagram::addConnection() {
-    return nullptr;
+    return Diagram::addConnection();
 }
 
 void SequenceDiagram::setProperties() {
 }
+
+
 /***************************************/
 /**
  *
@@ -71,14 +73,14 @@ void ClassDiagram::sendToFront() {
  *
  */
 Object* ClassDiagram::addEntity() {
-    return nullptr;
+    return Diagram::addEntity();
 }
 
 /**
  *
  */
 Object* ClassDiagram::addConnection() {
-    return nullptr;
+    return Diagram::addConnection();
 }
 
 /**

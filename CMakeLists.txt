@@ -21,7 +21,6 @@ add_executable(proj
         src/editor/editorinterface.cpp        src/editor/editorinterface.h
         src/editor/tabs/tabcanvas.cpp         src/editor/tabs/tabcanvas.h
         src/editor/tabs/object.cpp            src/editor/tabs/object.h
-        src/editor/tabs/scene.cpp             src/editor/tabs/scene.h
         src/editor/tabs/diagram/Diagrams.cpp  src/editor/tabs/diagram/Diagrams.h)
 target_link_libraries(proj
         Qt::Core
