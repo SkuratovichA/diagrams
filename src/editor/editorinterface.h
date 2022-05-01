@@ -41,29 +41,20 @@ public:
     //void loadFile(const QString &filename);
 
 private slots:
-    void actionZoom_In_triggered();
-    void actionZoom_Out_triggered();
-    void actionReset_Zoom_triggered();
-
-    void actionCopy_triggered();
-    void actionPaste_triggered();
-    void actionCut_triggered();
-
-    void actionUndo_triggered();
-    void actionRedo_triggered();
     void actionSave_triggered();
+    void actionSave_As_triggered();
 
     void actionDeleteTab_triggered();
     void actionNewTab_triggered();
 
-    void actionSave_As_triggered();
     void actionQuit_triggered();
     void tabSelected();
 
 private:
+    QString get_text_representation();
     void createTabs();
     void createToolBars();
-    void createActions();
+
     void disconnectSlots(TabCanvas *prevTab);
     void createStaticToolBar();
 

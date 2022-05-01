@@ -25,6 +25,9 @@ public:
     explicit TabCanvas(QWidget *parent = nullptr, DiagramType diagramType = DIAGRAM_TYPE_DEFAULT);
     ~TabCanvas();
 
+public:
+    std::string get_string_representation();
+
 private:
     void create_scene();
     Object *selectedObject();
@@ -41,6 +44,8 @@ public slots:
     void addEntity();
     void addConnection();
     void remove();
+    void undo();
+    void redo();
     void cut();
     void copy();
     void paste();
