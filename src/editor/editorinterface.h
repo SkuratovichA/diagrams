@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include "tabs/tabcanvas.h"
+#include "tabs/object.h"
 
 
 namespace Ui {

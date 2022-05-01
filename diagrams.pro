@@ -21,7 +21,7 @@ HEADERS += \
     src/editor/editorinterface.h \
     src/editor/tabs/tabcanvas.h \
     src/editor/tabs/object.h \
-    src/editor/tabs/diagram/Diagrams.h) \
+    src/editor/tabs/diagram/Diagrams.h \
 
 FORMS += \
     src/editor/editorinterface.ui \

@@ -188,6 +188,7 @@ void editorInterface::actionReset_Zoom_triggered() {
 
 void editorInterface::actionCopy_triggered() {
     // TODO: copy the selected object
+    //Object *object =
     QMessageBox::information(this, "TODO", "copy");
 }
 

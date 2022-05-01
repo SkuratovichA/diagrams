@@ -27,6 +27,7 @@ public:
 
 private:
     void create_scene();
+    Object *selectedObject();
 
 private:
     Diagram* diagram;

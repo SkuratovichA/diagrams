@@ -50,18 +50,27 @@ void TabCanvas::create_scene() {
     view->setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing);
 }
 
+Object *TabCanvas::selectedObject() {
+    QList<QGraphicsItem *> items = scene->selectedItems();
+    if (items.count() == 1) {
+        return dynamic_cast<Object *>(items.first());
+    } else {
+        return 0;
+    }
+}
+
 /**
  *
  */
 void TabCanvas::addEntity() {
-    scene->addItem(diagram->addEntity());
+    diagram->addEntity(scene);
 }
 
 /**
  *
  */
 void TabCanvas::addConnection() {
-    scene->addItem(diagram->addConnection());
+    diagram->addConnection(scene);
 }
 
 /**
@@ -85,6 +94,14 @@ void TabCanvas::cut() {
  */
 void TabCanvas::copy() {
     qDebug() << "copy";
+    Object *tmp = selectedObject();
+    if(!tmp)
+        return;
+
+//    QString str = QString("Actor %1 %2 %3 %4")
+//                    .arg(tmp->x())
+//                    .arg(tmp->y())
+//                    .arg(tmp->scale())
     // TODO: implement me
 }
 

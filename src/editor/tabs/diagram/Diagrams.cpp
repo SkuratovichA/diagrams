@@ -29,15 +29,15 @@ void SequenceDiagram::sendToFront() {
 /**
  *
  */
-Object* SequenceDiagram::addEntity() {
-    return Diagram::addEntity();
+Object* SequenceDiagram::addEntity(QGraphicsScene *scene) {
+    return Diagram::addEntity(scene);
 }
 
 /**
  *
  */
-Object* SequenceDiagram::addConnection() {
-    return Diagram::addConnection();
+Object* SequenceDiagram::addConnection(QGraphicsScene *scene) {
+    return Diagram::addConnection(scene);
 }
 
 void SequenceDiagram::setProperties() {
@@ -72,15 +72,15 @@ void ClassDiagram::sendToFront() {
 /**
  *
  */
-Object* ClassDiagram::addEntity() {
-    return Diagram::addEntity();
+Object* ClassDiagram::addEntity(QGraphicsScene *scene) {
+    return Diagram::addEntity(scene);
 }
 
 /**
  *
  */
-Object* ClassDiagram::addConnection() {
-    return Diagram::addConnection();
+Object* ClassDiagram::addConnection(QGraphicsScene *scene) {
+    return Diagram::addConnection(scene);
 }
 
 /**
