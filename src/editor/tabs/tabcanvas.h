@@ -43,6 +43,8 @@ public slots:
     void addEntity();
     void addConnection();
     void remove();
+    void undo();
+    void redo();
     void cut();
     void copy();
     void paste();

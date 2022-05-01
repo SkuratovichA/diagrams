@@ -62,7 +62,6 @@ editorInterface::editorInterface(
     connect(tabWidget, SIGNAL(currentChanged(int)), this, SLOT(tabSelected()));
 }
 
-
 editorInterface::~editorInterface() {
     delete ui;
 }
@@ -142,8 +141,8 @@ void editorInterface::createStaticToolBar() {
     ADD_SIGNAL(deleteTabAction, "Delete &Tab", "+T", "Ctrl+W", this, SLOT(actionDeleteTab_triggered()));
 
     ADD_SIGNAL(saveAction, "Save&", "S", "Ctrl+S", this, SLOT(actionSave_triggered()));
-    ADD_SIGNAL(undoAction, "Undo", "<", "Ctrl+z", this, SLOT(actionUndo_triggered()));
-    ADD_SIGNAL(redoAction, "Redo", ">", "Ctrl+Z", this, SLOT(actionRedo_triggered()));
+    ADD_SIGNAL(undoAction, "Undo", "<", "Ctrl+z", tabWidget->currentWidget(), SLOT(redo()));
+    ADD_SIGNAL(redoAction, "Redo", ">", "Ctrl+Z", tabWidget->currentWidget(), SLOT(undo()));
 
     editToolBar = addToolBar(tr("Actions"));
     editToolBar->setFloatable(false);
@@ -185,7 +184,6 @@ void editorInterface::actionSave_triggered() {
     file.close();
 }
 
-
 void editorInterface::actionSave_As_triggered() {
     filename = QFileDialog::getSaveFileName(this, tr("Save Address Book"), QDir::homePath(),
                                                     filenameFilter);
@@ -205,21 +203,16 @@ void editorInterface::actionSave_As_triggered() {
     file.close();
 }
 
-
 void editorInterface::actionQuit_triggered() {
     editorInterface::close();
 }
 
 void editorInterface::actionNewTab_triggered() {
-    qDebug() << "New tab";
     tabWidget->addTab(new TabCanvas(this, DiagramType::SEQUENCE), "sequence diagram editor");
     //    tabWidget->setCurrentIndex(tabWidget->count()-1);
 }
 
 void editorInterface::actionDeleteTab_triggered() {
-    qDebug() << "Delete tab";
-    //tabWidget->addTab(new TabCanvas(this, DiagramType::SEQUENCE), "sequence diagram editor");
-
     auto ci = tabWidget->currentIndex();
     if (ci == 0) {
         QMessageBox::warning(this, "Warning", "You cannot close the class diagram");

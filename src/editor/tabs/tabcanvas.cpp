@@ -72,6 +72,14 @@ void TabCanvas::remove() {
     qDeleteAll(items);
 }
 
+void TabCanvas::undo() {
+    qDebug() << "undo";
+}
+
+void TabCanvas::redo() {
+    qDebug() << "redo";
+
+}
 /**
  *
  */
@@ -112,11 +120,18 @@ void TabCanvas::sendToBack() {
     diagram->sendToBack();
 }
 
+/**
+ *
+ */
 void TabCanvas::sendToFront() {
     qDebug() << "not segfault";
     diagram->sendToFront();
 }
 
+/**
+ *
+ * @return
+ */
 std::string TabCanvas::get_string_representation() {
     // for every object, return a class in json?
     return std::string("hello");
