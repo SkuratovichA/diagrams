@@ -16,16 +16,16 @@ public:
     enum { Type = UserType + 1 };
     enum EntityType { Actor = 0, Class, ActorConnection, ClassConnection, UNKNOWN_TYPE };
 
-    DiagramItem(qreal x, qreal y, qreal s = 1.0);
+    /*virtual*/ DiagramItem(qreal x, qreal y, qreal s = 1.0);
 
 public:
     // 1. FIXME: make the whole class abstract
     // 2. Make the function virtual and each class to return its type
     /*virtual*/ EntityType getEntityType();
-    void setText(QGraphicsTextItem *item, QString text, qreal mid);
+    /*virtual*/ void setText(QGraphicsTextItem *item, QString text, qreal mid);
 
 protected:
-    void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event);
+    /*virtual*/ void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event);
 
 private:
     QGraphicsLineItem *legL;
