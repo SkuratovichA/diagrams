@@ -1,4 +1,4 @@
-#include "object.h"
+#include "DiagramItem.h"
 
 #include <QtGui>
 #include <QStyleOptionGraphicsItem>
@@ -19,7 +19,7 @@ Message::Message(qreal x, qreal y, qreal s) : QGraphicsRectItem(0, 0, 70*s, 110*
 
 }
 
-Actor::Actor(qreal x, qreal y, qreal s) : QGraphicsRectItem(0, 0, 70*s, 110*s) {
+DiagramItem::DiagramItem(qreal x, qreal y, qreal s) : QGraphicsRectItem(0, 0, 70 * s, 110 * s) {
 
       this->setFlags(QGraphicsItem::ItemIsMovable | QGraphicsItem::ItemIsSelectable);
       this->setFlag(QGraphicsItem::ItemSendsGeometryChanges);
@@ -40,7 +40,7 @@ Actor::Actor(qreal x, qreal y, qreal s) : QGraphicsRectItem(0, 0, 70*s, 110*s) {
       this->setPos(x, y);
 }
 
-void Actor::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
+void DiagramItem::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
 {
     QString text = QInputDialog::getText(event->widget(),
                            tr("Edit Text"), tr("Enter new text:"),
@@ -49,7 +49,7 @@ void Actor::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
         setText(this->name, text, this->mid);
 }
 
-void Actor::setText(QGraphicsTextItem *item, QString text, qreal mid)
+void DiagramItem::setText(QGraphicsTextItem *item, QString text, qreal mid)
 {
     cur_str = text;
     item->setPlainText(text);

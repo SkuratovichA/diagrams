@@ -4,7 +4,7 @@
 #include <QWidget>
 #include <QToolBar>
 #include <QBoxLayout>
-#include "diagram/Diagrams.h"
+#include "diagram/EditorScene.h"
 
 
 namespace SceneType {
@@ -38,46 +38,41 @@ public:
     /** Private functions
      */
 private:
-    void create_scene();
 
     QGraphicsItem *selectedObject();
 
     /** Private variables
      */
 private:
+    DiagramItem::EntityType newEntityType = DiagramItem::UNKNOWN_TYPE;
+    DiagramItem::EntityType newConnectionType = DiagramItem::UNKNOWN_TYPE;
+
     QUndoStack *undoStack = nullptr;
     Diagram *diagram = nullptr;
     QVBoxLayout *layout = nullptr;
-    QGraphicsView *view = nullptr;
-    QGraphicsScene *scene = nullptr;
 
-/** Slots
- */
+//    QGraphicsView *view = nullptr;
+//    QGraphicsScene *scene = nullptr;
+
+    EditorScene *editorScene = nullptr;
+
+    /** Slots
+     */
 public slots:
-
+    void moveEntity(DiagramItem *movedItem, const QPointF &startPosition);
+    void removeEntity();
     void addEntity();
-
     void addConnection();
 
-    void remove();
-
-    void undo();
-
-    void redo();
-
     void cut();
-
     void copy();
-
     void paste();
-
     void properties();
-
     void sendToBack();
-
     void sendToFront();
 
 
+    void createScene();
 };
 
 #endif // TABCANVAS_H

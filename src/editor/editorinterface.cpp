@@ -16,10 +16,10 @@
 #include "tabs/tabcanvas.h"
 
 #define ADD_SIGNAL(obj, name, icon, shortcut, receiver, memberslot) \
-    do {                                                  \
-        obj = new QAction(tr((name)), this);                          \
-        /*obj->setIcon(icon);*/                                       \
-        (obj)->setShortcut(tr(shortcut));                           \
+    do {                                                          \
+        obj = new QAction(tr((name)), this);                      \
+        /*obj->setIcon(icon);*/                                   \
+        (obj)->setShortcut(tr(shortcut));                         \
         connect((obj), SIGNAL(triggered()), receiver, memberslot);\
     } while(0)
 
@@ -147,9 +147,9 @@ void editorInterface::createDynamicToolBar() {
  */
 void editorInterface::createStaticToolBar() {
     // creating actions for a toolbar
-    ADD_SIGNAL(newTabAction,    "New &Tab",    "+T", "Ctrl+T", this, SLOT(actionNewTab_triggered()));
+    ADD_SIGNAL(newTabAction, "New &Tab", "+T", "Ctrl+T", this, SLOT(actionNewTab_triggered()));
     ADD_SIGNAL(deleteTabAction, "Delete &Tab", "+T", "Ctrl+W", this, SLOT(actionDeleteTab_triggered()));
-    ADD_SIGNAL(saveAction,      "&Save",        "S", "Ctrl+S", this, SLOT(actionSave_triggered()));
+    ADD_SIGNAL(saveAction, "&Save", "S", "Ctrl+S", this, SLOT(actionSave_triggered()));
     qDebug() << "static toolbar added";
 
     // create undo/redo actions
@@ -208,7 +208,7 @@ void editorInterface::actionSave_triggered() {
  */
 void editorInterface::actionSaveAs_triggered() {
     filename = QFileDialog::getSaveFileName(this, tr("Save Address Book"), QDir::homePath(),
-                                                    filenameFilter);
+                                            filenameFilter);
     if (filename == nullptr || filename.isEmpty()) {
         return;
     }
@@ -264,7 +264,7 @@ void editorInterface::actionAddConnection_triggered() {
  *
  */
 void editorInterface::actionRemove_triggered() {
-    reinterpret_cast<TabCanvas *>(tabWidget->currentWidget())->remove();
+    reinterpret_cast<TabCanvas *>(tabWidget->currentWidget())->removeEntity();
 }
 
 /**

@@ -6,5 +6,6 @@
         <file>icons/save2.png</file>
         <file>icons/undo.jpg</file>
         <file>icons/undo3.png</file>
+        <file>icons/background.png</file>
     </qresource>
 </RCC>

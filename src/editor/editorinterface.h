@@ -5,7 +5,7 @@
 #include <QUndoGroup>
 #include <QUndoView>
 #include "tabs/tabcanvas.h"
-#include "tabs/object.h"
+#include "tabs/diagram/DiagramItem.h"
 
 
 namespace Ui {

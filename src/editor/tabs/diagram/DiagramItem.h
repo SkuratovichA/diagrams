@@ -8,12 +8,20 @@
 #include <QSet>
 #include <QKeyEvent>
 
-class Actor : public QGraphicsRectItem
+class DiagramItem : public QGraphicsRectItem
 {
     Q_DECLARE_TR_FUNCTIONS(Object);
 
 public:
-    Actor(qreal x, qreal y, qreal s = 1.0);
+    enum { Type = UserType + 1 };
+    enum EntityType { Actor = 0, Class, ActorConnection, ClassConnection, UNKNOWN_TYPE };
+
+    DiagramItem(qreal x, qreal y, qreal s = 1.0);
+
+public:
+    // 1. FIXME: make the whole class abstract
+    // 2. Make the function virtual and each class to return its type
+    /*virtual*/ EntityType getEntityType();
     void setText(QGraphicsTextItem *item, QString text, qreal mid);
 
 protected:

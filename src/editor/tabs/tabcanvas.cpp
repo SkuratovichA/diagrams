@@ -2,13 +2,13 @@
 #include <QUndoStack>
 #include <QUndoGroup>
 #include "tabcanvas.h"
-#include "diagram/Diagrams.h"
+#include "diagram/Commands.h"
 
 using namespace SceneType;
 
 class editorInterface;
 
-/**
+ /**
  *
  * @param parent
  * @param type
@@ -18,17 +18,18 @@ TabCanvas::TabCanvas(QWidget *parent, DiagramType type, QUndoGroup *parentGroup)
 
     undoStack = new QUndoStack(parentGroup);
 
-    create_scene();
-    layout = new QVBoxLayout();
-    layout->addWidget(view);
-    setLayout(layout);
+    createScene();
 
     // TOOD: create Diagram depending on the type passed;
     switch (type) {
         case DiagramType::SEQUENCE:
+            newEntityType = DiagramItem::Actor;
+            newConnectionType = DiagramItem::ActorConnection;
             diagram = new SequenceDiagram();
             break;
         case DiagramType::CLASS:
+            newEntityType = DiagramItem::Class;
+            newConnectionType = DiagramItem::ClassConnection;
             diagram = new ClassDiagram();
             break;
         default:
@@ -36,6 +37,9 @@ TabCanvas::TabCanvas(QWidget *parent, DiagramType type, QUndoGroup *parentGroup)
     }
 }
 
+/**
+ *
+ */
 TabCanvas::~TabCanvas() {
     delete diagram;
     delete layout;
@@ -44,20 +48,78 @@ TabCanvas::~TabCanvas() {
 /**
  *
  */
-void TabCanvas::create_scene() {
-    scene = new QGraphicsScene();
-    view = new QGraphicsView(scene);
+void TabCanvas::createScene() {
+    editorScene = new EditorScene();
+    QBrush pixmapBrush(QPixmap(":/icons/background.png").scaled(30,30));
+    editorScene->setBackgroundBrush(pixmapBrush);
+    editorScene->setSceneRect(QRect(0, 0, 1400, 1400));
 
-    scene->setSceneRect(0, 0, 1400, 1000);
-    view->setMinimumSize(400, 400);
+    connect(editorScene, &EditorScene::itemMoved, this, &TabCanvas::moveEntity);
 
-    view->setScene(scene);
-    view->setDragMode(QGraphicsView::RubberBandDrag);
-    view->setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing);
+    auto *view = new QGraphicsView(editorScene);
+    resize(1400, 1400);
+   /*  TODO: maybe add this instead of the two lines above?
+    layout = new QVBoxLayout();
+    layout->addWidget(view);
+    setLayout(layout);
+    */
+
+
+//    scene = new QGraphicsScene();
+//    view = new QGraphicsView(scene);
+//
+//    scene->setSceneRect(0, 0, 1400, 1000);
+//    view->setMinimumSize(400, 400);
+//
+//    view->setScene(scene);
+//    view->setDragMode(QGraphicsView::RubberBandDrag);
+//    view->setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing);
 }
 
+/**
+ *
+ */
+void TabCanvas::moveEntity(DiagramItem *movedItem, const QPointF &startPosition) {
+    undoStack->push(new MoveCommand(movedItem, startPosition));
+}
+
+/**
+ *
+ */
+void TabCanvas::removeEntity() {
+    if (editorScene->selectedItems().isEmpty()) {
+        return;
+    }
+    QUndoCommand *deleteCommand = new DeleteCommand(editorScene);
+    undoStack->push(deleteCommand);
+//    QList<QGraphicsItem *> items = editorScene->selectedItems();
+//    qDeleteAll(items);
+}
+
+/**
+ *
+ */
+void TabCanvas::addEntity() {
+    QUndoCommand *addCommand = new AddEntityCommand(newEntityType, editorScene);
+    undoStack->push(addCommand);
+//    diagram->addEntity(editorScene);
+}
+
+/**
+ *
+ */
+void TabCanvas::addConnection() {
+    QUndoCommand *addConnection = new AddEntityCommand(newConnectionType, editorScene);
+    undoStack->push(addConnection);
+    diagram->addConnection(editorScene);
+}
+
+/**
+ *
+ * @return
+ */
 QGraphicsItem *TabCanvas::selectedObject() {
-    QList<QGraphicsItem *> items = scene->selectedItems();
+    QList<QGraphicsItem *> items = editorScene->selectedItems();
     if (items.count() == 1) {
         return dynamic_cast<QGraphicsItem *>(items.first());
     } else {
@@ -68,39 +130,9 @@ QGraphicsItem *TabCanvas::selectedObject() {
 /**
  *
  */
-void TabCanvas::addEntity() {
-    // TODO improve
-    diagram->addEntity(scene);
-}
-
-/**
- *
- */
-void TabCanvas::addConnection() {
-    // TODO improve
-    diagram->addConnection(scene);
-}
-
-/**
- *
- */
-void TabCanvas::remove() {
-    QList<QGraphicsItem *> items = scene->selectedItems();
-    qDeleteAll(items);
-}
-
-/**
- *
- */
-void TabCanvas::undo() {
-    qDebug() << "undo";
-}
-
-/**
- *
- */
-void TabCanvas::redo() {
-    qDebug() << "redo";
+void TabCanvas::paste() {
+    qDebug() << "paste";
+    // TODO: paste
 }
 
 /**
@@ -117,22 +149,14 @@ void TabCanvas::cut() {
 void TabCanvas::copy() {
 //    qDebug() << "copy";
 //    Object *tmp = selectedObject();
-//    if(!tmp)
+ //    if(!tmp)
 //        return;
 
-//    QString str = QString("Actor %1 %2 %3 %4")
+//    QString str = QString("DiagramItem %1 %2 %3 %4")
 //                    .arg(tmp->x())
 //                    .arg(tmp->y())
 //                    .arg(tmp->scale())
     // TODO: implement me
-}
-
-/**
- *
- */
-void TabCanvas::paste() {
-    qDebug() << "paste";
-    // TODO: paste
 }
 
 /**
