@@ -2,6 +2,8 @@
 #define EDITORINTERFACE_H
 
 #include <QMainWindow>
+#include "tabs/tabcanvas.h"
+#include "tabs/object.h"
 
 
 namespace Ui {
@@ -33,53 +35,57 @@ public:
                              // without a type - just a plain canvas
                              newWindowType newType = NO_FILE
                              );
+
     ~editorInterface();
 
     //void loadFile(const QString &filename);
 
 private slots:
+    void actionSave_triggered();
+    void actionSave_As_triggered();
 
-//    void on_actionNew_Project_triggered();
-//
-//    void on_actionOpen_triggered();
+    void actionDeleteTab_triggered();
+    void actionNewTab_triggered();
 
-    void on_actionSave_triggered();
-
-//    void on_actionAll_triggered();
-//
-//    void on_actionAll_Objects_triggered();
-//
-//    void on_actionAll_Lines_triggered();
-//
-//    void on_actionZoom_In_triggered();
-//
-//    void on_actionZoom_Out_triggered();
-//
-//    void on_actionReset_Zoom_triggered();
-//
-//    void on_actionNew_Diagram_triggered();
-
-    void on_actionSave_As_triggered();
-
-//    void on_actionCopy_triggered();
-//
-//    void on_actionPaste_triggered();
-//
-//    void on_actionCut_triggered();
-//
-//    void on_actionUndo_triggered();
-//
-//    void on_actionRedo_triggered();
-//
-//    void on_tabWidget_tabCloseRequested(int index);
-
-    void on_actionQuit_triggered();
+    void actionQuit_triggered();
+    void tabSelected();
 
 private:
+    QString get_text_representation();
+    void createTabs();
+    void createToolBars();
+
+    void disconnectSlots(TabCanvas *prevTab);
+    void createStaticToolBar();
+
+private:
+    QToolBar *editToolBar;
+    QTabWidget *tabWidget;
 
     Ui::editorInterface *ui;
     QString filename = "";
     QString filenameFilter = "Diagram Files (*.gae)";
+
+
+    /**
+     * actions
+     */
+private:
+    QAction *addEntityAction;
+    QAction *addConnectionAction;
+    QAction *deleteAction;
+    QAction *cutAction;
+    QAction *copyAction;
+    QAction *pasteAction;
+    QAction *bringToFrontAction;
+    QAction *propertiesAction;
+    QAction *sendToBackAction;
+
+    QAction *newTabAction;
+    QAction *deleteTabAction;
+    QAction *saveAction;
+    QAction *undoAction;
+    QAction *redoAction;
 };
 
 #endif // EDITORINTERFACE_H

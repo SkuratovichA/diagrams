@@ -4,7 +4,7 @@
 #include <QMainWindow>
 #include <QSessionManager>
 
-#include "editorinterface.h"
+#include "editor/editorinterface.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class mainWindow; }
@@ -38,6 +38,7 @@ private slots:
 private:
     Ui::mainWindow *ui;
     editorInterface *editor_window;
+
     // void createActions();
     // void readSettings();
     // void writeSettings();
