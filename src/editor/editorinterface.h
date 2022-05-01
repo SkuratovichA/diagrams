@@ -2,6 +2,8 @@
 #define EDITORINTERFACE_H
 
 #include <QMainWindow>
+#include <QUndoGroup>
+#include <QUndoView>
 #include "tabs/tabcanvas.h"
 #include "tabs/object.h"
 
@@ -41,9 +43,8 @@ public:
     //void loadFile(const QString &filename);
 
 private slots:
+    void actionSaveAs_triggered();
     void actionSave_triggered();
-    void actionSave_As_triggered();
-
     void actionDeleteTab_triggered();
     void actionNewTab_triggered();
 
@@ -58,26 +59,33 @@ private slots:
     void actionRedo();
     void actionQuit_triggered();
 
-private:
-    QString get_text_representation();
-    void createTabs();
-    void createToolBars();
+    void newTabSelected();
 
+private:
+    void createUndoView();
+    void createTabs();
+    void createDynamicToolBar();
     void createStaticToolBar();
 
+    QString get_text_representation();
+
 private:
-    QToolBar *editToolBar;
+    QToolBar *staticToolBar;
+    QToolBar *dynamicToolBar;
     QTabWidget *tabWidget;
 
-    Ui::editorInterface *ui;
-    QString filename = "";
-    QString filenameFilter = "Diagram Files (*.gae)";
+    QUndoGroup *undoStack = nullptr;
+    QUndoView *undoView = nullptr;
 
+    Ui::editorInterface *ui;
+    QString filename = nullptr;
+    QString filenameFilter = "Diagram Files (*.gae)";
 
     /**
      * actions
      */
 private:
+
     QAction *addEntityAction;
     QAction *addConnectionAction;
     QAction *deleteAction;
@@ -89,8 +97,8 @@ private:
     QAction *sendToBackAction;
 
     QAction *newTabAction;
-    QAction *deleteTabAction;
     QAction *saveAction;
+    QAction *deleteTabAction;
     QAction *undoAction;
     QAction *redoAction;
 };

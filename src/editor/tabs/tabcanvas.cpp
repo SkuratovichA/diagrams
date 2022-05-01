@@ -1,16 +1,22 @@
 #include <QGraphicsView>
+#include <QUndoStack>
+#include <QUndoGroup>
 #include "tabcanvas.h"
 #include "diagram/Diagrams.h"
 
 using namespace SceneType;
+
+class editorInterface;
 
 /**
  *
  * @param parent
  * @param type
  */
-TabCanvas::TabCanvas(QWidget *parent, DiagramType type) :
+TabCanvas::TabCanvas(QWidget *parent, DiagramType type, QUndoGroup *parentGroup) :
         QWidget(parent) {
+
+    undoStack = new QUndoStack(parentGroup);
 
     create_scene();
     layout = new QVBoxLayout();
@@ -157,7 +163,15 @@ void TabCanvas::sendToFront() {
  *
  * @return
  */
-std::string TabCanvas::get_string_representation() {
+std::string TabCanvas::getStringRepresentation() {
     // for every object, return a class in json?
     return {"hello"};
+}
+
+/** When tab is changed, there is a need to manually set the current undo stack.
+ *
+ * @return undo stack
+ */
+QUndoStack* TabCanvas::getUndoStack() {
+    return undoStack;
 }

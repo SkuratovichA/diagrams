@@ -17,40 +17,64 @@ namespace SceneType {
 
 using namespace SceneType;
 
-class TabCanvas : public QWidget
-{
-    Q_OBJECT
+class TabCanvas : public QWidget {
+Q_OBJECT
 
 public:
-    explicit TabCanvas(QWidget *parent = nullptr, DiagramType diagramType = DIAGRAM_TYPE_DEFAULT);
+    explicit TabCanvas(
+            QWidget *parent = nullptr,
+            DiagramType diagramType = DIAGRAM_TYPE_DEFAULT,
+            QUndoGroup *parentGroup = nullptr
+    );
+
     ~TabCanvas();
 
 public:
-    std::string get_string_representation();
+    QUndoStack *getUndoStack();
 
+    std::string getStringRepresentation();
+
+
+    /** Private functions
+     */
 private:
     void create_scene();
+
     QGraphicsItem *selectedObject();
 
+    /** Private variables
+     */
 private:
-    Diagram* diagram;
-    QVBoxLayout *layout;
-    QGraphicsView *view;
-    QGraphicsScene *scene;
+    QUndoStack *undoStack = nullptr;
+    Diagram *diagram = nullptr;
+    QVBoxLayout *layout = nullptr;
+    QGraphicsView *view = nullptr;
+    QGraphicsScene *scene = nullptr;
 
 /** Slots
  */
 public slots:
+
     void addEntity();
+
     void addConnection();
+
     void remove();
+
     void undo();
+
     void redo();
+
     void cut();
+
     void copy();
+
     void paste();
+
     void properties();
+
     void sendToBack();
+
     void sendToFront();
 
 

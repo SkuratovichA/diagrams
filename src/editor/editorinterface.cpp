@@ -1,3 +1,9 @@
+// File: editorinterface.cpp
+// Author: Skuratovich ALiaksandr
+// Date: 1.5.2022
+
+// FIXME: https://doc.qt.io/qt-5/qkeysequence.html
+
 #include "editorinterface.h"
 #include "ui_editorinterface.h"
 
@@ -5,6 +11,7 @@
 #include <QFile>
 #include <QFileDialog>
 #include <QDir>
+#include <QUndoView>
 
 #include "tabs/tabcanvas.h"
 
@@ -12,7 +19,7 @@
     do {                                                  \
         obj = new QAction(tr((name)), this);                          \
         /*obj->setIcon(icon);*/                                       \
-        (obj)->setShortcut(tr(shortcut));                             \
+        (obj)->setShortcut(tr(shortcut));                           \
         connect((obj), SIGNAL(triggered()), receiver, memberslot);\
     } while(0)
 
@@ -57,38 +64,58 @@ editorInterface::editorInterface(
 #endif
 
     ui->setupUi(this);
+    undoStack = new QUndoGroup(this);
+
     this->setWindowTitle("editor");
 
-    createTabs();
-
-    createToolBars();
-
+    createUndoView();
+    createDynamicToolBar();
     createStaticToolBar();
+
+//    qDebug() << "before creating tabs";
+    createTabs();
+    setCentralWidget(tabWidget);
 }
 
 /**
  *
  */
 editorInterface::~editorInterface() {
+    delete undoView;
     delete ui;
 }
 
+/**
+ * Change the active stack in the stackGroup to display ins members (history) for the tab.
+ */
+void editorInterface::newTabSelected() {
+    undoStack->setActiveStack(reinterpret_cast<TabCanvas *>(tabWidget->currentWidget())->getUndoStack());
+}
+
+/**
+ *
+ */
+void editorInterface::createUndoView() {
+    undoView = new QUndoView(undoStack);
+    undoView->setWindowTitle(tr("Command List"));
+    undoView->show();
+    undoView->setAttribute(Qt::WA_QuitOnClose, true);
+}
 
 /**
  *
  */
 void editorInterface::createTabs() {
     tabWidget = new QTabWidget(this);
-    this->setCentralWidget(tabWidget);
-    tabWidget->addTab(new TabCanvas(this, DiagramType::CLASS), "class diagram editor");
-    tabWidget->addTab(new TabCanvas(this, DiagramType::SEQUENCE), "sequence diagram editor");
+    connect(tabWidget, SIGNAL(currentChanged(int)), this, SLOT(newTabSelected()));
+    tabWidget->addTab(new TabCanvas(this, DiagramType::CLASS, undoStack), "class diagram editor");
+    tabWidget->addTab(new TabCanvas(this, DiagramType::SEQUENCE, undoStack), "sequence diagram editor");
 }
 
 /**
  *
  */
-void editorInterface::createToolBars() {
-
+void editorInterface::createDynamicToolBar() {
     ADD_SIGNAL(addEntityAction, "New &Entity", "+", "Ctrl+N", this, SLOT(actionAddEntity_triggered()));
     ADD_SIGNAL(addConnectionAction, "Connect", "->", "Ctrl+L", this, SLOT(actionAddConnection_triggered()));
     ADD_SIGNAL(deleteAction, "Delete", "-", "Ctrl+D", this, SLOT(actionRemove_triggered()));
@@ -98,18 +125,19 @@ void editorInterface::createToolBars() {
     ADD_SIGNAL(propertiesAction, "Properties", "i", "Ctrl+I", this, SLOT(actionProperties_triggered()));
 //    ADD_SIGNAL(sendToBackAction, "Send to back", "b", "Ctrl+""B",   this, SLOT());
 //    ADD_SIGNAL(bringToFrontAction, "Send to front", "f", "Ctrl+""F",this, SLOT());
+    qDebug() << "dynamic toolbar added";
 
-    editToolBar = addToolBar(tr("Edit"));
-    editToolBar->setFloatable(false);
+    dynamicToolBar = addToolBar(tr("Edit"));
+    dynamicToolBar->setFloatable(false);
 
-    editToolBar->addAction(addEntityAction);
-    editToolBar->addAction(addConnectionAction);
-    editToolBar->addAction(deleteAction);
-    editToolBar->addSeparator();
-    editToolBar->addAction(cutAction);
-    editToolBar->addAction(copyAction);
-    editToolBar->addAction(pasteAction);
-    editToolBar->addSeparator();
+    dynamicToolBar->addAction(addEntityAction);
+    dynamicToolBar->addAction(addConnectionAction);
+    dynamicToolBar->addAction(deleteAction);
+    dynamicToolBar->addSeparator();
+    dynamicToolBar->addAction(cutAction);
+    dynamicToolBar->addAction(copyAction);
+    dynamicToolBar->addAction(pasteAction);
+    dynamicToolBar->addSeparator();
 //    editToolBar->addAction(bringToFrontAction);
 //    editToolBar->addAction(sendToBackAction);
 }
@@ -118,26 +146,26 @@ void editorInterface::createToolBars() {
  *
  */
 void editorInterface::createStaticToolBar() {
-    // FIXME: change chortcuts
-    ADD_SIGNAL(newTabAction, "New &Tab", "+T", "Ctrl+T", this, SLOT(actionNewTab_triggered()));
-
+    // creating actions for a toolbar
+    ADD_SIGNAL(newTabAction,    "New &Tab",    "+T", "Ctrl+T", this, SLOT(actionNewTab_triggered()));
     ADD_SIGNAL(deleteTabAction, "Delete &Tab", "+T", "Ctrl+W", this, SLOT(actionDeleteTab_triggered()));
+    ADD_SIGNAL(saveAction,      "&Save",        "S", "Ctrl+S", this, SLOT(actionSave_triggered()));
+    qDebug() << "static toolbar added";
 
-    ADD_SIGNAL(saveAction, "Save&", "S", "Ctrl+S", this, SLOT(actionSave_triggered()));
+    // create undo/redo actions
+    undoAction = undoStack->createUndoAction(this, tr("&Undo"));
+    redoAction = undoStack->createRedoAction(this, tr("&Redo"));
 
-    ADD_SIGNAL(undoAction, "Undo", "<", "Ctrl+z", this, SLOT(actionUndo()));
-    ADD_SIGNAL(redoAction, "Redo", ">", "Ctrl+Z", this, SLOT(actionRedo()));
+    staticToolBar = addToolBar(tr("Actions"));
+    staticToolBar->setFloatable(false);
+    staticToolBar->setMovable(false);
 
-    editToolBar = addToolBar(tr("Actions"));
-    editToolBar->setFloatable(false);
-    editToolBar->setMovable(false);
-
-    editToolBar->addAction(newTabAction);
-    editToolBar->addAction(deleteTabAction);
-    editToolBar->addAction(saveAction);
-    editToolBar->addSeparator();
-    editToolBar->addAction(undoAction);
-    editToolBar->addAction(redoAction);
+    staticToolBar->addAction(newTabAction);
+    staticToolBar->addAction(deleteTabAction);
+    staticToolBar->addAction(saveAction);
+    staticToolBar->addSeparator();
+    staticToolBar->addAction(undoAction);
+    staticToolBar->addAction(redoAction);
 }
 
 /**
@@ -148,7 +176,7 @@ QString editorInterface::get_text_representation() {
     auto size = tabWidget->count();
     std::string prg;
     for (int i = 0; i < size; i++) {
-        prg += reinterpret_cast<TabCanvas *>(tabWidget->widget(i))->get_string_representation();
+        prg += reinterpret_cast<TabCanvas *>(tabWidget->widget(i))->getStringRepresentation();
     }
     return {prg.c_str()};
 }
@@ -158,7 +186,7 @@ QString editorInterface::get_text_representation() {
  */
 void editorInterface::actionSave_triggered() {
     if (filename == nullptr || filename == "") {
-        actionSave_As_triggered();
+        actionSaveAs_triggered();
         return;
     }
 
@@ -175,7 +203,10 @@ void editorInterface::actionSave_triggered() {
     file.close();
 }
 
-void editorInterface::actionSave_As_triggered() {
+/**
+ *
+ */
+void editorInterface::actionSaveAs_triggered() {
     filename = QFileDialog::getSaveFileName(this, tr("Save Address Book"), QDir::homePath(),
                                                     filenameFilter);
     if (filename == nullptr || filename.isEmpty()) {
@@ -199,7 +230,7 @@ void editorInterface::actionQuit_triggered() {
 }
 
 void editorInterface::actionNewTab_triggered() {
-    tabWidget->addTab(new TabCanvas(this, DiagramType::SEQUENCE), "sequence diagram editor");
+    tabWidget->addTab(new TabCanvas(this, DiagramType::SEQUENCE, undoStack), "sequence diagram editor");
     //    tabWidget->setCurrentIndex(tabWidget->count()-1);
 }
 

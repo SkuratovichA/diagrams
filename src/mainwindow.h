@@ -26,7 +26,7 @@ private slots:
 
     // void open();
     // void save();
-    // void saveAs();
+    // void actionSaveAs_triggered();
     // void about();
     // void documentWasModified();
 // #ifndef QT_NO_SESSIONMANAGER
