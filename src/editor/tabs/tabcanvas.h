@@ -25,6 +25,9 @@ public:
     explicit TabCanvas(QWidget *parent = nullptr, DiagramType diagramType = DIAGRAM_TYPE_DEFAULT);
     ~TabCanvas();
 
+public:
+    std::string get_string_representation();
+
 private:
     void create_scene();
 
