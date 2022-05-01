@@ -90,10 +90,11 @@ AddEntityCommand::AddEntityCommand(DiagramItem::EntityType addType,
         : QUndoCommand(parent), graphicsScene(scene) {
     static int itemCount = 0;
 
+    diagramItem = new DiagramItem(addType);
+
     switch (addType) {
         case DiagramItem::Actor:
         case DiagramItem::Class:
-            diagramItem = new DiagramItem(addType);
             initialPosition = QPointF((itemCount * 15) % int(scene->width()),
                                       (itemCount * 15) % int(scene->height()));
             scene->update();
@@ -104,6 +105,7 @@ AddEntityCommand::AddEntityCommand(DiagramItem::EntityType addType,
 
         case DiagramItem::ActorConnection:
         case DiagramItem::ClassConnection:
+            // FIXME: add creating of connection
             assert(!"TODO: There is a need to implement the connection.");
             break;
 
