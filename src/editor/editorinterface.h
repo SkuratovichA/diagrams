@@ -47,15 +47,22 @@ private slots:
     void actionDeleteTab_triggered();
     void actionNewTab_triggered();
 
+    void actionAddEntity_triggered();
+    void actionAddConnection_triggered();
+    void actionRemove_triggered();
+    void actionCut_triggered();
+    void actionCopy_triggered();
+    void actionPaste_triggered();
+    void actionProperties_triggered();
+    void actionUndo();
+    void actionRedo();
     void actionQuit_triggered();
-    void tabSelected();
 
 private:
     QString get_text_representation();
     void createTabs();
     void createToolBars();
 
-    void disconnectSlots(TabCanvas *prevTab);
     void createStaticToolBar();
 
 private:
