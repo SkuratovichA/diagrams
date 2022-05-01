@@ -6,6 +6,21 @@
 #include "Diagrams.h"
 #include "../object.h"
 
+// delete after
+Actor* Diagram::addEntity(QGraphicsScene *scene) {
+    Actor *actor = new Actor(100,100);
+    scene->addItem(actor);
+    return actor;
+}
+
+// delete after
+Message* Diagram::addConnection(QGraphicsScene *scene) {
+    Message *msg = new Message(100,100);
+    scene->addItem(msg);
+    return msg;
+}
+
+
 /**
  *
  * @param parent
@@ -29,15 +44,19 @@ void SequenceDiagram::sendToFront() {
 /**
  *
  */
-Object* SequenceDiagram::addEntity(QGraphicsScene *scene) {
-    return Diagram::addEntity(scene);
+Actor* SequenceDiagram::addEntity(QGraphicsScene *scene) {
+    Actor *actor = new Actor(100,100);
+    scene->addItem(actor);
+    return actor;
 }
 
 /**
  *
  */
-Object* SequenceDiagram::addConnection(QGraphicsScene *scene) {
-    return Diagram::addConnection(scene);
+Message* SequenceDiagram::addConnection(QGraphicsScene *scene) {
+    Message *msg = new Message(100,100);
+    scene->addItem(msg);
+    return msg;
 }
 
 void SequenceDiagram::setProperties() {
@@ -72,15 +91,19 @@ void ClassDiagram::sendToFront() {
 /**
  *
  */
-Object* ClassDiagram::addEntity(QGraphicsScene *scene) {
-    return Diagram::addEntity(scene);
+Class* ClassDiagram::addEntity(QGraphicsScene *scene) {
+    Class *class_ = new Class(100,100);
+    scene->addItem(class_);
+    return class_;
 }
 
 /**
  *
  */
-Object* ClassDiagram::addConnection(QGraphicsScene *scene) {
-    return Diagram::addConnection(scene);
+Relation* ClassDiagram::addConnection(QGraphicsScene *scene) {
+    Relation *relation = new Relation(100,100);
+    scene->addItem(relation);
+    return relation;
 }
 
 /**

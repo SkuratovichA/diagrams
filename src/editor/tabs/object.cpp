@@ -7,30 +7,54 @@
 #include <QDebug>
 #include <QPainter>
 
-Object::Object(qreal x, qreal y, qreal s, QGraphicsItem *parent) : QGraphicsRectItem(x,y,100,100) {
+Class::Class(qreal x, qreal y, qreal s) : QGraphicsRectItem(0, 0, 70*s, 110*s) {
 
-      //point = new QGraphicsEllipseItem(20, 20, 10, 10);
+}
+
+Relation::Relation(qreal x, qreal y, qreal s) : QGraphicsRectItem(0, 0, 70*s, 110*s) {
+
+}
+
+Message::Message(qreal x, qreal y, qreal s) : QGraphicsRectItem(0, 0, 70*s, 110*s) {
+
+}
+
+Actor::Actor(qreal x, qreal y, qreal s) : QGraphicsRectItem(0, 0, 70*s, 110*s) {
+
       this->setFlags(QGraphicsItem::ItemIsMovable | QGraphicsItem::ItemIsSelectable);
       this->setFlag(QGraphicsItem::ItemSendsGeometryChanges);
 
-      //drawRect(x,y,width,height);
-      //new QGraphicsRectItem(x,y,width,height);
-      legL = new QGraphicsLineItem(20, 100, 100, 20, this);
-      legR = new QGraphicsLineItem(60, 60, 120, 120, this);
-      name = new QGraphicsTextItem("allo blyat", this);
-      name->setPos(90, 120);
-      //line1->setFlags(QGraphicsItem::ItemIsMovable | QGraphicsItem::ItemIsSelectable);
-      //line1->setFlag(QGraphicsItem::ItemSendsGeometryChanges);
+      legL = new QGraphicsLineItem(35*s, 70*s, 10*s, 110*s, this);
+      setPen(QPen(Qt::white));
 
+      legR = new QGraphicsLineItem(35*s, 70*s, 60*s, 110*s, this);
+      handL = new QGraphicsLineItem(35*s, 45*s, 0*s, 35*s, this);
+      handR = new QGraphicsLineItem(35*s, 45*s, 70*s, 35*s, this);
+      body = new QGraphicsLineItem(35*s, 30*s, 35*s, 70*s, this);
+      head = new QGraphicsEllipseItem(20*s, 0*s, 30*s, 30*s, this);
 
-//    myTextColor = Qt::darkGreen;
-//    myOutlineColor = Qt::darkBlue;
-//    myBackgroundColor = Qt::white;
+      name = new QGraphicsTextItem("Name", this);
+      mid =70*s/2.0;
+      setText(name, "Name", mid);
 
-//    setFlags(ItemIsMovable | ItemIsSelectable);
-//    setFlag(ItemSendsGeometryChanges);
+      this->setPos(x, y);
+}
 
-//    r_scale = 1.0;
-//    x_pos = 0;
-//    y_pos = 0;
+void Actor::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
+{
+    QString text = QInputDialog::getText(event->widget(),
+                           tr("Edit Text"), tr("Enter new text:"),
+                           QLineEdit::Normal, cur_str);
+    if (!text.isEmpty())
+        setText(this->name, text, this->mid);
+}
+
+void Actor::setText(QGraphicsTextItem *item, QString text, qreal mid)
+{
+    cur_str = text;
+    item->setPlainText(text);
+    QFontMetricsF metrics{qApp->font()};
+    QRectF rect = metrics.boundingRect(text);
+    qreal pos_x = mid - rect.width()/2.0;
+    item->setPos(pos_x, 120);
 }

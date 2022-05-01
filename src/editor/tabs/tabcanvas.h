@@ -30,7 +30,7 @@ public:
 
 private:
     void create_scene();
-    Object *selectedObject();
+    QGraphicsItem *selectedObject();
 
 private:
     Diagram* diagram;

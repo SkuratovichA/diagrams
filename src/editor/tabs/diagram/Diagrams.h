@@ -24,27 +24,10 @@ Q_OBJECT
 
 public:
     // TODO: reimplement me inside of classes and make me return nullptr.
-    virtual Object* addEntity(QGraphicsScene *scene) {
-        Object *obj = new Object(10,10,1);
-        scene->addItem(obj);
-        //scene->addItem(obj->line1);
-        //scene->addItem(obj->line2);
-//    obj->setText("support in the future version of the project. Dont delete me please. I have kids and wife.");
-        //obj->setPos(QPoint(20, 20));
-
-        //obj->setSelected(true);
-        return obj;
-    };
+    Actor* addEntity(QGraphicsScene *scene);
 
     // TODO: reimplement me inside of classes and make me return nullptr.
-    virtual Object* addConnection(QGraphicsScene *scene) {
-        Object *obj = new Object(10,10,1);
-//    obj->setText("support in the future version of the project. Dont delete me please. I have kids and wife.");
-        //obj->setPos(QPoint(20, 20));
-
-        //obj->setSelected(true);
-        return obj;
-    }
+    Message* addConnection(QGraphicsScene *scene);
 
     virtual void setProperties() {};
     virtual void sendToBack() {};
@@ -61,8 +44,8 @@ public:
     ~SequenceDiagram();
 
 public:
-    Object* addEntity(QGraphicsScene *scene) override;
-    Object* addConnection(QGraphicsScene *scene) override;
+    Actor* addEntity(QGraphicsScene *scene);
+    Message* addConnection(QGraphicsScene *scene);
     void setProperties() override;
     void sendToBack() override;
     void sendToFront() override;
@@ -76,8 +59,8 @@ public:
     ~ClassDiagram();
 
 public:
-    Object* addEntity(QGraphicsScene *scene) override;
-    Object* addConnection(QGraphicsScene *scene) override;
+    Class* addEntity(QGraphicsScene *scene);
+    Relation* addConnection(QGraphicsScene *scene);
     void setProperties() override;
     void sendToBack() override;
     void sendToFront() override;
