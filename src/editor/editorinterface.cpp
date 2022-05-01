@@ -16,7 +16,12 @@
         connect((obj), SIGNAL(triggered()), receiver, memberslot);\
     } while(0)
 
-////////////////////////////////
+/**
+ *
+ * @param parent
+ * @param exampleName
+ * @param new_type
+ */
 editorInterface::editorInterface(
         QWidget *parent,
         const QString &exampleName,
@@ -62,10 +67,16 @@ editorInterface::editorInterface(
     connect(tabWidget, SIGNAL(currentChanged(int)), this, SLOT(tabSelected()));
 }
 
+/**
+ *
+ */
 editorInterface::~editorInterface() {
     delete ui;
 }
 
+/**
+ *
+ */
 void editorInterface::tabSelected() {
     static TabCanvas *prevTab = nullptr;
     if (prevTab != nullptr) {
@@ -86,6 +97,10 @@ void editorInterface::tabSelected() {
 
 }
 
+/**
+ *
+ * @param prevTab
+ */
 void editorInterface::disconnectSlots(TabCanvas *prevTab) {
 #define DISCONNECT(obj, memberslot)\
             disconnect((obj), SIGNAL(triggered()), prevTab, memberslot)\
@@ -101,6 +116,9 @@ void editorInterface::disconnectSlots(TabCanvas *prevTab) {
 //    DISCONNECT(bringToFrontAction  , SLOT(sendToFront()));
 }
 
+/**
+ *
+ */
 void editorInterface::createTabs() {
     tabWidget = new QTabWidget(this);
     this->setCentralWidget(tabWidget);
@@ -108,6 +126,9 @@ void editorInterface::createTabs() {
     tabWidget->addTab(new TabCanvas(this, DiagramType::SEQUENCE), "sequence diagram editor");
 }
 
+/**
+ *
+ */
 void editorInterface::createToolBars() {
 
     ADD_SIGNAL(addEntityAction, "New &Entity", "+", "Ctrl+N", tabWidget->currentWidget(), SLOT(addEntity()));
@@ -135,14 +156,17 @@ void editorInterface::createToolBars() {
 //    editToolBar->addAction(sendToBackAction);
 }
 
+/**
+ *
+ */
 void editorInterface::createStaticToolBar() {
     ADD_SIGNAL(newTabAction, "New &Tab", "+T", "Ctrl+T", this, SLOT(actionNewTab_triggered()));
 
     ADD_SIGNAL(deleteTabAction, "Delete &Tab", "+T", "Ctrl+W", this, SLOT(actionDeleteTab_triggered()));
 
     ADD_SIGNAL(saveAction, "Save&", "S", "Ctrl+S", this, SLOT(actionSave_triggered()));
-    ADD_SIGNAL(undoAction, "Undo", "<", "Ctrl+z", tabWidget->currentWidget(), SLOT(redo()));
-    ADD_SIGNAL(redoAction, "Redo", ">", "Ctrl+Z", tabWidget->currentWidget(), SLOT(undo()));
+    ADD_SIGNAL(undoAction, "Undo", "<", "Ctrl+z", tabWidget->currentWidget(), SLOT(undo()));
+    ADD_SIGNAL(redoAction, "Redo", ">", "Ctrl+Z", tabWidget->currentWidget(), SLOT(redo()));
 
     editToolBar = addToolBar(tr("Actions"));
     editToolBar->setFloatable(false);
@@ -156,6 +180,10 @@ void editorInterface::createStaticToolBar() {
     editToolBar->addAction(redoAction);
 }
 
+/**
+ *
+ * @return
+ */
 QString editorInterface::get_text_representation() {
     auto size = tabWidget->count();
     std::string prg;
@@ -165,50 +193,9 @@ QString editorInterface::get_text_representation() {
     return QString(prg.c_str());
 }
 
-
-void editorInterface::actionZoom_Out_triggered() {
-    // TODO: zoom out
-    QMessageBox::information(this, "TODO", "zoom out");
-}
-
-
-void editorInterface::actionReset_Zoom_triggered() {
-    // TODO: reset zoom
-    QMessageBox::information(this, "TODO", "reset zoom   ");
-}
-
-
-void editorInterface::actionCopy_triggered() {
-    // TODO: copy the selected object
-    //Object *object =
-    QMessageBox::information(this, "TODO", "copy");
-}
-
-
-void editorInterface::actionPaste_triggered() {
-    // TODO: paste the selected object
-    QMessageBox::information(this, "TODO", "paste");
-}
-
-
-void editorInterface::actionCut_triggered() {
-    // TODO: cut an object
-    QMessageBox::information(this, "TODO", "cut");
-}
-
-
-void editorInterface::actionUndo_triggered() {
-    // TODO: https://stackoverflow.com/questions/14998836/implementing-undo-redo-functionality-in-qt
-    QMessageBox::information(this, "TODO", "undo");
-}
-
-
-void editorInterface::actionRedo_triggered() {
-    // TODO: https://stackoverflow.com/questions/14998836/implementing-undo-redo-functionality-in-qt
-    QMessageBox::information(this, "TODO", "Redo");
-}
-
-
+/**
+ *
+ */
 void editorInterface::actionSave_triggered() {
     if (filename == nullptr || filename == "") {
         actionSave_As_triggered();

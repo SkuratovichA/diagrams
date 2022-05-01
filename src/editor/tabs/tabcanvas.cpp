@@ -81,14 +81,20 @@ void TabCanvas::remove() {
     qDeleteAll(items);
 }
 
+/**
+ *
+ */
 void TabCanvas::undo() {
     qDebug() << "undo";
 }
 
+/**
+ *
+ */
 void TabCanvas::redo() {
     qDebug() << "redo";
-
 }
+
 /**
  *
  */
@@ -151,5 +157,5 @@ void TabCanvas::sendToFront() {
  */
 std::string TabCanvas::get_string_representation() {
     // for every object, return a class in json?
-    return std::string("hello");
+    return {"hello"};
 }
