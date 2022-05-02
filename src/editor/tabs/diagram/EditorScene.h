@@ -6,7 +6,7 @@
 #ifndef DIAGRAMS_EDITORSCENE_H
 #define DIAGRAMS_EDITORSCENE_H
 
-#include <QOBject>
+#include <QObject>
 #include <QGraphicsScene>
 #include "DiagramItem.h"
 

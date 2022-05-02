@@ -4,6 +4,7 @@
 #include <QWidget>
 #include <QToolBar>
 #include <QBoxLayout>
+#include <QMainWindow>
 #include "diagram/EditorScene.h"
 
 
@@ -17,7 +18,7 @@ namespace SceneType {
 
 using namespace SceneType;
 
-class TabCanvas : public QWidget {
+class TabCanvas : public QMainWindow {
 Q_OBJECT
 
 public:
@@ -48,7 +49,7 @@ private:
     DiagramItem::EntityType newConnectionType = DiagramItem::UNKNOWN_TYPE;
 
     QUndoStack *undoStack = nullptr;
-    Diagram *diagram = nullptr;
+    //Diagram *diagram = nullptr;
     QVBoxLayout *layout = nullptr;
 
 //    QGraphicsView *view = nullptr;

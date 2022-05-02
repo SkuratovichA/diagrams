@@ -90,11 +90,18 @@ AddEntityCommand::AddEntityCommand(DiagramItem::EntityType addType,
         : QUndoCommand(parent), graphicsScene(scene) {
     static int itemCount = 0;
 
-    diagramItem = new DiagramItem(addType);
+    //diagramItem = new DiagramItem(addType);
 
     switch (addType) {
         case DiagramItem::Actor:
+            qDebug() << "You try to create an actor.";
+            diagramItem = new Actor(0,0,1);
+            scene->addItem(diagramItem);
+            break;
         case DiagramItem::Class:
+            qDebug() << "You try to create a class.";
+            diagramItem = new Class(0,0,1);
+
             initialPosition = QPointF((itemCount * 15) % int(scene->width()),
                                       (itemCount * 15) % int(scene->height()));
             scene->update();
@@ -102,13 +109,14 @@ AddEntityCommand::AddEntityCommand(DiagramItem::EntityType addType,
             setText(QObject::tr("Add %1")
                             .arg(createCommandString(diagramItem, initialPosition)));
             break;
-
         case DiagramItem::ActorConnection:
-        case DiagramItem::ClassConnection:
-            // FIXME: add creating of connection
-            assert(!"TODO: There is a need to implement the connection.");
+            qDebug() << "You try to create a connection for actors.";
+            diagramItem = new Message(0,0,1);
             break;
-
+        case DiagramItem::ClassConnection:
+            qDebug() << "You try to create a connection for classes.";
+            diagramItem = new Relation(0,0,1);
+            break;
         default:
             assert(!"here, DiagramItem type must be specified. Panicking and exiting.");
     }

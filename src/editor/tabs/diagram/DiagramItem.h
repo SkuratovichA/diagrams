@@ -8,6 +8,7 @@
 #include <QSet>
 #include <QKeyEvent>
 
+// FIXME may be another parrent
 class DiagramItem : public QGraphicsRectItem
 {
     Q_DECLARE_TR_FUNCTIONS(Object);
@@ -16,16 +17,30 @@ public:
     enum { Type = UserType + 1 };
     enum EntityType { Actor = 0, Class, ActorConnection, ClassConnection, UNKNOWN_TYPE };
 
-    /*virtual*/ DiagramItem(qreal x, qreal y, qreal s = 1.0);
+    DiagramItem() = default;
 
 public:
-    // 1. FIXME: make the whole class abstract
-    // 2. Make the function virtual and each class to return its type
-    /*virtual*/ EntityType getEntityType();
-    /*virtual*/ void setText(QGraphicsTextItem *item, QString text, qreal mid);
+    virtual EntityType getEntityType();
 
 protected:
-    /*virtual*/ void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event);
+    EntityType type;
+    // FIXME i dont sure if it is necessary
+    QGraphicsRectItem *item{};
+};
+
+class Actor : public DiagramItem
+{
+    Q_DECLARE_TR_FUNCTIONS(Object);
+
+public:
+    Actor(qreal x, qreal y, qreal s = 1.0);
+
+public:
+    //virtual EntityType getEntityType();
+    void setText(QGraphicsTextItem *item, const QString& text, qreal mid);
+
+protected:
+    void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event) override;
 
 private:
     QGraphicsLineItem *legL;
@@ -40,12 +55,14 @@ private:
     qreal mid;
 };
 
-class Class : public QGraphicsRectItem
+class Class : public DiagramItem
 {
     Q_DECLARE_TR_FUNCTIONS(Object);
 
 public:
     Class(qreal x, qreal y, qreal s = 1.0);
+
+    //EntityType getEntityType() override;
 
 private:
     QGraphicsTextItem *name;
@@ -55,7 +72,7 @@ private:
     QString cur_str = "Name";
 };
 
-class Relation : public QGraphicsRectItem
+class Relation : public DiagramItem
 {
     Q_DECLARE_TR_FUNCTIONS(Object);
 
@@ -63,16 +80,16 @@ public:
     Relation(qreal x, qreal y, qreal s = 1.0);
 
 private:
-    QGraphicsTextItem *name;
-    QList<QGraphicsTextItem *> *attrs; // i dont sure
-    QList<QGraphicsTextItem *> *methods; // i dont sure
+    QGraphicsTextItem *name{};
+    QList<QGraphicsTextItem *> *attrs{}; // i dont sure
+    QList<QGraphicsTextItem *> *methods{}; // i dont sure
 
     // 2 parents
 
     QString cur_str = "Name";
 };
 
-class Message : public QGraphicsRectItem
+class Message : public DiagramItem
 {
     Q_DECLARE_TR_FUNCTIONS(Object);
 

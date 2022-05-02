@@ -299,12 +299,14 @@ void editorInterface::actionProperties_triggered() {
  *
  */
 void editorInterface::actionUndo() {
-    reinterpret_cast<TabCanvas *>(tabWidget->currentWidget())->undo();
+    qDebug() << "Undo in the file editorinterface.h";
+    //reinterpret_cast<TabCanvas *>(tabWidget->currentWidget())->undo();
 }
 
 /**
  *
  */
 void editorInterface::actionRedo() {
-    reinterpret_cast<TabCanvas *>(tabWidget->currentWidget())->redo();
+    qDebug() << "Redo in the file editorinterface.h";
+    //reinterpret_cast<TabCanvas *>(tabWidget->currentWidget())->redo();
 }
