@@ -46,16 +46,18 @@ ClassDiagramItem::ClassDiagramItem(QGraphicsItem *item)
                  QRandomGenerator::global()->bounded(256),
                  QRandomGenerator::global()->bounded(256),
                  180);
+    auto width = 140;
     setPen(QPen(color));
     auto text = new QGraphicsTextItem("name will be here", this);
     text->setPos(-30, -30);
+    text->setTextWidth(width+80);
     text->setFont(QFont("Courier", 20));
     text->setTextInteractionFlags(
             Qt::TextInteractionFlag::TextEditable | Qt::TextInteractionFlag::TextSelectableByMouse |
             Qt::TextInteractionFlag::TextSelectableByKeyboard);
     text->topLevelItem();
 
-    boxRect = QRectF(0, 0, 140, 100);
+    boxRect = QRectF(0, 0, width, 100);
     setRect(boxRect);
     setFlag(QGraphicsItem::ItemIsSelectable);
     setFlag(QGraphicsItem::ItemIsMovable);
