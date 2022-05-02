@@ -49,7 +49,7 @@ void TabCanvas::createScene() {
     editorScene = new EditorScene(this);
     //QBrush pixmapBrush(QPixmap(":/icons/background.png").scaled(30,30));
     //editorScene->setBackgroundBrush(pixmapBrush);
-    editorScene->setSceneRect(QRect(0, 0, 1400, 1400));
+    editorScene->setSceneRect(QRect(0, 0, 800, 800));
 
     connect(editorScene, &EditorScene::itemMoved, this, &TabCanvas::moveEntity);
 
