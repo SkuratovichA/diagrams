@@ -15,7 +15,7 @@ public:
         Id = 1234
     };
 
-    MoveCommand(DiagramItem *diagramItem, const QPointF &startPos,
+    MoveCommand(ActorDiagramItem *diagramItem, const QPointF &startPos,
                 QUndoCommand *parent = nullptr);
 
     void undo() override;
@@ -25,7 +25,7 @@ public:
     int id() const override { return Id; }
 
 private:
-    DiagramItem *diagramItem;
+    ActorDiagramItem *diagramItem;
     QPointF startPos;
     QPointF newPos;
 };
@@ -37,7 +37,7 @@ public:
     void redo() override;
 
 private:
-    DiagramItem *diagramItem;
+    ActorDiagramItem *diagramItem;
     QGraphicsScene *graphicsScene;
 };
 
@@ -50,8 +50,7 @@ public:
 
 
 private:
-    DiagramItem::DiagramType type;
-    DiagramItem *diagramItem;
+    ActorDiagramItem *diagramItem;
     QGraphicsScene *graphicsScene;
     union {
         QPointF initialStartPosition;
@@ -68,8 +67,7 @@ public:
     void redo() override;
 
 private:
-    DiagramItem::DiagramType type;
-    DiagramItem *diagramItem;
+    ClassDiagramItem *diagramItem;
     QGraphicsScene *graphicsScene;
     union {
         QPointF initialStartPosition;
@@ -78,8 +76,6 @@ private:
     QPointF initialEndPosition;
 };
 
-
-
-QString createCommandString(DiagramItem *item, const QPointF &point);
+QString createCommandString(ActorDiagramItem *item, const QPointF &point);
 
 #endif //DIAGRAMS_COMMANDS_H

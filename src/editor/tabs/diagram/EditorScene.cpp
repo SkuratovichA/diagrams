@@ -32,7 +32,7 @@ void EditorScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
     if (movingItem != nullptr && event->button() == Qt::LeftButton) {
         if (oldPos != movingItem->pos()) {
-            emit itemMoved(qgraphicsitem_cast<DiagramItem *>(movingItem), oldPos);
+            emit itemMoved(qgraphicsitem_cast<ActorDiagramItem *>(movingItem), oldPos);
         }
         movingItem = nullptr;
     }

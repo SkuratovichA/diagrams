@@ -45,22 +45,16 @@ private:
     /** Private variables
      */
 private:
-    DiagramItem::DiagramType newEntityType = DiagramItem::UNKNOWN_TYPE;
-    DiagramItem::DiagramType newConnectionType = DiagramItem::UNKNOWN_TYPE;
+    DiagramType type;
 
     QUndoStack *undoStack = nullptr;
-    //Diagram *diagram = nullptr;
     QVBoxLayout *layout = nullptr;
-
-//    QGraphicsView *view = nullptr;
-//    QGraphicsScene *scene = nullptr;
-
     EditorScene *editorScene = nullptr;
 
     /** Slots
      */
 public slots:
-    void moveEntity(DiagramItem *movedItem, const QPointF &startPosition);
+    void moveEntity(ActorDiagramItem *movedItem, const QPointF &startPosition);
     void removeEntity();
     void addEntity();
     void addConnection();

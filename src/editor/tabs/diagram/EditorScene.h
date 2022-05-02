@@ -10,7 +10,7 @@
 #include <QGraphicsScene>
 #include "DiagramItem.h"
 
-class DiagramItem;
+class ActorDiagramItem;
 QT_BEGIN_NAMESPACE
 class QGraphicsSceneDragDropEvent;
 class QGraphicsViewItem;
@@ -23,7 +23,7 @@ public:
     explicit EditorScene(QObject *parent = nullptr);
 
 signals:
-    void itemMoved(DiagramItem *movedItem, const QPointF &movedFromPosition);
+    void itemMoved(ActorDiagramItem *movedItem, const QPointF &movedFromPosition);
 
 protected:
     void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
