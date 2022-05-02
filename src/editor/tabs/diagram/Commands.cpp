@@ -16,7 +16,6 @@
 MoveCommand::MoveCommand(DiagramItem *diagramItem, const QPointF &oldPos,
                          QUndoCommand *parent)
         : QUndoCommand(parent), diagramItem(diagramItem), startPos(oldPos), newPos(diagramItem->pos()) {
-    qDebug() << "A chto tut proisxodit??";
 }
 
 /**
@@ -86,49 +85,24 @@ void DeleteCommand::redo() {
 /**
  *
  */
-AddEntityCommand::AddEntityCommand(DiagramItem::EntityType addType,
-                                   QGraphicsScene *scene, QUndoCommand *parent)
+AddActorCommand::AddActorCommand(QGraphicsScene *scene, QUndoCommand *parent)
         : QUndoCommand(parent), graphicsScene(scene) {
     static int itemCount = 0;
 
-    //diagramItem = new DiagramItem(addType);
-
-    switch (addType) {
-        case DiagramItem::Actor:
-            qDebug() << "You try to create an actor.";
-            diagramItem = new Actor(0,0,1);
-            qDebug() << "actor was created" << diagramItem;
-            qDebug() << "Scene before push actor " << graphicsScene;
-            //graphicsScene->addItem(diagramItem);
-            break;
-        case DiagramItem::Class:
-            qDebug() << "You try to create a class.";
-            diagramItem = new Class(0,0,1);
-
-            initialPosition = QPointF((itemCount * 15) % int(scene->width()),
-                                      (itemCount * 15) % int(scene->height()));
-            scene->update();
-            ++itemCount;
-            setText(QObject::tr("Add %1")
-                            .arg(createCommandString(diagramItem, initialPosition)));
-            break;
-        case DiagramItem::ActorConnection:
-            qDebug() << "You try to create a connection for actors.";
-            diagramItem = new Message(0,0,1);
-            break;
-        case DiagramItem::ClassConnection:
-            qDebug() << "You try to create a connection for classes.";
-            diagramItem = new Relation(0,0,1);
-            break;
-        default:
-            assert(!"here, DiagramItem type must be specified. Panicking and exiting.");
-    }
+    diagramItem = new DiagramItem(DiagramItem::Actor);
+    initialPosition = QPointF((itemCount * 15) % int(scene->width()),
+                              (itemCount * 15) % int(scene->height()));
+//    setText(QObject::tr("Add %1")
+//                    .arg(createCommandString(diagramItem, initialPosition)));
+    itemCount++;
+    scene->update();
+    //graphicsScene->addItem(diagramItem);
 }
 
 /**
  *
  */
-AddEntityCommand::~AddEntityCommand() {
+AddActorCommand::~AddActorCommand() {
     if (!diagramItem->scene()) {
         delete diagramItem;
     }
@@ -137,7 +111,7 @@ AddEntityCommand::~AddEntityCommand() {
 /**
  *
  */
-void AddEntityCommand::undo() {
+void AddActorCommand::undo() {
     graphicsScene->removeItem(diagramItem);
     graphicsScene->update();
 }
@@ -145,12 +119,59 @@ void AddEntityCommand::undo() {
 /**
  *
  */
-void AddEntityCommand::redo() {
+void AddActorCommand::redo() {
     graphicsScene->addItem(diagramItem);
     diagramItem->setPos(initialPosition);
     graphicsScene->clearSelection();
     graphicsScene->update();
 }
+
+/**
+ *
+ */
+AddClassCommand::AddClassCommand(QGraphicsScene *scene, QUndoCommand *parent)
+        : QUndoCommand(parent), graphicsScene(scene) {
+    static int itemCount = 0;
+
+    type = DiagramItem::Class;
+
+    diagramItem = new DiagramItem(type);
+    initialPosition = QPointF((itemCount * 15) % int(scene->width()),
+                              (itemCount * 15) % int(scene->height()));
+//    setText(QObject::tr("Add %1")
+//                    .arg(createCommandString(diagramItem, initialPosition)));
+    itemCount++;
+    scene->update();
+    //graphicsScene->addItem(diagramItem);
+}
+
+/**
+ *
+ */
+AddClassCommand::~AddClassCommand() {
+    if (!diagramItem->scene()) {
+        delete diagramItem;
+    }
+}
+
+/**
+ *
+ */
+void AddClassCommand::undo() {
+    graphicsScene->removeItem(diagramItem);
+    graphicsScene->update();
+}
+
+/**
+ *
+ */
+void AddClassCommand::redo() {
+    graphicsScene->addItem(diagramItem);
+    diagramItem->setPos(initialPosition);
+    graphicsScene->clearSelection();
+    graphicsScene->update();
+}
+
 
 /**
  *
@@ -161,6 +182,6 @@ void AddEntityCommand::redo() {
 QString createCommandString(DiagramItem *item, const QPointF &pos) {
     static const char *type[5] = {"Actor", "Class", "Message", "Connection", "Unknown"};
     return QObject::tr("%1 at (%3, %4)")
-            .arg(type[item->getEntityType()])
+            .arg(type[item->getDiagramType()])
             .arg(pos.x()).arg(pos.y());
 }

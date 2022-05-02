@@ -7,30 +7,43 @@
 #include <QDebug>
 #include <QPainter>
 
-DiagramItem::EntityType DiagramItem::getEntityType()
+DiagramItem::DiagramItem(DiagramType diagramType, QGraphicsItem *item)
+        : QGraphicsPolygonItem(item)
 {
-    return type;
+    if (diagramType == Class) {
+        boxPolygon << QPointF(0, 0) << QPointF(0, 30) << QPointF(30, 30)
+                   << QPointF(30, 0) << QPointF(0, 0);
+        setPolygon(boxPolygon);
+    } else {
+        trianglePolygon << QPointF(15, 0) << QPointF(30, 30) << QPointF(0, 30)
+                        << QPointF(15, 0);
+        setPolygon(trianglePolygon);
+    }
+
+    QColor color(QRandomGenerator::global()->bounded(256),
+                 QRandomGenerator::global()->bounded(256),
+                 QRandomGenerator::global()->bounded(256));
+    QBrush brush(color);
+    setBrush(brush);
+    setFlag(QGraphicsItem::ItemIsSelectable);
+    setFlag(QGraphicsItem::ItemIsMovable);
 }
+
+//
+//DiagramItem::EntityType DiagramItem::getDiagramType()
+//{
+//    return type;
+//}
 
 Class::Class(qreal x, qreal y, qreal s) {
     item = new QGraphicsRectItem(0, 0, 70*s, 110*s);
-    type = EntityType::Class;
+//    type = EntityType::Class;
 }
 
-Relation::Relation(qreal x, qreal y, qreal s) {
-    item = new QGraphicsRectItem(0, 0, 70*s, 110*s);
-    type = EntityType::ClassConnection;
-}
+//DiagramItem::DiagramItem() : QGraphicsRectItem(0, 0, 70, 110) {}
 
-Message::Message(qreal x, qreal y, qreal s) {
-    item = new QGraphicsRectItem(0, 0, 70*s, 110*s);
-    type = EntityType::ActorConnection;
-}
-
-DiagramItem::DiagramItem() : QGraphicsRectItem(0, 0, 70, 110) {}
-
-Actor::Actor(qreal x, qreal y, qreal s) : DiagramItem() {
-    type = EntityType::Actor;
+Actor::Actor(qreal x, qreal y, qreal s) : QGraphicsRectItem(0,0,70,110) {
+//    type = EntityType::Actor;
     //item = new QGraphicsRectItem(0, 0, 70*s, 110*s);
     this->setFlags(QGraphicsItem::ItemIsMovable | QGraphicsItem::ItemIsSelectable);
     this->setFlag(QGraphicsItem::ItemSendsGeometryChanges);

@@ -99,7 +99,7 @@ void editorInterface::createUndoView() {
     undoView = new QUndoView(undoStack);
     undoView->setWindowTitle(tr("Command List"));
     undoView->show();
-    undoView->setAttribute(Qt::WA_QuitOnClose, true);
+    undoView->setAttribute(Qt::WA_QuitOnClose, false);
 }
 
 /**

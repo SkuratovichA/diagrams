@@ -45,8 +45,8 @@ private:
     /** Private variables
      */
 private:
-    DiagramItem::EntityType newEntityType = DiagramItem::UNKNOWN_TYPE;
-    DiagramItem::EntityType newConnectionType = DiagramItem::UNKNOWN_TYPE;
+    DiagramItem::DiagramType newEntityType = DiagramItem::UNKNOWN_TYPE;
+    DiagramItem::DiagramType newConnectionType = DiagramItem::UNKNOWN_TYPE;
 
     QUndoStack *undoStack = nullptr;
     //Diagram *diagram = nullptr;

@@ -19,9 +19,7 @@ public:
                 QUndoCommand *parent = nullptr);
 
     void undo() override;
-
     void redo() override;
-
     bool mergeWith(const QUndoCommand *command) override;
 
     int id() const override { return Id; }
@@ -35,9 +33,7 @@ private:
 class DeleteCommand : public QUndoCommand {
 public:
     explicit DeleteCommand(QGraphicsScene *graphicsScene, QUndoCommand *parent = nullptr);
-
     void undo() override;
-
     void redo() override;
 
 private:
@@ -45,18 +41,16 @@ private:
     QGraphicsScene *graphicsScene;
 };
 
-class AddEntityCommand : public QUndoCommand {
+class AddActorCommand : public QUndoCommand {
 public:
-    AddEntityCommand(DiagramItem::EntityType entityType, QGraphicsScene *graphicsScene,
-                     QUndoCommand *parent = nullptr);
-
-    ~AddEntityCommand() override;
-
+    explicit AddActorCommand(QGraphicsScene *scene, QUndoCommand *parent = nullptr);
+    ~AddActorCommand();
     void undo() override;
-
     void redo() override;
 
+
 private:
+    DiagramItem::DiagramType type;
     DiagramItem *diagramItem;
     QGraphicsScene *graphicsScene;
     union {
@@ -65,6 +59,25 @@ private:
     };
     QPointF initialEndPosition;
 };
+
+class AddClassCommand : public QUndoCommand {
+public:
+    explicit AddClassCommand(QGraphicsScene *scene, QUndoCommand *parent = nullptr);
+    ~AddClassCommand();
+    void undo() override;
+    void redo() override;
+
+private:
+    DiagramItem::DiagramType type;
+    DiagramItem *diagramItem;
+    QGraphicsScene *graphicsScene;
+    union {
+        QPointF initialStartPosition;
+        QPointF initialPosition;
+    };
+    QPointF initialEndPosition;
+};
+
 
 
 QString createCommandString(DiagramItem *item, const QPointF &point);

@@ -15,24 +15,19 @@ class editorInterface;
  */
 TabCanvas::TabCanvas(QWidget *parent, DiagramType type, QUndoGroup *parentGroup)
 {
-    qDebug() << "Here?? Why...";
-    undoStack = new QUndoStack(parentGroup);
 
+    undoStack = new QUndoStack(parentGroup);
     createScene();
 
-    // TODO: create Diagram depending on the type passed;
     switch (type) {
         case DiagramType::SEQUENCE:
-            qDebug() << "newEntity type sequence";
             newEntityType = DiagramItem::Actor;
             newConnectionType = DiagramItem::ActorConnection;
-            //diagram = new SequenceDiagram();
             break;
         case DiagramType::CLASS:
             qDebug() << "newEntity type class";
             newEntityType = DiagramItem::Class;
             newConnectionType = DiagramItem::ClassConnection;
-            //diagram = new ClassDiagram();
             break;
         default:
             throw std::runtime_error("Unknown diagram type");
@@ -52,7 +47,6 @@ TabCanvas::~TabCanvas() {
  */
 void TabCanvas::createScene() {
     editorScene = new EditorScene(this);
-    qDebug() << "Scene after creating is " << editorScene;
     //QBrush pixmapBrush(QPixmap(":/icons/background.png").scaled(30,30));
     //editorScene->setBackgroundBrush(pixmapBrush);
     editorScene->setSceneRect(QRect(0, 0, 1400, 1400));
@@ -63,11 +57,10 @@ void TabCanvas::createScene() {
     setCentralWidget(view);
     //resize(1400, 1400);
    /*  TODO: maybe add this instead of the two lines above?
+    layout = new QVBoxLayout();
+    layout->addWidget(view);
+    setLayout(layout);
     */
-    //layout = new QVBoxLayout();
-    //layout->addWidget(view);
-    //setLayout(layout);
-
 
 
 //    scene = new QGraphicsScene();
@@ -85,7 +78,8 @@ void TabCanvas::createScene() {
  *
  */
 void TabCanvas::moveEntity(DiagramItem *movedItem, const QPointF &startPosition) {
-    qDebug() << "Some troubles mr Andrei" << movedItem << startPosition;
+    qDebug() << "Some troubles mr Andrei" << static_cast<void*>(movedItem) << startPosition;
+
     undoStack->push(new MoveCommand(movedItem, startPosition));
     qDebug() << "Some troubles mr Sasha";
 }
@@ -107,19 +101,27 @@ void TabCanvas::removeEntity() {
  *
  */
 void TabCanvas::addEntity() {
-    qDebug() << "add entity in tabcanvas.cpp";
-    QUndoCommand *addCommand = new AddEntityCommand(newEntityType, editorScene);
+    QUndoCommand *addCommand = nullptr;
+    switch (newEntityType) {
+        case DiagramItem::Actor:
+            addCommand = new AddActorCommand(editorScene);
+            break;
+        case DiagramItem::Class:
+            addCommand = new AddClassCommand(editorScene);
+            break;
+        default:
+            assert(!"This statement must not be reached");
+            return;
+    }
     undoStack->push(addCommand);
-//    diagram->addEntity(editorScene);
 }
 
 /**
  *
  */
 void TabCanvas::addConnection() {
-    QUndoCommand *addConnection = new AddEntityCommand(newConnectionType, editorScene);
-    undoStack->push(addConnection);
-    //diagram->addConnection(editorScene);
+//    QUndoCommand *addConnection = new AddConnectionCommand(newConnectionType, editorScene);
+//    undoStack->push(addConnection);
 }
 
 /**
@@ -172,7 +174,6 @@ void TabCanvas::copy() {
  */
 void TabCanvas::properties() {
     qDebug() << "not segfault";
-    //diagram->setProperties();
 }
 
 /**
@@ -180,7 +181,6 @@ void TabCanvas::properties() {
  */
 void TabCanvas::sendToBack() {
     qDebug() << "not segfault";
-    //diagram->sendToBack();
 }
 
 /**
@@ -188,7 +188,6 @@ void TabCanvas::sendToBack() {
  */
 void TabCanvas::sendToFront() {
     qDebug() << "not segfault";
-    //diagram->sendToFront();
 }
 
 /**
