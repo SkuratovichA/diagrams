@@ -51,7 +51,6 @@ ClassDiagramItem::ClassDiagramItem(QGraphicsItem *item)
     custom_color = color;
     auto text = new QGraphicsTextItem("name", this);
     text->setPos(-30, -30);
-    text->setTextWidth(width+80);
     text->setFont(QFont("Courier", 20));
     text->setTextInteractionFlags(
             Qt::TextInteractionFlag::TextEditable | Qt::TextInteractionFlag::TextSelectableByMouse |
