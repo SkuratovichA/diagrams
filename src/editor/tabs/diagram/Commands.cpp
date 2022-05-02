@@ -2,6 +2,7 @@
 // Author: Skuratovich Aliaksandr <xskura01@vutbr.cz>
 // Date: 01.05.2022
 
+
 #include "Commands.h"
 #include "DiagramItem.h"
 
@@ -75,6 +76,8 @@ void DeleteCommand::redo() {
     graphicsScene->removeItem(diagramItem);
 }
 
+
+/************************************* Entities */
 /**
  *
  */
@@ -151,6 +154,91 @@ void AddClassCommand::undo() {
  *
  */
 void AddClassCommand::redo() {
+    graphicsScene->addItem(diagramItem);
+    diagramItem->setPos(initialPosition);
+    graphicsScene->clearSelection();
+    graphicsScene->update();
+}
+
+
+/************************ Connections */
+// TODO: make connectios work somehow
+/**
+ *
+ */
+AddClassConnectionCommand::AddClassConnectionCommand(ClassDiagramItem *firstClass, ClassDiagramItem *secondClass, QGraphicsScene *scene, QUndoCommand *parent)
+        : QUndoCommand(parent), graphicsScene(scene) {
+    static int itemCount = 0;
+
+    diagramItem = new ClassConnectionItem(firstClass, secondClass, connectionType);
+    initialPosition = QPointF(((itemCount * 20) + 100)% int(scene->width()),
+                              ((itemCount * 20) + 100)% int(scene->height()));
+    itemCount++;
+    scene->update();
+}
+
+/**
+ *
+ */
+AddClassConnectionCommand::~AddClassConnectionCommand() {
+    if (!diagramItem->scene()) {
+        delete diagramItem;
+    }
+}
+
+/**
+ *
+ */
+void AddClassConnectionCommand::undo() {
+    graphicsScene->removeItem(diagramItem);
+    graphicsScene->update();
+}
+
+/**
+ *
+ */
+void AddClassConnectionCommand::redo() {
+    graphicsScene->addItem(diagramItem);
+    diagramItem->setPos(initialPosition);
+    graphicsScene->clearSelection();
+    graphicsScene->update();
+}
+
+/**
+ *
+ */
+AddActorConnectionCommand::AddActorConnectionCommand(QGraphicsScene *scene, QUndoCommand *parent)
+        : QUndoCommand(parent), graphicsScene(scene) {
+    static int itemCount = 0;
+
+    diagramItem = new ClassDiagramItem();
+    initialPosition = QPointF(((itemCount * 20) + 100)% int(scene->width()),
+                              ((itemCount * 20) + 100)% int(scene->height()));
+    itemCount++;
+    scene->update();
+}
+
+/**
+ *
+ */
+AddActorConnectionCommand::~AddActorConnectionCommand() {
+    if (!diagramItem->scene()) {
+        delete diagramItem;
+    }
+}
+
+/**
+ *
+ */
+void AddActorConnectionCommand::undo() {
+    graphicsScene->removeItem(diagramItem);
+    graphicsScene->update();
+}
+
+/**
+ *
+ */
+void AddActorConnectionCommand::redo() {
     graphicsScene->addItem(diagramItem);
     diagramItem->setPos(initialPosition);
     graphicsScene->clearSelection();

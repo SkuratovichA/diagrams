@@ -9,6 +9,9 @@
 #include <QUndoCommand>
 #include "DiagramItem.h"
 
+/**
+ *
+*/
 class MoveCommand : public QUndoCommand {
 public:
     enum {
@@ -19,7 +22,9 @@ public:
                 QUndoCommand *parent = nullptr);
 
     void undo() override;
+
     void redo() override;
+
     bool mergeWith(const QUndoCommand *command) override;
 
     int id() const override { return Id; }
@@ -30,10 +35,15 @@ private:
     QPointF newPos;
 };
 
+/**
+ *
+ */
 class DeleteCommand : public QUndoCommand {
 public:
     explicit DeleteCommand(QGraphicsScene *graphicsScene, QUndoCommand *parent = nullptr);
+
     void undo() override;
+
     void redo() override;
 
 private:
@@ -41,13 +51,18 @@ private:
     QGraphicsScene *graphicsScene;
 };
 
+/**
+ *
+ */
 class AddActorCommand : public QUndoCommand {
 public:
     explicit AddActorCommand(QGraphicsScene *scene, QUndoCommand *parent = nullptr);
-    ~AddActorCommand();
-    void undo() override;
-    void redo() override;
 
+    ~AddActorCommand();
+
+    void undo() override;
+
+    void redo() override;
 
 private:
     ActorDiagramItem *diagramItem;
@@ -59,11 +74,17 @@ private:
     QPointF initialEndPosition;
 };
 
+/**
+ *
+ */
 class AddClassCommand : public QUndoCommand {
 public:
     explicit AddClassCommand(QGraphicsScene *scene, QUndoCommand *parent = nullptr);
+
     ~AddClassCommand();
+
     void undo() override;
+
     void redo() override;
 
 private:
@@ -75,6 +96,55 @@ private:
     };
     QPointF initialEndPosition;
 };
+
+/**
+ *
+ */
+class AddActorConnectionCommand : public QUndoCommand {
+public:
+    explicit AddActorConnectionCommand(ActorDiagramItem *firstActor, ActorDiagramItem *secondActor,
+                                       QGraphicsScene *scene, QUndoCommand *parent = nullptr);
+
+    ~AddActorConnectionCommand();
+
+    void undo() override;
+
+    void redo() override;
+
+private:
+    ActorDiagramItem *diagramItem;
+    QGraphicsScene *graphicsScene;
+    union {
+        QPointF initialStartPosition;
+        QPointF initialPosition;
+    };
+    QPointF initialEndPosition;
+};
+
+/**
+ *
+ */
+class AddClassConnectionCommand : public QUndoCommand {
+public:
+    explicit AddClassConnectionCommand(ClassDiagramItem *firstClass, ClassDiagramItem *secondClass,
+                                       QGraphicsScene *scene, QUndoCommand *parent = nullptr);
+
+    ~AddClassConnectionCommand();
+
+    void undo() override;
+
+    void redo() override;
+
+private:
+    ClassDiagramItem *diagramItem;
+    QGraphicsScene *graphicsScene;
+    union {
+        QPointF initialStartPosition;
+        QPointF initialPosition;
+    };
+    QPointF initialEndPosition;
+};
+
 
 QString createCommandString(ActorDiagramItem *item, const QPointF &point);
 

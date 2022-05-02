@@ -6,6 +6,8 @@
 #include <QGraphicsSceneMouseEvent>
 #include <QDebug>
 #include <QPainter>
+// FIXME: (1) create 2 separate files from this shit. (2) create custom function for adding a line
+
 
 ActorDiagramItem::ActorDiagramItem(QGraphicsItem *item)
         : QGraphicsRectItem(item) {
