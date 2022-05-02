@@ -28,9 +28,17 @@ private:
 class ClassDiagramItem : public QGraphicsRectItem {
 public:
     explicit ClassDiagramItem(QGraphicsItem *item = nullptr);
+    void refactor_table();
+
+
 
 private:
     QRectF boxRect;
+    QList<QGraphicsTextItem *> attrs;
+    QList<QGraphicsTextItem *> methods;
+    QColor custom_color;
+
+
 };
 
 

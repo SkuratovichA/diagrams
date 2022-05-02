@@ -34,9 +34,14 @@ TabCanvas::~TabCanvas() {
  */
 void TabCanvas::createScene() {
     editorScene = new EditorScene(this);
+
     editorScene->setSceneRect(QRect(0, 0, 800, 800));
     connect(editorScene, &EditorScene::itemMoved, this, &TabCanvas::moveEntity);
     auto *view = new QGraphicsView(editorScene);
+
+    view->setDragMode(QGraphicsView::RubberBandDrag);
+    view->setRenderHints(QPainter::Antialiasing
+                               | QPainter::TextAntialiasing);
 
     setCentralWidget(view);
 }

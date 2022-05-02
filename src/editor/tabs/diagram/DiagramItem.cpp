@@ -48,7 +48,8 @@ ClassDiagramItem::ClassDiagramItem(QGraphicsItem *item)
                  180);
     auto width = 140;
     setPen(QPen(color));
-    auto text = new QGraphicsTextItem("name will be here", this);
+    custom_color = color;
+    auto text = new QGraphicsTextItem("name", this);
     text->setPos(-30, -30);
     text->setTextWidth(width+80);
     text->setFont(QFont("Courier", 20));
@@ -57,9 +58,97 @@ ClassDiagramItem::ClassDiagramItem(QGraphicsItem *item)
             Qt::TextInteractionFlag::TextSelectableByKeyboard);
     text->topLevelItem();
 
-    boxRect = QRectF(0, 0, width, 100);
+    boxRect = QRectF(0, 0, width, 120);
     setRect(boxRect);
+
+    auto set_text_flags = [](QGraphicsTextItem *l) { l->setTextInteractionFlags(
+            Qt::TextInteractionFlag::TextEditable | Qt::TextInteractionFlag::TextSelectableByMouse |
+            Qt::TextInteractionFlag::TextSelectableByKeyboard); };
+
+    auto attrs_st = new QGraphicsTextItem("ATTRIBUTES", this);
+    set_text_flags(attrs_st);
+    attrs_st->setPos(2, 2);
+
+    auto line1 = new QGraphicsLineItem(0,30, width, 30, this);
+
+    auto tmp_attr = new QGraphicsTextItem("+ int name", this);
+    set_text_flags(tmp_attr);
+    tmp_attr->setPos(2, 32);
+    attrs.push_back(tmp_attr);
+
+    auto line2 = new QGraphicsLineItem(0, 60, width, 60, this);
+
+    auto methods_st = new QGraphicsTextItem("METHODS", this);
+    set_text_flags(methods_st);
+    methods_st->setPos(2, 62);
+
+    auto line3 = new QGraphicsLineItem(0, 90, width, 90, this);
+
+    auto tmp_method = new QGraphicsTextItem("+ int name()", this);
+    set_text_flags(tmp_method);
+    tmp_method->setPos(2, 92);
+    attrs.push_back(tmp_method);
+
     setFlag(QGraphicsItem::ItemIsSelectable);
     setFlag(QGraphicsItem::ItemIsMovable);
     setFlag(QGraphicsItem::ItemSendsGeometryChanges);
+
+    refactor_table();
+}
+
+void ClassDiagramItem::refactor_table()
+{
+    qreal x = this->x();
+    qreal y = this->y();
+    qreal width = this->rect().width();
+    qreal height = this->rect().height();
+
+    this->setPos(100, 100);
+
+    auto set_text_flags = [](QGraphicsTextItem *l) { l->setTextInteractionFlags(
+            Qt::TextInteractionFlag::TextEditable | Qt::TextInteractionFlag::TextSelectableByMouse |
+            Qt::TextInteractionFlag::TextSelectableByKeyboard); };
+
+    QList<QGraphicsTextItem *> tmp_attrs;
+    QList<QGraphicsTextItem *> tmp_methods;
+
+    foreach (QGraphicsTextItem *val, this->attrs) {
+        tmp_attrs.push_back(val);
+        qDebug() << val->toPlainText();
+    }
+
+    foreach (QGraphicsTextItem *val, this->methods) {
+        tmp_methods.push_back(val);
+        qDebug() << val->toPlainText();
+    }
+
+    //delete this;
+//
+//    boxRect = QRectF(0, 0, width, height+30);
+////    this = new QGraphicsRectItem();
+//            setRect(boxRect);
+
+//    auto attrs_st = new QGraphicsTextItem("ATTRIBUTES", this);
+//    set_text_flags(attrs_st);
+//    attrs_st->setPos(2, 2);
+//
+//    auto line1 = new QGraphicsLineItem(0,30, width, 30, this);
+//
+//    auto tmp_attr = new QGraphicsTextItem("+ int name", this);
+//    set_text_flags(tmp_attr);
+//    tmp_attr->setPos(2, 32);
+//    attrs.push_back(tmp_attr);
+//
+//    auto line2 = new QGraphicsLineItem(0, 60, width, 60, this);
+//
+//    auto methods_st = new QGraphicsTextItem("METHODS", this);
+//    set_text_flags(methods_st);
+//    methods_st->setPos(2, 62);
+//
+//    auto line3 = new QGraphicsLineItem(0, 90, width, 90, this);
+//
+//    auto tmp_method = new QGraphicsTextItem("+ int name()", this);
+//    set_text_flags(tmp_method);
+//    tmp_method->setPos(2, 92);
+//    attrs.push_back(tmp_method);
 }

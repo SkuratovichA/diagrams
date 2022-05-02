@@ -29,6 +29,7 @@ protected:
     void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
     void mouseReleaseEvent(QGraphicsSceneMouseEvent *event) override;
 
+
 private:
     QGraphicsItem *movingItem = nullptr;
     QPointF oldPos;
