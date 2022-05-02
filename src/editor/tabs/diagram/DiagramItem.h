@@ -12,13 +12,16 @@
 
 QT_BEGIN_NAMESPACE
 class QGraphicsItem;
+
 class QGraphicsScene;
+
 class QGraphicsSceneMouseEvent;
+
 class QPointF;
+
 QT_END_NAMESPACE
 
 class ActorDiagramItem : public QGraphicsRectItem {
-public:
     explicit ActorDiagramItem(QGraphicsItem *item = nullptr);
 
 private:
@@ -26,7 +29,6 @@ private:
 };
 
 class ClassDiagramItem : public QGraphicsRectItem {
-public:
     explicit ClassDiagramItem(QGraphicsItem *item = nullptr);
     void refactor_table();
 
@@ -40,6 +42,4 @@ private:
 
 
 };
-
-
 #endif // Object_H
