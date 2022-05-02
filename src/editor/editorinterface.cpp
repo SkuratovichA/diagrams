@@ -250,6 +250,7 @@ void editorInterface::actionDeleteTab_triggered() {
  *
  */
 void editorInterface::actionAddEntity_triggered() {
+    qDebug() << "action Add Entity editorinterface.cpp";
     reinterpret_cast<TabCanvas *>(tabWidget->currentWidget())->addEntity();
 }
 

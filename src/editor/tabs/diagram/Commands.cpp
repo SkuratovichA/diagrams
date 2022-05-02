@@ -16,6 +16,7 @@
 MoveCommand::MoveCommand(DiagramItem *diagramItem, const QPointF &oldPos,
                          QUndoCommand *parent)
         : QUndoCommand(parent), diagramItem(diagramItem), startPos(oldPos), newPos(diagramItem->pos()) {
+    qDebug() << "A chto tut proisxodit??";
 }
 
 /**
@@ -96,7 +97,9 @@ AddEntityCommand::AddEntityCommand(DiagramItem::EntityType addType,
         case DiagramItem::Actor:
             qDebug() << "You try to create an actor.";
             diagramItem = new Actor(0,0,1);
-            scene->addItem(diagramItem);
+            qDebug() << "actor was created" << diagramItem;
+            qDebug() << "Scene before push actor " << graphicsScene;
+            //graphicsScene->addItem(diagramItem);
             break;
         case DiagramItem::Class:
             qDebug() << "You try to create a class.";

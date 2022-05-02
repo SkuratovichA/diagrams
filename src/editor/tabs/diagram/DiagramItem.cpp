@@ -27,27 +27,29 @@ Message::Message(qreal x, qreal y, qreal s) {
     type = EntityType::ActorConnection;
 }
 
-Actor::Actor(qreal x, qreal y, qreal s) {
+DiagramItem::DiagramItem() : QGraphicsRectItem(0, 0, 70, 110) {}
+
+Actor::Actor(qreal x, qreal y, qreal s) : DiagramItem() {
     type = EntityType::Actor;
-    item = new QGraphicsRectItem(0, 0, 70*s, 110*s);
+    //item = new QGraphicsRectItem(0, 0, 70*s, 110*s);
     this->setFlags(QGraphicsItem::ItemIsMovable | QGraphicsItem::ItemIsSelectable);
     this->setFlag(QGraphicsItem::ItemSendsGeometryChanges);
 
-    legL = new QGraphicsLineItem(35*s, 70*s, 10*s, 110*s, item);
-    setPen(QPen(Qt::white));
+    legL = new QGraphicsLineItem(35*s, 70*s, 10*s, 110*s, this);
+    setPen(QPen(Qt::black));
 
-    legR = new QGraphicsLineItem(35*s, 70*s, 60*s, 110*s, item);
-    handL = new QGraphicsLineItem(35*s, 45*s, 0*s, 35*s, item);
-    handR = new QGraphicsLineItem(35*s, 45*s, 70*s, 35*s, item);
-    body = new QGraphicsLineItem(35*s, 30*s, 35*s, 70*s, item);
-    head = new QGraphicsEllipseItem(20*s, 0*s, 30*s, 30*s, item);
+    legR = new QGraphicsLineItem(35*s, 70*s, 60*s, 110*s, this);
+    handL = new QGraphicsLineItem(35*s, 45*s, 0*s, 35*s, this);
+    handR = new QGraphicsLineItem(35*s, 45*s, 70*s, 35*s, this);
+    body = new QGraphicsLineItem(35*s, 30*s, 35*s, 70*s, this);
+    head = new QGraphicsEllipseItem(20*s, 0*s, 30*s, 30*s, this);
 
     // FIXME connect name with object in another way (ChangeItem...)
     name = new QGraphicsTextItem("Name", item);
     mid =70*s/2.0;
     setText(name, "Name", mid);
 
-    this->setPos(x, y);
+    //this->setPos(x, y);
 }
 
 void Actor::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)

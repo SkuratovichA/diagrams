@@ -15,7 +15,7 @@ class editorInterface;
  */
 TabCanvas::TabCanvas(QWidget *parent, DiagramType type, QUndoGroup *parentGroup)
 {
-
+    qDebug() << "Here?? Why...";
     undoStack = new QUndoStack(parentGroup);
 
     createScene();
@@ -23,11 +23,13 @@ TabCanvas::TabCanvas(QWidget *parent, DiagramType type, QUndoGroup *parentGroup)
     // TODO: create Diagram depending on the type passed;
     switch (type) {
         case DiagramType::SEQUENCE:
+            qDebug() << "newEntity type sequence";
             newEntityType = DiagramItem::Actor;
             newConnectionType = DiagramItem::ActorConnection;
             //diagram = new SequenceDiagram();
             break;
         case DiagramType::CLASS:
+            qDebug() << "newEntity type class";
             newEntityType = DiagramItem::Class;
             newConnectionType = DiagramItem::ClassConnection;
             //diagram = new ClassDiagram();
@@ -49,7 +51,8 @@ TabCanvas::~TabCanvas() {
  *
  */
 void TabCanvas::createScene() {
-    editorScene = new EditorScene();
+    editorScene = new EditorScene(this);
+    qDebug() << "Scene after creating is " << editorScene;
     //QBrush pixmapBrush(QPixmap(":/icons/background.png").scaled(30,30));
     //editorScene->setBackgroundBrush(pixmapBrush);
     editorScene->setSceneRect(QRect(0, 0, 1400, 1400));
@@ -58,12 +61,13 @@ void TabCanvas::createScene() {
 
     auto *view = new QGraphicsView(editorScene);
     setCentralWidget(view);
-    resize(1400, 1400);
+    //resize(1400, 1400);
    /*  TODO: maybe add this instead of the two lines above?
-    layout = new QVBoxLayout();
-    layout->addWidget(view);
-    setLayout(layout);
     */
+    //layout = new QVBoxLayout();
+    //layout->addWidget(view);
+    //setLayout(layout);
+
 
 
 //    scene = new QGraphicsScene();
@@ -81,7 +85,9 @@ void TabCanvas::createScene() {
  *
  */
 void TabCanvas::moveEntity(DiagramItem *movedItem, const QPointF &startPosition) {
+    qDebug() << "Some troubles mr Andrei" << movedItem << startPosition;
     undoStack->push(new MoveCommand(movedItem, startPosition));
+    qDebug() << "Some troubles mr Sasha";
 }
 
 /**
@@ -101,6 +107,7 @@ void TabCanvas::removeEntity() {
  *
  */
 void TabCanvas::addEntity() {
+    qDebug() << "add entity in tabcanvas.cpp";
     QUndoCommand *addCommand = new AddEntityCommand(newEntityType, editorScene);
     undoStack->push(addCommand);
 //    diagram->addEntity(editorScene);

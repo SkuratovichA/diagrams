@@ -17,7 +17,7 @@ public:
     enum { Type = UserType + 1 };
     enum EntityType { Actor = 0, Class, ActorConnection, ClassConnection, UNKNOWN_TYPE };
 
-    DiagramItem() = default;
+    DiagramItem();
 
 public:
     virtual EntityType getEntityType();
