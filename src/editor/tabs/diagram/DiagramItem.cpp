@@ -111,6 +111,10 @@ void ClassDiagramItem::refactor_table()
     QList<QGraphicsTextItem *> tmp_attrs;
     QList<QGraphicsTextItem *> tmp_methods;
 
+    foreach(QGraphicsItem *obj, this->childItems()) {
+        qDebug() << obj;
+    }
+
     foreach (QGraphicsTextItem *val, this->attrs) {
         tmp_attrs.push_back(val);
         qDebug() << val->toPlainText();
@@ -120,6 +124,14 @@ void ClassDiagramItem::refactor_table()
         tmp_methods.push_back(val);
         qDebug() << val->toPlainText();
     }
+
+    //QList<QGraphicsTextItem *> attrs = { QGraphicsTextItem("ATTRIBUTES", this) };
+
+
+
+    //setX(200);
+    //setY(200);
+    //this->update(100, 100, 500, 500);
 
     //delete this;
 //
