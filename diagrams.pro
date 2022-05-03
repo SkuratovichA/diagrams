@@ -13,15 +13,19 @@ SOURCES += \
     src/mainwindow.cpp \
     src/editor/editorinterface.cpp \
     src/editor/tabs/tabcanvas.cpp \
-    src/editor/tabs/object.cpp \
-    src/editor/tabs/diagram/Diagrams.cpp \
+    src/editor/tabs/diagram/DiagramItem.cpp \
+    src/editor/tabs/diagram/Commands.cpp \
+    src/editor/tabs/diagram/Connections.cpp \
+    src/editor/tabs/diagram/EditorScene.cpp \
 
 HEADERS += \
     src/mainwindow.h \
     src/editor/editorinterface.h \
     src/editor/tabs/tabcanvas.h \
-    src/editor/tabs/object.h \
-    src/editor/tabs/diagram/Diagrams.h \
+    src/editor/tabs/diagram/DiagramItem.h \
+    src/editor/tabs/diagram/Commands.h \
+    src/editor/tabs/diagram/Connections.h \
+    src/editor/tabs/diagram/EditorScene.h \
 
 FORMS += \
     src/editor/editorinterface.ui \

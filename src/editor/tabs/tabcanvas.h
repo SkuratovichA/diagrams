@@ -5,6 +5,8 @@
 #include <QToolBar>
 #include <QBoxLayout>
 #include <QMainWindow>
+#include <QMenuBar>
+#include <QUndoGroup>
 #include "diagram/EditorScene.h"
 
 
@@ -46,10 +48,13 @@ private:
      */
 private:
     DiagramType type;
-
     QUndoStack *undoStack = nullptr;
     QVBoxLayout *layout = nullptr;
     EditorScene *editorScene = nullptr;
+
+    QMenu *editMenu;
+    //QToolBar *editToolBar;
+    QAction *addAttr;
 
     /** Slots
      */
@@ -66,6 +71,7 @@ public slots:
     void sendToBack();
     void sendToFront();
 
+    void addAttr_triggered();
 
     void createScene();
 };

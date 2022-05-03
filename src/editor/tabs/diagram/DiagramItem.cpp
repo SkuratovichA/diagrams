@@ -115,10 +115,10 @@ ClassDiagramItem::ClassDiagramItem(QGraphicsItem *item)
     setFlag(QGraphicsItem::ItemIsMovable);
     setFlag(QGraphicsItem::ItemSendsGeometryChanges);
 
-    refactor_table();
+    refactorTable();
 }
 
-void ClassDiagramItem::refactor_table()
+void ClassDiagramItem::refactorTable()
 {
     qreal x = this->x();
     qreal y = this->y();

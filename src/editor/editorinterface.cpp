@@ -138,6 +138,10 @@ void editorInterface::createDynamicToolBar() {
     dynamicToolBar->addAction(copyAction);
     dynamicToolBar->addAction(pasteAction);
     dynamicToolBar->addSeparator();
+    dynamicToolBar->addAction(propertiesAction);
+
+    //editMenu = menuBar()->addMenu(tr("Add &Attr"));
+    //editMenu = menuBar()->addAction(addAttr);
 //    editToolBar->addAction(bringToFrontAction);
 //    editToolBar->addAction(sendToBackAction);
 }

@@ -40,7 +40,7 @@ class ClassDiagramItem : public QGraphicsRectItem {
 
 public:
     explicit ClassDiagramItem(QGraphicsItem *item = nullptr);
-    void refactor_table();
+    void refactorTable();
 
     void addConnection(ClassConnectionItem *connection);
     void removeConnection(ClassConnectionItem *connection);
