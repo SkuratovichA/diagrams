@@ -187,19 +187,20 @@ void TabCanvas::addConnection() {
     // then according to the type pass the parameters.
     // Probably, there will be a need to remove the first node and put it into the separate variabble
     // Then, call a function to connect n nodes.
+    QUndoCommand *connectionCommand = nullptr;
+    switch (type) {
+        case DiagramType::SEQUENCE:
+//            connectionCommand = new AddActorConnectionCommand(editorScene);
+            break;
 
-//    switch (type) {
-//        case DiagramType::SEQUENCE:
-//            addCommand = new AddActorCommand(editorScene);
-//            break;
-//
-//        case DiagramType::CLASS:
-//            addCommand = new AddClassCommand(editorScene);
-//            break;
-//        default:
-//            assert(!"This statement must not be reached");
-//            return;
-//     }
+        case DiagramType::CLASS:
+//            connectionCommand = new AddClassConnectionCommand(fromNode, toNodes, editorScene);
+            break;
+        default:
+            assert(!"This statement must not be reached");
+            return;
+     }
+     undoStack->push(connectionCommand);
 }
 
 /**

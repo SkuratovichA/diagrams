@@ -10,19 +10,20 @@
 
 
 ActorDiagramItem::ActorDiagramItem(QGraphicsItem *item)
-        : QGraphicsRectItem(item) {
-    QColor color(QRandomGenerator::global()->bounded(256),
-                 QRandomGenerator::global()->bounded(256),
-                 QRandomGenerator::global()->bounded(256));
-    setPen(QPen(QColor(0, 0, 0, 0)));
+        : QGraphicsRectItem(item), DiagramItem(70, 110, DiagramItem::Actor) {
+
+    setFlag(QGraphicsItem::ItemIsSelectable);
+    setFlag(QGraphicsItem::ItemIsMovable);
+    setFlag(QGraphicsItem::ItemSendsGeometryChanges);
+
+    setPen(QPen(QColor(1, 0, 0, 0)));
     auto text = new QGraphicsTextItem("test", this);
     text->setTextInteractionFlags(
             Qt::TextInteractionFlag::TextEditable | Qt::TextInteractionFlag::TextSelectableByMouse |
             Qt::TextInteractionFlag::TextSelectableByKeyboard);
     text->topLevelItem();
 
-    boxRect = QRectF(0, 0, width, height);
-    auto setpen = [&color](QGraphicsLineItem *l) { l->setPen(QPen(color, 3)); };
+    auto setpen = [this](QGraphicsLineItem *l) { l->setPen(QPen(color(), 3)); };
     auto legL = new QGraphicsLineItem(35, 70, 10, 110, this);
     setpen(legL);
     auto legR = new QGraphicsLineItem(35, 70, 60, 110, this);
@@ -34,17 +35,10 @@ ActorDiagramItem::ActorDiagramItem(QGraphicsItem *item)
     auto body = new QGraphicsLineItem(35, 30, 35, 70, this);
     setpen(body);
     auto head = new QGraphicsEllipseItem(20, 0, 30, 30, this);
-    head->setPen(QPen(color, 3));
-    head->setBrush(QBrush(color));
-    setRect(boxRect);
-    setFlag(QGraphicsItem::ItemIsSelectable);
-    setFlag(QGraphicsItem::ItemIsMovable);
-    setFlag(QGraphicsItem::ItemSendsGeometryChanges);
+    head->setPen(QPen(color(), 3));
+    head->setBrush(QBrush(color()));
+    setRect(boundingBox());
 }
-//
-//QPointF ActorDiagramItem::pos() {
-//    return {x() + width / 2, y() + height / 2};
-//}
 
 /**
  *
@@ -63,25 +57,22 @@ void ActorDiagramItem::removeConnection(ActorConnectionItem *connection) {
  * @param item
  */
 ClassDiagramItem::ClassDiagramItem(QGraphicsItem *item)
-        : QGraphicsRectItem(item) {
-    QColor color(QRandomGenerator::global()->bounded(256),
-                 QRandomGenerator::global()->bounded(256),
-                 QRandomGenerator::global()->bounded(256),
-                 180);
+        : QGraphicsRectItem(item), DiagramItem(110, 120, DiagramItem::Class)  {
 
-    setPen(QPen(color));
-    custom_color = color;
+    setFlag(QGraphicsItem::ItemIsSelectable);
+    setFlag(QGraphicsItem::ItemIsMovable);
+    setFlag(QGraphicsItem::ItemSendsGeometryChanges);
+
+    setPen(QPen(color()));
     auto text = new QGraphicsTextItem("name", this);
     text->setPos(-30, -30);
-    text->setTextWidth(width+80);
+    text->setTextWidth(width()+80);
     text->setFont(QFont("Courier", 20));
     text->setTextInteractionFlags(
             Qt::TextInteractionFlag::TextEditable | Qt::TextInteractionFlag::TextSelectableByMouse |
             Qt::TextInteractionFlag::TextSelectableByKeyboard);
     text->topLevelItem();
 
-    boxRect = QRectF(0, 0, width, height);
-    setRect(boxRect);
 
     auto set_text_flags = [](QGraphicsTextItem *l) { l->setTextInteractionFlags(
             Qt::TextInteractionFlag::TextEditable | Qt::TextInteractionFlag::TextSelectableByMouse |
@@ -91,39 +82,37 @@ ClassDiagramItem::ClassDiagramItem(QGraphicsItem *item)
     set_text_flags(attrs_st);
     attrs_st->setPos(2, 2);
 
-    auto line1 = new QGraphicsLineItem(0,30, width, 30, this);
+    auto line1 = new QGraphicsLineItem(0,30, width(), 30, this);
 
     auto tmp_attr = new QGraphicsTextItem("+ int name", this);
     set_text_flags(tmp_attr);
     tmp_attr->setPos(2, 32);
     attrs.push_back(tmp_attr);
 
-    auto line2 = new QGraphicsLineItem(0, 60, width, 60, this);
+    auto line2 = new QGraphicsLineItem(0, 60, width(), 60, this);
 
     auto methods_st = new QGraphicsTextItem("METHODS", this);
     set_text_flags(methods_st);
     methods_st->setPos(2, 62);
 
-    auto line3 = new QGraphicsLineItem(0, 90, width, 90, this);
+    auto line3 = new QGraphicsLineItem(0, 90, width(), 90, this);
 
     auto tmp_method = new QGraphicsTextItem("+ int name()", this);
     set_text_flags(tmp_method);
     tmp_method->setPos(2, 92);
     attrs.push_back(tmp_method);
 
-    setFlag(QGraphicsItem::ItemIsSelectable);
-    setFlag(QGraphicsItem::ItemIsMovable);
-    setFlag(QGraphicsItem::ItemSendsGeometryChanges);
-
-    refactorTable();
+    setRect(boundingBox());
+    setBrush(QBrush(QColor(255,255,255,255)));
+    refactor_table();
 }
 
 void ClassDiagramItem::refactorTable()
 {
     qreal x = this->x();
     qreal y = this->y();
-    qreal width = this->rect().width();
-    qreal height = this->rect().height();
+    setWidth(this->rect().width());
+    setHeight(this->rect().height());
 
     this->setPos(100, 100);
 
