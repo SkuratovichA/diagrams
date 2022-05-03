@@ -259,7 +259,7 @@ void TabCanvas::addMethod_triggered() {
     }
 
     // resize item for one row
-    item->setRect(0,0,item->width(), item->height() + 30);
+    item->setRect(0,0,item->width(), item->height() + item->rowHeight());
 
     // save previous coordinates + move item to [0,0]
     qreal tmp_x = item->x();
@@ -267,8 +267,9 @@ void TabCanvas::addMethod_triggered() {
     item->setPos(0,0);
 
     // create a line
-    auto line1 = new QGraphicsLineItem(0,           item->height(),
-                                       item->width(),item->height(), item);
+    auto line1 = new QGraphicsLineItem(0,           0,
+                                       item->rowWidth(),0, item);
+    line1->setPos(0, item->height());
     item->pushMethodLine(line1);
 
     // create a default text
@@ -279,12 +280,98 @@ void TabCanvas::addMethod_triggered() {
 
     // return item to previous position and set a height
     item->setPos(tmp_x, tmp_y);
-    item->setHeight(item->height() + 30);
+    item->setHeight(item->height() + item->rowHeight());
 
     qDebug() << "add Method";
 };
 
 void TabCanvas::rmMethod_triggered() {
+    ClassDiagramItem *item = static_cast<ClassDiagramItem *>(selectedObject());
+
+    if (item == nullptr) {
+        qDebug() << "No selected item";
+        return;
+    }
+
+    // one default METHODS
+    auto size = item->getMethods().size();
+    if (size < 2) {
+        qDebug() << "No methods";
+        return;
+    }
+
+    // resize item for one row
+    item->setRect(0,0,item->width(), item->height() - item->rowHeight());
+
+    // save previous coordinates + move item to [0,0]
+    qreal tmp_x = item->x();
+    qreal tmp_y = item->y();
+    item->setPos(0,0);
+
+    // delete line and text
+    item->popMethod();
+    item->popMethodsLine();
+
+    item->setPos(tmp_x, tmp_y);
+    item->setHeight(item->height() - item->rowHeight());
+
+    // return item to previous position and set a height
+    qDebug() << "delete Method";
+};
+
+void TabCanvas::addAttr_triggered() {
+    ClassDiagramItem *item = static_cast<ClassDiagramItem *>(selectedObject());
+
+    if (item == nullptr) {
+        qDebug() << "No selected item";
+        return;
+    }
+
+    // resize item for one row
+    item->setRect(0,0,item->width(), item->height() + item->rowHeight());
+
+    // save previous coordinates + move item to [0,0]
+    qreal tmp_x = item->x();
+    qreal tmp_y = item->y();
+    item->setPos(0,0);
+
+    auto inc = item->getAttrs().size() + 1;
+    qDebug() << "attrs:" << inc;
+
+    int i = 1;
+    foreach (QGraphicsTextItem *val, item->getMethods()) {
+        qDebug() << inc * item->rowHeight() + i*30 + 2 << "text";
+        val->setPos(2, (i + inc) * item->rowHeight() + 2);
+        i++;
+    }
+
+    i = 1;
+    foreach (QGraphicsLineItem *val, item->getMethodsLines()) {
+        qDebug() << val->x() << val->y() << "line";
+        val->setPos(0, (i + inc) * item->rowHeight());
+        i++;
+    }
+
+    // create a line
+    auto line1 = new QGraphicsLineItem(0,           0,
+                                       item->rowWidth(),0, item);
+    line1->setPos(0, inc * item->rowHeight());
+    item->pushAttrLine(line1);
+
+    // create a default text
+    auto tmp_attr = new QGraphicsTextItem("+ int word", item);
+    item->setTextFlags(tmp_attr);
+    tmp_attr->setPos(2, (item->rowHeight() * inc) + 2);
+    item->pushAttr(tmp_attr);
+
+    // return item to previous position and set a height
+    item->setPos(tmp_x, tmp_y);
+    item->setHeight(item->height() + item->rowHeight());
+
+    qDebug() << "add Attr";
+};
+
+void TabCanvas::rmAttr_triggered() {
     ClassDiagramItem *item = static_cast<ClassDiagramItem *>(selectedObject());
 
     if (item == nullptr) {
@@ -299,20 +386,38 @@ void TabCanvas::rmMethod_triggered() {
     }
 
     // resize item for one row
-    item->setRect(0,0,item->width(), item->height() - 30);
+    item->setRect(0,0,item->width(), item->height() - item->rowHeight());
 
     // save previous coordinates + move item to [0,0]
     qreal tmp_x = item->x();
     qreal tmp_y = item->y();
     item->setPos(0,0);
 
-    item->popMethod();
-    item->popMethodsLine();
+    // delete line and text
+    item->popAttr();
+    item->popAttrsLine();
+
+    auto inc = item->getAttrs().size() + 1;
+
+    int i = 0;
+    foreach (QGraphicsTextItem *val, item->getMethods()) {
+        //qDebug() << inc * item->rowHeight() + i*30 + 2 << "text";
+        val->setPos(2, (inc + i) * item->rowHeight() + 2);
+        i++;
+    }
+
+    i = 0;
+    foreach (QGraphicsLineItem *val, item->getMethodsLines()) {
+        //qDebug() << val->x() << val->y() << "line";
+        val->setPos(0, (inc + i) * item->rowHeight());
+        i++;
+    }
 
     item->setPos(tmp_x, tmp_y);
-    item->setHeight(item->height() - 30);
+    item->setHeight(item->height() - item->rowHeight());
 
-    qDebug() << "delete Method";
+    // return item to previous position and set a height
+    qDebug() << "delete Attr";
 };
 
 /**
@@ -325,9 +430,17 @@ void TabCanvas::properties() {
     rmMethod = new QAction(tr("Delete &Method"));
     connect(rmMethod, SIGNAL(triggered()), this, SLOT(rmMethod_triggered()));
 
+    addAttr = new QAction(tr("Add &Attribute"));
+    connect(addAttr, SIGNAL(triggered()), this, SLOT(addAttr_triggered()));
+
+    rmAttr = new QAction(tr("Delete &Attribute"));
+    connect(rmAttr, SIGNAL(triggered()), this, SLOT(rmAttr_triggered()));
+
     editMenu = menuBar()->addMenu(tr("Properties"));
     editMenu->addAction(addMethod);
     editMenu->addAction(rmMethod);
+    editMenu->addAction(addAttr);
+    editMenu->addAction(rmAttr);
 
 
     qDebug() << "properties TabCanvas";

@@ -126,6 +126,14 @@ public:
         return methodsLines;
     }
 
+    QList<QGraphicsTextItem *> getAttrs() {
+        return attrs;
+    }
+
+    QList<QGraphicsLineItem *> getAttrsLines() {
+        return attrsLines;
+    }
+
     void popMethod() {
         if (methods.isEmpty()) {
             return;
@@ -139,6 +147,22 @@ public:
             return;
         }
         QGraphicsLineItem *tmp = methodsLines.takeLast();
+        delete tmp;
+    }
+
+    void popAttr() {
+        if (attrs.isEmpty()) {
+            return;
+        }
+        QGraphicsTextItem *tmp = attrs.takeLast();
+        delete tmp;
+    }
+
+    void popAttrsLine() {
+        if (attrsLines.isEmpty()) {
+            return;
+        }
+        QGraphicsLineItem *tmp = attrsLines.takeLast();
         delete tmp;
     }
 
@@ -158,6 +182,14 @@ public:
         attrsLines.push_back(item);
     }
 
+    qreal rowHeight() {
+        return _rowHeight;
+    }
+
+    qreal rowWidth() {
+        return _rowWidth;
+    }
+
     void setTextFlags(QGraphicsTextItem *item) {
         item->setTextInteractionFlags(Qt::TextInteractionFlag::TextEditable     |
                                       Qt::TextInteractionFlag::TextSelectableByMouse |
@@ -170,7 +202,8 @@ private:
     QList<QGraphicsTextItem *> methods;
     QList<QGraphicsLineItem *> attrsLines;
     QList<QGraphicsLineItem *> methodsLines;
-    QColor customColor;
+    qreal _rowHeight;
+    qreal _rowWidth;
 };
 
 #endif // Object_H

@@ -59,6 +59,9 @@ void ActorDiagramItem::removeConnection(ActorConnectionItem *connection) {
 ClassDiagramItem::ClassDiagramItem(QGraphicsItem *item)
         : QGraphicsRectItem(item), DiagramItem(120, 120, DiagramItem::Class)  {
 
+    _rowHeight = 30;
+    _rowWidth = 120;
+
     setFlag(QGraphicsItem::ItemIsSelectable);
     setFlag(QGraphicsItem::ItemIsMovable);
     setFlag(QGraphicsItem::ItemSendsGeometryChanges);
@@ -82,7 +85,8 @@ ClassDiagramItem::ClassDiagramItem(QGraphicsItem *item)
     set_text_flags(attrs_st);
     attrs_st->setPos(2, 2);
 
-    auto line1 = new QGraphicsLineItem(0,30, width(), 30, this);
+    auto line1 = new QGraphicsLineItem(0,0, width(), 0, this);
+    line1->setPos(0, 30);
     attrsLines.push_back(line1);
 
     auto tmp_attr = new QGraphicsTextItem("+ int name", this);
@@ -90,14 +94,17 @@ ClassDiagramItem::ClassDiagramItem(QGraphicsItem *item)
     tmp_attr->setPos(2, 32);
     attrs.push_back(tmp_attr);
 
-    auto line2 = new QGraphicsLineItem(0, 60, width(), 60, this);
-   // methodsLines.push_back(line2);
+    auto line2 = new QGraphicsLineItem(0, 0, width(), 0, this);
+    line2->setPos(0, 60);
+    methodsLines.push_back(line2);
 
     auto methods_st = new QGraphicsTextItem("METHODS", this);
     set_text_flags(methods_st);
     methods_st->setPos(2, 62);
+    methods.push_back(methods_st);
 
-    auto line3 = new QGraphicsLineItem(0, 90, width(), 90, this);
+    auto line3 = new QGraphicsLineItem(0, 0, width(), 0, this);
+    line3->setPos(0, 90);
     methodsLines.push_back(line3);
 
     auto tmp_method = new QGraphicsTextItem("+ int name()", this);

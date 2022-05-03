@@ -56,6 +56,8 @@ private:
     //QToolBar *editToolBar;
     QAction *addMethod;
     QAction *rmMethod;
+    QAction *addAttr;
+    QAction *rmAttr;
 
     /** Slots
      */
@@ -73,8 +75,8 @@ public slots:
     void sendToFront();
 
     void addMethod_triggered();
-    //void addAttr_triggered();
-    //void rmAttr_triggered();
+    void addAttr_triggered();
+    void rmAttr_triggered();
     void rmMethod_triggered();
 
     void createScene();
