@@ -4,7 +4,8 @@
 #include <QWidget>
 #include <QToolBar>
 #include <QBoxLayout>
-#include "diagram/Diagrams.h"
+#include <QMainWindow>
+#include "diagram/EditorScene.h"
 
 
 namespace SceneType {
@@ -17,35 +18,47 @@ namespace SceneType {
 
 using namespace SceneType;
 
-class TabCanvas : public QWidget
-{
-    Q_OBJECT
+class TabCanvas : public QMainWindow {
+Q_OBJECT
 
 public:
-    explicit TabCanvas(QWidget *parent = nullptr, DiagramType diagramType = DIAGRAM_TYPE_DEFAULT);
+    explicit TabCanvas(
+            QWidget *parent = nullptr,
+            DiagramType diagramType = DIAGRAM_TYPE_DEFAULT,
+            QUndoGroup *parentGroup = nullptr
+    );
+
     ~TabCanvas();
 
 public:
-    std::string get_string_representation();
+    QUndoStack *getUndoStack();
 
+    std::string getStringRepresentation();
+
+
+    /** Private functions
+     */
 private:
-    void create_scene();
-    Object *selectedObject();
 
+    QGraphicsItem *selectedObject();
+
+    /** Private variables
+     */
 private:
-    Diagram* diagram;
-    QVBoxLayout *layout;
-    QGraphicsView *view;
-    QGraphicsScene *scene;
+    DiagramType type;
 
-/** Slots
- */
+    QUndoStack *undoStack = nullptr;
+    QVBoxLayout *layout = nullptr;
+    EditorScene *editorScene = nullptr;
+
+    /** Slots
+     */
 public slots:
+    void moveEntity(ActorDiagramItem *movedItem, const QPointF &startPosition);
+    void removeEntity();
     void addEntity();
     void addConnection();
-    void remove();
-    void undo();
-    void redo();
+
     void cut();
     void copy();
     void paste();
@@ -54,6 +67,7 @@ public slots:
     void sendToFront();
 
 
+    void createScene();
 };
 
 #endif // TABCANVAS_H

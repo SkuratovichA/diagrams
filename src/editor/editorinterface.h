@@ -2,8 +2,10 @@
 #define EDITORINTERFACE_H
 
 #include <QMainWindow>
+#include <QUndoGroup>
+#include <QUndoView>
 #include "tabs/tabcanvas.h"
-#include "tabs/object.h"
+#include "tabs/diagram/DiagramItem.h"
 
 
 namespace Ui {
@@ -41,36 +43,49 @@ public:
     //void loadFile(const QString &filename);
 
 private slots:
+    void actionSaveAs_triggered();
     void actionSave_triggered();
-    void actionSave_As_triggered();
-
     void actionDeleteTab_triggered();
     void actionNewTab_triggered();
 
+    void actionAddEntity_triggered();
+    void actionAddConnection_triggered();
+    void actionRemove_triggered();
+    void actionCut_triggered();
+    void actionCopy_triggered();
+    void actionPaste_triggered();
+    void actionProperties_triggered();
+    void actionUndo();
+    void actionRedo();
     void actionQuit_triggered();
-    void tabSelected();
+
+    void newTabSelected();
 
 private:
-    QString get_text_representation();
+    void createUndoView();
     void createTabs();
-    void createToolBars();
-
-    void disconnectSlots(TabCanvas *prevTab);
+    void createDynamicToolBar();
     void createStaticToolBar();
 
+    QString get_text_representation();
+
 private:
-    QToolBar *editToolBar;
+    QToolBar *staticToolBar;
+    QToolBar *dynamicToolBar;
     QTabWidget *tabWidget;
 
-    Ui::editorInterface *ui;
-    QString filename = "";
-    QString filenameFilter = "Diagram Files (*.gae)";
+    QUndoGroup *undoStack = nullptr;
+    QUndoView *undoView = nullptr;
 
+    Ui::editorInterface *ui;
+    QString filename = nullptr;
+    QString filenameFilter = "Diagram Files (*.gae)";
 
     /**
      * actions
      */
 private:
+
     QAction *addEntityAction;
     QAction *addConnectionAction;
     QAction *deleteAction;
@@ -82,8 +97,8 @@ private:
     QAction *sendToBackAction;
 
     QAction *newTabAction;
-    QAction *deleteTabAction;
     QAction *saveAction;
+    QAction *deleteTabAction;
     QAction *undoAction;
     QAction *redoAction;
 };

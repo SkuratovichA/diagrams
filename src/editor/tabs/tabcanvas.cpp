@@ -1,59 +1,119 @@
 #include <QGraphicsView>
+#include <QUndoStack>
+#include <QUndoGroup>
 #include "tabcanvas.h"
-#include "diagram/Diagrams.h"
+#include "diagram/Commands.h"
 
 using namespace SceneType;
 
+class editorInterface;
+
 /**
- *
- * @param parent
- * @param type
- */
-TabCanvas::TabCanvas(QWidget *parent, DiagramType type) :
-        QWidget(parent) {
-
-    create_scene();
-    layout = new QVBoxLayout();
-    layout->addWidget(view);
-    setLayout(layout);
-
-    // TOOD: create Diagram depending on the type passed;
-    switch (type) {
-        case DiagramType::SEQUENCE:
-            diagram = new SequenceDiagram();
-            break;
-        case DiagramType::CLASS:
-            diagram = new ClassDiagram();
-            break;
-        default:
-            throw std::runtime_error("Unknown diagram type");
+*
+* @param parent
+* @param type
+*/
+TabCanvas::TabCanvas(QWidget *parent, DiagramType type, QUndoGroup *parentGroup) {
+    undoStack = new QUndoStack(parentGroup);
+    createScene();
+    if (type != DiagramType::CLASS && type != DiagramType::SEQUENCE) {
+        throw std::runtime_error("Unknown diagram type");
     }
+    this->type = type;
 }
 
+/**
+ *
+ */
 TabCanvas::~TabCanvas() {
-    delete diagram;
     delete layout;
 }
 
 /**
  *
  */
-void TabCanvas::create_scene() {
-    scene = new QGraphicsScene();
-    view = new QGraphicsView(scene);
+void TabCanvas::createScene() {
+    editorScene = new EditorScene(this);
 
-    scene->setSceneRect(0, 0, 1400, 1000);
-    view->setMinimumSize(400, 400);
+    editorScene->setSceneRect(QRect(0, 0, 800, 800));
+    connect(editorScene, &EditorScene::itemMoved, this, &TabCanvas::moveEntity);
+    auto *view = new QGraphicsView(editorScene);
 
-    view->setScene(scene);
     view->setDragMode(QGraphicsView::RubberBandDrag);
-    view->setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing);
+    view->setRenderHints(QPainter::Antialiasing
+                               | QPainter::TextAntialiasing);
+
+    setCentralWidget(view);
 }
 
-Object *TabCanvas::selectedObject() {
-    QList<QGraphicsItem *> items = scene->selectedItems();
+/**
+ *
+ */
+void TabCanvas::moveEntity(ActorDiagramItem *movedItem, const QPointF &startPosition) {
+    undoStack->push(new MoveCommand(movedItem, startPosition));
+}
+
+/**
+ *
+ */
+void TabCanvas::removeEntity() {
+    if (editorScene->selectedItems().isEmpty()) {
+        return;
+    }
+    QUndoCommand *deleteCommand = new DeleteCommand(editorScene);
+    undoStack->push(deleteCommand);
+}
+
+/**
+ *
+ */
+void TabCanvas::addEntity() {
+    QUndoCommand *addCommand = nullptr;
+    switch (type) {
+        case DiagramType::SEQUENCE:
+            addCommand = new AddActorCommand(editorScene);
+            break;
+        case DiagramType::CLASS:
+            addCommand = new AddClassCommand(editorScene);
+            break;
+        default:
+            assert(!"This statement must not be reached");
+            return;
+    }
+    undoStack->push(addCommand);
+}
+
+/**
+ *
+ */
+void TabCanvas::addConnection() {
+    // FIXME: create a function to select one or more nodes
+    // then according to the type pass the parameters.
+    // Probably, there will be a need to remove the first node and put it into the separate variabble
+    // Then, call a function to connect n nodes.
+
+//    switch (type) {
+//        case DiagramType::SEQUENCE:
+//            addCommand = new AddActorCommand(editorScene);
+//            break;
+//
+//        case DiagramType::CLASS:
+//            addCommand = new AddClassCommand(editorScene);
+//            break;
+//        default:
+//            assert(!"This statement must not be reached");
+//            return;
+//     }
+}
+
+/**
+ *
+ * @return
+ */
+QGraphicsItem *TabCanvas::selectedObject() {
+    QList<QGraphicsItem *> items = editorScene->selectedItems();
     if (items.count() == 1) {
-        return dynamic_cast<Object *>(items.first());
+        return dynamic_cast<QGraphicsItem *>(items.first());
     } else {
         return 0;
     }
@@ -62,37 +122,9 @@ Object *TabCanvas::selectedObject() {
 /**
  *
  */
-void TabCanvas::addEntity() {
-    diagram->addEntity(scene);
-}
-
-/**
- *
- */
-void TabCanvas::addConnection() {
-    diagram->addConnection(scene);
-}
-
-/**
- *
- */
-void TabCanvas::remove() {
-    QList<QGraphicsItem *> items = scene->selectedItems();
-    qDeleteAll(items);
-}
-
-/**
- *
- */
-void TabCanvas::undo() {
-    qDebug() << "undo";
-}
-
-/**
- *
- */
-void TabCanvas::redo() {
-    qDebug() << "redo";
+void TabCanvas::paste() {
+    qDebug() << "paste";
+    // FIXME: paste
 }
 
 /**
@@ -100,62 +132,61 @@ void TabCanvas::redo() {
  */
 void TabCanvas::cut() {
     qDebug() << "cut";
-    // TODO: implement me
+    // FIXME: implement me
 }
 
 /**
  *
  */
 void TabCanvas::copy() {
+    // TODO: implement me
+#if 0
     qDebug() << "copy";
     Object *tmp = selectedObject();
-    if(!tmp)
+        if(!tmp)
         return;
 
-//    QString str = QString("Actor %1 %2 %3 %4")
-//                    .arg(tmp->x())
-//                    .arg(tmp->y())
-//                    .arg(tmp->scale())
-    // TODO: implement me
-}
-
-/**
- *
- */
-void TabCanvas::paste() {
-    qDebug() << "paste";
-    // TODO: paste
+    QString str = QString("ActorDiagramItem %1 %2 %3 %4")
+                    .arg(tmp->x())
+                    .arg(tmp->y())
+                    .arg(tmp->scale())
+#endif
 }
 
 /**
  *
  */
 void TabCanvas::properties() {
-    qDebug() << "not segfault";
-    diagram->setProperties();
+    qDebug() << "properties";
 }
 
 /**
  *
  */
 void TabCanvas::sendToBack() {
-    qDebug() << "not segfault";
-    diagram->sendToBack();
+    qDebug() << "send to back";
 }
 
 /**
  *
  */
 void TabCanvas::sendToFront() {
-    qDebug() << "not segfault";
-    diagram->sendToFront();
+    qDebug() << "send to front";
 }
 
 /**
  *
  * @return
  */
-std::string TabCanvas::get_string_representation() {
-    // for every object, return a class in json?
+std::string TabCanvas::getStringRepresentation() {
+    // FIXME: in the end
     return {"hello"};
+}
+
+/** When tab is changed, there is a need to manually set the current undo stack.
+ *
+ * @return undo stack
+ */
+QUndoStack *TabCanvas::getUndoStack() {
+    return undoStack;
 }
