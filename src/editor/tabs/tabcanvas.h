@@ -54,7 +54,8 @@ private:
 
     QMenu *editMenu;
     //QToolBar *editToolBar;
-    QAction *addAttr;
+    QAction *addMethod;
+    QAction *rmMethod;
 
     /** Slots
      */
@@ -71,7 +72,10 @@ public slots:
     void sendToBack();
     void sendToFront();
 
-    void addAttr_triggered();
+    void addMethod_triggered();
+    //void addAttr_triggered();
+    //void rmAttr_triggered();
+    void rmMethod_triggered();
 
     void createScene();
 };

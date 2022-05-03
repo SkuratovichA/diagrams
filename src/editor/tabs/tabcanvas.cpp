@@ -250,27 +250,84 @@ void TabCanvas::copy() {
 #endif
 }
 
-void TabCanvas::addAttr_triggered() {
-    QGraphicsItem * item = selectedObject();
+void TabCanvas::addMethod_triggered() {
+    ClassDiagramItem *item = static_cast<ClassDiagramItem *>(selectedObject());
 
-    qDebug() << item;
-    qDebug() << "add attr";
+    if (item == nullptr) {
+        qDebug() << "No selected item";
+        return;
+    }
+
+    // resize item for one row
+    item->setRect(0,0,item->width(), item->height() + 30);
+
+    // save previous coordinates + move item to [0,0]
+    qreal tmp_x = item->x();
+    qreal tmp_y = item->y();
+    item->setPos(0,0);
+
+    // create a line
+    auto line1 = new QGraphicsLineItem(0,           item->height(),
+                                       item->width(),item->height(), item);
+    item->pushMethodLine(line1);
+
+    // create a default text
+    auto tmp_attr = new QGraphicsTextItem("+ int example()", item);
+    item->setTextFlags(tmp_attr);
+    tmp_attr->setPos(2, item->height() + 2);
+    item->pushMethod(tmp_attr);
+
+    // return item to previous position and set a height
+    item->setPos(tmp_x, tmp_y);
+    item->setHeight(item->height() + 30);
+
+    qDebug() << "add Method";
+};
+
+void TabCanvas::rmMethod_triggered() {
+    ClassDiagramItem *item = static_cast<ClassDiagramItem *>(selectedObject());
+
+    if (item == nullptr) {
+        qDebug() << "No selected item";
+        return;
+    }
+
+    auto size = item->getMethods().size();
+    if (size < 1) {
+        qDebug() << "No methods";
+        return;
+    }
+
+    // resize item for one row
+    item->setRect(0,0,item->width(), item->height() - 30);
+
+    // save previous coordinates + move item to [0,0]
+    qreal tmp_x = item->x();
+    qreal tmp_y = item->y();
+    item->setPos(0,0);
+
+    item->popMethod();
+    item->popMethodsLine();
+
+    item->setPos(tmp_x, tmp_y);
+    item->setHeight(item->height() - 30);
+
+    qDebug() << "delete Method";
 };
 
 /**
  *
  */
 void TabCanvas::properties() {
-    addAttr = new QAction(tr("Add &Attr"));
+    addMethod = new QAction(tr("Add &Method"));
+    connect(addMethod, SIGNAL(triggered()), this, SLOT(addMethod_triggered()));
 
-    //addAttr->setIcon(QIcon(":/images/node.png"));
-    //addAttr->setShortcut(tr("Ctrl+T"));
-    connect(addAttr, SIGNAL(triggered()), this, SLOT(addAttr_triggered()));
+    rmMethod = new QAction(tr("Delete &Method"));
+    connect(rmMethod, SIGNAL(triggered()), this, SLOT(rmMethod_triggered()));
 
-    editMenu = menuBar()->addMenu(tr("Add &Attr"));
-    editMenu->addAction(addAttr);
-    //editToolBar = addToolBar(tr("Edit"));
-    //editToolBar->addAction(addAttr);
+    editMenu = menuBar()->addMenu(tr("Properties"));
+    editMenu->addAction(addMethod);
+    editMenu->addAction(rmMethod);
 
 
     qDebug() << "properties TabCanvas";

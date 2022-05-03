@@ -129,8 +129,8 @@ AddClassCommand::AddClassCommand(QGraphicsScene *scene, QUndoCommand *parent)
     static int itemCount = 0;
 
     diagramItem = new ClassDiagramItem();
-    initialPosition = QPointF(((itemCount * 20) + 100)% int(scene->width()),
-                              ((itemCount * 20) + 100)% int(scene->height()));
+//    initialPosition = QPointF(((itemCount * 20) + 100)% int(scene->width()),
+//                              ((itemCount * 20) + 100)% int(scene->height()));
     itemCount++;
     scene->update();
 }

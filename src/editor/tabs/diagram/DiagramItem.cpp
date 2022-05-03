@@ -57,7 +57,7 @@ void ActorDiagramItem::removeConnection(ActorConnectionItem *connection) {
  * @param item
  */
 ClassDiagramItem::ClassDiagramItem(QGraphicsItem *item)
-        : QGraphicsRectItem(item), DiagramItem(110, 120, DiagramItem::Class)  {
+        : QGraphicsRectItem(item), DiagramItem(120, 120, DiagramItem::Class)  {
 
     setFlag(QGraphicsItem::ItemIsSelectable);
     setFlag(QGraphicsItem::ItemIsMovable);
@@ -83,6 +83,7 @@ ClassDiagramItem::ClassDiagramItem(QGraphicsItem *item)
     attrs_st->setPos(2, 2);
 
     auto line1 = new QGraphicsLineItem(0,30, width(), 30, this);
+    attrsLines.push_back(line1);
 
     auto tmp_attr = new QGraphicsTextItem("+ int name", this);
     set_text_flags(tmp_attr);
@@ -90,21 +91,25 @@ ClassDiagramItem::ClassDiagramItem(QGraphicsItem *item)
     attrs.push_back(tmp_attr);
 
     auto line2 = new QGraphicsLineItem(0, 60, width(), 60, this);
+   // methodsLines.push_back(line2);
 
     auto methods_st = new QGraphicsTextItem("METHODS", this);
     set_text_flags(methods_st);
     methods_st->setPos(2, 62);
 
     auto line3 = new QGraphicsLineItem(0, 90, width(), 90, this);
+    methodsLines.push_back(line3);
 
     auto tmp_method = new QGraphicsTextItem("+ int name()", this);
     set_text_flags(tmp_method);
     tmp_method->setPos(2, 92);
-    attrs.push_back(tmp_method);
+    methods.push_back(tmp_method);
+
+   // qDebug() << attrs[0]->toPlainText();
 
     setRect(boundingBox());
     setBrush(QBrush(QColor(255,255,255,255)));
-    refactorTable();
+
 }
 
 void ClassDiagramItem::refactorTable()
@@ -114,7 +119,9 @@ void ClassDiagramItem::refactorTable()
     setWidth(this->rect().width());
     setHeight(this->rect().height());
 
-    this->setPos(100, 100);
+    qDebug() << "DELETE THIS SHIT";
+
+    //this->setPos(100, 100);
 
     auto set_text_flags = [](QGraphicsTextItem *l) { l->setTextInteractionFlags(
             Qt::TextInteractionFlag::TextEditable | Qt::TextInteractionFlag::TextSelectableByMouse |

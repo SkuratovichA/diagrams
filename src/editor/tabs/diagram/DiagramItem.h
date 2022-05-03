@@ -60,10 +60,6 @@ public:
         return _height;
     }
 
-    qreal width() {
-        return _width;
-    }
-
     void setWidth(qreal width) {
         _width = width;
     }
@@ -88,6 +84,10 @@ public:
         return _color;
     }
 
+    qreal width() {
+        return _width;
+    }
+
 private:
     qreal _height;
     qreal _width;
@@ -96,7 +96,7 @@ private:
     QColor _color;
 };
 
-class ActorDiagramItem : public QGraphicsRectItem, DiagramItem {
+class ActorDiagramItem : public QGraphicsRectItem, public DiagramItem {
 public:
     explicit ActorDiagramItem(QGraphicsItem *item = nullptr);
 
@@ -108,7 +108,7 @@ private:
     QSet<ActorConnectionItem *> connections;
 };
 
-class ClassDiagramItem : public QGraphicsRectItem, DiagramItem {
+class ClassDiagramItem : public QGraphicsRectItem, public DiagramItem {
 public:
     explicit ClassDiagramItem(QGraphicsItem *item = nullptr);
 
@@ -118,10 +118,58 @@ public:
 
     void removeConnection(ClassConnectionItem *connection);
 
+    QList<QGraphicsTextItem *> getMethods() {
+        return methods;
+    }
+
+    QList<QGraphicsLineItem *> getMethodsLines() {
+        return methodsLines;
+    }
+
+    void popMethod() {
+        if (methods.isEmpty()) {
+            return;
+        }
+        QGraphicsTextItem *tmp = methods.takeLast();
+        delete tmp;
+    }
+
+    void popMethodsLine() {
+        if (methodsLines.isEmpty()) {
+            return;
+        }
+        QGraphicsLineItem *tmp = methodsLines.takeLast();
+        delete tmp;
+    }
+
+    void pushAttr(QGraphicsTextItem *item) {
+        attrs.push_back(item);
+    }
+
+    void pushMethod(QGraphicsTextItem *item) {
+        methods.push_back(item);
+    }
+
+    void pushMethodLine(QGraphicsLineItem *item) {
+        methodsLines.push_back(item);
+    }
+
+    void pushAttrLine(QGraphicsLineItem *item) {
+        attrsLines.push_back(item);
+    }
+
+    void setTextFlags(QGraphicsTextItem *item) {
+        item->setTextInteractionFlags(Qt::TextInteractionFlag::TextEditable     |
+                                      Qt::TextInteractionFlag::TextSelectableByMouse |
+                                      Qt::TextInteractionFlag::TextSelectableByKeyboard);
+    }
+
 private:
     QSet<ClassConnectionItem *> connections;
     QList<QGraphicsTextItem *> attrs;
     QList<QGraphicsTextItem *> methods;
+    QList<QGraphicsLineItem *> attrsLines;
+    QList<QGraphicsLineItem *> methodsLines;
     QColor customColor;
 };
 
