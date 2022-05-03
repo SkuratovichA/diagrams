@@ -261,27 +261,13 @@ void TabCanvas::addMethod_triggered() {
     // resize item for one row
     item->setRect(0,0,item->width(), item->height() + item->rowHeight());
 
-    // save previous coordinates + move item to [0,0]
-    qreal tmp_x = item->x();
-    qreal tmp_y = item->y();
-    item->setPos(0,0);
+    auto line = item->createLine(0, item->height());
+    item->pushMethodLine(line);
 
-    // create a line
-    auto line1 = new QGraphicsLineItem(0,           0,
-                                       item->rowWidth(),0, item);
-    line1->setPos(0, item->height());
-    item->pushMethodLine(line1);
+    auto text = item->createText(item->tabText(), item->height() + item->tabText(), "+ int example()");
+    item->pushMethod(text);
 
-    // create a default text
-    auto tmp_attr = new QGraphicsTextItem("+ int example()", item);
-    item->setTextFlags(tmp_attr);
-    tmp_attr->setPos(2, item->height() + 2);
-    item->pushMethod(tmp_attr);
-
-    // return item to previous position and set a height
-    item->setPos(tmp_x, tmp_y);
     item->setHeight(item->height() + item->rowHeight());
-
     qDebug() << "add Method";
 };
 
@@ -303,19 +289,11 @@ void TabCanvas::rmMethod_triggered() {
     // resize item for one row
     item->setRect(0,0,item->width(), item->height() - item->rowHeight());
 
-    // save previous coordinates + move item to [0,0]
-    qreal tmp_x = item->x();
-    qreal tmp_y = item->y();
-    item->setPos(0,0);
-
     // delete line and text
     item->popMethod();
     item->popMethodsLine();
 
-    item->setPos(tmp_x, tmp_y);
     item->setHeight(item->height() - item->rowHeight());
-
-    // return item to previous position and set a height
     qDebug() << "delete Method";
 };
 
@@ -330,44 +308,17 @@ void TabCanvas::addAttr_triggered() {
     // resize item for one row
     item->setRect(0,0,item->width(), item->height() + item->rowHeight());
 
-    // save previous coordinates + move item to [0,0]
-    qreal tmp_x = item->x();
-    qreal tmp_y = item->y();
-    item->setPos(0,0);
+    long long inc = item->getAttrs().size() + 1;
+    item->moveTexts(1, inc);
+    item->moveLines(1, inc);
 
-    auto inc = item->getAttrs().size() + 1;
-    qDebug() << "attrs:" << inc;
+    auto line = item->createLine(0, inc * item->rowHeight());
+    item->pushAttrLine(line);
 
-    int i = 1;
-    foreach (QGraphicsTextItem *val, item->getMethods()) {
-        qDebug() << inc * item->rowHeight() + i*30 + 2 << "text";
-        val->setPos(2, (i + inc) * item->rowHeight() + 2);
-        i++;
-    }
+    auto text = item->createText(item->tabText(), item->rowHeight() * inc + item->tabText(), "+ int word");
+    item->pushAttr(text);
 
-    i = 1;
-    foreach (QGraphicsLineItem *val, item->getMethodsLines()) {
-        qDebug() << val->x() << val->y() << "line";
-        val->setPos(0, (i + inc) * item->rowHeight());
-        i++;
-    }
-
-    // create a line
-    auto line1 = new QGraphicsLineItem(0,           0,
-                                       item->rowWidth(),0, item);
-    line1->setPos(0, inc * item->rowHeight());
-    item->pushAttrLine(line1);
-
-    // create a default text
-    auto tmp_attr = new QGraphicsTextItem("+ int word", item);
-    item->setTextFlags(tmp_attr);
-    tmp_attr->setPos(2, (item->rowHeight() * inc) + 2);
-    item->pushAttr(tmp_attr);
-
-    // return item to previous position and set a height
-    item->setPos(tmp_x, tmp_y);
     item->setHeight(item->height() + item->rowHeight());
-
     qDebug() << "add Attr";
 };
 
@@ -388,35 +339,17 @@ void TabCanvas::rmAttr_triggered() {
     // resize item for one row
     item->setRect(0,0,item->width(), item->height() - item->rowHeight());
 
-    // save previous coordinates + move item to [0,0]
-    qreal tmp_x = item->x();
-    qreal tmp_y = item->y();
-    item->setPos(0,0);
-
     // delete line and text
     item->popAttr();
     item->popAttrsLine();
 
-    auto inc = item->getAttrs().size() + 1;
+    // move items
+    long long inc = item->getAttrs().size() + 1;
+    item->moveTexts(0, inc);
+    item->moveLines(0, inc);
 
-    int i = 0;
-    foreach (QGraphicsTextItem *val, item->getMethods()) {
-        //qDebug() << inc * item->rowHeight() + i*30 + 2 << "text";
-        val->setPos(2, (inc + i) * item->rowHeight() + 2);
-        i++;
-    }
-
-    i = 0;
-    foreach (QGraphicsLineItem *val, item->getMethodsLines()) {
-        //qDebug() << val->x() << val->y() << "line";
-        val->setPos(0, (inc + i) * item->rowHeight());
-        i++;
-    }
-
-    item->setPos(tmp_x, tmp_y);
+    //item->setPos(tmp_x, tmp_y);
     item->setHeight(item->height() - item->rowHeight());
-
-    // return item to previous position and set a height
     qDebug() << "delete Attr";
 };
 
@@ -441,7 +374,6 @@ void TabCanvas::properties() {
     editMenu->addAction(rmMethod);
     editMenu->addAction(addAttr);
     editMenu->addAction(rmAttr);
-
 
     qDebug() << "properties TabCanvas";
 }

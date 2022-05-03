@@ -190,6 +190,37 @@ public:
         return _rowWidth;
     }
 
+    qreal tabText() {
+        return _tabText;
+    }
+
+    void moveLines(int st, long long el) {
+        foreach (QGraphicsLineItem *val, methodsLines) {
+            val->setPos(0, (el + st) * _rowHeight);
+            st++;
+        }
+    }
+
+    void moveTexts(int st, long long el) {
+        foreach (QGraphicsTextItem *val, methods) {
+            val->setPos(0, (el + st) * _rowHeight + _tabText);
+            st++;
+        }
+    }
+
+    QGraphicsLineItem* createLine(qreal x, qreal y) {
+        auto line = new QGraphicsLineItem(0, 0, _rowWidth, 0, this);
+        line->setPos(x, y);
+        return line;
+    }
+
+    QGraphicsTextItem* createText(qreal x, qreal y, QString text) {
+        auto attr = new QGraphicsTextItem(text, this);
+        setTextFlags(attr);
+        attr->setPos(x, y);
+        return attr;
+    }
+
     void setTextFlags(QGraphicsTextItem *item) {
         item->setTextInteractionFlags(Qt::TextInteractionFlag::TextEditable     |
                                       Qt::TextInteractionFlag::TextSelectableByMouse |
@@ -204,6 +235,7 @@ private:
     QList<QGraphicsLineItem *> methodsLines;
     qreal _rowHeight;
     qreal _rowWidth;
+    qreal _tabText;
 };
 
 #endif // Object_H
