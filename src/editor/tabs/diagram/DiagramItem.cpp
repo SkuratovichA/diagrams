@@ -21,7 +21,7 @@ ActorDiagramItem::ActorDiagramItem(QGraphicsItem *item)
             Qt::TextInteractionFlag::TextSelectableByKeyboard);
     text->topLevelItem();
 
-    boxRect = QRectF(0, 0, 70, 110);
+    boxRect = QRectF(0, 0, width, height);
     auto setpen = [&color](QGraphicsLineItem *l) { l->setPen(QPen(color, 3)); };
     auto legL = new QGraphicsLineItem(35, 70, 10, 110, this);
     setpen(legL);
@@ -42,13 +42,33 @@ ActorDiagramItem::ActorDiagramItem(QGraphicsItem *item)
     setFlag(QGraphicsItem::ItemSendsGeometryChanges);
 }
 
+QPointF ActorDiagramItem::pos() {
+    return {100, 100};
+}
+
+/**
+ *
+ * @param connection
+ */
+void ActorDiagramItem::addConnection(ActorConnectionItem *connection) {
+    connections.insert(connection);
+}
+
+void ActorDiagramItem::removeConnection(ActorConnectionItem *connection) {
+    connections.remove(connection);
+}
+
+/**
+ *
+ * @param item
+ */
 ClassDiagramItem::ClassDiagramItem(QGraphicsItem *item)
         : QGraphicsRectItem(item) {
     QColor color(QRandomGenerator::global()->bounded(256),
                  QRandomGenerator::global()->bounded(256),
                  QRandomGenerator::global()->bounded(256),
                  180);
-    auto width = 140;
+
     setPen(QPen(color));
     custom_color = color;
     auto text = new QGraphicsTextItem("name", this);
@@ -60,7 +80,7 @@ ClassDiagramItem::ClassDiagramItem(QGraphicsItem *item)
             Qt::TextInteractionFlag::TextSelectableByKeyboard);
     text->topLevelItem();
 
-    boxRect = QRectF(0, 0, width, 120);
+    boxRect = QRectF(0, 0, width, height);
     setRect(boxRect);
 
     auto set_text_flags = [](QGraphicsTextItem *l) { l->setTextInteractionFlags(
@@ -153,4 +173,24 @@ void ClassDiagramItem::refactor_table()
 //    set_text_flags(tmp_method);
 //    tmp_method->setPos(2, 92);
 //    attrs.push_back(tmp_method);
+}
+
+QPointF ClassDiagramItem::pos() {
+    return { x() + width / 2, y() + height / 2};
+}
+
+/**
+ *
+ * @param connection
+ */
+void ClassDiagramItem::addConnection(ClassConnectionItem *connection) {
+    connections.insert(connection);
+}
+
+/**
+ *
+ * @param connection
+ */
+void ClassDiagramItem::removeConnection(ClassConnectionItem *connection) {
+    connections.remove(connection);
 }

@@ -5,9 +5,10 @@
 #ifndef DIAGRAMS_CONNECTIONS_H
 #define DIAGRAMS_CONNECTIONS_H
 
-#includen <QGraphicsLineItem>
+#include <QGraphicsLineItem>
 
-#include "DiagramItem.h"
+class ClassDiagramItem;
+class ActorDiagramItem;
 
 
 /**
@@ -48,7 +49,7 @@ private:
 class ActorConnectionItem : public QGraphicsLineItem {
 public:
     enum ActorConnectionType {
-        Requect, Responce
+        Request, Response
     };
 
     ActorConnectionItem(

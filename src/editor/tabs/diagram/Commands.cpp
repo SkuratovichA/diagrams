@@ -4,9 +4,11 @@
 
 
 #include "Commands.h"
+#include "Connections.h"
 #include "DiagramItem.h"
 
 #include <QGraphicsScene>
+#include <utility>
 
 /**
  *
@@ -38,7 +40,7 @@ bool MoveCommand::mergeWith(const QUndoCommand *command) {
  *
  */
 void MoveCommand::undo() {
-    diagramItem->setPos(startPos);
+    diagramItem->setPos(startPos.x(), startPos.y());
     diagramItem->scene()->update();
 }
 
@@ -166,11 +168,15 @@ void AddClassCommand::redo() {
 /**
  *
  */
-AddClassConnectionCommand::AddClassConnectionCommand(ClassDiagramItem *firstClass, ClassDiagramItem *secondClass, QGraphicsScene *scene, QUndoCommand *parent)
+AddClassConnectionCommand::AddClassConnectionCommand(ClassDiagramItem *fromNode,
+                                                     QVector<ClassDiagramItem *> toNode,
+                                                     ClassConnectionItem::ClassConnectionType connectionType,
+                                                     QGraphicsScene *scene,
+                                                     QUndoCommand *parent)
         : QUndoCommand(parent), graphicsScene(scene) {
     static int itemCount = 0;
 
-    diagramItem = new ClassConnectionItem(firstClass, secondClass, connectionType);
+    classConnection = new ClassConnectionItem(fromNode, std::move(toNode), connectionType);
     initialPosition = QPointF(((itemCount * 20) + 100)% int(scene->width()),
                               ((itemCount * 20) + 100)% int(scene->height()));
     itemCount++;
@@ -181,8 +187,8 @@ AddClassConnectionCommand::AddClassConnectionCommand(ClassDiagramItem *firstClas
  *
  */
 AddClassConnectionCommand::~AddClassConnectionCommand() {
-    if (!diagramItem->scene()) {
-        delete diagramItem;
+    if (!classConnection->scene()) {
+        delete classConnection;
     }
 }
 
@@ -190,7 +196,7 @@ AddClassConnectionCommand::~AddClassConnectionCommand() {
  *
  */
 void AddClassConnectionCommand::undo() {
-    graphicsScene->removeItem(diagramItem);
+    graphicsScene->removeItem(classConnection);
     graphicsScene->update();
 }
 
@@ -198,8 +204,8 @@ void AddClassConnectionCommand::undo() {
  *
  */
 void AddClassConnectionCommand::redo() {
-    graphicsScene->addItem(diagramItem);
-    diagramItem->setPos(initialPosition);
+    graphicsScene->addItem(classConnection);
+    classConnection->setPos(initialPosition);
     graphicsScene->clearSelection();
     graphicsScene->update();
 }
@@ -207,11 +213,15 @@ void AddClassConnectionCommand::redo() {
 /**
  *
  */
-AddActorConnectionCommand::AddActorConnectionCommand(QGraphicsScene *scene, QUndoCommand *parent)
+AddActorConnectionCommand::AddActorConnectionCommand(ActorDiagramItem *fromNode,
+                                                     ActorDiagramItem *toNode,
+                                                     ActorConnectionItem::ActorConnectionType connectionType,
+                                                     QGraphicsScene *scene,
+                                                     QUndoCommand *parent)
         : QUndoCommand(parent), graphicsScene(scene) {
     static int itemCount = 0;
 
-    diagramItem = new ClassDiagramItem();
+    actorConnection = new ActorConnectionItem(fromNode, toNode, connectionType);
     initialPosition = QPointF(((itemCount * 20) + 100)% int(scene->width()),
                               ((itemCount * 20) + 100)% int(scene->height()));
     itemCount++;
@@ -222,8 +232,8 @@ AddActorConnectionCommand::AddActorConnectionCommand(QGraphicsScene *scene, QUnd
  *
  */
 AddActorConnectionCommand::~AddActorConnectionCommand() {
-    if (!diagramItem->scene()) {
-        delete diagramItem;
+    if (!actorConnection->scene()) {
+        delete actorConnection;
     }
 }
 
@@ -231,7 +241,7 @@ AddActorConnectionCommand::~AddActorConnectionCommand() {
  *
  */
 void AddActorConnectionCommand::undo() {
-    graphicsScene->removeItem(diagramItem);
+    graphicsScene->removeItem(actorConnection);
     graphicsScene->update();
 }
 
@@ -239,8 +249,8 @@ void AddActorConnectionCommand::undo() {
  *
  */
 void AddActorConnectionCommand::redo() {
-    graphicsScene->addItem(diagramItem);
-    diagramItem->setPos(initialPosition);
+    graphicsScene->addItem(actorConnection);
+    actorConnection->setPos(initialPosition);
     graphicsScene->clearSelection();
     graphicsScene->update();
 }

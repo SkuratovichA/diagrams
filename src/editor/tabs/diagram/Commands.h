@@ -7,7 +7,9 @@
 #define DIAGRAMS_COMMANDS_H
 
 #include <QUndoCommand>
+#include "Connections.h"
 #include "DiagramItem.h"
+
 
 /**
  *
@@ -102,8 +104,11 @@ private:
  */
 class AddActorConnectionCommand : public QUndoCommand {
 public:
-    explicit AddActorConnectionCommand(ActorDiagramItem *firstActor, ActorDiagramItem *secondActor,
-                                       QGraphicsScene *scene, QUndoCommand *parent = nullptr);
+    explicit AddActorConnectionCommand(ActorDiagramItem *fromNode,
+                                       ActorDiagramItem *toNode,
+                                       ActorConnectionItem::ActorConnectionType connectionType,
+                                       QGraphicsScene *scene,
+                                       QUndoCommand *parent = nullptr);
 
     ~AddActorConnectionCommand();
 
@@ -112,7 +117,7 @@ public:
     void redo() override;
 
 private:
-    ActorDiagramItem *diagramItem;
+    ActorConnectionItem *actorConnection;
     QGraphicsScene *graphicsScene;
     union {
         QPointF initialStartPosition;
@@ -126,8 +131,11 @@ private:
  */
 class AddClassConnectionCommand : public QUndoCommand {
 public:
-    explicit AddClassConnectionCommand(ClassDiagramItem *firstClass, ClassDiagramItem *secondClass,
-                                       QGraphicsScene *scene, QUndoCommand *parent = nullptr);
+    explicit AddClassConnectionCommand(ClassDiagramItem *fromNode,
+                                       QVector<ClassDiagramItem *> toNode,
+                                       ClassConnectionItem::ClassConnectionType connectionType,
+                                       QGraphicsScene *scene,
+                                       QUndoCommand *parent = nullptr);
 
     ~AddClassConnectionCommand();
 
@@ -136,7 +144,7 @@ public:
     void redo() override;
 
 private:
-    ClassDiagramItem *diagramItem;
+    ClassConnectionItem *classConnection;
     QGraphicsScene *graphicsScene;
     union {
         QPointF initialStartPosition;

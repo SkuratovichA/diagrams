@@ -3,6 +3,7 @@
 // Date: 02.05.2022
 
 #include <QPen>
+#include <utility>
 
 #include "Connections.h"
 #include "DiagramItem.h"
@@ -18,10 +19,12 @@ ClassConnectionItem::ClassConnectionItem(ClassDiagramItem *fromNode,
                                          QVector<ClassDiagramItem *> toNode,
                                          ClassConnectionType connectionType) {
     nodeFrom = fromNode;
-    nodeTo = toNode;
+    nodeTo = std::move(toNode);
 
-    nodeFrom->addlink(this);
-    nodeTo->addLink(this);
+    nodeFrom->addConnection(this);
+    for(auto &node : nodeTo) {
+        node->addConnection(this);
+    }
 
     setZValue(-1);
 
@@ -33,9 +36,9 @@ ClassConnectionItem::ClassConnectionItem(ClassDiagramItem *fromNode,
  *
  */
 ClassConnectionItem::~ClassConnectionItem() {
-    nodeFrom->removeLink(this);
+    nodeFrom->removeConnection(this);
     for (auto &node : nodeTo) {
-        nodeTo->removeLink(this);
+        node->removeConnection(this);
     }
 }
 
@@ -68,7 +71,7 @@ void ClassConnectionItem::setColor(const QColor &color) {
  * @return
  */
 QColor ClassConnectionItem::color() const {
-    pen().color();
+    return pen().color();
 }
 
 /**
@@ -92,8 +95,8 @@ ActorConnectionItem::ActorConnectionItem(ActorDiagramItem *fromNode,
     nodeFrom = fromNode;
     nodeTo = toNode;
 
-    nodeFrom->addlink(this);
-    nodeTo->addLink(this);
+    nodeFrom->addConnection(this);
+    nodeTo->addConnection(this);
 
     setZValue(-1);
 
@@ -105,8 +108,8 @@ ActorConnectionItem::ActorConnectionItem(ActorDiagramItem *fromNode,
  *
  */
 ActorConnectionItem::~ActorConnectionItem() {
-    nodeFrom->removeLink(this);
-    nodeTo->removeLink(this);
+    nodeFrom->removeConnection(this);
+    nodeTo->removeConnection(this);
 }
 
 /**
@@ -122,7 +125,7 @@ void ActorConnectionItem::setColor(const QColor &color) {
  * @return
  */
 QColor ActorConnectionItem::color() const {
-    pen().color();
+    return pen().color();
 }
 
 /**
