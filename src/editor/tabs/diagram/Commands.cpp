@@ -169,14 +169,14 @@ void AddClassCommand::redo() {
  *
  */
 AddClassConnectionCommand::AddClassConnectionCommand(ClassDiagramItem *fromNode,
-                                                     QVector<ClassDiagramItem *> toNode,
+                                                     QVector<ClassDiagramItem *> toNodes,
                                                      ClassConnectionItem::ClassConnectionType connectionType,
                                                      QGraphicsScene *scene,
                                                      QUndoCommand *parent)
         : QUndoCommand(parent), graphicsScene(scene) {
     static int itemCount = 0;
 
-    classConnection = new ClassConnectionItem(fromNode, std::move(toNode), connectionType);
+    classConnection = new ClassConnectionItem(fromNode, std::move(toNodes), connectionType);
     initialPosition = QPointF(((itemCount * 20) + 100)% int(scene->width()),
                               ((itemCount * 20) + 100)% int(scene->height()));
     itemCount++;
