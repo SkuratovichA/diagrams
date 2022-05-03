@@ -87,7 +87,23 @@ void TabCanvas::addEntity() {
  *
  */
 void TabCanvas::addConnection() {
-    // FIXME: add connection
+    // FIXME: create a function to select one or more nodes
+    // then according to the type pass the parameters.
+    // Probably, there will be a need to remove the first node and put it into the separate variabble
+    // Then, call a function to connect n nodes.
+
+//    switch (type) {
+//        case DiagramType::SEQUENCE:
+//            addCommand = new AddActorCommand(editorScene);
+//            break;
+//
+//        case DiagramType::CLASS:
+//            addCommand = new AddClassCommand(editorScene);
+//            break;
+//        default:
+//            assert(!"This statement must not be reached");
+//            return;
+//     }
 }
 
 /**

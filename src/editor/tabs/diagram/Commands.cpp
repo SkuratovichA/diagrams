@@ -2,10 +2,13 @@
 // Author: Skuratovich Aliaksandr <xskura01@vutbr.cz>
 // Date: 01.05.2022
 
+
 #include "Commands.h"
+#include "Connections.h"
 #include "DiagramItem.h"
 
 #include <QGraphicsScene>
+#include <utility>
 
 /**
  *
@@ -37,7 +40,7 @@ bool MoveCommand::mergeWith(const QUndoCommand *command) {
  *
  */
 void MoveCommand::undo() {
-    diagramItem->setPos(startPos);
+    diagramItem->setPos(startPos.x(), startPos.y());
     diagramItem->scene()->update();
 }
 
@@ -75,6 +78,8 @@ void DeleteCommand::redo() {
     graphicsScene->removeItem(diagramItem);
 }
 
+
+/************************************* Entities */
 /**
  *
  */
@@ -153,6 +158,99 @@ void AddClassCommand::undo() {
 void AddClassCommand::redo() {
     graphicsScene->addItem(diagramItem);
     diagramItem->setPos(initialPosition);
+    graphicsScene->clearSelection();
+    graphicsScene->update();
+}
+
+
+/************************ Connections */
+// TODO: make connectios work somehow
+/**
+ *
+ */
+AddClassConnectionCommand::AddClassConnectionCommand(ClassDiagramItem *fromNode,
+                                                     QVector<ClassDiagramItem *> toNode,
+                                                     ClassConnectionItem::ClassConnectionType connectionType,
+                                                     QGraphicsScene *scene,
+                                                     QUndoCommand *parent)
+        : QUndoCommand(parent), graphicsScene(scene) {
+    static int itemCount = 0;
+
+    classConnection = new ClassConnectionItem(fromNode, std::move(toNode), connectionType);
+    initialPosition = QPointF(((itemCount * 20) + 100)% int(scene->width()),
+                              ((itemCount * 20) + 100)% int(scene->height()));
+    itemCount++;
+    scene->update();
+}
+
+/**
+ *
+ */
+AddClassConnectionCommand::~AddClassConnectionCommand() {
+    if (!classConnection->scene()) {
+        delete classConnection;
+    }
+}
+
+/**
+ *
+ */
+void AddClassConnectionCommand::undo() {
+    graphicsScene->removeItem(classConnection);
+    graphicsScene->update();
+}
+
+/**
+ *
+ */
+void AddClassConnectionCommand::redo() {
+    graphicsScene->addItem(classConnection);
+    classConnection->setPos(initialPosition);
+    graphicsScene->clearSelection();
+    graphicsScene->update();
+}
+
+/**
+ *
+ */
+AddActorConnectionCommand::AddActorConnectionCommand(ActorDiagramItem *fromNode,
+                                                     ActorDiagramItem *toNode,
+                                                     ActorConnectionItem::ActorConnectionType connectionType,
+                                                     QGraphicsScene *scene,
+                                                     QUndoCommand *parent)
+        : QUndoCommand(parent), graphicsScene(scene) {
+    static int itemCount = 0;
+
+    actorConnection = new ActorConnectionItem(fromNode, toNode, connectionType);
+    initialPosition = QPointF(((itemCount * 20) + 100)% int(scene->width()),
+                              ((itemCount * 20) + 100)% int(scene->height()));
+    itemCount++;
+    scene->update();
+}
+
+/**
+ *
+ */
+AddActorConnectionCommand::~AddActorConnectionCommand() {
+    if (!actorConnection->scene()) {
+        delete actorConnection;
+    }
+}
+
+/**
+ *
+ */
+void AddActorConnectionCommand::undo() {
+    graphicsScene->removeItem(actorConnection);
+    graphicsScene->update();
+}
+
+/**
+ *
+ */
+void AddActorConnectionCommand::redo() {
+    graphicsScene->addItem(actorConnection);
+    actorConnection->setPos(initialPosition);
     graphicsScene->clearSelection();
     graphicsScene->update();
 }
