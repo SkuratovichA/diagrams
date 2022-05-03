@@ -104,7 +104,7 @@ ClassDiagramItem::ClassDiagramItem(QGraphicsItem *item)
 
     setRect(boundingBox());
     setBrush(QBrush(QColor(255,255,255,255)));
-    refactor_table();
+    refactorTable();
 }
 
 void ClassDiagramItem::refactorTable()
