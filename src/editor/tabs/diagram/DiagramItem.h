@@ -26,7 +26,7 @@ public:
 
     void addConnection(ActorConnectionItem *connection);
     void removeConnection(ActorConnectionItem *connection);
-    QPointF pos();
+//    QPointF pos();
 
 private:
     qreal height = 110;
@@ -44,7 +44,7 @@ public:
 
     void addConnection(ClassConnectionItem *connection);
     void removeConnection(ClassConnectionItem *connection);
-    QPointF pos();
+//    QPointF pos();
 
 private:
     qreal height = 120;
