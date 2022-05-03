@@ -88,8 +88,8 @@ AddActorCommand::AddActorCommand(QGraphicsScene *scene, QUndoCommand *parent)
     static int itemCount = 0;
 
     diagramItem = new ActorDiagramItem();
-    initialPosition = QPointF((itemCount * 15) % int(scene->width()),
-                              (itemCount * 15) % int(scene->height()));
+    initialPosition = QPointF((itemCount * 15 + 100) % int(scene->width()),
+                              (itemCount * 15 + 150) % int(scene->height()));
     itemCount++;
     scene->update();
 }

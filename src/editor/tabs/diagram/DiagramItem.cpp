@@ -41,10 +41,10 @@ ActorDiagramItem::ActorDiagramItem(QGraphicsItem *item)
     setFlag(QGraphicsItem::ItemIsMovable);
     setFlag(QGraphicsItem::ItemSendsGeometryChanges);
 }
-
-QPointF ActorDiagramItem::pos() {
-    return {100, 100};
-}
+//
+//QPointF ActorDiagramItem::pos() {
+//    return {x() + width / 2, y() + height / 2};
+//}
 
 /**
  *
@@ -186,10 +186,10 @@ void ClassDiagramItem::refactor_table()
 //    tmp_method->setPos(2, 92);
 //    attrs.push_back(tmp_method);
 }
-
-QPointF ClassDiagramItem::pos() {
-    return { x() + width / 2, y() + height / 2};
-}
+//
+//QPointF ClassDiagramItem::pos() {
+//    return { x() + width / 2, y() + height / 2};
+//}
 
 /**
  *
