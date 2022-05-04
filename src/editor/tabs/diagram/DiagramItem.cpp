@@ -9,6 +9,47 @@
 // FIXME: (1) create 2 separate files from this shit. (2) create custom function for adding a line
 
 
+CustomAttrText::CustomAttrText(ClassDiagramItem *p, QString text, qreal x, qreal y, QFlags<Qt::TextInteractionFlag> flags)
+                            : QGraphicsTextItem(text, p) {
+    setTextInteractionFlags(flags);
+    setPos(x, y);
+    _parent = p;
+}
+
+void CustomAttrText::keyReleaseEvent(QKeyEvent *event) {
+    qreal maxLen = 0;
+
+    for (auto item : parent()->getAttrs()) {
+        maxLen = item->boundingRect().width() > maxLen ? item->boundingRect().width() : maxLen;
+    }
+    for (auto item : parent()->getMethods()) {
+        maxLen = item->boundingRect().width() > maxLen ? item->boundingRect().width() : maxLen;
+    }
+
+    if (maxLen + 30 < parent()->width()) {
+        maxLen = parent()->width() - 30;
+    }
+    else if (maxLen + 20 > parent()->width()) {
+        maxLen = parent()->width() + 20;
+    }
+    else {
+        return;
+    }
+
+    parent()->setRect(0, 0, maxLen, parent()->height());
+    for (auto item : parent()->getAttrsLines()) {
+        item->setLine(0, 0, maxLen, 0);
+    }
+    for (auto item : parent()->getMethodsLines()) {
+        item->setLine(0, 0, maxLen, 0);
+    }
+    parent()->setWidth(maxLen);
+
+    qreal midW = parent()->_head->boundingRect().width();
+    qreal midO = parent()->width();
+    parent()->_head->setPos((midO - midW) / 2, -40);
+}
+
 ActorDiagramItem::ActorDiagramItem(QGraphicsItem *item)
         : QGraphicsRectItem(item), DiagramItem(70.0, 110.0, DiagramItem::Actor) {
 
@@ -54,6 +95,10 @@ void ActorDiagramItem::addConnection(ActorConnectionItem *connection) {
     connections.insert(connection);
 }
 
+/**
+ *
+ * @param connection
+ */
 void ActorDiagramItem::removeConnection(ActorConnectionItem *connection) {
     connections.remove(connection);
 }
@@ -106,67 +151,15 @@ ClassDiagramItem::ClassDiagramItem(QGraphicsItem *item)
     setBrush(QBrush(QColor(255,255,255,255)));
 }
 
-CustomAttrText::CustomAttrText(ClassDiagramItem *p, QString text, qreal x, qreal y, QFlags<Qt::TextInteractionFlag> flags)
-                            : QGraphicsTextItem(text, p) {
-    setTextInteractionFlags(flags);
-    setPos(x, y);
-    _parent = p;
-}
-
-void CustomAttrText::keyReleaseEvent(QKeyEvent *event) {
-    qreal maxLen = 0;
-
-    for (auto item : parent()->getAttrs()) {
-        maxLen = item->boundingRect().width() > maxLen ? item->boundingRect().width() : maxLen;
+/**
+ *
+ */
+ClassDiagramItem::~ClassDiagramItem() {
+    foreach (ClassConnectionItem *connection, connections) {
+//        removeConnection(connection);
+        connections.remove(connection);
+        delete connection;
     }
-    for (auto item : parent()->getMethods()) {
-        maxLen = item->boundingRect().width() > maxLen ? item->boundingRect().width() : maxLen;
-    }
-
-    if (maxLen + 30 < parent()->width()) {
-        maxLen = parent()->width() - 30;
-    }
-    else if (maxLen + 20 > parent()->width()) {
-        maxLen = parent()->width() + 20;
-    }
-    else {
-        return;
-    }
-
-    parent()->setRect(0, 0, maxLen, parent()->height());
-    for (auto item : parent()->getAttrsLines()) {
-        item->setLine(0, 0, maxLen, 0);
-    }
-    for (auto item : parent()->getMethodsLines()) {
-        item->setLine(0, 0, maxLen, 0);
-    }
-    parent()->setWidth(maxLen);
-
-    qreal midW = parent()->_head->boundingRect().width();
-    qreal midO = parent()->width();
-    parent()->_head->setPos((midO - midW) / 2, -40);
-}
-
-NameObject::NameObject(QGraphicsItem *parent, QFlags<Qt::TextInteractionFlag> flags, qreal x, qreal y)
-            : QGraphicsTextItem("_Name_", parent)
-    {
-    _parent = parent;
-    setPos(x, y);
-    setFont(QFont("Courier", 20));
-    setTextInteractionFlags(flags);
-    topLevelItem();
-}
-
-void NameObject::keyReleaseEvent(QKeyEvent *event) {
-    ClassDiagramItem *tmp1 = static_cast<ClassDiagramItem *>(parent());
-    ActorDiagramItem *tmp2 = static_cast<ActorDiagramItem *>(parent());
-    qreal midO = tmp1 == nullptr ? tmp2->width() : tmp1->width();
-    qreal midW = boundingRect().width();
-    setPos((midO - midW) / 2, -40);
-}
-
-NameObject::~NameObject() {
-
 }
 
 /**
@@ -185,6 +178,12 @@ void ClassDiagramItem::removeConnection(ClassConnectionItem *connection) {
     connections.remove(connection);
 }
 
+/**
+ *
+ * @param change
+ * @param value
+ * @return
+ */
 QVariant ClassDiagramItem::itemChange(GraphicsItemChange change, const QVariant &value) {
     if (change == ItemPositionHasChanged) {
         for(auto *connection : connections) {
@@ -192,4 +191,37 @@ QVariant ClassDiagramItem::itemChange(GraphicsItemChange change, const QVariant 
         }
     }
     return QGraphicsItem::itemChange(change, value);
+}
+
+/**
+ *
+ * @param parent
+ * @param flags
+ * @param x
+ * @param y
+ */
+NameObject::NameObject(QGraphicsItem *parent, QFlags<Qt::TextInteractionFlag> flags, qreal x, qreal y)
+            : QGraphicsTextItem("_Name_", parent)
+    {
+    _parent = parent;
+    setPos(x, y);
+    setFont(QFont("Courier", 20));
+    setTextInteractionFlags(flags);
+    topLevelItem();
+}
+
+/**
+ *
+ * @param event
+ */
+void NameObject::keyReleaseEvent(QKeyEvent *event) {
+    ClassDiagramItem *tmp1 = static_cast<ClassDiagramItem *>(parent());
+    ActorDiagramItem *tmp2 = static_cast<ActorDiagramItem *>(parent());
+    qreal midO = tmp1 == nullptr ? tmp2->width() : tmp1->width();
+    qreal midW = boundingRect().width();
+    setPos((midO - midW) / 2, -40);
+}
+
+NameObject::~NameObject() {
+
 }

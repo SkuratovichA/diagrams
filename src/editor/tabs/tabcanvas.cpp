@@ -334,3 +334,11 @@ QPair<T *, T *> TabCanvas::getSelectedDiagramItems() {
     // first is always T*, the rest is always QVector
     return QPair<T *, T *>(first, rest);
 }
+
+void TabCanvas::sendToBack() {
+
+}
+
+void TabCanvas::sendToFront() {
+
+}

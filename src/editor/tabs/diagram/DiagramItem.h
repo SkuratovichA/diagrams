@@ -145,8 +145,6 @@ public:
     explicit ClassDiagramItem(QGraphicsItem *item = nullptr);
     ~ClassDiagramItem();
 
-    void refactorTable();
-
     void addConnection(ClassConnectionItem *connection);
 
     void removeConnection(ClassConnectionItem *connection);
@@ -154,9 +152,6 @@ public:
     QPointF centre() {
         return {x() + width()/2.0, y() + height()/2.0};
     }
-
-protected:
-    QVariant itemChange(GraphicsItemChange change, const QVariant &value);
 
     QList<CustomAttrText *>  getMethods() {
         return methods;
@@ -270,6 +265,10 @@ protected:
                                       Qt::TextInteractionFlag::TextSelectableByMouse |
                                       Qt::TextInteractionFlag::TextSelectableByKeyboard);
     }
+
+protected:
+    QVariant itemChange(GraphicsItemChange change, const QVariant &value);
+
 
 private:
     QSet<ClassConnectionItem *> connections;
