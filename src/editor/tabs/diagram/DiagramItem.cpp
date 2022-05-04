@@ -133,7 +133,8 @@ ClassDiagramItem::ClassDiagramItem(QGraphicsItem *item)
 
     _head = new NameObject(this, _flags, 5, -40);
 
-    textAttr = new CustomAttrText(this, "ATTRIBUTES", _tabText, _tabText,  Qt::NoTextInteraction);
+    textAttr = new CustomAttrText(this, "_ATTRIBUTES_", _tabText, _tabText,  Qt::NoTextInteraction);
+    textAttr->setFont(QFont("Times", 10, QFont::Bold));
 
     lineAttr = createLine(0, _rowHeight);
     _attrsLines.push_back(lineAttr);
@@ -144,7 +145,8 @@ ClassDiagramItem::ClassDiagramItem(QGraphicsItem *item)
     lineAttr = createLine(0, _rowHeight * 2);
     _methodsLines.push_back(lineAttr);
 
-    textAttr = new CustomAttrText(this, "METHODS", _tabText, _rowHeight * 2 + _tabText, Qt::NoTextInteraction);
+    textAttr = new CustomAttrText(this, "_METHODS_", _tabText, _rowHeight * 2 + _tabText, Qt::NoTextInteraction);
+    textAttr->setFont(QFont("Times", 10, QFont::Bold));
     _methods.push_back(textAttr);
 
     lineAttr = createLine(0, _rowHeight * 3);
