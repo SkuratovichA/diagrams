@@ -74,15 +74,7 @@ ClassDiagramItem::ClassDiagramItem(QGraphicsItem *item)
     // name of the class
     setPen(QPen(color()));
 
-    auto text = new NameObject(this, _flags);
-    //text->setPos(-30, -30);
-    //text->setTextWidth(width()+80);
-    _head = text;
-    text->setFont(QFont("Courier", 20));
-    setTextFlags(text);
-    text->topLevelItem();
-
-    auto name = NameObject(this, _flags);
+    _head = new NameObject(this, _flags);
 
     textAttr = new CustomAttrText(this, "ATTRIBUTES", _tabText, _tabText,  Qt::NoTextInteraction);
 
@@ -146,19 +138,16 @@ void CustomAttrText::keyReleaseEvent(QKeyEvent *event) {
 
     qreal midW = parent()->_head->boundingRect().width();
     qreal midO = parent()->width();
-    qDebug() << midO << midW;
     parent()->_head->setPos((midO - midW) / 2, -40);
 }
 
 NameObject::NameObject(ClassDiagramItem *parent, QFlags<Qt::TextInteractionFlag> flags)
             : QGraphicsTextItem("_Name_", parent) {
-    //auto text = new QGraphicsTextItem("name", this);
     _parent = parent;
     setPos(5, -40);
-    //setTextWidth(120+80);
-    //setFont(QFont("Courier", 20));
-    //setTextInteractionFlags(flags);
-    //grttopLevelItem();
+    setFont(QFont("Courier", 20));
+    setTextInteractionFlags(flags);
+    topLevelItem();
 }
 
 void NameObject::keyReleaseEvent(QKeyEvent *event) {
@@ -186,7 +175,3 @@ void ClassDiagramItem::addConnection(ClassConnectionItem *connection) {
 void ClassDiagramItem::removeConnection(ClassConnectionItem *connection) {
     connections.remove(connection);
 }
-
-//void CustomAttrText::setPosition(qreal x, qreal y) {
-//    this->setPos(x, y);
-//}

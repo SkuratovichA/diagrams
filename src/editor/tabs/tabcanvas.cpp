@@ -290,20 +290,6 @@ CustomAttrText::~CustomAttrText() {
 
 /**
  *
- */
-void TabCanvas::sendToBack() {
-    qDebug() << "send to back";
-}
-
-/**
- *
- */
-void TabCanvas::sendToFront() {
-    qDebug() << "send to front";
-}
-
-/**
- *
  * @return
  */
 std::string TabCanvas::getStringRepresentation() {

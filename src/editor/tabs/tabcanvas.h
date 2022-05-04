@@ -72,8 +72,6 @@ public slots:
     void copy();
     void paste();
     void properties();
-    void sendToBack();
-    void sendToFront();
 
     void addMethod_triggered();
     void addAttr_triggered();

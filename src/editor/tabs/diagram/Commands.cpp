@@ -58,9 +58,10 @@ void MoveCommand::redo() {
  */
 DeleteCommand::DeleteCommand(QGraphicsScene *scene, QUndoCommand *parent)
         : QUndoCommand(parent), graphicsScene(scene) {
+    qDebug() << "Delete item";
     QList<QGraphicsItem *> list = graphicsScene->selectedItems();
     list.first()->setSelected(false);
-    diagramItem = dynamic_cast<ActorDiagramItem *>(list.first());
+    diagramItem = list.first();
 }
 
 /**
@@ -102,6 +103,7 @@ AddActorCommand::~AddActorCommand() {
         delete diagramItem;
     }
 }
+
 
 /**
  *

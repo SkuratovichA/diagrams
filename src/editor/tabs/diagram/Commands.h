@@ -49,7 +49,7 @@ public:
     void redo() override;
 
 private:
-    ActorDiagramItem *diagramItem;
+    QGraphicsItem *diagramItem;
     QGraphicsScene *graphicsScene;
 };
 

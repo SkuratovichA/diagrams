@@ -236,8 +236,6 @@ public:
 
     void moveTexts(int st, long long el) {
         foreach (CustomAttrText *val, methods) {
-            qDebug() << val;
-            //val->setPo
             val->setPos(0, (el + st) * _rowHeight + _tabText);
             st++;
         }
