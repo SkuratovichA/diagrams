@@ -47,28 +47,43 @@ public:
 
     std::string getStringRepresentation();
 
-
-    /** Private functions
-     */
 private:
     template<typename T>
     QPair<T *, T *> getSelectedDiagramItems();
 
-
     QGraphicsItem *selectedObject();
 
-    /** Private variables
-     */
+    void createMenusClass();
+    void createMenusConnections();
+
+    QColor generateColor() {
+        return QColor(QRandomGenerator::global()->bounded(256),
+                      QRandomGenerator::global()->bounded(256),
+                      QRandomGenerator::global()->bounded(256),
+                      180);
+    }
+
+    QPoint generateCoords() {
+        return QPoint(QRandomGenerator::global()->bounded(100),
+                      QRandomGenerator::global()->bounded(100));
+    }
+
 private:
     DiagramType type;
     QUndoStack *undoStack = nullptr;
     EditorScene *editorScene = nullptr;
 
-    QMenu *editMenu;
+    QMenu *classMenu;
     QAction *addMethod;
     QAction *rmMethod;
     QAction *addAttr;
     QAction *rmAttr;
+
+    QMenu *connectionMenu;
+    QAction *aggregation;
+    QAction *composition;
+    QAction *generalization;
+    QAction *association;
 
     ItemsBuffer *buffer;
     classParams *createItem;
@@ -77,6 +92,7 @@ private:
     /** Slots
      */
 public slots:
+    void ShowContextMenu(const QPoint& pos); // this is a slot
     void moveEntity(ActorDiagramItem *movedItem, const QPointF &startPosition);
     void removeEntity();
     void addEntity();
@@ -85,7 +101,6 @@ public slots:
     void cut();
     void copy();
     void paste();
-    void properties();
     void sendToBack();
     void sendToFront();
 
@@ -94,14 +109,12 @@ public slots:
     void rmAttr_triggered();
     void rmMethod_triggered();
 
-    void createScene();
+    void aggregation_triggered();
+    void composition_triggered();
+    void generalization_triggered();
+    void association_triggered();
 
-    QColor generateColor() {
-        return QColor(QRandomGenerator::global()->bounded(256),
-                      QRandomGenerator::global()->bounded(256),
-                      QRandomGenerator::global()->bounded(256),
-                      180);
-    }
+    void createScene();
 };
 
 #endif // TABCANVAS_H

@@ -6,14 +6,19 @@
 #include <QGraphicsSceneMouseEvent>
 #include <QDebug>
 #include <QPainter>
+#include <QInputEvent>
 // FIXME: (1) create 2 separate files from this shit. (2) create custom function for adding a line
-
 
 CustomAttrText::CustomAttrText(ClassDiagramItem *p, QString text, qreal x, qreal y, QFlags<Qt::TextInteractionFlag> flags)
                             : QGraphicsTextItem(text, p) {
     setTextInteractionFlags(flags);
     setPos(x, y);
     _parent = p;
+}
+
+CustomAttrText::~CustomAttrText()
+{
+
 }
 
 void CustomAttrText::keyReleaseEvent(QKeyEvent *event) {
@@ -73,12 +78,6 @@ ActorDiagramItem::ActorDiagramItem(actorParams *params)
     setPen(QPen(QColor(1, 0, 0, 0)));
     _head = new NameObject(this, _flags, -15, -40, params->name());
 
-//    auto text = new QGraphicsTextItem("test", this);
-//    text->setTextInteractionFlags(
-//            Qt::TextInteractionFlag::TextEditable | Qt::TextInteractionFlag::TextSelectableByMouse |
-//            Qt::TextInteractionFlag::TextSelectableByKeyboard);
-//    text->topLevelItem();
-
     auto setpen = [this](QGraphicsLineItem *l) { l->setPen(QPen(color(), 3.0)); };
     auto legL = new QGraphicsLineItem(35.0, 70.0, 10.0, 110.0, this);
     setpen(legL);
@@ -121,7 +120,6 @@ ClassDiagramItem::ClassDiagramItem(classParams *params)
                       params->height() * params->scale(),
                        DiagramItem::Class,
                        params->color()) {
-
 
 
     _rowHeight = (params->height() / 4.0) * params->scale();
@@ -173,6 +171,7 @@ ClassDiagramItem::ClassDiagramItem(classParams *params)
 
     setRect(boundingBox());
     setBrush(QBrush(QColor(255,255,255,255)));
+    //setBrush(QBrush(QColor(240,120,180,60)));
 }
 
 /**
@@ -181,7 +180,6 @@ ClassDiagramItem::ClassDiagramItem(classParams *params)
 ClassDiagramItem::~ClassDiagramItem() {
     foreach (ClassConnectionItem *connection, _connections) {
         delete connection;
-        qDebug() << "Connection deleted (diagramItem.cpp)";
     }
 }
 
@@ -249,6 +247,12 @@ void NameObject::keyReleaseEvent(QKeyEvent *event) {
     qreal midO = tmp1 == nullptr ? tmp2->width() : tmp1->width();
     qreal midW = boundingRect().width();
     setPos((midO - midW) / 2, -40);
+}
+
+void ClassDiagramItem::mousePressEvent(QGraphicsSceneMouseEvent *event) {
+    if (event->button() == Qt::RightButton) {
+        setSelected(true);
+    }
 }
 
 NameObject::~NameObject() {

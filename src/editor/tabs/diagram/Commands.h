@@ -11,9 +11,6 @@
 #include "DiagramItem.h"
 #include "../fillItems.h"
 
-
-QString createCommandString(QGraphicsItem *item, const QPointF &pos);
-
 /**
  *
 */

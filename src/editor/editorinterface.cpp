@@ -72,7 +72,7 @@ editorInterface::editorInterface(
 
     createUndoView();
     createDynamicToolBar();
-    createStaticToolBar();
+    //createStaticToolBar();
 
 //    qDebug() << "before creating tabs";
     createTabs();
@@ -87,23 +87,6 @@ editorInterface::~editorInterface() {
     delete undoView;
     qDebug() << "delete ui : destructor editorInterface";
     delete ui;
-
-    delete undoStack;
-    delete tabWidget;
-    delete staticToolBar;
-    delete dynamicToolBar;
-    delete addEntityAction;
-    delete addConnectionAction;
-    delete deleteAction;
-    delete cutAction;
-    delete copyAction;
-    delete pasteAction;
-    delete propertiesAction;
-    delete newTabAction;
-    delete saveAction;
-    delete deleteTabAction;
-    delete undoAction;
-    delete redoAction;
 }
 
 /**
@@ -143,58 +126,34 @@ void editorInterface::createDynamicToolBar() {
     ADD_SIGNAL(cutAction, "Cut", "x", "Ctrl+X", this, SLOT(actionCut_triggered()));
     ADD_SIGNAL(copyAction, "Copy", "c", "Ctrl+C", this, SLOT(actionCopy_triggered()));
     ADD_SIGNAL(pasteAction, "Paste", "v", "Ctrl+V", this, SLOT(actionPaste_triggered()));
-    ADD_SIGNAL(propertiesAction, "Properties", "i", "Ctrl+I", this, SLOT(actionProperties_triggered()));
-//    ADD_SIGNAL(sendToBackAction, "Send to back", "b", "Ctrl+""B",   this, SLOT());
-//    ADD_SIGNAL(bringToFrontAction, "Send to front", "f", "Ctrl+""F",this, SLOT());
-    qDebug() << "dynamic toolbar added";
-
-    dynamicToolBar = addToolBar(tr("Edit"));
-    dynamicToolBar->setFloatable(false);
-
-    dynamicToolBar->addAction(addEntityAction);
-    dynamicToolBar->addAction(addConnectionAction);
-    dynamicToolBar->addAction(deleteAction);
-    dynamicToolBar->addSeparator();
-    dynamicToolBar->addAction(cutAction);
-    dynamicToolBar->addAction(copyAction);
-    dynamicToolBar->addAction(pasteAction);
-    dynamicToolBar->addSeparator();
-    dynamicToolBar->addAction(propertiesAction);
-
-
-
-    //propertiesAction->setMenu();
-
-    //editMenu = menuBar()->addMenu(tr("Add &Attr"));
-    //editMenu = menuBar()->addAction(addAttr);
-//    editToolBar->addAction(bringToFrontAction);
-//    editToolBar->addAction(sendToBackAction);
-}
-
-/*
- *
- */
-void editorInterface::createStaticToolBar() {
-    // creating actions for a toolbar
     ADD_SIGNAL(newTabAction, "New &Tab", "+T", "Ctrl+T", this, SLOT(actionNewTab_triggered()));
     ADD_SIGNAL(deleteTabAction, "Delete &Tab", "+T", "Ctrl+W", this, SLOT(actionDeleteTab_triggered()));
     ADD_SIGNAL(saveAction, "&Save", "S", "Ctrl+S", this, SLOT(actionSave_triggered()));
-    qDebug() << "static toolbar added";
 
-    // create undo/redo actions
+    //ADD_SIGNAL(sendToBackAction, "Send to back", "b", "Ctrl+""B",   this, SLOT());
+    //ADD_SIGNAL(bringToFrontAction, "Send to front", "f", "Ctrl+""F",this, SLOT());
+    qDebug() << "dynamic toolbar added";
+
     undoAction = undoStack->createUndoAction(this, tr("&Undo"));
     redoAction = undoStack->createRedoAction(this, tr("&Redo"));
 
-    staticToolBar = addToolBar(tr("Actions"));
-    staticToolBar->setFloatable(false);
-    staticToolBar->setMovable(false);
+    fileMenu = menuBar()->addMenu(tr("&File"));
+    fileMenu->addAction(saveAction);
 
-    staticToolBar->addAction(newTabAction);
-    staticToolBar->addAction(deleteTabAction);
-    staticToolBar->addAction(saveAction);
-    staticToolBar->addSeparator();
-    staticToolBar->addAction(undoAction);
-    staticToolBar->addAction(redoAction);
+    editMenu = menuBar()->addMenu(tr("&Edit"));
+    editMenu->addAction(cutAction);
+    editMenu->addAction(pasteAction);
+    editMenu->addAction(copyAction);
+    editMenu->addAction(undoAction);
+    editMenu->addAction(redoAction);
+
+    actionMenu = menuBar()->addMenu(tr("&Action"));
+    actionMenu->addAction(addEntityAction);
+    actionMenu->addAction(addConnectionAction);
+    actionMenu->addAction(deleteAction);
+
+    menuBar()->addAction(newTabAction);
+    menuBar()->addAction(deleteTabAction);
 }
 
 /**
@@ -260,7 +219,6 @@ void editorInterface::actionQuit_triggered() {
 
 void editorInterface::actionNewTab_triggered() {
     tabWidget->addTab(new TabCanvas(this, DiagramType::SEQUENCE, undoStack), "sequence diagram editor");
-    //    tabWidget->setCurrentIndex(tabWidget->count()-1);
 }
 
 void editorInterface::actionDeleteTab_triggered() {
@@ -270,16 +228,12 @@ void editorInterface::actionDeleteTab_triggered() {
         return;
     }
     tabWidget->removeTab(ci);
-    qDebug() << "tab deleted";
-
-    //    tabWidget->setCurrentIndex(0);
 }
 
 /**
  *
  */
 void editorInterface::actionAddEntity_triggered() {
-    qDebug() << "action Add Entity editorinterface.cpp";
     reinterpret_cast<TabCanvas *>(tabWidget->currentWidget())->addEntity();
 }
 
@@ -316,11 +270,4 @@ void editorInterface::actionCopy_triggered() {
  */
 void editorInterface::actionPaste_triggered() {
     reinterpret_cast<TabCanvas *>(tabWidget->currentWidget())->paste();
-}
-
-/**
- *
- */
-void editorInterface::actionProperties_triggered() {
-    reinterpret_cast<TabCanvas *>(tabWidget->currentWidget())->properties();
 }

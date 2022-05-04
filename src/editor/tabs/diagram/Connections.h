@@ -6,6 +6,7 @@
 #define DIAGRAMS_CONNECTIONS_H
 
 #include <QGraphicsLineItem>
+#include <QGraphicsSceneMouseEvent>
 
 class ClassDiagramItem;
 
@@ -33,7 +34,11 @@ public:
     QColor color() const;
 
     void trackNodes();
+protected:
+    void mousePressEvent(QGraphicsSceneMouseEvent *event);
+
 private:
+
     QPainterPath shape() const;
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
 

@@ -139,6 +139,9 @@ public:
 
     void removeConnection(ActorConnectionItem *connection);
 
+protected:
+    //void mousePressEvent(QGraphicsSceneMouseEvent *event);
+
 private:
     QSet<ActorConnectionItem *> _connections;
 };
@@ -272,6 +275,8 @@ public:
     QSet<ClassConnectionItem *> connections() const {
         return _connections;
     }
+
+    void mousePressEvent(QGraphicsSceneMouseEvent *event);
 
 protected:
     QVariant itemChange(GraphicsItemChange change, const QVariant &value);

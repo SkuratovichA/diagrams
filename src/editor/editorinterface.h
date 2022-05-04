@@ -60,8 +60,6 @@ private slots:
 
     void actionPaste_triggered();
 
-    void actionProperties_triggered();
-
     void actionQuit_triggered();
 
     void newTabSelected();
@@ -73,13 +71,9 @@ private:
 
     void createDynamicToolBar();
 
-    void createStaticToolBar();
-
     QString get_text_representation();
 
 private:
-    QToolBar *staticToolBar;
-    QToolBar *dynamicToolBar;
     QTabWidget *tabWidget;
 
     QUndoGroup *undoStack = nullptr;
@@ -89,11 +83,10 @@ private:
     QString filename = nullptr;
     QString filenameFilter = "Diagram Files (*.gae)";
 
-    /**
-     * actions
-     */
+/**
+ * actions
+ */
 private:
-
     QAction *addEntityAction;
     QAction *addConnectionAction;
     QAction *deleteAction;
@@ -104,9 +97,9 @@ private:
     //QAction *bringToFrontAction;
     //QAction *sendToBackAction;
 
-
-    QMenu *properties;
-
+    QMenu *editMenu;
+    QMenu *actionMenu;
+    QMenu *fileMenu;
 
     QAction *newTabAction;
     QAction *saveAction;

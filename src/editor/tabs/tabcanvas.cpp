@@ -24,6 +24,9 @@ TabCanvas::TabCanvas(QWidget *parent, DiagramType type, QUndoGroup *parentGroup)
     this->type = type;
 
     buffer = new ItemsBuffer();
+
+    createMenusClass();
+    createMenusConnections();
 }
 
 /**
@@ -32,6 +35,78 @@ TabCanvas::TabCanvas(QWidget *parent, DiagramType type, QUndoGroup *parentGroup)
 TabCanvas::~TabCanvas() {
     delete buffer;
     delete editorScene;
+}
+
+void TabCanvas::createMenusClass() {
+    addMethod = new QAction(tr("Add &Method"));
+    connect(addMethod, SIGNAL(triggered()), this, SLOT(addMethod_triggered()));
+    rmMethod = new QAction(tr("Delete &Method"));
+    connect(rmMethod, SIGNAL(triggered()), this, SLOT(rmMethod_triggered()));
+    addAttr = new QAction(tr("Add &Attribute"));
+    connect(addAttr, SIGNAL(triggered()), this, SLOT(addAttr_triggered()));
+    rmAttr = new QAction(tr("Delete &Attribute"));
+    connect(rmAttr, SIGNAL(triggered()), this, SLOT(rmAttr_triggered()));
+
+    classMenu = new QMenu();
+    classMenu->addAction(addMethod);
+    classMenu->addAction(rmMethod);
+    classMenu->addAction(addAttr);
+    classMenu->addAction(rmAttr);
+}
+
+void TabCanvas::createMenusConnections() {
+    aggregation = new QAction(tr("Aggregation &Relation"));
+    connect(aggregation, SIGNAL(triggered()), this, SLOT(aggregation_triggered()));
+    composition = new QAction(tr("Composition &Relation"));
+    connect(composition, SIGNAL(triggered()), this, SLOT(composition_triggered()));
+    generalization = new QAction(tr("Generalization &Relation"));
+    connect(generalization, SIGNAL(triggered()), this, SLOT(generalization_triggered()));
+    association = new QAction(tr("Association &Relation"));
+    connect(association, SIGNAL(triggered()), this, SLOT(association_triggered()));
+
+    connectionMenu = new QMenu();
+    connectionMenu->addAction(aggregation);
+    connectionMenu->addAction(composition);
+    connectionMenu->addAction(generalization);
+    connectionMenu->addAction(association);
+}
+
+void TabCanvas::ShowContextMenu(const QPoint& pos) // this is a slot
+{
+    QGraphicsItem *item = selectedObject();
+    ClassDiagramItem *ptr1;
+    ActorDiagramItem *ptr2;
+
+    if (item == nullptr) {
+        return;
+    }
+
+    switch (type) {
+        case SceneType::CLASS:
+            ptr1 = dynamic_cast<ClassDiagramItem *>(item);
+
+            if (ptr1 != nullptr) {
+                classMenu->exec(this->mapToGlobal(pos));
+            }
+            else {
+                connectionMenu->exec(this->mapToGlobal(pos));
+            }
+
+            break;
+        case SceneType::SEQUENCE:
+            ptr2 = dynamic_cast<ActorDiagramItem *>(item);
+
+            if (ptr2 != nullptr) {
+                // TODO: actor
+            }
+            else {
+                // TODO: message
+            }
+
+            break;
+        default:
+            assert(!"This statement must not be reached");
+    }
 }
 
 /**
@@ -47,6 +122,9 @@ void TabCanvas::createScene() {
     view->setDragMode(QGraphicsView::RubberBandDrag);
     view->setRenderHints(QPainter::Antialiasing
                          | QPainter::TextAntialiasing);
+    view->setContextMenuPolicy(Qt::CustomContextMenu);
+    connect(view, SIGNAL(customContextMenuRequested(const QPoint&)),
+            this, SLOT(ShowContextMenu(const QPoint&)));
 
     setCentralWidget(view);
 }
@@ -76,10 +154,11 @@ void TabCanvas::addEntity() {
     QUndoCommand *addCommand = nullptr;
     QList<QString> attrs;
     QList<QString> methods;
+    QPoint point = generateCoords();
 
     switch (type) {
         case DiagramType::SEQUENCE:
-            createActor = new actorParams(20, 20, 1.0, "_ACTOR_",
+            createActor = new actorParams(point.x(), point.y() ,1.0, "_ACTOR_",
                                           generateColor(), 70, 110);
             addCommand = new AddActorCommand(editorScene, createActor);
             delete createActor;
@@ -89,7 +168,7 @@ void TabCanvas::addEntity() {
             attrs.push_back("+ int name");
             methods.push_back("+ int name()");
 
-            createItem = new classParams(20, 20, 1.0,"_NAME_",
+            createItem = new classParams(point.x(), point.y(), 1.0,"_NAME_",
                                          generateColor(), 120.0, 120.0, attrs, methods);
             addCommand = new AddClassCommand(editorScene, createItem);
             delete createItem;
@@ -327,31 +406,20 @@ void TabCanvas::rmAttr_triggered() {
     qDebug() << "delete Attr";
 };
 
-/**
- *
- */
-void TabCanvas::properties() {
-    addMethod = new QAction(tr("Add &Method"));
-    connect(addMethod, SIGNAL(triggered()), this, SLOT(addMethod_triggered()));
-
-    rmMethod = new QAction(tr("Delete &Method"));
-    connect(rmMethod, SIGNAL(triggered()), this, SLOT(rmMethod_triggered()));
-
-    addAttr = new QAction(tr("Add &Attribute"));
-    connect(addAttr, SIGNAL(triggered()), this, SLOT(addAttr_triggered()));
-
-    rmAttr = new QAction(tr("Delete &Attribute"));
-    connect(rmAttr, SIGNAL(triggered()), this, SLOT(rmAttr_triggered()));
-
-    editMenu = menuBar()->addMenu(tr("Properties"));
-    editMenu->addAction(addMethod);
-    editMenu->addAction(rmMethod);
-    editMenu->addAction(addAttr);
-    editMenu->addAction(rmAttr);
+void TabCanvas::aggregation_triggered() {
+    return;
 }
 
-CustomAttrText::~CustomAttrText() {
+void TabCanvas::composition_triggered() {
+    return;
+}
 
+void TabCanvas::generalization_triggered() {
+    return;
+}
+
+void TabCanvas::association_triggered() {
+    return;
 }
 
 /**
