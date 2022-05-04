@@ -7,7 +7,6 @@
 #include "tabs/tabcanvas.h"
 #include "tabs/diagram/DiagramItem.h"
 
-
 namespace Ui {
     class editorInterface;
 }

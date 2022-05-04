@@ -19,10 +19,10 @@ CustomAttrText::CustomAttrText(ClassDiagramItem *p, QString text, qreal x, qreal
 void CustomAttrText::keyReleaseEvent(QKeyEvent *event) {
     qreal maxLen = 0;
 
-    for (auto item : parent()->getAttrs()) {
+    for (auto item : parent()->attrs()) {
         maxLen = item->boundingRect().width() > maxLen ? item->boundingRect().width() : maxLen;
     }
-    for (auto item : parent()->getMethods()) {
+    for (auto item : parent()->methods()) {
         maxLen = item->boundingRect().width() > maxLen ? item->boundingRect().width() : maxLen;
     }
 
@@ -37,10 +37,10 @@ void CustomAttrText::keyReleaseEvent(QKeyEvent *event) {
     }
 
     parent()->setRect(0, 0, maxLen, parent()->height());
-    for (auto item : parent()->getAttrsLines()) {
+    for (auto item : parent()->attrsLines()) {
         item->setLine(0, 0, maxLen, 0);
     }
-    for (auto item : parent()->getMethodsLines()) {
+    for (auto item : parent()->methodsLines()) {
         item->setLine(0, 0, maxLen, 0);
     }
     parent()->setWidth(maxLen);
@@ -92,7 +92,7 @@ ActorDiagramItem::ActorDiagramItem(QGraphicsItem *item)
  * @param connection
  */
 void ActorDiagramItem::addConnection(ActorConnectionItem *connection) {
-    connections.insert(connection);
+    _connections.insert(connection);
 }
 
 /**
@@ -100,7 +100,7 @@ void ActorDiagramItem::addConnection(ActorConnectionItem *connection) {
  * @param connection
  */
 void ActorDiagramItem::removeConnection(ActorConnectionItem *connection) {
-    connections.remove(connection);
+    _connections.remove(connection);
 }
 
 /**
@@ -130,22 +130,22 @@ ClassDiagramItem::ClassDiagramItem(QGraphicsItem *item)
     textAttr = new CustomAttrText(this, "ATTRIBUTES", _tabText, _tabText,  Qt::NoTextInteraction);
 
     lineAttr = createLine(0, _rowHeight);
-    attrsLines.push_back(lineAttr);
+    _attrsLines.push_back(lineAttr);
 
     textAttr = new CustomAttrText(this, "+ int name", _tabText, _rowHeight + _tabText, _flags);
-    attrs.push_back(textAttr);
+    _attrs.push_back(textAttr);
 
     lineAttr = createLine(0, _rowHeight * 2);
-    methodsLines.push_back(lineAttr);
+    _methodsLines.push_back(lineAttr);
 
     textAttr = new CustomAttrText(this, "METHODS", _tabText, _rowHeight * 2 + _tabText, Qt::NoTextInteraction);
-    methods.push_back(textAttr);
+    _methods.push_back(textAttr);
 
     lineAttr = createLine(0, _rowHeight * 3);
-    methodsLines.push_back(lineAttr);
+    _methodsLines.push_back(lineAttr);
 
     textAttr = new CustomAttrText(this, "+ int name()", _tabText, _rowHeight * 3 + _tabText, _flags);
-    methods.push_back(textAttr);
+    _methods.push_back(textAttr);
 
     setRect(boundingBox());
     setBrush(QBrush(QColor(255,255,255,255)));
@@ -155,8 +155,9 @@ ClassDiagramItem::ClassDiagramItem(QGraphicsItem *item)
  *
  */
 ClassDiagramItem::~ClassDiagramItem() {
-    foreach (ClassConnectionItem *connection, connections) {
+    foreach (ClassConnectionItem *connection, _connections) {
         delete connection;
+        qDebug() << "Connection deleted (diagramItem.cpp)";
     }
 }
 
@@ -165,7 +166,7 @@ ClassDiagramItem::~ClassDiagramItem() {
  * @param connection
  */
 void ClassDiagramItem::addConnection(ClassConnectionItem *connection) {
-    connections.insert(connection);
+    _connections.insert(connection);
 }
 
 /**
@@ -173,7 +174,7 @@ void ClassDiagramItem::addConnection(ClassConnectionItem *connection) {
  * @param connection
  */
 void ClassDiagramItem::removeConnection(ClassConnectionItem *connection) {
-    connections.remove(connection);
+    _connections.remove(connection);
 }
 
 /**
@@ -184,7 +185,7 @@ void ClassDiagramItem::removeConnection(ClassConnectionItem *connection) {
  */
 QVariant ClassDiagramItem::itemChange(GraphicsItemChange change, const QVariant &value) {
     if (change == ItemPositionHasChanged) {
-        for(auto *connection : connections) {
+        for(auto *connection : _connections) {
             connection->trackNodes();
         }
     }

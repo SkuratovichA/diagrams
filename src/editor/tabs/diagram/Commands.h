@@ -71,10 +71,7 @@ public:
 private:
     ActorDiagramItem *diagramItem;
     QGraphicsScene *graphicsScene;
-    union {
-        QPointF initialStartPosition;
-        QPointF initialPosition;
-    };
+    QPointF initialStartPosition;
     QPointF initialEndPosition;
 };
 
@@ -94,10 +91,7 @@ public:
 private:
     ClassDiagramItem *diagramItem;
     QGraphicsScene *graphicsScene;
-    union {
-        QPointF initialStartPosition;
-        QPointF initialPosition;
-    };
+    QPointF initialStartPosition;
     QPointF initialEndPosition;
 };
 

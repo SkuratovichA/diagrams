@@ -187,7 +187,7 @@ void TabCanvas::rmMethod_triggered() {
     }
 
     // one default METHODS
-    auto size = item->getMethods().size();
+    auto size = item->methods().size();
     if (size < 2) {
         qDebug() << "No methods";
         return;
@@ -215,7 +215,7 @@ void TabCanvas::addAttr_triggered() {
     // resize item for one row
     item->setRect(0,0,item->width(), item->height() + item->rowHeight());
 
-    long long inc = item->getAttrs().size() + 1;
+    long long inc = item->attrs().size() + 1;
     item->moveTexts(1, inc);
     item->moveLines(1, inc);
 
@@ -238,7 +238,7 @@ void TabCanvas::rmAttr_triggered() {
         return;
     }
 
-    auto size = item->getMethods().size();
+    auto size = item->methods().size();
     if (size < 1) {
         qDebug() << "No methods";
         return;
@@ -252,7 +252,7 @@ void TabCanvas::rmAttr_triggered() {
     item->popAttrsLine();
 
     // move items
-    long long inc = item->getAttrs().size() + 1;
+    long long inc = item->attrs().size() + 1;
     item->moveTexts(0, inc);
     item->moveLines(0, inc);
 

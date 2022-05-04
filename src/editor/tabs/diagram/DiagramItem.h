@@ -14,9 +14,13 @@
 
 QT_BEGIN_NAMESPACE
 class QGraphicsItem;
+
 class QGraphicsScene;
+
 class QGraphicsSceneMouseEvent;
+
 class QPointF;
+
 QT_END_NAMESPACE
 
 // for attrs and table expanding
@@ -25,7 +29,7 @@ public:
     CustomAttrText(ClassDiagramItem *p, QString text, qreal x, qreal y, QFlags<Qt::TextInteractionFlag> flags);
     ~CustomAttrText();
 
-    ClassDiagramItem* parent() {
+    ClassDiagramItem *parent() {
         return _parent;
     }
 
@@ -41,7 +45,7 @@ public:
     NameObject(QGraphicsItem *parent, QFlags<Qt::TextInteractionFlag> flags, qreal x, qreal y);
     ~NameObject();
 
-    QGraphicsItem* parent() {
+    QGraphicsItem *parent() {
         return _parent;
     }
 
@@ -137,7 +141,7 @@ public:
     void removeConnection(ActorConnectionItem *connection);
 
 private:
-    QSet<ActorConnectionItem *> connections;
+    QSet<ActorConnectionItem *> _connections;
 };
 
 class ClassDiagramItem : public QGraphicsRectItem, public DiagramItem {
@@ -150,106 +154,106 @@ public:
     void removeConnection(ClassConnectionItem *connection);
 
     QPointF centre() {
-        return {x() + width()/2.0, y() + height()/2.0};
+        return {x() + width() / 2.0, y() + height() / 2.0};
     }
 
-    QList<CustomAttrText *>  getMethods() {
-        return methods;
+    QList<CustomAttrText *> methods() {
+        return _methods;
     }
 
-    QList<QGraphicsLineItem *> getMethodsLines() {
-        return methodsLines;
+    QList<QGraphicsLineItem *> methodsLines() {
+        return _methodsLines;
     }
 
-    QList<CustomAttrText *>  getAttrs() {
-        return attrs;
+    QList<CustomAttrText *> attrs() {
+        return _attrs;
     }
 
-    QList<QGraphicsLineItem *> getAttrsLines() {
-        return attrsLines;
+    QList<QGraphicsLineItem *> attrsLines() {
+        return _attrsLines;
     }
 
     void popMethod() {
-        if (methods.isEmpty()) {
+        if (_methods.isEmpty()) {
             return;
         }
-        CustomAttrText *tmp = methods.takeLast();
+        CustomAttrText *tmp = _methods.takeLast();
         delete tmp;
     }
 
     void popMethodsLine() {
-        if (methodsLines.isEmpty()) {
+        if (_methodsLines.isEmpty()) {
             return;
         }
-        QGraphicsLineItem *tmp = methodsLines.takeLast();
+        QGraphicsLineItem *tmp = _methodsLines.takeLast();
         delete tmp;
     }
 
     void popAttr() {
-        if (attrs.isEmpty()) {
+        if (_attrs.isEmpty()) {
             return;
         }
-        CustomAttrText *tmp = attrs.takeLast();
+        CustomAttrText *tmp = _attrs.takeLast();
         delete tmp;
     }
 
     void popAttrsLine() {
-        if (attrsLines.isEmpty()) {
+        if (_attrsLines.isEmpty()) {
             return;
         }
-        QGraphicsLineItem *tmp = attrsLines.takeLast();
+        QGraphicsLineItem *tmp = _attrsLines.takeLast();
         delete tmp;
     }
 
     void pushAttr(CustomAttrText *item) {
-        attrs.push_back(item);
+        _attrs.push_back(item);
     }
 
     void pushMethod(CustomAttrText *item) {
-        methods.push_back(item);
+        _methods.push_back(item);
     }
 
     void pushMethodLine(QGraphicsLineItem *item) {
-        methodsLines.push_back(item);
+        _methodsLines.push_back(item);
     }
 
     void pushAttrLine(QGraphicsLineItem *item) {
-        attrsLines.push_back(item);
+        _attrsLines.push_back(item);
     }
 
-    qreal rowHeight() {
+    qreal rowHeight() const {
         return _rowHeight;
     }
 
-    qreal rowWidth() {
+    qreal rowWidth() const {
         return _rowWidth;
     }
 
-    qreal tabText() {
+    qreal tabText() const {
         return _tabText;
     }
 
     void moveLines(int st, long long el) {
-        foreach (QGraphicsLineItem *val, methodsLines) {
-            val->setPos(0, (el + st) * _rowHeight);
-            st++;
-        }
+                foreach (QGraphicsLineItem *val, _methodsLines) {
+                val->setPos(0, (el + st) * _rowHeight);
+                st++;
+            }
     }
 
     void moveTexts(int st, long long el) {
-        foreach (CustomAttrText *val, methods) {
-            val->setPos(0, (el + st) * _rowHeight + _tabText);
-            st++;
-        }
+                foreach (CustomAttrText *val, _methods) {
+                val->setPos(0, (el + st) * _rowHeight + _tabText);
+                st++;
+            }
     }
 
-    QGraphicsLineItem* createLine(qreal x, qreal y) {
+    QGraphicsLineItem *createLine(qreal x, qreal y) {
         auto line = new QGraphicsLineItem(0, 0, _rowWidth, 0, this);
         line->setPos(x, y);
         return line;
     }
 
-    QGraphicsTextItem* createText(qreal x, qreal y, QString text) {
+    QGraphicsTextItem *createText(qreal x, qreal y, QString text) {
         auto attr = new QGraphicsTextItem(text, this);
         setTextFlags(attr);
         attr->setPos(x, y);
@@ -261,21 +265,24 @@ public:
     }
 
     void setTextFlags(QGraphicsTextItem *item) {
-        item->setTextInteractionFlags(Qt::TextInteractionFlag::TextEditable     |
+        item->setTextInteractionFlags(Qt::TextInteractionFlag::TextEditable |
                                       Qt::TextInteractionFlag::TextSelectableByMouse |
                                       Qt::TextInteractionFlag::TextSelectableByKeyboard);
+    }
+
+    QSet<ClassConnectionItem *> connections() const {
+        return _connections;
     }
 
 protected:
     QVariant itemChange(GraphicsItemChange change, const QVariant &value);
 
-
 private:
-    QSet<ClassConnectionItem *> connections;
-    QList<CustomAttrText *> attrs;
-    QList<CustomAttrText *> methods;
-    QList<QGraphicsLineItem *> attrsLines;
-    QList<QGraphicsLineItem *> methodsLines;
+    QSet<ClassConnectionItem *> _connections;
+    QList<CustomAttrText *> _attrs;
+    QList<CustomAttrText *> _methods;
+    QList<QGraphicsLineItem *> _attrsLines;
+    QList<QGraphicsLineItem *> _methodsLines;
     qreal _rowHeight;
     qreal _rowWidth;
     qreal _tabText;

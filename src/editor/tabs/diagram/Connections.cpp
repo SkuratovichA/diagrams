@@ -38,9 +38,17 @@ ClassConnectionItem::ClassConnectionItem(ClassDiagramItem *fromNode,
  *
  */
 ClassConnectionItem::~ClassConnectionItem() {
-    qDebug() << "removing connections";
-    nodeFrom->removeConnection(this);
-    nodeTo->removeConnection(this);
+    qDebug() << "removing connections from 'fromNode'";
+    if (nodeFrom != nullptr) {
+        nodeFrom->removeConnection(this);
+    }
+    qDebug() << "DONE";
+
+    qDebug() << "removing connections from 'toNode'";
+    if (nodeTo != nullptr) {
+        nodeTo->removeConnection(this);
+    }
+    qDebug() << "DONE";
 }
 
 /**

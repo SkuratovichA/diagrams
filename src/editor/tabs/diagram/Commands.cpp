@@ -8,13 +8,10 @@
 #include "DiagramItem.h"
 
 #include <QGraphicsScene>
-#include <utility>
 
-QString createCommandString(QGraphicsItem *item, const QPointF &pos)
-{
-    return QObject::tr("%1 at (%2, %3)")
-            .arg("ITEM")
-            .arg(pos.x()).arg(pos.y());
+QString createCommandString(QGraphicsItem *item) {
+    return QObject::tr("%1")
+            .arg("ITEM");
 }
 
 /**
@@ -39,9 +36,8 @@ bool MoveCommand::mergeWith(const QUndoCommand *command) {
     if (diagramItem != item) {
         return false;
     }
-    newPos = item->pos();
     setText(QObject::tr("Move %1")
-                    .arg(createCommandString(diagramItem, newPos)));
+                    .arg(createCommandString(diagramItem)));
     return true;
 }
 
@@ -52,7 +48,7 @@ void MoveCommand::undo() {
     diagramItem->setPos(startPos.x(), startPos.y());
     diagramItem->scene()->update();
     setText(QObject::tr("Move %1")
-                    .arg(createCommandString(diagramItem, newPos)));
+                    .arg(createCommandString(diagramItem)));
 }
 
 /**
@@ -61,7 +57,7 @@ void MoveCommand::undo() {
 void MoveCommand::redo() {
     diagramItem->setPos(newPos);
     setText(QObject::tr("Move %1")
-                    .arg(createCommandString(diagramItem, newPos)));
+                    .arg(createCommandString(diagramItem)));
 }
 
 /**
@@ -75,7 +71,13 @@ DeleteCommand::DeleteCommand(QGraphicsScene *scene, QUndoCommand *parent)
     list.first()->setSelected(false);
     diagramItem = list.first();
     setText(QObject::tr("Delete %1")
-                    .arg(createCommandString(diagramItem, diagramItem->pos())));
+                    .arg(createCommandString(diagramItem)));
+    if (dynamic_cast<ClassDiagramItem *>(diagramItem) != nullptr) {
+        auto connections = dynamic_cast<ClassDiagramItem *>(diagramItem)->connections();
+                foreach (ClassConnectionItem *connection, connections) {
+                scene->removeItem(connection);
+            }
+    }
 }
 
 /**
@@ -83,6 +85,12 @@ DeleteCommand::DeleteCommand(QGraphicsScene *scene, QUndoCommand *parent)
  */
 void DeleteCommand::undo() {
     graphicsScene->addItem(diagramItem);
+    if (dynamic_cast<ClassDiagramItem *>(diagramItem) != nullptr) {
+        auto connections = dynamic_cast<ClassDiagramItem *>(diagramItem)->connections();
+                foreach (ClassConnectionItem *connection, connections) {
+                graphicsScene->addItem(connection);
+            }
+    }
     graphicsScene->update();
 }
 
@@ -90,6 +98,12 @@ void DeleteCommand::undo() {
  *
  */
 void DeleteCommand::redo() {
+    if (dynamic_cast<ClassDiagramItem *>(diagramItem) != nullptr) {
+        auto connections = dynamic_cast<ClassDiagramItem *>(diagramItem)->connections();
+                foreach (ClassConnectionItem *connection, connections) {
+                graphicsScene->removeItem(connection);
+            }
+    }
     graphicsScene->removeItem(diagramItem);
 }
 
@@ -109,7 +123,7 @@ AddActorCommand::AddActorCommand(QGraphicsScene *scene, QUndoCommand *parent)
     scene->update();
 
     setText(QObject::tr("Add %1")
-                    .arg(createCommandString(static_cast<QGraphicsItem *>(diagramItem), initialPosition)));
+                    .arg(createCommandString(static_cast<QGraphicsItem *>(diagramItem))));
 }
 
 /**
@@ -153,7 +167,7 @@ AddClassCommand::AddClassCommand(QGraphicsScene *scene, QUndoCommand *parent)
     itemCount++;
     scene->update();
     setText(QObject::tr("Add %1")
-                    .arg(createCommandString(static_cast<QGraphicsItem *>(diagramItem), initialPosition)));
+                    .arg(createCommandString(static_cast<QGraphicsItem *>(diagramItem))));
 }
 
 /**
@@ -164,6 +178,7 @@ AddClassCommand::~AddClassCommand() {
         return;
     }
     delete diagramItem;
+    qDebug() << "diagramItem deleted (Commands.cpp)";
 }
 
 /**
@@ -212,7 +227,8 @@ AddClassConnectionCommand::~AddClassConnectionCommand() {
     if (classConnection->scene() != nullptr) {
         return;
     }
-    delete classConnection;
+    qDebug() << "This shit of code causes segfault";
+//    delete classConnection;
 }
 
 /**
