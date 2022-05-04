@@ -104,6 +104,10 @@ private:
     //QAction *bringToFrontAction;
     //QAction *sendToBackAction;
 
+
+    QMenu *properties;
+
+
     QAction *newTabAction;
     QAction *saveAction;
     QAction *deleteTabAction;

@@ -151,7 +151,6 @@ void TabCanvas::paste() {
                 ActorDiagramItem *diagramItem = new ActorDiagramItem(ptr);
                 diagramItem->setPos(ptr->x(), ptr->y());
                 editorScene->addItem(diagramItem);
-                editorScene->update();
             }
             break;
         case SceneType::CLASS:
@@ -159,12 +158,12 @@ void TabCanvas::paste() {
                 ClassDiagramItem *diagramItem = new ClassDiagramItem(ptr);
                 diagramItem->setPos(ptr->x(), ptr->y());
                 editorScene->addItem(diagramItem);
-                editorScene->update();
             }
             break;
         default:
             qDebug() << "It is impossible";
     }
+    editorScene->update();
 }
 
 /**
@@ -183,10 +182,7 @@ void TabCanvas::cut() {
  *
  */
 void TabCanvas::copy() {
-
     ClassDiagramItem *ptrClass;
-    //ClassConnectionItem *ptrConnect;
-    //ActorConnectionItem *ptrMsg;
     ActorDiagramItem *ptrActor;
     QList<QGraphicsItem *> items = editorScene->selectedItems();
 
@@ -194,28 +190,18 @@ void TabCanvas::copy() {
     switch (type) {
         case SceneType::SEQUENCE:
             for (auto val : items) {
-                //ptrMsg = dynamic_cast<ActorConnectionItem *>(val);
                 ptrActor = dynamic_cast<ActorDiagramItem *>(val);
-
                 if (ptrActor != nullptr) {
                     buffer->fillActorItems(ptrActor);
                 }
-                //else {
-                    // TODO for messages
-                //}
             }
             break;
         case SceneType::CLASS:
             for (auto val : items) {
                 ptrClass = dynamic_cast<ClassDiagramItem *>(val);
-                //ptrConnect = dynamic_cast<ClassConnectionItem *>(val);
-
                 if (ptrClass != nullptr) {
                     buffer->fillClassItems(ptrClass);
                 }
-                //else {
-                    // TODO for arrows
-                //}
             }
             break;
         default:
@@ -317,7 +303,8 @@ void TabCanvas::rmAttr_triggered() {
         return;
     }
 
-    auto size = item->methods().size();
+    auto size = item->attrs().size();
+    qDebug() << size;
     if (size < 1) {
         qDebug() << "No methods";
         return;

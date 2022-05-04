@@ -161,6 +161,10 @@ void editorInterface::createDynamicToolBar() {
     dynamicToolBar->addSeparator();
     dynamicToolBar->addAction(propertiesAction);
 
+
+
+    //propertiesAction->setMenu();
+
     //editMenu = menuBar()->addMenu(tr("Add &Attr"));
     //editMenu = menuBar()->addAction(addAttr);
 //    editToolBar->addAction(bringToFrontAction);

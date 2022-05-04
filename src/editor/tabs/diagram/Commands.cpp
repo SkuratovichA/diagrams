@@ -23,6 +23,7 @@ QString createCommandString(QGraphicsItem *item) {
 MoveCommand::MoveCommand(QGraphicsItem *diagramItem, const QPointF &oldPos,
                          QUndoCommand *parent)
         : QUndoCommand(parent), diagramItem(diagramItem), startPos(oldPos), newPos(diagramItem->pos()) {
+    qDebug() << "Move command";
 }
 
 /**
@@ -67,16 +68,15 @@ void MoveCommand::redo() {
  */
 DeleteCommand::DeleteCommand(QGraphicsScene *scene, QUndoCommand *parent)
         : QUndoCommand(parent), graphicsScene(scene) {
-    //qDebug() << " iam heeeeeeeeeer";
     QList<QGraphicsItem *> list = graphicsScene->selectedItems();
     list.first()->setSelected(false);
     diagramItem = list.first();
     setText(QObject::tr("Delete %1")
                     .arg(createCommandString(diagramItem)));
+
     if (dynamic_cast<ClassDiagramItem *>(diagramItem) != nullptr) {
         auto connections = dynamic_cast<ClassDiagramItem *>(diagramItem)->connections();
         foreach (ClassConnectionItem *connection, connections) {
-
             scene->removeItem(connection);
         }
     }
@@ -89,7 +89,7 @@ void DeleteCommand::undo() {
     graphicsScene->addItem(diagramItem);
     if (dynamic_cast<ClassDiagramItem *>(diagramItem) != nullptr) {
         auto connections = dynamic_cast<ClassDiagramItem *>(diagramItem)->connections();
-                foreach (ClassConnectionItem *connection, connections) {
+        foreach (ClassConnectionItem *connection, connections) {
                 graphicsScene->addItem(connection);
             }
     }
@@ -102,7 +102,7 @@ void DeleteCommand::undo() {
 void DeleteCommand::redo() {
     if (dynamic_cast<ClassDiagramItem *>(diagramItem) != nullptr) {
         auto connections = dynamic_cast<ClassDiagramItem *>(diagramItem)->connections();
-                foreach (ClassConnectionItem *connection, connections) {
+        foreach (ClassConnectionItem *connection, connections) {
                 graphicsScene->removeItem(connection);
             }
     }
