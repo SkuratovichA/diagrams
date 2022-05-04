@@ -56,8 +56,11 @@ void CustomAttrText::keyReleaseEvent(QKeyEvent *event) {
     parent()->_head->setPos((midO - midW) / 2, -40);
 }
 
-ActorDiagramItem::ActorDiagramItem(QGraphicsItem *item)
-        : QGraphicsRectItem(item), DiagramItem(70.0, 110.0, DiagramItem::Actor, QColor(56,100,67, 255)) {
+ActorDiagramItem::ActorDiagramItem(actorParams *params)
+        : DiagramItem(params->width() * params->scale(),
+                      params->height() * params->scale(),
+                      DiagramItem::Actor,
+                      params->color()) {
 
     setFlag(QGraphicsItem::ItemIsSelectable);
     setFlag(QGraphicsItem::ItemIsMovable);
@@ -68,7 +71,7 @@ ActorDiagramItem::ActorDiagramItem(QGraphicsItem *item)
              Qt::TextInteractionFlag::TextSelectableByKeyboard;
 
     setPen(QPen(QColor(1, 0, 0, 0)));
-    _head = new NameObject(this, _flags, -15, -40, "ACTOR");
+    _head = new NameObject(this, _flags, -15, -40, params->name());
 
 //    auto text = new QGraphicsTextItem("test", this);
 //    text->setTextInteractionFlags(

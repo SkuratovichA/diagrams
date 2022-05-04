@@ -9,11 +9,11 @@
 #include <QList>
 #include <QColor>
 
-class classParams {
+class objectParams {
 public:
-    classParams(qreal x, qreal y, qreal scale, QList<QString> attrs,
-                QList<QString> methods, QString name,
-                QColor color, qreal width, qreal height);
+    objectParams(qreal x, qreal y, qreal scale, QString name,
+                 QColor color, qreal width, qreal height);
+    ~objectParams() = default;
 
     qreal x() const {
         return _x;
@@ -39,6 +39,26 @@ public:
         return _height;
     }
 
+    QString name() const {
+        return _name;
+    }
+protected:
+    qreal _x;
+    qreal _y;
+    qreal _scale;
+    QColor _color;
+    qreal _width;
+    qreal _height;
+    QString _name;
+};
+
+class classParams : public objectParams {
+public:
+    classParams(qreal x, qreal y, qreal scale, QString name,
+                QColor color, qreal width, qreal height,
+                QList<QString> attrs, QList<QString> methods);
+    ~classParams() = default;
+
     QList<QString> attrs() const {
         return _attrs;
     }
@@ -47,33 +67,16 @@ public:
         return _methods;
     }
 
-    QString name() const {
-        return _name;
-    }
-
-//    void pushAttr(QString pushItem) {
-//        _attrs.push_back(pushItem);
-//    }
-//
-//    void pushMethod(QString pushItem) {
-//        _methods.push_back(pushItem);
-//    }
-//
-//    void setName(QString name) {
-//        _name = name;
-//    }
-
-
 private:
-    qreal _x;
-    qreal _y;
-    qreal _scale;
-    QColor _color;
-    qreal _width;
-    qreal _height;
     QList<QString> _attrs;
     QList<QString> _methods;
-    QString _name;
+};
+
+class actorParams : public objectParams {
+public:
+    actorParams(qreal x, qreal y, qreal scale, QString name,
+                QColor color, qreal width, qreal height);
+    ~actorParams() = default;
 };
 
 

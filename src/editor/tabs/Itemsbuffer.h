@@ -15,6 +15,7 @@ public:
 
     //void createClassItems();
     void fillClassItems(ClassDiagramItem *item);
+    void fillActorItems(ActorDiagramItem *item);
     void clearBuffer();
 
     QList<classParams *> classItems() const {
@@ -25,7 +26,7 @@ public:
         return _connectionItems;
     }
 
-    QList<ActorDiagramItem *> actorItems() const {
+    QList<actorParams *> actorItems() const {
         return _actorItems;
     }
 
@@ -37,6 +38,10 @@ public:
         _classItems.push_back(item);
     }
 
+    void pushActorItem(actorParams *item) {
+        _actorItems.push_back(item);
+    }
+
     void deleteClassItems() {
         for (auto x : _classItems) {
             _classItems.pop_front();
@@ -45,10 +50,18 @@ public:
         }
     }
 
+    void deleteActorItems() {
+        for (auto x : _actorItems) {
+            _actorItems.pop_front();
+            qDebug() << "delete item from buffer copy/paste" << x;
+            delete x;
+        }
+    }
+
 private:
     QList<classParams *> _classItems;
     QList<ClassConnectionItem *> _connectionItems;
-    QList<ActorDiagramItem *> _actorItems;
+    QList<actorParams *> _actorItems;
     QList<ActorConnectionItem *> _messageItems;
 };
 

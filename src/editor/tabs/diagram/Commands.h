@@ -61,7 +61,7 @@ private:
  */
 class AddActorCommand : public QUndoCommand {
 public:
-    explicit AddActorCommand(QGraphicsScene *scene, QUndoCommand *parent = nullptr);
+    explicit AddActorCommand(QGraphicsScene *scene, actorParams *params, QUndoCommand *parent = nullptr);
 
     ~AddActorCommand();
 

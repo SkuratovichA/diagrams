@@ -76,24 +76,21 @@ void TabCanvas::addEntity() {
     QUndoCommand *addCommand = nullptr;
     QList<QString> attrs;
     QList<QString> methods;
-    QRandomGenerator p = QRandomGenerator();
-    QColor color = QColor(QRandomGenerator::global()->bounded(256),
-                          QRandomGenerator::global()->bounded(256),
-                          QRandomGenerator::global()->bounded(256),
-                          180);
 
     switch (type) {
         case DiagramType::SEQUENCE:
-            addCommand = new AddActorCommand(editorScene);
+            createActor = new actorParams(20, 20, 1.0, "_ACTOR_",
+                                          generateColor(), 70, 110);
+            addCommand = new AddActorCommand(editorScene, createActor);
+            delete createActor;
+
             break;
         case DiagramType::CLASS:
             attrs.push_back("+ int name");
             methods.push_back("+ int name()");
 
-            //x = static_cast<qreal>(p.generate(0,700));
-            //y = static_cast<qreal>(p.generate(0,700));
-            createItem = new classParams(20, 20, 1.0, attrs, methods,
-                                         "_NAME_", color, 120.0, 120.0);
+            createItem = new classParams(20, 20, 1.0,"_NAME_",
+                                         generateColor(), 120.0, 120.0, attrs, methods);
             addCommand = new AddClassCommand(editorScene, createItem);
             delete createItem;
 
@@ -148,13 +145,25 @@ QGraphicsItem *TabCanvas::selectedObject() {
  *
  */
 void TabCanvas::paste() {
-    // FIXME: paste
-
-    for (auto ptr : buffer->classItems()) {
-        ClassDiagramItem *diagramItem = new ClassDiagramItem(ptr);
-        diagramItem->setPos(ptr->x(), ptr->y());
-        editorScene->addItem(diagramItem);
-        editorScene->update();
+    switch (type) {
+        case SceneType::SEQUENCE:
+            for (auto ptr : buffer->actorItems()) {
+                ActorDiagramItem *diagramItem = new ActorDiagramItem(ptr);
+                diagramItem->setPos(ptr->x(), ptr->y());
+                editorScene->addItem(diagramItem);
+                editorScene->update();
+            }
+            break;
+        case SceneType::CLASS:
+            for (auto ptr : buffer->classItems()) {
+                ClassDiagramItem *diagramItem = new ClassDiagramItem(ptr);
+                diagramItem->setPos(ptr->x(), ptr->y());
+                editorScene->addItem(diagramItem);
+                editorScene->update();
+            }
+            break;
+        default:
+            qDebug() << "It is impossible";
     }
 }
 
@@ -162,40 +171,63 @@ void TabCanvas::paste() {
  *
  */
 void TabCanvas::cut() {
-    qDebug() << "cut";
     copy();
     QList<QGraphicsItem *> items = editorScene->selectedItems();
 
-    //buffer->clearBuffer();
     for (auto val : items) {
         editorScene->removeItem(val);
-        //delete val;
     }
-    // FIXME: implement me
 }
 
 /**
  *
  */
 void TabCanvas::copy() {
-    // TODO: implement me
-    ClassDiagramItem *ptr;
-    // add other 3 types of objects
+
+    ClassDiagramItem *ptrClass;
+    //ClassConnectionItem *ptrConnect;
+    //ActorConnectionItem *ptrMsg;
+    ActorDiagramItem *ptrActor;
     QList<QGraphicsItem *> items = editorScene->selectedItems();
 
     buffer->clearBuffer();
-    for (auto val : items) {
-        ptr = static_cast<ClassDiagramItem *>(val);
-        if (ptr == nullptr) {
-            continue;
-        }
+    switch (type) {
+        case SceneType::SEQUENCE:
+            for (auto val : items) {
+                //ptrMsg = dynamic_cast<ActorConnectionItem *>(val);
+                ptrActor = dynamic_cast<ActorDiagramItem *>(val);
 
-        buffer->fillClassItems(ptr);
+                if (ptrActor != nullptr) {
+                    buffer->fillActorItems(ptrActor);
+                }
+                //else {
+                    // TODO for messages
+                //}
+            }
+            break;
+        case SceneType::CLASS:
+            for (auto val : items) {
+                ptrClass = dynamic_cast<ClassDiagramItem *>(val);
+                //ptrConnect = dynamic_cast<ClassConnectionItem *>(val);
+
+                if (ptrClass != nullptr) {
+                    buffer->fillClassItems(ptrClass);
+                }
+                //else {
+                    // TODO for arrows
+                //}
+            }
+            break;
+        default:
+            qDebug() << "It is impossible";
     }
 }
 
+/**
+ *
+ */
 void TabCanvas::addMethod_triggered() {
-    ClassDiagramItem *item = static_cast<ClassDiagramItem *>(selectedObject());
+    ClassDiagramItem *item = dynamic_cast<ClassDiagramItem *>(selectedObject());
 
     if (item == nullptr) {
         qDebug() << "No selected item";
@@ -216,8 +248,11 @@ void TabCanvas::addMethod_triggered() {
     qDebug() << "add Method";
 };
 
+/**
+ *
+ */
 void TabCanvas::rmMethod_triggered() {
-    ClassDiagramItem *item = static_cast<ClassDiagramItem *>(selectedObject());
+    ClassDiagramItem *item = dynamic_cast<ClassDiagramItem *>(selectedObject());
 
     if (item == nullptr) {
         qDebug() << "No selected item";
@@ -242,8 +277,11 @@ void TabCanvas::rmMethod_triggered() {
     qDebug() << "delete Method";
 };
 
+/**
+ *
+ */
 void TabCanvas::addAttr_triggered() {
-    ClassDiagramItem *item = static_cast<ClassDiagramItem *>(selectedObject());
+    ClassDiagramItem *item = dynamic_cast<ClassDiagramItem *>(selectedObject());
 
     if (item == nullptr) {
         qDebug() << "No selected item";
@@ -268,8 +306,11 @@ void TabCanvas::addAttr_triggered() {
     qDebug() << "add Attr";
 };
 
+/**
+ *
+ */
 void TabCanvas::rmAttr_triggered() {
-    ClassDiagramItem *item = static_cast<ClassDiagramItem *>(selectedObject());
+    ClassDiagramItem *item = dynamic_cast<ClassDiagramItem *>(selectedObject());
 
     if (item == nullptr) {
         qDebug() << "No selected item";
@@ -320,8 +361,6 @@ void TabCanvas::properties() {
     editMenu->addAction(rmMethod);
     editMenu->addAction(addAttr);
     editMenu->addAction(rmAttr);
-
-    qDebug() << "properties TabCanvas";
 }
 
 CustomAttrText::~CustomAttrText() {
@@ -335,14 +374,6 @@ CustomAttrText::~CustomAttrText() {
 std::string TabCanvas::getStringRepresentation() {
     // FIXME: in the end
     return {"hello"};
-}
-
-/** When tab is changed, there is a need to manually set the current undo stack.
- *
- * @return undo stack
- */
-QUndoStack *TabCanvas::getUndoStack() {
-    return undoStack;
 }
 
 template<typename T>

@@ -133,7 +133,7 @@ private:
 
 class ActorDiagramItem : public QGraphicsRectItem, public DiagramItem {
 public:
-    explicit ActorDiagramItem(QGraphicsItem *item = nullptr);
+    explicit ActorDiagramItem(actorParams *params);
 
     void addConnection(ActorConnectionItem *connection);
 

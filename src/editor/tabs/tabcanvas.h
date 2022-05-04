@@ -41,7 +41,9 @@ public:
      *
      */
 public:
-    QUndoStack *getUndoStack();
+    QUndoStack *getUndoStack() const {
+        return undoStack;
+    }
 
     std::string getStringRepresentation();
 
@@ -70,6 +72,7 @@ private:
 
     ItemsBuffer *buffer;
     classParams *createItem;
+    actorParams *createActor;
 
     /** Slots
      */
@@ -92,6 +95,13 @@ public slots:
     void rmMethod_triggered();
 
     void createScene();
+
+    QColor generateColor() {
+        return QColor(QRandomGenerator::global()->bounded(256),
+                      QRandomGenerator::global()->bounded(256),
+                      QRandomGenerator::global()->bounded(256),
+                      180);
+    }
 };
 
 #endif // TABCANVAS_H

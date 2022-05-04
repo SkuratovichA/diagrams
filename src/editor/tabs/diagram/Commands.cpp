@@ -67,7 +67,7 @@ void MoveCommand::redo() {
  */
 DeleteCommand::DeleteCommand(QGraphicsScene *scene, QUndoCommand *parent)
         : QUndoCommand(parent), graphicsScene(scene) {
-    qDebug() << " iam heeeeeeeeeer";
+    //qDebug() << " iam heeeeeeeeeer";
     QList<QGraphicsItem *> list = graphicsScene->selectedItems();
     list.first()->setSelected(false);
     diagramItem = list.first();
@@ -114,16 +114,14 @@ void DeleteCommand::redo() {
 /**
  *
  */
-AddActorCommand::AddActorCommand(QGraphicsScene *scene, QUndoCommand *parent)
+AddActorCommand::AddActorCommand(QGraphicsScene *scene, actorParams *params, QUndoCommand *parent)
         : QUndoCommand(parent), graphicsScene(scene) {
     static int itemCount = 0;
 
-    diagramItem = new ActorDiagramItem();
-    initialStartPosition = QPointF(static_cast<qreal>((itemCount * 15 + 100) % static_cast<int>(scene->width())),
-                                   static_cast<qreal>((itemCount * 15 + 150) % static_cast<int>(scene->height())));
+    diagramItem = new ActorDiagramItem(params);
+    initialStartPosition = QPointF(params->x(), params->y());
     itemCount++;
     scene->update();
-
     setText(QObject::tr("Add %1")
                     .arg(createCommandString(static_cast<QGraphicsItem *>(diagramItem))));
 }
