@@ -68,7 +68,7 @@ ActorDiagramItem::ActorDiagramItem(QGraphicsItem *item)
              Qt::TextInteractionFlag::TextSelectableByKeyboard;
 
     setPen(QPen(QColor(1, 0, 0, 0)));
-    _head = new NameObject(this, _flags, -15, -40);
+    _head = new NameObject(this, _flags, -15, -40, "ACTOR");
 
 //    auto text = new QGraphicsTextItem("test", this);
 //    text->setTextInteractionFlags(
@@ -113,47 +113,57 @@ void ActorDiagramItem::removeConnection(ActorConnectionItem *connection) {
  *
  * @param item
  */
-ClassDiagramItem::ClassDiagramItem(QGraphicsItem *item)
-        : QGraphicsRectItem(item), DiagramItem(120.0, 120.0, DiagramItem::Class) {
+ClassDiagramItem::ClassDiagramItem(classParams *params)
+        : DiagramItem(params->width() * params->scale(),
+                      params->height() * params->scale(),
+                       DiagramItem::Class) {
 
-    _rowHeight = 30;
-    _rowWidth = 120;
-    _tabText = 2;
+    _rowHeight = params->height() * params->scale() / 4.0;
+    _rowWidth = params->width() * params->scale();
+    _tabText = _rowHeight / 15.0;
     QGraphicsLineItem *lineAttr;
     CustomAttrText *textAttr;
     _flags = Qt::TextInteractionFlag::TextEditable |
              Qt::TextInteractionFlag::TextSelectableByMouse |
              Qt::TextInteractionFlag::TextSelectableByKeyboard;
-
-
     setFlags(QGraphicsItem::ItemIsSelectable | QGraphicsItem::ItemIsMovable | QGraphicsItem::ItemSendsGeometryChanges);
+
+    int line = 1;
 
     // name of the class
     setPen(QPen(color()));
 
-    _head = new NameObject(this, _flags, 5, -40);
+    _head = new NameObject(this, _flags, 5, -40, params->name()); // i do not why coordinates 5, -40
 
     textAttr = new CustomAttrText(this, "_ATTRIBUTES_", _tabText, _tabText,  Qt::NoTextInteraction);
     textAttr->setFont(QFont("Times", 10, QFont::Bold));
 
-    lineAttr = createLine(0, _rowHeight);
-    _attrsLines.push_back(lineAttr);
+    for (auto attr_name : params->attrs()) {
+        lineAttr = createLine(0, _rowHeight * line);
+        _attrsLines.push_back(lineAttr);
 
-    textAttr = new CustomAttrText(this, "+ int name", _tabText, _rowHeight + _tabText, _flags);
-    _attrs.push_back(textAttr);
+        textAttr = new CustomAttrText(this, attr_name, _tabText, _rowHeight * line + _tabText, _flags);
+        _attrs.push_back(textAttr);
 
-    lineAttr = createLine(0, _rowHeight * 2);
+        line++;
+    }
+
+    lineAttr = createLine(0, _rowHeight * line);
     _methodsLines.push_back(lineAttr);
 
-    textAttr = new CustomAttrText(this, "_METHODS_", _tabText, _rowHeight * 2 + _tabText, Qt::NoTextInteraction);
+    textAttr = new CustomAttrText(this, "_METHODS_", _tabText, _rowHeight * line++ + _tabText, Qt::NoTextInteraction);
     textAttr->setFont(QFont("Times", 10, QFont::Bold));
     _methods.push_back(textAttr);
 
-    lineAttr = createLine(0, _rowHeight * 3);
-    _methodsLines.push_back(lineAttr);
+    for (auto method_name : params->methods()) {
+        lineAttr = createLine(0, _rowHeight * line);
+        _methodsLines.push_back(lineAttr);
 
-    textAttr = new CustomAttrText(this, "+ int name()", _tabText, _rowHeight * 3 + _tabText, _flags);
-    _methods.push_back(textAttr);
+        textAttr = new CustomAttrText(this, method_name, _tabText, _rowHeight * line + _tabText, _flags);
+        _methods.push_back(textAttr);
+
+        line++;
+    }
 
     setRect(boundingBox());
     setBrush(QBrush(QColor(255,255,255,255)));
@@ -207,8 +217,8 @@ QVariant ClassDiagramItem::itemChange(GraphicsItemChange change, const QVariant 
  * @param x
  * @param y
  */
-NameObject::NameObject(QGraphicsItem *parent, QFlags<Qt::TextInteractionFlag> flags, qreal x, qreal y)
-            : QGraphicsTextItem("_Name_", parent)
+NameObject::NameObject(QGraphicsItem *parent, QFlags<Qt::TextInteractionFlag> flags, qreal x, qreal y, QString str)
+            : QGraphicsTextItem(str, parent)
     {
     _parent = parent;
     setPos(x, y);

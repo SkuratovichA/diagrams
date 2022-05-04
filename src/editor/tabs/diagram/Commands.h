@@ -9,6 +9,7 @@
 #include <QUndoCommand>
 #include "Connections.h"
 #include "DiagramItem.h"
+#include "../fillItems.h"
 
 
 QString createCommandString(QGraphicsItem *item, const QPointF &pos);
@@ -80,7 +81,7 @@ private:
  */
 class AddClassCommand : public QUndoCommand {
 public:
-    explicit AddClassCommand(QGraphicsScene *scene, QUndoCommand *parent = nullptr);
+    explicit AddClassCommand(QGraphicsScene *scene, classParams* params, QUndoCommand *parent = nullptr);
 
     ~AddClassCommand();
 

@@ -11,6 +11,7 @@
 #include <QGraphicsPolygonItem>
 
 #include "Connections.h"
+#include "../fillItems.h"
 
 QT_BEGIN_NAMESPACE
 class QGraphicsItem;
@@ -42,7 +43,7 @@ private:
 
 class NameObject : public QGraphicsTextItem {
 public:
-    NameObject(QGraphicsItem *parent, QFlags<Qt::TextInteractionFlag> flags, qreal x, qreal y);
+    NameObject(QGraphicsItem *parent, QFlags<Qt::TextInteractionFlag> flags, qreal x, qreal y, QString str);
     ~NameObject();
 
     QGraphicsItem *parent() {
@@ -146,7 +147,7 @@ private:
 
 class ClassDiagramItem : public QGraphicsRectItem, public DiagramItem {
 public:
-    explicit ClassDiagramItem(QGraphicsItem *item = nullptr);
+    explicit ClassDiagramItem(classParams *params);
     ~ClassDiagramItem();
 
     void addConnection(ClassConnectionItem *connection);

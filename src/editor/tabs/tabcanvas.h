@@ -9,7 +9,7 @@
 #include <QUndoGroup>
 #include "diagram/EditorScene.h"
 #include "diagram/DiagramItem.h"
-
+#include "fillItems.h"
 
 namespace SceneType {
     enum DiagramType {
@@ -63,11 +63,12 @@ private:
     EditorScene *editorScene = nullptr;
 
     QMenu *editMenu;
-    //QToolBar *editToolBar;
     QAction *addMethod;
     QAction *rmMethod;
     QAction *addAttr;
     QAction *rmAttr;
+
+    classParams *createItem;
 
     /** Slots
      */

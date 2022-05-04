@@ -23,7 +23,7 @@ add_executable(proj
         src/editor/tabs/diagram/DiagramItem.cpp src/editor/tabs/diagram/DiagramItem.h
         src/editor/tabs/diagram/EditorScene.cpp src/editor/tabs/diagram/EditorScene.h
         src/editor/tabs/diagram/Commands.cpp src/editor/tabs/diagram/Commands.h
-        src/editor/tabs/diagram/Connections.cpp src/editor/tabs/diagram/Connections.h)
+        src/editor/tabs/diagram/Connections.cpp src/editor/tabs/diagram/Connections.h src/editor/tabs/Itemsbuffer.cpp src/editor/tabs/Itemsbuffer.h src/editor/tabs/fillItems.cpp src/editor/tabs/fillItems.h)
 target_link_libraries(proj
         Qt::Core
         Qt::Gui

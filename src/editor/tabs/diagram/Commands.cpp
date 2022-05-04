@@ -157,11 +157,11 @@ void AddActorCommand::redo() {
 /**
  *
  */
-AddClassCommand::AddClassCommand(QGraphicsScene *scene, QUndoCommand *parent)
+AddClassCommand::AddClassCommand(QGraphicsScene *scene, classParams *params, QUndoCommand *parent)
         : QUndoCommand(parent), graphicsScene(scene) {
     static int itemCount = 0;
 
-    diagramItem = new ClassDiagramItem();
+    diagramItem = new ClassDiagramItem(params);
     initialStartPosition = QPointF(static_cast<qreal>(((itemCount * 20) + 100) % static_cast<int>(scene->width())),
                                    static_cast<qreal>(((itemCount * 20) + 100) % static_cast<int>(scene->height())));
     itemCount++;

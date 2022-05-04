@@ -69,12 +69,21 @@ void TabCanvas::removeEntity() {
  */
 void TabCanvas::addEntity() {
     QUndoCommand *addCommand = nullptr;
+    QList<QString> attrs;
+    QList<QString> methods;
+
     switch (type) {
         case DiagramType::SEQUENCE:
             addCommand = new AddActorCommand(editorScene);
             break;
         case DiagramType::CLASS:
-            addCommand = new AddClassCommand(editorScene);
+            attrs.push_back("+ int name");
+            methods.push_back("+ int name()");
+
+            createItem = new classParams(120.0, 120.0, 1.0, attrs, methods, "_NAME_");
+            addCommand = new AddClassCommand(editorScene, createItem);
+            delete createItem;
+
             break;
         default:
             assert(!"This statement must not be reached");
@@ -143,6 +152,11 @@ void TabCanvas::cut() {
  */
 void TabCanvas::copy() {
     // TODO: implement me
+    QGraphicsItem *tmp = selectedObject();
+    if(!tmp) {
+        return;
+    }
+
 #if 0
     qDebug() << "copy";
     Object *tmp = selectedObject();
