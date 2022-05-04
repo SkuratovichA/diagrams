@@ -10,13 +10,20 @@
 #include <QGraphicsScene>
 #include <utility>
 
+QString createCommandString(QGraphicsItem *item, const QPointF &pos)
+{
+    return QObject::tr("%1 at (%2, %3)")
+            .arg("ITEM")
+            .arg(pos.x()).arg(pos.y());
+}
+
 /**
  *
  * @param diagramItem
  * @param oldPos
  * @param parent
  */
-MoveCommand::MoveCommand(ActorDiagramItem *diagramItem, const QPointF &oldPos,
+MoveCommand::MoveCommand(QGraphicsItem *diagramItem, const QPointF &oldPos,
                          QUndoCommand *parent)
         : QUndoCommand(parent), diagramItem(diagramItem), startPos(oldPos), newPos(diagramItem->pos()) {
 }
@@ -28,11 +35,13 @@ MoveCommand::MoveCommand(ActorDiagramItem *diagramItem, const QPointF &oldPos,
  */
 bool MoveCommand::mergeWith(const QUndoCommand *command) {
     const auto *moveCommand = dynamic_cast<const MoveCommand *>(command);
-    ActorDiagramItem *item = moveCommand->diagramItem;
+    QGraphicsItem *item = moveCommand->diagramItem;
     if (diagramItem != item) {
         return false;
     }
     newPos = item->pos();
+    setText(QObject::tr("Move %1")
+                    .arg(createCommandString(diagramItem, newPos)));
     return true;
 }
 
@@ -42,6 +51,8 @@ bool MoveCommand::mergeWith(const QUndoCommand *command) {
 void MoveCommand::undo() {
     diagramItem->setPos(startPos.x(), startPos.y());
     diagramItem->scene()->update();
+    setText(QObject::tr("Move %1")
+                    .arg(createCommandString(diagramItem, newPos)));
 }
 
 /**
@@ -49,6 +60,8 @@ void MoveCommand::undo() {
  */
 void MoveCommand::redo() {
     diagramItem->setPos(newPos);
+    setText(QObject::tr("Move %1")
+                    .arg(createCommandString(diagramItem, newPos)));
 }
 
 /**
@@ -62,6 +75,8 @@ DeleteCommand::DeleteCommand(QGraphicsScene *scene, QUndoCommand *parent)
     QList<QGraphicsItem *> list = graphicsScene->selectedItems();
     list.first()->setSelected(false);
     diagramItem = list.first();
+    setText(QObject::tr("Delete %1")
+                    .arg(createCommandString(diagramItem, diagramItem->pos())));
 }
 
 /**
@@ -93,6 +108,9 @@ AddActorCommand::AddActorCommand(QGraphicsScene *scene, QUndoCommand *parent)
                               (itemCount * 15 + 150) % int(scene->height()));
     itemCount++;
     scene->update();
+
+    setText(QObject::tr("Add %1")
+                    .arg(createCommandString(static_cast<QGraphicsItem *>(diagramItem), initialPosition)));
 }
 
 /**
@@ -131,10 +149,13 @@ AddClassCommand::AddClassCommand(QGraphicsScene *scene, QUndoCommand *parent)
     static int itemCount = 0;
 
     diagramItem = new ClassDiagramItem();
-//    initialPosition = QPointF(((itemCount * 20) + 100)% int(scene->width()),
-//                              ((itemCount * 20) + 100)% int(scene->height()));
+    initialPosition = QPointF((itemCount * 15 + 100) % int(scene->width()),
+                              (itemCount * 15 + 150) % int(scene->height()));
+
     itemCount++;
     scene->update();
+    setText(QObject::tr("Add %1")
+                    .arg(createCommandString(static_cast<QGraphicsItem *>(diagramItem), initialPosition)));
 }
 
 /**
