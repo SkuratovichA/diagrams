@@ -13,12 +13,12 @@ public:
     classParams(qreal x, qreal y, qreal scale, QList<QString> attrs,
                 QList<QString> methods, QString name);
 
-    qreal width() const {
-        return _width;
+    qreal x() const {
+        return _x;
     }
 
-    qreal height() const {
-        return _height;
+    qreal y() const {
+        return _y;
     }
 
     qreal scale() const {
@@ -37,18 +37,26 @@ public:
         return _name;
     }
 
+//    void pushAttr(QString pushItem) {
+//        _attrs.push_back(pushItem);
+//    }
+//
+//    void pushMethod(QString pushItem) {
+//        _methods.push_back(pushItem);
+//    }
+//
+//    void setName(QString name) {
+//        _name = name;
+//    }
+
 
 private:
-    qreal _height;
-    qreal _width;
+    qreal _x;
+    qreal _y;
     qreal _scale;
     QList<QString> _attrs;
     QList<QString> _methods;
     QString _name;
-};
-
-class fillItems {
-
 };
 
 

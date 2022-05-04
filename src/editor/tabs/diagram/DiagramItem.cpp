@@ -114,13 +114,15 @@ void ActorDiagramItem::removeConnection(ActorConnectionItem *connection) {
  * @param item
  */
 ClassDiagramItem::ClassDiagramItem(classParams *params)
-        : DiagramItem(params->width() * params->scale(),
-                      params->height() * params->scale(),
+        : DiagramItem(120.0 * params->scale(),
+                      120.0 * params->scale(),
                        DiagramItem::Class) {
 
-    _rowHeight = params->height() * params->scale() / 4.0;
-    _rowWidth = params->width() * params->scale();
-    _tabText = _rowHeight / 15.0;
+
+
+    _rowHeight = 30.0 * params->scale();
+    _rowWidth = 120.0 * params->scale();
+    _tabText = 2.0 * params->scale();
     QGraphicsLineItem *lineAttr;
     CustomAttrText *textAttr;
     _flags = Qt::TextInteractionFlag::TextEditable |

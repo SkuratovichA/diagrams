@@ -3,6 +3,7 @@
 #include <QUndoGroup>
 #include "tabcanvas.h"
 #include "diagram/Commands.h"
+#include <QRandomGenerator>
 
 using namespace SceneType;
 
@@ -20,6 +21,8 @@ TabCanvas::TabCanvas(QWidget *parent, DiagramType type, QUndoGroup *parentGroup)
         throw std::runtime_error("Unknown diagram type");
     }
     this->type = type;
+
+    buffer = new ItemsBuffer();
 }
 
 /**
@@ -71,6 +74,7 @@ void TabCanvas::addEntity() {
     QUndoCommand *addCommand = nullptr;
     QList<QString> attrs;
     QList<QString> methods;
+    QRandomGenerator p = QRandomGenerator();
 
     switch (type) {
         case DiagramType::SEQUENCE:
@@ -80,7 +84,9 @@ void TabCanvas::addEntity() {
             attrs.push_back("+ int name");
             methods.push_back("+ int name()");
 
-            createItem = new classParams(120.0, 120.0, 1.0, attrs, methods, "_NAME_");
+            //x = static_cast<qreal>(p.generate(0,700));
+            //y = static_cast<qreal>(p.generate(0,700));
+            createItem = new classParams(20, 20, 1.0, attrs, methods, "_NAME_");
             addCommand = new AddClassCommand(editorScene, createItem);
             delete createItem;
 
@@ -135,8 +141,18 @@ QGraphicsItem *TabCanvas::selectedObject() {
  *
  */
 void TabCanvas::paste() {
-    qDebug() << "paste";
     // FIXME: paste
+
+    for (auto ptr : buffer->classItems()) {
+        qDebug() << "Paste element which exists" << ptr;
+        ClassDiagramItem *diagramItem = new ClassDiagramItem(ptr);
+        qDebug() << "111";
+        diagramItem->setPos(ptr->x(), ptr->y());
+        qDebug() << "222";
+        editorScene->addItem(diagramItem);
+        qDebug() << "333";
+        editorScene->update();
+    }
 }
 
 /**
@@ -152,22 +168,19 @@ void TabCanvas::cut() {
  */
 void TabCanvas::copy() {
     // TODO: implement me
-    QGraphicsItem *tmp = selectedObject();
-    if(!tmp) {
-        return;
+    ClassDiagramItem *ptr;
+    // add other 3 types of objects
+    QList<QGraphicsItem *> items = editorScene->selectedItems();
+
+    buffer->clearBuffer();
+    for (auto val : items) {
+        ptr = static_cast<ClassDiagramItem *>(val);
+        if (ptr == nullptr) {
+            continue;
+        }
+
+        buffer->fillClassItems(ptr);
     }
-
-#if 0
-    qDebug() << "copy";
-    Object *tmp = selectedObject();
-        if(!tmp)
-        return;
-
-    QString str = QString("ActorDiagramItem %1 %2 %3 %4")
-                    .arg(tmp->x())
-                    .arg(tmp->y())
-                    .arg(tmp->scale())
-#endif
 }
 
 void TabCanvas::addMethod_triggered() {

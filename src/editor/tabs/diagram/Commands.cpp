@@ -162,8 +162,7 @@ AddClassCommand::AddClassCommand(QGraphicsScene *scene, classParams *params, QUn
     static int itemCount = 0;
 
     diagramItem = new ClassDiagramItem(params);
-    initialStartPosition = QPointF(static_cast<qreal>(((itemCount * 20) + 100) % static_cast<int>(scene->width())),
-                                   static_cast<qreal>(((itemCount * 20) + 100) % static_cast<int>(scene->height())));
+    initialStartPosition = QPointF(params->x(), params->y());
     itemCount++;
     scene->update();
     setText(QObject::tr("Add %1")

@@ -10,6 +10,7 @@
 #include "diagram/EditorScene.h"
 #include "diagram/DiagramItem.h"
 #include "fillItems.h"
+#include "Itemsbuffer.h"
 
 namespace SceneType {
     enum DiagramType {
@@ -68,6 +69,7 @@ private:
     QAction *addAttr;
     QAction *rmAttr;
 
+    ItemsBuffer *buffer;
     classParams *createItem;
 
     /** Slots

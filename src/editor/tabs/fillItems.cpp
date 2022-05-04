@@ -7,8 +7,8 @@
 classParams::classParams(qreal x, qreal y, qreal scale, QList<QString> attrs,
             QList<QString> methods, QString name) {
 
-    _height = x;
-    _width = y;
+    _x = x;
+    _y = y;
     _scale = scale;
     for (auto val : attrs) {
         _attrs.push_back(val);
