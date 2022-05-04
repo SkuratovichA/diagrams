@@ -17,6 +17,12 @@ CustomAttrText::CustomAttrText(ClassDiagramItem *p, QString text, qreal x, qreal
 }
 
 void CustomAttrText::keyReleaseEvent(QKeyEvent *event) {
+    if ((event->key() == Qt::Key_Enter) || (event->key() == Qt::Key_Return)) {
+        setPlainText(toPlainText().remove('\n'));
+        clearFocus();
+        return;
+    }
+
     qreal maxLen = 0;
 
     for (auto item : parent()->attrs()) {
@@ -214,6 +220,12 @@ NameObject::NameObject(QGraphicsItem *parent, QFlags<Qt::TextInteractionFlag> fl
  * @param event
  */
 void NameObject::keyReleaseEvent(QKeyEvent *event) {
+    if ((event->key() == Qt::Key_Enter) || (event->key() == Qt::Key_Return)) {
+        setPlainText(toPlainText().remove('\n'));
+        clearFocus();
+        return;
+    }
+
     ClassDiagramItem *tmp1 = static_cast<ClassDiagramItem *>(parent());
     ActorDiagramItem *tmp2 = static_cast<ActorDiagramItem *>(parent());
     qreal midO = tmp1 == nullptr ? tmp2->width() : tmp1->width();
