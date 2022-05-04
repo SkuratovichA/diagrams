@@ -5,11 +5,14 @@
 #include "fillItems.h"
 
 classParams::classParams(qreal x, qreal y, qreal scale, QList<QString> attrs,
-            QList<QString> methods, QString name) {
+            QList<QString> methods, QString name, QColor color, qreal width, qreal height) {
 
     _x = x;
     _y = y;
     _scale = scale;
+    _color = color;
+    _width = width;
+    _height = height;
     for (auto val : attrs) {
         _attrs.push_back(val);
     }

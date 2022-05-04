@@ -57,7 +57,7 @@ void CustomAttrText::keyReleaseEvent(QKeyEvent *event) {
 }
 
 ActorDiagramItem::ActorDiagramItem(QGraphicsItem *item)
-        : QGraphicsRectItem(item), DiagramItem(70.0, 110.0, DiagramItem::Actor) {
+        : QGraphicsRectItem(item), DiagramItem(70.0, 110.0, DiagramItem::Actor, QColor(56,100,67, 255)) {
 
     setFlag(QGraphicsItem::ItemIsSelectable);
     setFlag(QGraphicsItem::ItemIsMovable);
@@ -114,15 +114,16 @@ void ActorDiagramItem::removeConnection(ActorConnectionItem *connection) {
  * @param item
  */
 ClassDiagramItem::ClassDiagramItem(classParams *params)
-        : DiagramItem(120.0 * params->scale(),
-                      120.0 * params->scale(),
-                       DiagramItem::Class) {
+        : DiagramItem(params->width() * params->scale(),
+                      params->height() * params->scale(),
+                       DiagramItem::Class,
+                       params->color()) {
 
 
 
-    _rowHeight = 30.0 * params->scale();
-    _rowWidth = 120.0 * params->scale();
-    _tabText = 2.0 * params->scale();
+    _rowHeight = (params->height() / 4.0) * params->scale();
+    _rowWidth = params->width() * params->scale();
+    _tabText = _rowHeight / 15.0;
     QGraphicsLineItem *lineAttr;
     CustomAttrText *textAttr;
     _flags = Qt::TextInteractionFlag::TextEditable |

@@ -62,14 +62,12 @@ public:
         Actor, Class
     };
 
-    explicit DiagramItem(qreal width, qreal height, DiagramType type) {
+    explicit DiagramItem(qreal width, qreal height, DiagramType type, QColor color) {
         _height = height;
         _width = width;
         _type = type;
         _boundingBox = QRectF(0.0, 0.0, _width, _height);
-        _color = QColor(QRandomGenerator::global()->bounded(256),
-                        QRandomGenerator::global()->bounded(256),
-                        QRandomGenerator::global()->bounded(256), 180);
+        _color = color;
     }
 
     DiagramType type() {

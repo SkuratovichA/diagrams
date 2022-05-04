@@ -30,7 +30,8 @@ void ItemsBuffer::fillClassItems(ClassDiagramItem *item) {
         attrs.push_back(x->toPlainText());
     }
 
-    ptr = new classParams(item->x() + 40, item->y() + 40, 1.0, attrs, methods, item->_head->toPlainText());
+    ptr = new classParams(item->x() + 40, item->y() + 40, 1.0, attrs, methods,
+                          item->_head->toPlainText(), item->color(), item->width(), item->height());
     pushClassItem(ptr);
 }
 

@@ -4,6 +4,7 @@
 #include "tabcanvas.h"
 #include "diagram/Commands.h"
 #include <QRandomGenerator>
+#include <QColor>
 
 using namespace SceneType;
 
@@ -75,6 +76,10 @@ void TabCanvas::addEntity() {
     QList<QString> attrs;
     QList<QString> methods;
     QRandomGenerator p = QRandomGenerator();
+    QColor color = QColor(QRandomGenerator::global()->bounded(256),
+                          QRandomGenerator::global()->bounded(256),
+                          QRandomGenerator::global()->bounded(256),
+                          180);
 
     switch (type) {
         case DiagramType::SEQUENCE:
@@ -86,7 +91,8 @@ void TabCanvas::addEntity() {
 
             //x = static_cast<qreal>(p.generate(0,700));
             //y = static_cast<qreal>(p.generate(0,700));
-            createItem = new classParams(20, 20, 1.0, attrs, methods, "_NAME_");
+            createItem = new classParams(20, 20, 1.0, attrs, methods,
+                                         "_NAME_", color, 120.0, 120.0);
             addCommand = new AddClassCommand(editorScene, createItem);
             delete createItem;
 

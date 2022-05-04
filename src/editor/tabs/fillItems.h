@@ -7,11 +7,13 @@
 
 #include <QString>
 #include <QList>
+#include <QColor>
 
 class classParams {
 public:
     classParams(qreal x, qreal y, qreal scale, QList<QString> attrs,
-                QList<QString> methods, QString name);
+                QList<QString> methods, QString name,
+                QColor color, qreal width, qreal height);
 
     qreal x() const {
         return _x;
@@ -23,6 +25,18 @@ public:
 
     qreal scale() const {
         return _scale;
+    }
+
+    QColor color() const {
+        return _color;
+    }
+
+    qreal width() const {
+        return _width;
+    }
+
+    qreal height() const {
+        return _height;
     }
 
     QList<QString> attrs() const {
@@ -54,6 +68,9 @@ private:
     qreal _x;
     qreal _y;
     qreal _scale;
+    QColor _color;
+    qreal _width;
+    qreal _height;
     QList<QString> _attrs;
     QList<QString> _methods;
     QString _name;
