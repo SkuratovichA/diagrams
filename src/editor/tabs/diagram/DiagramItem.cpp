@@ -148,7 +148,7 @@ ClassDiagramItem::ClassDiagramItem(QGraphicsItem *item)
     _methods.push_back(textAttr);
 
     setRect(boundingBox());
-    setBrush(QBrush(QColor(255,255,255,255)));
+    setBrush(QBrush(QColor(255,255,255,10)));
 }
 
 /**
@@ -214,8 +214,8 @@ NameObject::NameObject(QGraphicsItem *parent, QFlags<Qt::TextInteractionFlag> fl
  * @param event
  */
 void NameObject::keyReleaseEvent(QKeyEvent *event) {
-    ClassDiagramItem *tmp1 = static_cast<ClassDiagramItem *>(parent());
-    ActorDiagramItem *tmp2 = static_cast<ActorDiagramItem *>(parent());
+    ClassDiagramItem *tmp1 = dynamic_cast<ClassDiagramItem *>(parent());
+    ActorDiagramItem *tmp2 = dynamic_cast<ActorDiagramItem *>(parent());
     qreal midO = tmp1 == nullptr ? tmp2->width() : tmp1->width();
     qreal midW = boundingRect().width();
     setPos((midO - midW) / 2, -40);
