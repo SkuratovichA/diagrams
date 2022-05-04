@@ -34,6 +34,8 @@ public:
 
     void trackNodes();
 private:
+    QPolygonF lineShaper() const;
+    QPair<QPointF, QPointF> edgePoints() const;
     QPainterPath shape() const;
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
 

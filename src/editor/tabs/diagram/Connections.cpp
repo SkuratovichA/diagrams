@@ -112,128 +112,65 @@ inline int getOctant(QPointF const &x1y1, QPointF const &x2y2) {
     }
 }
 
-QPair<QPointF, QPointF> edgePoints(QPointF const x1y1, QPointF const x2y2, QPointF const  &whFrom, QPointF const &whTo) {
-    auto fromW = whFrom.x();
-    auto fromH = whFrom.y();
-    auto toW = whTo.x();
-    auto toH = whTo.y();
+QPair<QPointF, QPointF> ClassConnectionItem::edgePoints() const {
+    auto xFrom   = nodeFrom->centre().x();
+    auto yFrom   = nodeFrom->centre().y();
+    auto xTo = nodeTo->centre().x();
+    auto yTo = nodeTo->centre().y();
 
-    auto octant = getOctant(x1y1, x2y2);
-    auto a = x2y2.y() - x1y1.x();
-    auto b = x1y1.x() - x2y2.x();
-    auto c = -(a*x1y1.x() + b*x1y1.y()); // dot product TODO:
+    auto octant = getOctant(QPoint(xFrom, yFrom), QPoint(xTo, yTo));
+    auto a = yTo - yFrom;
+    auto b = xFrom - xTo;
+    auto c = -(a*xFrom +b*yFrom);
 
-    qreal xTo = x2y2.x();
-    qreal yTo = x2y2.y();
-    qreal xFrom = x1y1.x();
-    qreal yFrom = x1y1.y();
     switch (octant) {
         case 1: case 8:
-            xTo = xTo - toW / 2;
+            xTo = xTo - nodeTo->width() / 2;
             yTo = -(c + a*xTo) / b;
 
-            xFrom = xFrom + fromW / 2;
+            xFrom = xFrom + nodeFrom->width() / 2;
             yFrom = -(c + a*xFrom) / b;
             break;
         case 2: case 3:
-            yTo = yTo + toH / 2;
+            yTo = yTo + nodeTo->height() / 2;
             xTo = -(c + b*yTo) / a;
 
-            yFrom = yFrom - fromH / 2;
+            yFrom = yFrom - nodeFrom->height() / 2;
             xFrom = -(c + b*yFrom) / a;
             break;
         case 4: case 5:
-            xTo = xTo + toW / 2;
+            xTo = xTo + nodeTo->width() / 2;
             yTo = -(c + a*xTo) / b;
 
-            xFrom = xFrom - fromW / 2;
+            xFrom = xFrom - nodeFrom->width() / 2;
             yFrom = -(c + a*xFrom) / b;
             break;
         case 6: case 7:
-            yTo = yTo - toH / 2;
+            yTo = yTo - nodeTo->height() / 2;
             xTo = -(c + b*yTo) / a;
 
-            yFrom = yFrom + fromH / 2;
+            yFrom = yFrom + nodeFrom->height() / 2;
             xFrom = -(c + b*yFrom) / a;
             break;
         default: break;
     }
-
     return {QPointF(xFrom, yFrom), QPointF(xTo, yTo)};
 }
-//
-//QPolygonF lineShaperr(QPointF const &fromPos, QPointF const &toPos, QPointF const &x1y1, QPointF &x2y2, QPointF) {
-//    auto fromUpperLeft = pos;
-//    auto fromUpperRight = pos + QPointF(fromWH.x(), 0);
-//    auto fromLowerLeft = pos + QPointF(0, fromWH.y());
-//    auto fromLowerRight = pos + fromWH;
-//
-//    auto toUpperLeft = pos;
-//    auto toUpperRight = pos + QPointF(toWH.x(), 0);
-//    auto toLowerLeft = pos + QPointF(0, toWH.y());
-//    auto toLowerRight = pos + toWH;
-//
-//#define ovlp(point) \
-//        (fromUpperLeft.x() < (point).x() && fromUpperLeft.y() < (point).y() \
-//        && fromUpperRight.x() > (point).x() && fromUpperRight.y() < (point).y() \
-//        && fromLowerLeft.y() > (point).y())
-//
-//    auto ovlpEdges = ovlp(toUpperLeft) + ovlp(toUpperRight) + ovlp(toLowerLeft) + ovlp(toLowerRight);
-//
-//    QPointF bLeft(std::min<qreal>(toUpperLeft.x(), fromUpperLeft.x()) - 15.0,
-//                  std::min<qreal>(toUpperLeft.y(), fromUpperLeft.y()) - 15.0);
-//    QPointF bRight(std::max<qreal>(toLowerRight.x(), fromLowerRight.x()) + 15.0,
-//                   std::max<qreal>(toLowerRight.y(), fromLowerRight.y()) + 15.0);
-//
-//    auto octant = getOctant(x1y1, x2y2);
-//
-//    QPolygonF poly;
-//    switch(ovlpEdges) {
-//        case 4:
-//        case 3:
-//        case 2:
-//        case 1: // only one overlapped edge - do not print bb
-//            poly = QRectF(bLeft, bRight);
-//            break;
-//        default:
-//            QPointF pa1; // adjustment 1
-//            QPointF pa2; // adjustment 2
-//            auto edges = edgePoints(x1y1, x2y2, fromWH, toWH);
-//
-//            // ************* dont use this fix
-//            auto adjust = QPointF(+10.0, +10.0);
-//            switch (octant) {
-//                case 7: case 8: case 3: case 4:
-//                    adjust.setX(-10.0);
-//                default: break;
-//            }
-//            auto farLeft = nodeFrom->centre();
-//            auto farRight = nodeTo->centre();
-//            poly << farLeft + adjust << farLeft - adjust << farRight - adjust << farRight + adjust;
-//            // **************
-//    }
-//}
 
-QPainterPath ClassConnectionItem::shape() const {
+QPolygonF ClassConnectionItem::lineShaper() const {
     QPolygonF poly;
-    QPainterPath path;
 
-    auto x1y1 = nodeFrom->centre();
-    auto x2y2 = nodeTo->centre();
-    auto diff = (x2y2 - x1y1);
-    auto fromWH = QPointF(nodeFrom->width(),nodeFrom->height());
-    auto toWH = QPointF(nodeTo->width(), nodeTo->height());
-    auto octant = getOctant(x1y1, x2y2);
+    auto const octant = getOctant(nodeFrom->centre(), nodeTo->centre());
 
-    auto fromUpperLeft = nodeFrom->pos();
-    auto fromUpperRight = fromUpperLeft + QPointF(nodeFrom->width(), 0);
-    auto fromLowerLeft = fromUpperLeft + QPointF(0, nodeFrom->height());
-    auto fromLowerRight = fromLowerLeft + QPointF(nodeFrom->width(), 0);
+    auto const fromUpperLeft = nodeFrom->pos();
+    auto const fromUpperRight = fromUpperLeft + QPointF(nodeFrom->width(), 0);
+    auto const fromLowerLeft = fromUpperLeft + QPointF(0, nodeFrom->height());
+    auto const fromLowerRight = fromLowerLeft + QPointF(nodeFrom->width(), 0);
 
-    auto toUpperLeft = nodeTo->pos();
-    auto toUpperRight = toUpperLeft + QPointF(nodeTo->width(), 0);
-    auto toLowerLeft = toUpperLeft + QPointF(0, nodeTo->height());
-    auto toLowerRight = toUpperRight + QPointF(0, nodeTo->height());
+    auto const toUpperLeft = nodeTo->pos();
+    auto const toUpperRight = toUpperLeft + QPointF(nodeTo->width(), 0);
+    auto const toLowerLeft = toUpperLeft + QPointF(0, nodeTo->height());
+    auto const toLowerRight = toUpperRight + QPointF(0, nodeTo->height());
 
     #define ovlp(point) \
         (fromUpperLeft.x() < (point).x() && fromUpperLeft.y() < (point).y() \
@@ -247,36 +184,35 @@ QPainterPath ClassConnectionItem::shape() const {
     QPointF bRight(std::max<qreal>(toLowerRight.x(), fromLowerRight.x()) + 15.0,
                    std::max<qreal>(toLowerRight.y(), fromLowerRight.y()) + 15.0);
 
+    auto adjust = QPointF(+10.0, +10.0);
     switch(ovlpEdges) {
-        case 4:
-        case 3:
-        case 2:
-        case 1: // only one overlapped edge - do not print bb
-            path.addRect(QRectF(bLeft, bRight)); // bounding rectangle
+        case 4: case 3: case 2: case 1: // only one overlapped edge - do not print bb
+            poly << QPolygonF(QRectF(bLeft, bRight)); // bounding rectangle
             break;
         default:
             // ************* dont use this fix
-            auto adjust = QPointF(+10.0, +10.0);
             switch (octant) {
                 case 7: case 8: case 3: case 4:
                     adjust.setX(-10.0);
                 default: break;
             }
-            auto farLeft = nodeFrom->centre();
-            auto farRight = nodeTo->centre();
+            auto const farLeft = nodeFrom->centre();
+            auto const farRight = nodeTo->centre();
 
-            QPolygonF poly; // bounding polygon
             poly << farLeft + adjust << farLeft - adjust << farRight - adjust << farRight + adjust;
-
-            path.addPolygon(poly);
             // **************
     }
-    return path;
+    return poly;
 #undef ovlp
 }
 
-void ClassConnectionItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) {
+QPainterPath ClassConnectionItem::shape() const {
+    QPainterPath path;
+    path.addPolygon(lineShaper());
+    return path;
+}
 
+void ClassConnectionItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) {
     auto x1y1 = nodeFrom->centre();
     auto x2y2 = nodeTo->centre();
     auto fromWH = QPointF(nodeFrom->width(), nodeFrom->height());
@@ -284,59 +220,7 @@ void ClassConnectionItem::paint(QPainter *painter, const QStyleOptionGraphicsIte
 
 #if DEBUG
     painter->setPen(QPen(QColor(0, 0, 0), 1, Qt::DotLine));
-
-#if 1
-    auto fromUpperLeft = nodeFrom->pos();
-    auto fromUpperRight = nodeFrom->pos() + QPointF(nodeFrom->width(), 0);
-    auto fromLowerLeft = nodeFrom->pos() + QPointF(0, fromWH.y());
-    auto fromLowerRight = nodeFrom->pos() + fromWH;
-
-    auto toUpperLeft = nodeTo->pos();
-    auto toUpperRight = nodeTo->pos() + QPointF(toWH.x(), 0);
-    auto toLowerLeft = nodeTo->pos() + QPointF(0, toWH.y());
-    auto toLowerRight = nodeTo->pos() + toWH;
-
-    #define ovlp(point) \
-        (fromUpperLeft.x() < (point).x() && fromUpperLeft.y() < (point).y() \
-        && fromUpperRight.x() > (point).x() && fromUpperRight.y() < (point).y() \
-        && fromLowerLeft.y() > (point).y())
-
-    auto ovlpEdges = ovlp(toUpperLeft) + ovlp(toUpperRight) + ovlp(toLowerLeft) + ovlp(toLowerRight);
-
-    QPointF bLeft(std::min<qreal>(toUpperLeft.x(), fromUpperLeft.x()) - 15.0,
-            std::min<qreal>(toUpperLeft.y(), fromUpperLeft.y()) - 15.0);
-    QPointF bRight(std::max<qreal>(toLowerRight.x(), fromLowerRight.x()) + 15.0,
-            std::max<qreal>(toLowerRight.y(), fromLowerRight.y()) + 15.0);
-
-    auto octant = getOctant(x1y1, x2y2);
-
-    QPolygonF poly;
-    switch(ovlpEdges) {
-        case 4:
-        case 3:
-        case 2:
-        case 1: // only one overlapped edge - do not print bb
-            poly = QRectF(bLeft, bRight);
-            break;
-        default:
-            QPointF pa1; // adjustment 1
-            QPointF pa2; // adjustment 2
-            auto edges = edgePoints(x1y1, x2y2, fromWH, toWH);
-
-            // ************* dont use this fix
-            auto adjust = QPointF(+10.0, +10.0);
-            switch (octant) {
-                case 7: case 8: case 3: case 4:
-                    adjust.setX(-10.0);
-                default: break;
-            }
-            auto farLeft = nodeFrom->centre();
-            auto farRight = nodeTo->centre();
-            poly << farLeft + adjust << farLeft - adjust << farRight - adjust << farRight + adjust;
-            // **************
-    }
-#endif
-    painter->drawPolygon(poly);
+    painter->drawPolygon(lineShaper());
 #endif
 
 
@@ -347,7 +231,7 @@ void ClassConnectionItem::paint(QPainter *painter, const QStyleOptionGraphicsIte
     painter->setRenderHint(QPainter::Antialiasing, true);
     painter->setPen(linepen);
 
-    auto body = edgePoints(x1y1, x2y2, fromWH, toWH);
+    auto body = edgePoints();
     painter->drawPoint(body.first);
     linepen.setColor(Qt::red);
     painter->setPen(linepen);
