@@ -156,8 +156,6 @@ ClassDiagramItem::ClassDiagramItem(QGraphicsItem *item)
  */
 ClassDiagramItem::~ClassDiagramItem() {
     foreach (ClassConnectionItem *connection, connections) {
-//        removeConnection(connection);
-        connections.remove(connection);
         delete connection;
     }
 }
