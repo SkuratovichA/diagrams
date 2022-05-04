@@ -22,102 +22,6 @@ TabCanvas::TabCanvas(QWidget *parent, DiagramType type, QUndoGroup *parentGroup)
     this->type = type;
 }
 
-//void DiagramWindow::createActions()
-//{
-//    exitAction = new QAction(tr("E&xit"), this);
-//    exitAction->setShortcut(tr("Ctrl+Q"));
-//    connect(exitAction, SIGNAL(triggered()), this, SLOT(close()));
-//
-//    addNodeAction = new QAction(tr("Add &Attr"), this);
-//    addNodeAction->setIcon(QIcon(":/images/node.png"));
-//    addNodeAction->setShortcut(tr("Ctrl+N"));
-//    connect(addNodeAction, SIGNAL(triggered()), this, SLOT(addNode()));
-//
-//    addLinkAction = new QAction(tr("Add &Method"), this);
-//    addLinkAction->setIcon(QIcon(":/images/link.png"));
-//    addLinkAction->setShortcut(tr("Ctrl+L"));
-//    connect(addLinkAction, SIGNAL(triggered()), this, SLOT(addLink()));
-//
-//    addNodeAction = new QAction(tr("Add &Attr"), this);
-//    addNodeAction->setIcon(QIcon(":/images/node.png"));
-//    addNodeAction->setShortcut(tr("Ctrl+N"));
-//    connect(addNodeAction, SIGNAL(triggered()), this, SLOT(addNode()));
-//
-//    addLinkAction = new QAction(tr("Add &Method"), this);
-//    addLinkAction->setIcon(QIcon(":/images/link.png"));
-//    addLinkAction->setShortcut(tr("Ctrl+L"));
-//    connect(addLinkAction, SIGNAL(triggered()), this, SLOT(addLink()));
-//
-//    deleteAction = new QAction(tr("&Delete"), this);
-//    deleteAction->setIcon(QIcon(":/images/delete.png"));
-//    deleteAction->setShortcut(tr("Del"));
-//    connect(deleteAction, SIGNAL(triggered()), this, SLOT(del()));
-//
-//    cutAction = new QAction(tr("Cu&t"), this);
-//    cutAction->setIcon(QIcon(":/images/cut.png"));
-//    cutAction->setShortcut(tr("Ctrl+X"));
-//    connect(cutAction, SIGNAL(triggered()), this, SLOT(cut()));
-//
-//    copyAction = new QAction(tr("&Copy"), this);
-//    copyAction->setIcon(QIcon(":/images/copy.png"));
-//    copyAction->setShortcut(tr("Ctrl+C"));
-//    connect(copyAction, SIGNAL(triggered()), this, SLOT(copy()));
-//
-//    pasteAction = new QAction(tr("&Paste"), this);
-//    pasteAction->setIcon(QIcon(":/images/paste.png"));
-//    pasteAction->setShortcut(tr("Ctrl+V"));
-//    connect(pasteAction, SIGNAL(triggered()), this, SLOT(paste()));
-//
-//    bringToFrontAction = new QAction(tr("Bring to &Front"), this);
-//    bringToFrontAction->setIcon(QIcon(":/images/bringtofront.png"));
-//    connect(bringToFrontAction, SIGNAL(triggered()),
-//            this, SLOT(bringToFront()));
-//
-//    sendToBackAction = new QAction(tr("&Send to Back"), this);
-//    sendToBackAction->setIcon(QIcon(":/images/sendtoback.png"));
-//    connect(sendToBackAction, SIGNAL(triggered()),
-//            this, SLOT(sendToBack()));
-//
-//    propertiesAction = new QAction(tr("P&roperties..."), this);
-//    connect(propertiesAction, SIGNAL(triggered()),
-//            this, SLOT(properties()));
-//}
-//
-//void DiagramWindow::createMenus()
-//{
-//    fileMenu = menuBar()->addMenu(tr("&File"));
-//    fileMenu->addAction(exitAction);
-//
-//    editMenu = menuBar()->addMenu(tr("&Edit"));
-//    editMenu->addAction(addNodeAction);
-//    editMenu->addAction(addLinkAction);
-//    editMenu->addAction(deleteAction);
-//    editMenu->addSeparator();
-//    editMenu->addAction(cutAction);
-//    editMenu->addAction(copyAction);
-//    editMenu->addAction(pasteAction);
-//    editMenu->addSeparator();
-//    editMenu->addAction(bringToFrontAction);
-//    editMenu->addAction(sendToBackAction);
-//    editMenu->addSeparator();
-//    editMenu->addAction(propertiesAction);
-//}
-//
-//void DiagramWindow::createToolBars()
-//{
-//    editToolBar = addToolBar(tr("Edit"));
-//    editToolBar->addAction(addNodeAction);
-//    editToolBar->addAction(addLinkAction);
-//    editToolBar->addAction(deleteAction);
-//    editToolBar->addSeparator();
-//    editToolBar->addAction(cutAction);
-//    editToolBar->addAction(copyAction);
-//    editToolBar->addAction(pasteAction);
-//    editToolBar->addSeparator();
-//    editToolBar->addAction(bringToFrontAction);
-//    editToolBar->addAction(sendToBackAction);
-//}
-
 /**
  *
  */
@@ -264,7 +168,8 @@ void TabCanvas::addMethod_triggered() {
     auto line = item->createLine(0, item->height());
     item->pushMethodLine(line);
 
-    auto text = item->createText(item->tabText(), item->height() + item->tabText(), "+ int example()");
+    //auto text = item->createText(item->tabText(), item->height() + item->tabText(), "+ int example()");
+    CustomAttrText *text = new CustomAttrText(item, "+ int example()", item->tabText(), item->height() + item->tabText(), item->flags());
     item->pushMethod(text);
 
     item->setHeight(item->height() + item->rowHeight());
@@ -315,7 +220,8 @@ void TabCanvas::addAttr_triggered() {
     auto line = item->createLine(0, inc * item->rowHeight());
     item->pushAttrLine(line);
 
-    auto text = item->createText(item->tabText(), item->rowHeight() * inc + item->tabText(), "+ int word");
+    //auto text = item->createText(item->tabText(), item->rowHeight() * inc + item->tabText(), "+ int word");
+    CustomAttrText *text = new CustomAttrText(item, "+ int word", item->tabText(), item->rowHeight() * inc + item->tabText(), item->flags());
     item->pushAttr(text);
 
     item->setHeight(item->height() + item->rowHeight());
@@ -376,6 +282,10 @@ void TabCanvas::properties() {
     editMenu->addAction(rmAttr);
 
     qDebug() << "properties TabCanvas";
+}
+
+CustomAttrText::~CustomAttrText() {
+
 }
 
 /**

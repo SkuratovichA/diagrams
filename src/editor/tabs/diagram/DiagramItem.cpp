@@ -63,43 +63,111 @@ ClassDiagramItem::ClassDiagramItem(QGraphicsItem *item)
     _rowWidth = 120;
     _tabText = 2;
     QGraphicsLineItem *lineAttr;
-    QGraphicsTextItem *textAttr;
+    CustomAttrText *textAttr;
+    _flags = Qt::TextInteractionFlag::TextEditable |
+             Qt::TextInteractionFlag::TextSelectableByMouse |
+             Qt::TextInteractionFlag::TextSelectableByKeyboard;
+
 
     setFlags(QGraphicsItem::ItemIsSelectable | QGraphicsItem::ItemIsMovable | QGraphicsItem::ItemSendsGeometryChanges);
 
     // name of the class
     setPen(QPen(color()));
-    auto text = new QGraphicsTextItem("name", this);
-    text->setPos(-30, -30);
-    text->setTextWidth(width()+80);
+
+    auto text = new NameObject(this, _flags);
+    //text->setPos(-30, -30);
+    //text->setTextWidth(width()+80);
+    _head = text;
     text->setFont(QFont("Courier", 20));
     setTextFlags(text);
     text->topLevelItem();
 
-    auto attrs_st = new QGraphicsTextItem("ATTRIBUTES", this);
-    attrs_st->setPos(_tabText, _tabText);
+    auto name = NameObject(this, _flags);
+
+    textAttr = new CustomAttrText(this, "ATTRIBUTES", _tabText, _tabText,  Qt::NoTextInteraction);
 
     lineAttr = createLine(0, _rowHeight);
     attrsLines.push_back(lineAttr);
 
-    textAttr = createText(_tabText, _rowHeight + _tabText, "+ int name");
+    textAttr = new CustomAttrText(this, "+ int name", _tabText, _rowHeight + _tabText, _flags);
     attrs.push_back(textAttr);
 
     lineAttr = createLine(0, _rowHeight * 2);
     methodsLines.push_back(lineAttr);
 
-    auto methods_st = new QGraphicsTextItem("METHODS", this);
-    methods_st->setPos(_tabText, _rowHeight * 2 + _tabText);
-    methods.push_back(methods_st);
+    textAttr = new CustomAttrText(this, "METHODS", _tabText, _rowHeight * 2 + _tabText, Qt::NoTextInteraction);
+    methods.push_back(textAttr);
 
     lineAttr = createLine(0, _rowHeight * 3);
     methodsLines.push_back(lineAttr);
 
-    textAttr = createText(_tabText, _rowHeight * 3 + _tabText, "+ int name()");
+    textAttr = new CustomAttrText(this, "+ int name()", _tabText, _rowHeight * 3 + _tabText, _flags);
     methods.push_back(textAttr);
 
     setRect(boundingBox());
     setBrush(QBrush(QColor(255,255,255,255)));
+}
+
+CustomAttrText::CustomAttrText(ClassDiagramItem *p, QString text, qreal x, qreal y, QFlags<Qt::TextInteractionFlag> flags)
+                            : QGraphicsTextItem(text, p) {
+    setTextInteractionFlags(flags);
+    setPos(x, y);
+    _parent = p;
+}
+
+void CustomAttrText::keyReleaseEvent(QKeyEvent *event) {
+    qreal maxLen = 0;
+
+    for (auto item : parent()->getAttrs()) {
+        maxLen = item->boundingRect().width() > maxLen ? item->boundingRect().width() : maxLen;
+    }
+    for (auto item : parent()->getMethods()) {
+        maxLen = item->boundingRect().width() > maxLen ? item->boundingRect().width() : maxLen;
+    }
+
+    if (maxLen + 30 < parent()->width()) {
+        maxLen = parent()->width() - 30;
+    }
+    else if (maxLen + 20 > parent()->width()) {
+        maxLen = parent()->width() + 20;
+    }
+    else {
+        return;
+    }
+
+    parent()->setRect(0, 0, maxLen, parent()->height());
+    for (auto item : parent()->getAttrsLines()) {
+        item->setLine(0, 0, maxLen, 0);
+    }
+    for (auto item : parent()->getMethodsLines()) {
+        item->setLine(0, 0, maxLen, 0);
+    }
+    parent()->setWidth(maxLen);
+
+    qreal midW = parent()->_head->boundingRect().width();
+    qreal midO = parent()->width();
+    qDebug() << midO << midW;
+    parent()->_head->setPos((midO - midW) / 2, -40);
+}
+
+NameObject::NameObject(ClassDiagramItem *parent, QFlags<Qt::TextInteractionFlag> flags)
+            : QGraphicsTextItem("_Name_", parent) {
+    //auto text = new QGraphicsTextItem("name", this);
+    _parent = parent;
+    setPos(5, -40);
+    //setTextWidth(120+80);
+    //setFont(QFont("Courier", 20));
+    //setTextInteractionFlags(flags);
+    //grttopLevelItem();
+}
+
+void NameObject::keyReleaseEvent(QKeyEvent *event) {
+    qreal midW = boundingRect().width();
+    qreal midO = parent()->width();
+    setPos((midO - midW) / 2, -40);
+}
+
+NameObject::~NameObject() {
 
 }
 
@@ -118,3 +186,7 @@ void ClassDiagramItem::addConnection(ClassConnectionItem *connection) {
 void ClassDiagramItem::removeConnection(ClassConnectionItem *connection) {
     connections.remove(connection);
 }
+
+//void CustomAttrText::setPosition(qreal x, qreal y) {
+//    this->setPos(x, y);
+//}

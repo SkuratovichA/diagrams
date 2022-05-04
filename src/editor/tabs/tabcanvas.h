@@ -8,6 +8,7 @@
 #include <QMenuBar>
 #include <QUndoGroup>
 #include "diagram/EditorScene.h"
+#include "diagram/DiagramItem.h"
 
 
 namespace SceneType {
