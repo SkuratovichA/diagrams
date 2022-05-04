@@ -16,12 +16,18 @@ ActorDiagramItem::ActorDiagramItem(QGraphicsItem *item)
     setFlag(QGraphicsItem::ItemIsMovable);
     setFlag(QGraphicsItem::ItemSendsGeometryChanges);
 
+    QFlags<Qt::TextInteractionFlag> _flags = Qt::TextInteractionFlag::TextEditable |
+             Qt::TextInteractionFlag::TextSelectableByMouse |
+             Qt::TextInteractionFlag::TextSelectableByKeyboard;
+
     setPen(QPen(QColor(1, 0, 0, 0)));
-    auto text = new QGraphicsTextItem("test", this);
-    text->setTextInteractionFlags(
-            Qt::TextInteractionFlag::TextEditable | Qt::TextInteractionFlag::TextSelectableByMouse |
-            Qt::TextInteractionFlag::TextSelectableByKeyboard);
-    text->topLevelItem();
+    _head = new NameObject(this, _flags, -15, -40);
+
+//    auto text = new QGraphicsTextItem("test", this);
+//    text->setTextInteractionFlags(
+//            Qt::TextInteractionFlag::TextEditable | Qt::TextInteractionFlag::TextSelectableByMouse |
+//            Qt::TextInteractionFlag::TextSelectableByKeyboard);
+//    text->topLevelItem();
 
     auto setpen = [this](QGraphicsLineItem *l) { l->setPen(QPen(color(), 3)); };
     auto legL = new QGraphicsLineItem(35, 70, 10, 110, this);
@@ -74,7 +80,7 @@ ClassDiagramItem::ClassDiagramItem(QGraphicsItem *item)
     // name of the class
     setPen(QPen(color()));
 
-    _head = new NameObject(this, _flags);
+    _head = new NameObject(this, _flags, 5, -40);
 
     textAttr = new CustomAttrText(this, "ATTRIBUTES", _tabText, _tabText,  Qt::NoTextInteraction);
 
@@ -141,18 +147,21 @@ void CustomAttrText::keyReleaseEvent(QKeyEvent *event) {
     parent()->_head->setPos((midO - midW) / 2, -40);
 }
 
-NameObject::NameObject(ClassDiagramItem *parent, QFlags<Qt::TextInteractionFlag> flags)
-            : QGraphicsTextItem("_Name_", parent) {
+NameObject::NameObject(QGraphicsItem *parent, QFlags<Qt::TextInteractionFlag> flags, qreal x, qreal y)
+            : QGraphicsTextItem("_Name_", parent)
+    {
     _parent = parent;
-    setPos(5, -40);
+    setPos(x, y);
     setFont(QFont("Courier", 20));
     setTextInteractionFlags(flags);
     topLevelItem();
 }
 
 void NameObject::keyReleaseEvent(QKeyEvent *event) {
+    ClassDiagramItem *tmp1 = static_cast<ClassDiagramItem *>(parent());
+    ActorDiagramItem *tmp2 = static_cast<ActorDiagramItem *>(parent());
+    qreal midO = tmp1 == nullptr ? tmp2->width() : tmp1->width();
     qreal midW = boundingRect().width();
-    qreal midO = parent()->width();
     setPos((midO - midW) / 2, -40);
 }
 

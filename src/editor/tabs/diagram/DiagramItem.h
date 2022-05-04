@@ -38,17 +38,17 @@ private:
 
 class NameObject : public QGraphicsTextItem {
 public:
-    NameObject(ClassDiagramItem *parent, QFlags<Qt::TextInteractionFlag> flags);
+    NameObject(QGraphicsItem *parent, QFlags<Qt::TextInteractionFlag> flags, qreal x, qreal y);
     ~NameObject();
 
-    ClassDiagramItem* parent() {
+    QGraphicsItem* parent() {
         return _parent;
     }
 
 protected:
     void keyReleaseEvent(QKeyEvent *event);
 
-    ClassDiagramItem *_parent;
+    QGraphicsItem *_parent;
 };
 
 class DiagramItem {
