@@ -5,7 +5,10 @@
 #include <QToolBar>
 #include <QBoxLayout>
 #include <QMainWindow>
+#include <QMenuBar>
+#include <QUndoGroup>
 #include "diagram/EditorScene.h"
+#include "diagram/DiagramItem.h"
 
 
 namespace SceneType {
@@ -55,34 +58,36 @@ private:
      */
 private:
     DiagramType type;
-
     QUndoStack *undoStack = nullptr;
     QVBoxLayout *layout = nullptr;
     EditorScene *editorScene = nullptr;
 
+    QMenu *editMenu;
+    //QToolBar *editToolBar;
+    QAction *addMethod;
+    QAction *rmMethod;
+    QAction *addAttr;
+    QAction *rmAttr;
+
     /** Slots
      */
 public slots:
-
     void moveEntity(ActorDiagramItem *movedItem, const QPointF &startPosition);
-
     void removeEntity();
-
     void addEntity();
-
     void addConnection();
 
     void cut();
-
     void copy();
-
     void paste();
-
     void properties();
-
     void sendToBack();
-
     void sendToFront();
+
+    void addMethod_triggered();
+    void addAttr_triggered();
+    void rmAttr_triggered();
+    void rmMethod_triggered();
 
     void createScene();
 };

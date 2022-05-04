@@ -11,6 +11,8 @@
 #include "DiagramItem.h"
 
 
+QString createCommandString(QGraphicsItem *item, const QPointF &pos);
+
 /**
  *
 */
@@ -20,7 +22,7 @@ public:
         Id = 1234
     };
 
-    MoveCommand(ActorDiagramItem *diagramItem, const QPointF &startPos,
+    MoveCommand(QGraphicsItem *diagramItem, const QPointF &startPos,
                 QUndoCommand *parent = nullptr);
 
     void undo() override;
@@ -32,7 +34,7 @@ public:
      int id() const override { return Id; }
 
 private:
-    ActorDiagramItem *diagramItem;
+    QGraphicsItem *diagramItem;
     QPointF startPos;
     QPointF newPos;
 };
@@ -49,7 +51,7 @@ public:
     void redo() override;
 
 private:
-    ActorDiagramItem *diagramItem;
+    QGraphicsItem *diagramItem;
     QGraphicsScene *graphicsScene;
 };
 

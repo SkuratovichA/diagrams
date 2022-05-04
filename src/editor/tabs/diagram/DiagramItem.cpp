@@ -16,12 +16,18 @@ ActorDiagramItem::ActorDiagramItem(QGraphicsItem *item)
     setFlag(QGraphicsItem::ItemIsMovable);
     setFlag(QGraphicsItem::ItemSendsGeometryChanges);
 
+    QFlags<Qt::TextInteractionFlag> _flags = Qt::TextInteractionFlag::TextEditable |
+             Qt::TextInteractionFlag::TextSelectableByMouse |
+             Qt::TextInteractionFlag::TextSelectableByKeyboard;
+
     setPen(QPen(QColor(1, 0, 0, 0)));
-    auto text = new QGraphicsTextItem("test", this);
-    text->setTextInteractionFlags(
-            Qt::TextInteractionFlag::TextEditable | Qt::TextInteractionFlag::TextSelectableByMouse |
-            Qt::TextInteractionFlag::TextSelectableByKeyboard);
-    text->topLevelItem();
+    _head = new NameObject(this, _flags, -15, -40);
+
+//    auto text = new QGraphicsTextItem("test", this);
+//    text->setTextInteractionFlags(
+//            Qt::TextInteractionFlag::TextEditable | Qt::TextInteractionFlag::TextSelectableByMouse |
+//            Qt::TextInteractionFlag::TextSelectableByKeyboard);
+//    text->topLevelItem();
 
     auto setpen = [this](QGraphicsLineItem *l) { l->setPen(QPen(color(), 3.0)); };
     auto legL = new QGraphicsLineItem(35.0, 70.0, 10.0, 110.0, this);
@@ -57,135 +63,110 @@ void ActorDiagramItem::removeConnection(ActorConnectionItem *connection) {
  * @param item
  */
 ClassDiagramItem::ClassDiagramItem(QGraphicsItem *item)
-        : QGraphicsRectItem(item), DiagramItem(110.0, 120.0, DiagramItem::Class) {
+        : QGraphicsRectItem(item), DiagramItem(120.0, 120.0, DiagramItem::Class) {
 
-    setFlag(QGraphicsItem::ItemIsSelectable);
-    setFlag(QGraphicsItem::ItemIsMovable);
-    setFlag(QGraphicsItem::ItemSendsGeometryChanges);
+    _rowHeight = 30;
+    _rowWidth = 120;
+    _tabText = 2;
+    QGraphicsLineItem *lineAttr;
+    CustomAttrText *textAttr;
+    _flags = Qt::TextInteractionFlag::TextEditable |
+             Qt::TextInteractionFlag::TextSelectableByMouse |
+             Qt::TextInteractionFlag::TextSelectableByKeyboard;
 
+
+    setFlags(QGraphicsItem::ItemIsSelectable | QGraphicsItem::ItemIsMovable | QGraphicsItem::ItemSendsGeometryChanges);
+
+    // name of the class
     setPen(QPen(color()));
-    auto text = new QGraphicsTextItem("name", this);
-    text->setPos(-30.0, -30.0);
-    text->setTextWidth(width() + 80.0);
-    text->setFont(QFont("Courier", 20));
-    text->setTextInteractionFlags(
-            Qt::TextInteractionFlag::TextEditable | Qt::TextInteractionFlag::TextSelectableByMouse |
-            Qt::TextInteractionFlag::TextSelectableByKeyboard);
-    text->topLevelItem();
 
+    _head = new NameObject(this, _flags, 5, -40);
 
-    auto set_text_flags = [](QGraphicsTextItem *l) {
-        l->setTextInteractionFlags(
-                Qt::TextInteractionFlag::TextEditable | Qt::TextInteractionFlag::TextSelectableByMouse |
-                Qt::TextInteractionFlag::TextSelectableByKeyboard);
-    };
+    textAttr = new CustomAttrText(this, "ATTRIBUTES", _tabText, _tabText,  Qt::NoTextInteraction);
 
-    auto attrs_st = new QGraphicsTextItem("ATTRIBUTES", this);
-    set_text_flags(attrs_st);
-    attrs_st->setPos(2.0, 2.0);
+    lineAttr = createLine(0, _rowHeight);
+    attrsLines.push_back(lineAttr);
 
-    auto line1 = new QGraphicsLineItem(0.0, 30.0, width(), 30.0, this);
+    textAttr = new CustomAttrText(this, "+ int name", _tabText, _rowHeight + _tabText, _flags);
+    attrs.push_back(textAttr);
 
-    auto tmp_attr = new QGraphicsTextItem("+ int name", this);
-    set_text_flags(tmp_attr);
-    tmp_attr->setPos(2.0, 32.0);
-    attrs.push_back(tmp_attr);
+    lineAttr = createLine(0, _rowHeight * 2);
+    methodsLines.push_back(lineAttr);
 
-    auto line2 = new QGraphicsLineItem(0.0, 60.0, width(), 60.0, this);
+    textAttr = new CustomAttrText(this, "METHODS", _tabText, _rowHeight * 2 + _tabText, Qt::NoTextInteraction);
+    methods.push_back(textAttr);
 
-    auto methods_st = new QGraphicsTextItem("METHODS", this);
-    set_text_flags(methods_st);
-    methods_st->setPos(2.0, 62.0);
+    lineAttr = createLine(0, _rowHeight * 3);
+    methodsLines.push_back(lineAttr);
 
-    auto line3 = new QGraphicsLineItem(0.0, 90.0, width(), 90.0, this);
-
-    auto tmp_method = new QGraphicsTextItem("+ int name()", this);
-    set_text_flags(tmp_method);
-    tmp_method->setPos(2.0, 92.0);
-    attrs.push_back(tmp_method);
+    textAttr = new CustomAttrText(this, "+ int name()", _tabText, _rowHeight * 3 + _tabText, _flags);
+    methods.push_back(textAttr);
 
     setRect(boundingBox());
-    setBrush(QBrush(QColor(255, 255, 255, 255)));
-//    refactor_table();
+    setBrush(QBrush(QColor(255,255,255,255)));
 }
-//
-//void ClassDiagramItem::refactor_table() {
-//    qreal x = this->x();
-//    qreal y = this->y();
-//    setWidth(this->rect().width());
-//    setHeight(this->rect().height());
-//
-//    this->setPos(100.0, 100.0);
-//
-//    auto set_text_flags = [](QGraphicsTextItem *l) {
-//        l->setTextInteractionFlags(
-//                Qt::TextInteractionFlag::TextEditable | Qt::TextInteractionFlag::TextSelectableByMouse |
-//                Qt::TextInteractionFlag::TextSelectableByKeyboard);
-//    };
-//
-//    QList<QGraphicsTextItem *> tmp_attrs;
-//    QList<QGraphicsTextItem *> tmp_methods;
-//
-//    foreach(QGraphicsItem *obj, this->childItems()) {
-//        qDebug() << obj;
-//    }
-//
-//    foreach (QGraphicsTextItem *val, this->attrs) {
-//        tmp_attrs.push_back(val);
-//        qDebug() << val->toPlainText();
-//    }
-//    foreach (QGraphicsTextItem *val, this->methods) {
-//        tmp_methods.push_back(val);
-//        qDebug() << val->toPlainText();
-//    }
-//
-//    //QList<QGraphicsTextItem *> attrs = { QGraphicsTextItem("ATTRIBUTES", this) };
-//
-//
-//
-//    //setX(200);
-//    //setY(200);
-//    //this->update(100, 100, 500, 500);
-//
-//    //delete this;
-////
-////    boxRect = QRectF(0, 0, width, height+30);
-//////    this = new QGraphicsRectItem();
-////            setRect(boxRect);
-//
-////    auto attrs_st = new QGraphicsTextItem("ATTRIBUTES", this);
-////    set_text_flags(attrs_st);
-////    attrs_st->setPos(2, 2);
-////
-////    auto line1 = new QGraphicsLineItem(0,30, width, 30, this);
-////
-////    auto tmp_attr = new QGraphicsTextItem("+ int name", this);
-////    set_text_flags(tmp_attr);
-////    tmp_attr->setPos(2, 32);
-////    attrs.push_back(tmp_attr);
-////
-////    auto line2 = new QGraphicsLineItem(0, 60, width, 60, this);
-////
-////    auto methods_st = new QGraphicsTextItem("METHODS", this);
-////    set_text_flags(methods_st);
-////    methods_st->setPos(2, 62);
-////
-////    auto line3 = new QGraphicsLineItem(0, 90, width, 90, this);
-////
-////    auto tmp_method = new QGraphicsTextItem("+ int name()", this);
-////    set_text_flags(tmp_method);
-////    tmp_method->setPos(2, 92);
-////    attrs.push_back(tmp_method);
-//}
-////
-////QPointF ClassDiagramItem::pos() {
-////    return { x() + width / 2, y() + height / 2};
-////}
 
-ClassDiagramItem::~ClassDiagramItem() {
-    foreach (ClassConnectionItem *connection, connections) {
-        delete connection;
+CustomAttrText::CustomAttrText(ClassDiagramItem *p, QString text, qreal x, qreal y, QFlags<Qt::TextInteractionFlag> flags)
+                            : QGraphicsTextItem(text, p) {
+    setTextInteractionFlags(flags);
+    setPos(x, y);
+    _parent = p;
+}
+
+void CustomAttrText::keyReleaseEvent(QKeyEvent *event) {
+    qreal maxLen = 0;
+
+    for (auto item : parent()->getAttrs()) {
+        maxLen = item->boundingRect().width() > maxLen ? item->boundingRect().width() : maxLen;
     }
+    for (auto item : parent()->getMethods()) {
+        maxLen = item->boundingRect().width() > maxLen ? item->boundingRect().width() : maxLen;
+    }
+
+    if (maxLen + 30 < parent()->width()) {
+        maxLen = parent()->width() - 30;
+    }
+    else if (maxLen + 20 > parent()->width()) {
+        maxLen = parent()->width() + 20;
+    }
+    else {
+        return;
+    }
+
+    parent()->setRect(0, 0, maxLen, parent()->height());
+    for (auto item : parent()->getAttrsLines()) {
+        item->setLine(0, 0, maxLen, 0);
+    }
+    for (auto item : parent()->getMethodsLines()) {
+        item->setLine(0, 0, maxLen, 0);
+    }
+    parent()->setWidth(maxLen);
+
+    qreal midW = parent()->_head->boundingRect().width();
+    qreal midO = parent()->width();
+    parent()->_head->setPos((midO - midW) / 2, -40);
+}
+
+NameObject::NameObject(QGraphicsItem *parent, QFlags<Qt::TextInteractionFlag> flags, qreal x, qreal y)
+            : QGraphicsTextItem("_Name_", parent)
+    {
+    _parent = parent;
+    setPos(x, y);
+    setFont(QFont("Courier", 20));
+    setTextInteractionFlags(flags);
+    topLevelItem();
+}
+
+void NameObject::keyReleaseEvent(QKeyEvent *event) {
+    ClassDiagramItem *tmp1 = static_cast<ClassDiagramItem *>(parent());
+    ActorDiagramItem *tmp2 = static_cast<ActorDiagramItem *>(parent());
+    qreal midO = tmp1 == nullptr ? tmp2->width() : tmp1->width();
+    qreal midW = boundingRect().width();
+    setPos((midO - midW) / 2, -40);
+}
+
+NameObject::~NameObject() {
+
 }
 
 /**

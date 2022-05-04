@@ -156,25 +156,138 @@ void TabCanvas::copy() {
 #endif
 }
 
+void TabCanvas::addMethod_triggered() {
+    ClassDiagramItem *item = static_cast<ClassDiagramItem *>(selectedObject());
+
+    if (item == nullptr) {
+        qDebug() << "No selected item";
+        return;
+    }
+
+    // resize item for one row
+    item->setRect(0,0,item->width(), item->height() + item->rowHeight());
+
+    auto line = item->createLine(0, item->height());
+    item->pushMethodLine(line);
+
+    //auto text = item->createText(item->tabText(), item->height() + item->tabText(), "+ int example()");
+    CustomAttrText *text = new CustomAttrText(item, "+ int example()", item->tabText(), item->height() + item->tabText(), item->flags());
+    item->pushMethod(text);
+
+    item->setHeight(item->height() + item->rowHeight());
+    qDebug() << "add Method";
+};
+
+void TabCanvas::rmMethod_triggered() {
+    ClassDiagramItem *item = static_cast<ClassDiagramItem *>(selectedObject());
+
+    if (item == nullptr) {
+        qDebug() << "No selected item";
+        return;
+    }
+
+    // one default METHODS
+    auto size = item->getMethods().size();
+    if (size < 2) {
+        qDebug() << "No methods";
+        return;
+    }
+
+    // resize item for one row
+    item->setRect(0,0,item->width(), item->height() - item->rowHeight());
+
+    // delete line and text
+    item->popMethod();
+    item->popMethodsLine();
+
+    item->setHeight(item->height() - item->rowHeight());
+    qDebug() << "delete Method";
+};
+
+void TabCanvas::addAttr_triggered() {
+    ClassDiagramItem *item = static_cast<ClassDiagramItem *>(selectedObject());
+
+    if (item == nullptr) {
+        qDebug() << "No selected item";
+        return;
+    }
+
+    // resize item for one row
+    item->setRect(0,0,item->width(), item->height() + item->rowHeight());
+
+    long long inc = item->getAttrs().size() + 1;
+    item->moveTexts(1, inc);
+    item->moveLines(1, inc);
+
+    auto line = item->createLine(0, inc * item->rowHeight());
+    item->pushAttrLine(line);
+
+    //auto text = item->createText(item->tabText(), item->rowHeight() * inc + item->tabText(), "+ int word");
+    CustomAttrText *text = new CustomAttrText(item, "+ int word", item->tabText(), item->rowHeight() * inc + item->tabText(), item->flags());
+    item->pushAttr(text);
+
+    item->setHeight(item->height() + item->rowHeight());
+    qDebug() << "add Attr";
+};
+
+void TabCanvas::rmAttr_triggered() {
+    ClassDiagramItem *item = static_cast<ClassDiagramItem *>(selectedObject());
+
+    if (item == nullptr) {
+        qDebug() << "No selected item";
+        return;
+    }
+
+    auto size = item->getMethods().size();
+    if (size < 1) {
+        qDebug() << "No methods";
+        return;
+    }
+
+    // resize item for one row
+    item->setRect(0,0,item->width(), item->height() - item->rowHeight());
+
+    // delete line and text
+    item->popAttr();
+    item->popAttrsLine();
+
+    // move items
+    long long inc = item->getAttrs().size() + 1;
+    item->moveTexts(0, inc);
+    item->moveLines(0, inc);
+
+    //item->setPos(tmp_x, tmp_y);
+    item->setHeight(item->height() - item->rowHeight());
+    qDebug() << "delete Attr";
+};
+
 /**
  *
  */
 void TabCanvas::properties() {
-    qDebug() << "properties";
+    addMethod = new QAction(tr("Add &Method"));
+    connect(addMethod, SIGNAL(triggered()), this, SLOT(addMethod_triggered()));
+
+    rmMethod = new QAction(tr("Delete &Method"));
+    connect(rmMethod, SIGNAL(triggered()), this, SLOT(rmMethod_triggered()));
+
+    addAttr = new QAction(tr("Add &Attribute"));
+    connect(addAttr, SIGNAL(triggered()), this, SLOT(addAttr_triggered()));
+
+    rmAttr = new QAction(tr("Delete &Attribute"));
+    connect(rmAttr, SIGNAL(triggered()), this, SLOT(rmAttr_triggered()));
+
+    editMenu = menuBar()->addMenu(tr("Properties"));
+    editMenu->addAction(addMethod);
+    editMenu->addAction(rmMethod);
+    editMenu->addAction(addAttr);
+    editMenu->addAction(rmAttr);
+
+    qDebug() << "properties TabCanvas";
 }
 
-/**
- *
- */
-void TabCanvas::sendToBack() {
-    qDebug() << "send to back";
-}
+CustomAttrText::~CustomAttrText() {
 
-/**
- *
- */
-void TabCanvas::sendToFront() {
-    qDebug() << "send to front";
 }
 
 /**
