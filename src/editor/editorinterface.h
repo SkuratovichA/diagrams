@@ -9,12 +9,11 @@
 
 
 namespace Ui {
-class editorInterface;
+    class editorInterface;
 }
 
-class editorInterface : public QMainWindow
-{
-    Q_OBJECT
+class editorInterface : public QMainWindow {
+Q_OBJECT
 
 public:
     enum newWindowType {
@@ -28,43 +27,53 @@ public:
         EXAMPLE_FILE
     };
 
+    // name of an example
+    // Must be provided only if newType is EXAMPLE_FILE
+    // default option for window is to create it
+    // without a type - just a plain canvas
     explicit editorInterface(QWidget *parent = nullptr,
-                             // name of an example
-                             // Must be provided only if newType is EXAMPLE_FILE
-                             const QString& exampleName = nullptr,
-
-                             // default option for window is to create it
-                             // without a type - just a plain canvas
-                             newWindowType newType = NO_FILE
-                             );
+                             const QString &exampleName = nullptr,
+                             newWindowType newType = NO_FILE);
 
     ~editorInterface();
 
     //void loadFile(const QString &filename);
 
 private slots:
+
     void actionSaveAs_triggered();
+
     void actionSave_triggered();
+
     void actionDeleteTab_triggered();
+
     void actionNewTab_triggered();
 
     void actionAddEntity_triggered();
+
     void actionAddConnection_triggered();
+
     void actionRemove_triggered();
+
     void actionCut_triggered();
+
     void actionCopy_triggered();
+
     void actionPaste_triggered();
+
     void actionProperties_triggered();
-    void actionUndo();
-    void actionRedo();
+
     void actionQuit_triggered();
 
     void newTabSelected();
 
 private:
     void createUndoView();
+
     void createTabs();
+
     void createDynamicToolBar();
+
     void createStaticToolBar();
 
     QString get_text_representation();
@@ -92,8 +101,8 @@ private:
     QAction *cutAction;
     QAction *copyAction;
     QAction *pasteAction;
-    QAction *bringToFrontAction;
     QAction *propertiesAction;
+    QAction *bringToFrontAction;
     QAction *sendToBackAction;
 
     QAction *newTabAction;

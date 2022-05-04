@@ -36,12 +36,12 @@ void TabCanvas::createScene() {
     editorScene = new EditorScene(this);
 
     editorScene->setSceneRect(QRect(0, 0, 800, 800));
-    connect(editorScene, &EditorScene::itemMoved, this, &TabCanvas::moveEntity);
+    (void)connect(editorScene, &EditorScene::itemMoved, this, &TabCanvas::moveEntity);
     auto *view = new QGraphicsView(editorScene);
 
     view->setDragMode(QGraphicsView::RubberBandDrag);
     view->setRenderHints(QPainter::Antialiasing
-                               | QPainter::TextAntialiasing);
+                         | QPainter::TextAntialiasing);
 
     setCentralWidget(view);
 }
@@ -87,24 +87,26 @@ void TabCanvas::addEntity() {
  *
  */
 void TabCanvas::addConnection() {
-    // FIXME: create a function to select one or more nodes
-    // then according to the type pass the parameters.
-    // Probably, there will be a need to remove the first node and put it into the separate variabble
-    // Then, call a function to connect n nodes.
     QUndoCommand *connectionCommand = nullptr;
-    switch (type) {
-        case DiagramType::SEQUENCE:
-//            connectionCommand = new AddActorConnectionCommand(editorScene);
-            break;
 
-        case DiagramType::CLASS:
-//            connectionCommand = new AddClassConnectionCommand(fromNode, toNodes, editorScene);
-            break;
-        default:
-            assert(!"This statement must not be reached");
+    if (type == DiagramType::SEQUENCE) {
+//      TODO: add line connection for a sequence diagram
+//      connectionCommand = new AddActorConnectionCommand(editorScene);
+        qDebug() << "add nodes for a sequence diagram";
+        return;
+    } else if (type == DiagramType::CLASS) {
+        auto nodes = getSelectedDiagramItems<ClassDiagramItem>();
+        qDebug() << "still alive";
+        auto emptySelect = nodes == QPair<ClassDiagramItem *, ClassDiagramItem*>();
+        if (emptySelect) {
             return;
-     }
-     undoStack->push(connectionCommand);
+        }
+        connectionCommand = new AddClassConnectionCommand(nodes.first, nodes.second, ClassConnectionItem::Aggregation,
+                                                          editorScene);
+    } else {
+        assert(!"There are only two types: SEQUENCE and CLASS.");
+    }
+    undoStack->push(connectionCommand);
 }
 
 /**
@@ -116,7 +118,7 @@ QGraphicsItem *TabCanvas::selectedObject() {
     if (items.count() == 1) {
         return dynamic_cast<QGraphicsItem *>(items.first());
     } else {
-        return 0;
+        return nullptr;
     }
 }
 
@@ -190,4 +192,32 @@ std::string TabCanvas::getStringRepresentation() {
  */
 QUndoStack *TabCanvas::getUndoStack() {
     return undoStack;
+}
+
+template<typename T>
+QPair<T *, T *> TabCanvas::getSelectedDiagramItems() {
+    auto items = editorScene->selectedItems();
+    if (items.isEmpty()) {
+        return QPair<T*, T*>();
+    }
+    auto first = dynamic_cast<T *>(items.first());
+    T *rest = nullptr;
+
+    switch (items.count()) {
+        case 2:
+            items.removeFirst();
+            // fallthrough
+        case 1:
+            rest = dynamic_cast<T *>(items.first());
+            if (first == nullptr || rest == nullptr) {
+                qDebug() << "shit fuck";
+                return QPair<T*, T*>();
+            }
+            break;
+        default:
+            qDebug() << items.count() << " nodes were selected. Bad";
+            return QPair<T*, T*>();
+    }
+    // first is always T*, the rest is always QVector
+    return QPair<T *, T *>(first, rest);
 }

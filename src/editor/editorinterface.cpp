@@ -107,9 +107,9 @@ void editorInterface::createUndoView() {
  */
 void editorInterface::createTabs() {
     tabWidget = new QTabWidget(this);
-    connect(tabWidget, SIGNAL(currentChanged(int)), this, SLOT(newTabSelected()));
-    tabWidget->addTab(new TabCanvas(this, DiagramType::CLASS, undoStack), "class diagram editor");
-    tabWidget->addTab(new TabCanvas(this, DiagramType::SEQUENCE, undoStack), "sequence diagram editor");
+    (void)connect(tabWidget, SIGNAL(currentChanged(int)), this, SLOT(newTabSelected()));
+    (void)tabWidget->addTab(new TabCanvas(this, DiagramType::CLASS, undoStack), "class diagram editor");
+    (void)tabWidget->addTab(new TabCanvas(this, DiagramType::SEQUENCE, undoStack), "sequence diagram editor");
 }
 
 /**
@@ -133,11 +133,11 @@ void editorInterface::createDynamicToolBar() {
     dynamicToolBar->addAction(addEntityAction);
     dynamicToolBar->addAction(addConnectionAction);
     dynamicToolBar->addAction(deleteAction);
-    dynamicToolBar->addSeparator();
+    (void)dynamicToolBar->addSeparator();
     dynamicToolBar->addAction(cutAction);
     dynamicToolBar->addAction(copyAction);
     dynamicToolBar->addAction(pasteAction);
-    dynamicToolBar->addSeparator();
+    (void)dynamicToolBar->addSeparator();
 //    editToolBar->addAction(bringToFrontAction);
 //    editToolBar->addAction(sendToBackAction);
 }
@@ -163,7 +163,7 @@ void editorInterface::createStaticToolBar() {
     staticToolBar->addAction(newTabAction);
     staticToolBar->addAction(deleteTabAction);
     staticToolBar->addAction(saveAction);
-    staticToolBar->addSeparator();
+    (void)staticToolBar->addSeparator();
     staticToolBar->addAction(undoAction);
     staticToolBar->addAction(redoAction);
 }
@@ -192,7 +192,7 @@ void editorInterface::actionSave_triggered() {
 
     QFile file(filename);
     if (!file.open(QFile::WriteOnly)) {
-        QMessageBox::warning(this, "Error", file.errorString());
+        (void)QMessageBox::warning(this, "Error", file.errorString());
         return;
     }
 
@@ -215,7 +215,7 @@ void editorInterface::actionSaveAs_triggered() {
 
     QFile file(filename);
     if (!file.open(QIODevice::WriteOnly)) {
-        QMessageBox::information(this, tr("Unable to open file"), file.errorString());
+        (void)QMessageBox::information(this, tr("Unable to open file"), file.errorString());
         return;
     }
     QTextStream in(&file);
@@ -226,18 +226,18 @@ void editorInterface::actionSaveAs_triggered() {
 }
 
 void editorInterface::actionQuit_triggered() {
-    editorInterface::close();
+    (void)editorInterface::close();
 }
 
 void editorInterface::actionNewTab_triggered() {
-    tabWidget->addTab(new TabCanvas(this, DiagramType::SEQUENCE, undoStack), "sequence diagram editor");
+    (void)tabWidget->addTab(new TabCanvas(this, DiagramType::SEQUENCE, undoStack), "sequence diagram editor");
     //    tabWidget->setCurrentIndex(tabWidget->count()-1);
 }
 
 void editorInterface::actionDeleteTab_triggered() {
     auto ci = tabWidget->currentIndex();
     if (ci == 0) {
-        QMessageBox::warning(this, "Warning", "You cannot close the class diagram");
+        (void)QMessageBox::warning(this, "Warning", "You cannot close the class diagram");
         return;
     }
     tabWidget->removeTab(ci);
@@ -294,20 +294,4 @@ void editorInterface::actionPaste_triggered() {
  */
 void editorInterface::actionProperties_triggered() {
     reinterpret_cast<TabCanvas *>(tabWidget->currentWidget())->properties();
-}
-
-/**
- *
- */
-void editorInterface::actionUndo() {
-    qDebug() << "Undo in the file editorinterface.h";
-    //reinterpret_cast<TabCanvas *>(tabWidget->currentWidget())->undo();
-}
-
-/**
- *
- */
-void editorInterface::actionRedo() {
-    qDebug() << "Redo in the file editorinterface.h";
-    //reinterpret_cast<TabCanvas *>(tabWidget->currentWidget())->redo();
 }

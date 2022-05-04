@@ -21,6 +21,9 @@ using namespace SceneType;
 class TabCanvas : public QMainWindow {
 Q_OBJECT
 
+    /** Public constructor, destructor
+     *
+     */
 public:
     explicit TabCanvas(
             QWidget *parent = nullptr,
@@ -30,6 +33,9 @@ public:
 
     ~TabCanvas();
 
+    /** Public functions
+     *
+     */
 public:
     QUndoStack *getUndoStack();
 
@@ -39,6 +45,9 @@ public:
     /** Private functions
      */
 private:
+    template<typename T>
+    QPair<T *, T *> getSelectedDiagramItems();
+
 
     QGraphicsItem *selectedObject();
 
@@ -54,18 +63,26 @@ private:
     /** Slots
      */
 public slots:
+
     void moveEntity(ActorDiagramItem *movedItem, const QPointF &startPosition);
+
     void removeEntity();
+
     void addEntity();
+
     void addConnection();
 
     void cut();
-    void copy();
-    void paste();
-    void properties();
-    void sendToBack();
-    void sendToFront();
 
+    void copy();
+
+    void paste();
+
+    void properties();
+
+    void sendToBack();
+
+    void sendToFront();
 
     void createScene();
 };

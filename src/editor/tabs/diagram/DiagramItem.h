@@ -30,7 +30,7 @@ public:
         _height = height;
         _width = width;
         _type = type;
-        _boundingBox = QRectF(0, 0, _width, _height);
+        _boundingBox = QRectF(0.0, 0.0, _width, _height);
         _color = QColor(QRandomGenerator::global()->bounded(256),
                         QRandomGenerator::global()->bounded(256),
                         QRandomGenerator::global()->bounded(256), 180);
@@ -111,12 +111,18 @@ private:
 class ClassDiagramItem : public QGraphicsRectItem, DiagramItem {
 public:
     explicit ClassDiagramItem(QGraphicsItem *item = nullptr);
-
-    void refactor_table();
+    ~ClassDiagramItem();
 
     void addConnection(ClassConnectionItem *connection);
 
     void removeConnection(ClassConnectionItem *connection);
+
+    QPointF centre() {
+        return {x() + width()/2.0, y() + height()/2.0};
+    }
+
+protected:
+    QVariant itemChange(GraphicsItemChange change, const QVariant &value);
 
 private:
     QSet<ClassConnectionItem *> connections;

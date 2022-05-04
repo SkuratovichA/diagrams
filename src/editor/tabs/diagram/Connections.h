@@ -8,8 +8,8 @@
 #include <QGraphicsLineItem>
 
 class ClassDiagramItem;
-class ActorDiagramItem;
 
+class ActorDiagramItem;
 
 /**
  *
@@ -22,24 +22,24 @@ public:
 
     ClassConnectionItem(
             ClassDiagramItem *fromNode,
-            QVector<ClassDiagramItem *> toNode,
+            ClassDiagramItem *toNode,
             ClassConnectionType connectionType);
 
     ~ClassConnectionItem();
 
     ClassDiagramItem *fromNode() const;
-
-    QVector<ClassDiagramItem *> toNode() const;
-
+    ClassDiagramItem *toNode() const;
     void setColor(const QColor &color);
-
     QColor color() const;
 
     void trackNodes();
+private:
+    QPainterPath shape() const;
+    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
 
 private:
     ClassDiagramItem *nodeFrom;
-    QVector<ClassDiagramItem *> nodeTo;
+    ClassDiagramItem *nodeTo;
     QLineF connectionLine;
 };
 
@@ -74,6 +74,5 @@ private:
     ActorDiagramItem *nodeTo;
     QLineF connectionLine;
 };
-
 
 #endif //DIAGRAMS_CONNECTIONS_H

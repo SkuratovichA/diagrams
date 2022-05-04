@@ -88,8 +88,8 @@ AddActorCommand::AddActorCommand(QGraphicsScene *scene, QUndoCommand *parent)
     static int itemCount = 0;
 
     diagramItem = new ActorDiagramItem();
-    initialPosition = QPointF((itemCount * 15 + 100) % int(scene->width()),
-                              (itemCount * 15 + 150) % int(scene->height()));
+    initialStartPosition = QPointF(static_cast<qreal>((itemCount * 15 + 100) % static_cast<int>(scene->width())),
+                                   static_cast<qreal>((itemCount * 15 + 150) % static_cast<int>(scene->height())));
     itemCount++;
     scene->update();
 }
@@ -98,9 +98,10 @@ AddActorCommand::AddActorCommand(QGraphicsScene *scene, QUndoCommand *parent)
  *
  */
 AddActorCommand::~AddActorCommand() {
-    if (!diagramItem->scene()) {
-        delete diagramItem;
+    if (diagramItem->scene() == nullptr) {
+        return;
     }
+    delete diagramItem;
 }
 
 /**
@@ -116,7 +117,7 @@ void AddActorCommand::undo() {
  */
 void AddActorCommand::redo() {
     graphicsScene->addItem(diagramItem);
-    diagramItem->setPos(initialPosition);
+    diagramItem->setPos(initialStartPosition);
     graphicsScene->clearSelection();
     graphicsScene->update();
 }
@@ -129,8 +130,8 @@ AddClassCommand::AddClassCommand(QGraphicsScene *scene, QUndoCommand *parent)
     static int itemCount = 0;
 
     diagramItem = new ClassDiagramItem();
-    initialPosition = QPointF(((itemCount * 20) + 100)% int(scene->width()),
-                              ((itemCount * 20) + 100)% int(scene->height()));
+    initialStartPosition = QPointF(static_cast<qreal>(((itemCount * 20) + 100) % static_cast<int>(scene->width())),
+                                   static_cast<qreal>(((itemCount * 20) + 100) % static_cast<int>(scene->height())));
     itemCount++;
     scene->update();
 }
@@ -139,9 +140,10 @@ AddClassCommand::AddClassCommand(QGraphicsScene *scene, QUndoCommand *parent)
  *
  */
 AddClassCommand::~AddClassCommand() {
-    if (!diagramItem->scene()) {
-        delete diagramItem;
+    if (diagramItem->scene() != nullptr) {
+        return;
     }
+    delete diagramItem;
 }
 
 /**
@@ -157,7 +159,7 @@ void AddClassCommand::undo() {
  */
 void AddClassCommand::redo() {
     graphicsScene->addItem(diagramItem);
-    diagramItem->setPos(initialPosition);
+    diagramItem->setPos(initialStartPosition);
     graphicsScene->clearSelection();
     graphicsScene->update();
 }
@@ -169,17 +171,17 @@ void AddClassCommand::redo() {
  *
  */
 AddClassConnectionCommand::AddClassConnectionCommand(ClassDiagramItem *fromNode,
-                                                     QVector<ClassDiagramItem *> toNodes,
+                                                     ClassDiagramItem *toNodes,
                                                      ClassConnectionItem::ClassConnectionType connectionType,
                                                      QGraphicsScene *scene,
                                                      QUndoCommand *parent)
         : QUndoCommand(parent), graphicsScene(scene) {
-    static int itemCount = 0;
+//    static int itemCount = 0;
 
-    classConnection = new ClassConnectionItem(fromNode, std::move(toNodes), connectionType);
-    initialPosition = QPointF(((itemCount * 20) + 100)% int(scene->width()),
-                              ((itemCount * 20) + 100)% int(scene->height()));
-    itemCount++;
+    classConnection = new ClassConnectionItem(fromNode, toNodes, connectionType);
+//    initialStartPosition = QPointF(static_cast<qreal>(((itemCount * 20) + 100) % static_cast<int>(scene->width())),
+//                                   static_cast<qreal>(((itemCount * 20) + 100) % static_cast<int>(scene->height())));
+//    itemCount++;
     scene->update();
 }
 
@@ -187,9 +189,10 @@ AddClassConnectionCommand::AddClassConnectionCommand(ClassDiagramItem *fromNode,
  *
  */
 AddClassConnectionCommand::~AddClassConnectionCommand() {
-    if (!classConnection->scene()) {
-        delete classConnection;
+    if (classConnection->scene() != nullptr) {
+        return;
     }
+    delete classConnection;
 }
 
 /**
@@ -205,7 +208,7 @@ void AddClassConnectionCommand::undo() {
  */
 void AddClassConnectionCommand::redo() {
     graphicsScene->addItem(classConnection);
-    classConnection->setPos(initialPosition);
+//    classConnection->setPos(initialStartPosition);
     graphicsScene->clearSelection();
     graphicsScene->update();
 }
@@ -219,12 +222,12 @@ AddActorConnectionCommand::AddActorConnectionCommand(ActorDiagramItem *fromNode,
                                                      QGraphicsScene *scene,
                                                      QUndoCommand *parent)
         : QUndoCommand(parent), graphicsScene(scene) {
-    static int itemCount = 0;
+//    static int itemCount = 0;
 
     actorConnection = new ActorConnectionItem(fromNode, toNode, connectionType);
-    initialPosition = QPointF(((itemCount * 20) + 100)% int(scene->width()),
-                              ((itemCount * 20) + 100)% int(scene->height()));
-    itemCount++;
+//    initialStartPosition = QPointF(static_cast<qreal>(((itemCount * 20) + 100) % static_cast<int>(scene->width())),
+//                                   static_cast<qreal>(((itemCount * 20) + 100) % static_cast<int>(scene->height())));
+//    itemCount++;
     scene->update();
 }
 
@@ -232,9 +235,10 @@ AddActorConnectionCommand::AddActorConnectionCommand(ActorDiagramItem *fromNode,
  *
  */
 AddActorConnectionCommand::~AddActorConnectionCommand() {
-    if (!actorConnection->scene()) {
-        delete actorConnection;
+    if (actorConnection->scene() != nullptr) {
+        return;
     }
+    delete actorConnection;
 }
 
 /**
@@ -250,7 +254,7 @@ void AddActorConnectionCommand::undo() {
  */
 void AddActorConnectionCommand::redo() {
     graphicsScene->addItem(actorConnection);
-    actorConnection->setPos(initialPosition);
+//    actorConnection->setPos(initialStartPosition);
     graphicsScene->clearSelection();
     graphicsScene->update();
 }

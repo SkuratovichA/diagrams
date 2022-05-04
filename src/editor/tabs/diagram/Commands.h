@@ -29,7 +29,7 @@ public:
 
     bool mergeWith(const QUndoCommand *command) override;
 
-    int id() const override { return Id; }
+     int id() const override { return Id; }
 
 private:
     ActorDiagramItem *diagramItem;
@@ -119,11 +119,8 @@ public:
 private:
     ActorConnectionItem *actorConnection;
     QGraphicsScene *graphicsScene;
-    union {
-        QPointF initialStartPosition;
-        QPointF initialPosition;
-    };
-    QPointF initialEndPosition;
+//    QPointF initialStartPosition;
+//    QPointF initialEndPosition;
 };
 
 /**
@@ -132,7 +129,7 @@ private:
 class AddClassConnectionCommand : public QUndoCommand {
 public:
     explicit AddClassConnectionCommand(ClassDiagramItem *fromNode,
-                                       QVector<ClassDiagramItem *> toNode,
+                                       ClassDiagramItem *toNode,
                                        ClassConnectionItem::ClassConnectionType connectionType,
                                        QGraphicsScene *scene,
                                        QUndoCommand *parent = nullptr);
@@ -146,11 +143,8 @@ public:
 private:
     ClassConnectionItem *classConnection;
     QGraphicsScene *graphicsScene;
-    union {
-        QPointF initialStartPosition;
-        QPointF initialPosition;
-    };
-    QPointF initialEndPosition;
+//    QPointF initialStartPosition;
+//    QPointF initialEndPosition;
 };
 
 
