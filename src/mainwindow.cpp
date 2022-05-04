@@ -12,11 +12,13 @@ mainWindow::mainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::mainWindow)
 {
+    qDebug() << "create Mainwindow : constructor mainWindow.cpp";
+    qDebug() << "create Editorinterface ui : constructor mainWindow.cpp";
     ui->setupUi(this);
     this->setWindowTitle("diagram");
 
     QDir directory(QDir::current()); // or you can use root()
-    qDebug() << directory.absolutePath();
+    //qDebug() << directory.absolutePath();
     if (directory.isEmpty()) {
         return;
     }
@@ -25,16 +27,20 @@ mainWindow::mainWindow(QWidget *parent)
     QDirIterator it(directory.path(), QStringList() << "example*.json", QDir::Files, QDirIterator::Subdirectories);
     it.next();
     do {
-        qDebug() << it.fileName();
+        //qDebug() << it.fileName();
         auto *item = new QListWidgetItem(it.fileName());
         ui->listWidget->addItem(item);
         it.next();
     } while(it.hasNext());
+
+    editor_window = nullptr;
 }
 
 mainWindow::~mainWindow()
 {
-//    delete ui;
+    qDebug() << "delete Mainwindow : destructor mainWindow.cpp";
+    qDebug() << "delete Editorinterface ui : destructor mainWindow.cpp";
+    delete ui;
 }
 
 ////////////////////////////////////////////////////////////////////////////

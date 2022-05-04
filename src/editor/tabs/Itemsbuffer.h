@@ -11,8 +11,9 @@
 class ItemsBuffer {
 public:
     ItemsBuffer();
+    ~ItemsBuffer();
 
-    void createClassItems();
+    //void createClassItems();
     void fillClassItems(ClassDiagramItem *item);
     void clearBuffer();
 

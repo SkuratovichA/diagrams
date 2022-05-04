@@ -101,8 +101,8 @@ private:
     QAction *copyAction;
     QAction *pasteAction;
     QAction *propertiesAction;
-    QAction *bringToFrontAction;
-    QAction *sendToBackAction;
+    //QAction *bringToFrontAction;
+    //QAction *sendToBackAction;
 
     QAction *newTabAction;
     QAction *saveAction;

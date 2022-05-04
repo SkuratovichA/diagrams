@@ -62,8 +62,10 @@ editorInterface::editorInterface(
     //        }
     //    }
 #endif
+    qDebug() << "create editorinterface: constructor editorInterface";
 
     ui->setupUi(this);
+    qDebug() << "create undo stack: constructor editorInterface";
     undoStack = new QUndoGroup(this);
 
     this->setWindowTitle("editor");
@@ -81,8 +83,27 @@ editorInterface::editorInterface(
  *
  */
 editorInterface::~editorInterface() {
+    qDebug() << "delete QUndoView undowView : destructor editorInterface";
     delete undoView;
+    qDebug() << "delete ui : destructor editorInterface";
     delete ui;
+
+    delete undoStack;
+    delete tabWidget;
+    delete staticToolBar;
+    delete dynamicToolBar;
+    delete addEntityAction;
+    delete addConnectionAction;
+    delete deleteAction;
+    delete cutAction;
+    delete copyAction;
+    delete pasteAction;
+    delete propertiesAction;
+    delete newTabAction;
+    delete saveAction;
+    delete deleteTabAction;
+    delete undoAction;
+    delete redoAction;
 }
 
 /**

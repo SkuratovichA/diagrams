@@ -60,7 +60,6 @@ private:
 private:
     DiagramType type;
     QUndoStack *undoStack = nullptr;
-    QVBoxLayout *layout = nullptr;
     EditorScene *editorScene = nullptr;
 
     QMenu *editMenu;

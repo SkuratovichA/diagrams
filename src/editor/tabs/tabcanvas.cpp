@@ -30,7 +30,8 @@ TabCanvas::TabCanvas(QWidget *parent, DiagramType type, QUndoGroup *parentGroup)
  *
  */
 TabCanvas::~TabCanvas() {
-    delete layout;
+    delete buffer;
+    delete editorScene;
 }
 
 /**
@@ -150,13 +151,9 @@ void TabCanvas::paste() {
     // FIXME: paste
 
     for (auto ptr : buffer->classItems()) {
-        qDebug() << "Paste element which exists" << ptr;
         ClassDiagramItem *diagramItem = new ClassDiagramItem(ptr);
-        qDebug() << "111";
         diagramItem->setPos(ptr->x(), ptr->y());
-        qDebug() << "222";
         editorScene->addItem(diagramItem);
-        qDebug() << "333";
         editorScene->update();
     }
 }
@@ -166,6 +163,14 @@ void TabCanvas::paste() {
  */
 void TabCanvas::cut() {
     qDebug() << "cut";
+    copy();
+    QList<QGraphicsItem *> items = editorScene->selectedItems();
+
+    //buffer->clearBuffer();
+    for (auto val : items) {
+        editorScene->removeItem(val);
+        //delete val;
+    }
     // FIXME: implement me
 }
 

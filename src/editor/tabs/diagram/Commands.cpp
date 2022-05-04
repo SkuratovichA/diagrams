@@ -67,6 +67,7 @@ void MoveCommand::redo() {
  */
 DeleteCommand::DeleteCommand(QGraphicsScene *scene, QUndoCommand *parent)
         : QUndoCommand(parent), graphicsScene(scene) {
+    qDebug() << " iam heeeeeeeeeer";
     QList<QGraphicsItem *> list = graphicsScene->selectedItems();
     list.first()->setSelected(false);
     diagramItem = list.first();
@@ -74,9 +75,10 @@ DeleteCommand::DeleteCommand(QGraphicsScene *scene, QUndoCommand *parent)
                     .arg(createCommandString(diagramItem)));
     if (dynamic_cast<ClassDiagramItem *>(diagramItem) != nullptr) {
         auto connections = dynamic_cast<ClassDiagramItem *>(diagramItem)->connections();
-                foreach (ClassConnectionItem *connection, connections) {
-                scene->removeItem(connection);
-            }
+        foreach (ClassConnectionItem *connection, connections) {
+
+            scene->removeItem(connection);
+        }
     }
 }
 
