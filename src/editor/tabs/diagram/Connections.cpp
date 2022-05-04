@@ -83,14 +83,7 @@ QColor ClassConnectionItem::color() const {
     return pen().color();
 }
 
-/**
- *
- */
-void ClassConnectionItem::trackNodes() {
-    setLine(QLineF(nodeFrom->centre(), nodeTo->centre()));
-}
-
-inline int getOctant(QPointF const &x1y1, QPointF const &x2y2) {
+inline int getOctant(QPointF const &x1y1, QPointF const &x2y2, bool *collision = nullptr) {
     auto x2 = x2y2.x() -x1y1.x(); // x2
     auto y2 = x2y2.y() -x1y1.y(); // y2
     qreal x1 = 0.0;
@@ -99,14 +92,26 @@ inline int getOctant(QPointF const &x1y1, QPointF const &x2y2) {
     x1 = y1 = 0; // x1
     if (x2 < x1) { // 3..6
         if (y2 < y1) { // 3,4
+            if (collision != nullptr && x2 == y2) {
+                *collision = true;
+            }
             return x2 > y2 ? 3 : 4;
         } else {
+            if (collision != nullptr && -x2 == y2) {
+                *collision = true;
+            }
             return -x2 > y2 ? 5 : 6;
         }
     } else { // 2..8
         if (y2 < y1) { // 1,2
+            if (collision != nullptr && -x2 == y2) {
+                *collision = true;
+            }
             return -x2 >= y2 ? 2 : 1;
         } else { // 7,8
+            if (collision != nullptr && x2 == y2) {
+                *collision = true;
+            }
             return x2 < y2 ? 7 : 8;
         }
     }
@@ -152,15 +157,21 @@ QPair<QPointF, QPointF> ClassConnectionItem::edgePoints() const {
             yFrom = yFrom + nodeFrom->height() / 2;
             xFrom = -(c + b*yFrom) / a;
             break;
-        default: break;
     }
     return {QPointF(xFrom, yFrom), QPointF(xTo, yTo)};
+}
+
+/**
+ *
+ */
+void ClassConnectionItem::trackNodes() {
+    auto edgePs = edgePoints();
+    setLine(QLineF(edgePs.first, edgePs.second));
 }
 
 QPolygonF ClassConnectionItem::lineShaper() const {
     QPolygonF poly;
 
-    auto const octant = getOctant(nodeFrom->centre(), nodeTo->centre());
 
     auto const fromUpperLeft = nodeFrom->pos();
     auto const fromUpperRight = fromUpperLeft + QPointF(nodeFrom->width(), 0);
@@ -179,27 +190,64 @@ QPolygonF ClassConnectionItem::lineShaper() const {
 
     auto ovlpEdges = ovlp(toUpperLeft) + ovlp(toUpperRight) + ovlp(toLowerLeft) + ovlp(toLowerRight);
 
-    QPointF bLeft(std::min<qreal>(toUpperLeft.x(), fromUpperLeft.x()) - 15.0,
-                  std::min<qreal>(toUpperLeft.y(), fromUpperLeft.y()) - 15.0);
-    QPointF bRight(std::max<qreal>(toLowerRight.x(), fromLowerRight.x()) + 15.0,
-                   std::max<qreal>(toLowerRight.y(), fromLowerRight.y()) + 15.0);
+    QPointF bLeft(std::min<qreal>(toUpperLeft.x(), fromUpperLeft.x()) - 10.0,
+                  std::min<qreal>(toUpperLeft.y(), fromUpperLeft.y()) - 10.0);
+    QPointF bRight(std::max<qreal>(toLowerRight.x(), fromLowerRight.x()) + 10.0,
+                   std::max<qreal>(toLowerRight.y(), fromLowerRight.y()) + 10.0);
 
-    auto adjust = QPointF(+10.0, +10.0);
+    QPointF topAdjuster;
+    QPointF bottomAdjuster;
+    bool collision = false;
+    auto const octant = getOctant(nodeFrom->centre(), nodeTo->centre(), &collision);
     switch(ovlpEdges) {
         case 4: case 3: case 2: case 1: // only one overlapped edge - do not print bb
             poly << QPolygonF(QRectF(bLeft, bRight)); // bounding rectangle
             break;
         default:
-            // ************* dont use this fix
-            switch (octant) {
-                case 7: case 8: case 3: case 4:
-                    adjust.setX(-10.0);
-                default: break;
-            }
-            auto const farLeft = nodeFrom->centre();
-            auto const farRight = nodeTo->centre();
+            auto ePs = edgePoints();
+            auto const farLeft = ePs.first;
+            auto const farRight = ePs.second;
 
-            poly << farLeft + adjust << farLeft - adjust << farRight - adjust << farRight + adjust;
+            switch (octant) {
+                case 1: case 8:
+                    if (collision) {
+                        bottomAdjuster = QPointF(0, -10);
+                        topAdjuster = QPointF(-10, 0);
+                    } else {
+                        topAdjuster = QPointF(-10.0, 10.0);
+                        bottomAdjuster = QPointF(-10.0, -10.0);
+                    }
+                    break;
+                case 4: case 5:
+                    if (collision) {
+                        topAdjuster = QPointF(0, +10);
+                        bottomAdjuster = QPointF(+10, +0);
+                    } else {
+                        topAdjuster = QPointF(10, 10);
+                        bottomAdjuster = QPointF(10, -10);
+                    }
+                    break;
+                case 2: case 3:
+                    if (collision) {
+                        topAdjuster = QPointF(-10, 0);
+                        bottomAdjuster = QPointF(0, 10);
+                    } else {
+                        topAdjuster = QPointF(-10, 10);
+                        bottomAdjuster = QPointF(10, 10);
+                    }
+                    break;
+                case 6: case 7:
+                    if (collision) {
+                        topAdjuster = QPointF(0, -10);
+                        bottomAdjuster = QPointF(0, 10);
+                    } else {
+                        topAdjuster = QPointF(-10, -10);
+                        bottomAdjuster = QPointF(10, -10);
+                    }
+                    break;
+            }
+
+            poly << farLeft + topAdjuster << farLeft + bottomAdjuster << farRight - topAdjuster << farRight - bottomAdjuster;
             // **************
     }
     return poly;
@@ -213,16 +261,10 @@ QPainterPath ClassConnectionItem::shape() const {
 }
 
 void ClassConnectionItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) {
-    auto x1y1 = nodeFrom->centre();
-    auto x2y2 = nodeTo->centre();
-    auto fromWH = QPointF(nodeFrom->width(), nodeFrom->height());
-    auto toWH = QPointF(nodeTo->width(), nodeTo->height());
-
 #if DEBUG
     painter->setPen(QPen(QColor(0, 0, 0), 1, Qt::DotLine));
     painter->drawPolygon(lineShaper());
 #endif
-
 
     // ************** painting "arrows"
     QPen linepen(Qt::black);
@@ -240,7 +282,10 @@ void ClassConnectionItem::paint(QPainter *painter, const QStyleOptionGraphicsIte
     QLineF cLine = line();
     painter->setPen(QPen(QColor(218, 120, 218), 2, Qt::SolidLine));
     qreal lineAngle = cLine.angle();
-
+    if (option->state & QStyle::State_Selected) {
+        painter->setPen(QPen(QColor(228, 120, 228), 3, Qt::SolidLine));
+    }
+    painter->drawLine(cLine);
 //    const qreal radius = 2.0;
 //    QLineF head1 = cLine;
 //    head1.setAngle(lineAngle+32);
@@ -266,11 +311,6 @@ void ClassConnectionItem::paint(QPainter *painter, const QStyleOptionGraphicsIte
 //    painter->drawLine(cLine);
 //    painter->drawLine(head1);
 //    painter->drawLine(head2);
-
-    if (option->state & QStyle::State_Selected) {
-        painter->setPen(QPen(QColor(228, 120, 228), 3, Qt::SolidLine));
-    }
-    painter->drawLine(cLine);
 }
 
 /**
