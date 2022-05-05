@@ -57,6 +57,9 @@ void CustomAttrText::keyReleaseEvent(QKeyEvent *event) {
     qreal midW = parent()->_head->boundingRect().width();
     qreal midO = parent()->width();
     parent()->_head->setPos((midO - midW) / 2, -40);
+    for (auto x : this->parent()->connections()) {
+        x->trackNodes();
+    }
 }
 
 ActorDiagramItem::ActorDiagramItem(actorParams *params)
@@ -160,8 +163,6 @@ ClassDiagramItem::ClassDiagramItem(classParams *params)
         lineAttr = createLine(0, _rowHeight * line);
         _methodsLines.push_back(lineAttr);
 
-        textAttr = new CustomAttrText(this, "+ int name()", _tabText, _rowHeight * 3 + _tabText, _flags);
-        _methods.push_back(textAttr);
         textAttr = new CustomAttrText(this, method_name, _tabText, _rowHeight * line + _tabText, _flags);
         _methods.push_back(textAttr);
 

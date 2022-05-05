@@ -212,7 +212,7 @@ QPolygonF ClassConnectionItem::lineShaper() const {
 
     auto ovlpEdges = ovlp(toUpperLeft) + ovlp(toUpperRight) + ovlp(toLowerLeft) + ovlp(toLowerRight);
 
-    auto boundSize = 10.0;
+    auto boundSize = 17.0;
 
     QPointF bLeft(std::min<qreal>(toUpperLeft.x(), fromUpperLeft.x()) - boundSize,
                   std::min<qreal>(toUpperLeft.y(), fromUpperLeft.y()) - boundSize);
