@@ -7,6 +7,7 @@
 #include <QMainWindow>
 #include <QMenuBar>
 #include <QUndoGroup>
+#include <QGraphicsView>
 #include "diagram/EditorScene.h"
 #include "diagram/DiagramItem.h"
 #include "fillItems.h"
@@ -46,6 +47,10 @@ public:
     }
 
     std::string getStringRepresentation();
+
+    QGraphicsView *view;
+
+    void scaleView(qreal scaleFactor);
 
 private:
     template<typename T>
@@ -101,6 +106,8 @@ public slots:
     void cut();
     void copy();
     void paste();
+    void zoomIn();
+    void zoomOut();
     void sendToBack();
     void sendToFront();
 

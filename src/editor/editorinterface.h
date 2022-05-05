@@ -60,7 +60,11 @@ private slots:
 
     void actionPaste_triggered();
 
-    void actionQuit_triggered();
+    void actionZoomIn_triggered();
+
+    void actionZoomOut_triggered();
+
+    //void actionQuit_triggered();
 
     void newTabSelected();
 
@@ -93,7 +97,8 @@ private:
     QAction *cutAction;
     QAction *copyAction;
     QAction *pasteAction;
-    QAction *propertiesAction;
+    QAction *zoomInAction;
+    QAction *zoomOutAction;
     //QAction *bringToFrontAction;
     //QAction *sendToBackAction;
 

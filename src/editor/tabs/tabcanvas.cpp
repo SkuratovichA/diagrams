@@ -118,7 +118,7 @@ void TabCanvas::createScene() {
 
     editorScene->setSceneRect(QRect(0, 0, 800, 800));
     (void)connect(editorScene, &EditorScene::itemMoved, this, &TabCanvas::moveEntity);
-    auto *view = new QGraphicsView(editorScene);
+    view = new QGraphicsView(editorScene);
 
     view->setDragMode(QGraphicsView::RubberBandDrag);
     view->setRenderHints(QPainter::Antialiasing
@@ -287,6 +287,28 @@ void TabCanvas::copy() {
         default:
             qDebug() << "It is impossible";
     }
+}
+
+void TabCanvas::scaleView(qreal scaleFactor) {
+    qreal factor = view->transform().scale(scaleFactor, scaleFactor).mapRect(QRectF(0, 0, 1, 1)).width();
+    if (factor < 0.07 || factor > 100)
+        return;
+
+    view->scale(scaleFactor, scaleFactor);
+}
+
+/**
+ *
+ */
+void TabCanvas::zoomIn() {
+    scaleView(qreal(1.2));
+}
+
+/**
+ *
+ */
+void TabCanvas::zoomOut() {
+    scaleView(1 / qreal(1.2));
 }
 
 /**

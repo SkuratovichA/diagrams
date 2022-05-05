@@ -129,6 +129,8 @@ void editorInterface::createDynamicToolBar() {
     ADD_SIGNAL(newTabAction, "New &Tab", "+T", "Ctrl+T", this, SLOT(actionNewTab_triggered()));
     ADD_SIGNAL(deleteTabAction, "Delete &Tab", "+T", "Ctrl+W", this, SLOT(actionDeleteTab_triggered()));
     ADD_SIGNAL(saveAction, "&Save", "S", "Ctrl+S", this, SLOT(actionSave_triggered()));
+    ADD_SIGNAL(zoomInAction, "Zoom &In", "Ctrl+", "Ctrl+", this, SLOT(actionZoomIn_triggered()));
+    ADD_SIGNAL(zoomOutAction, "Zoom &Out", "Ctrl-", "Ctrl-", this, SLOT(actionZoomOut_triggered()));
 
     //ADD_SIGNAL(sendToBackAction, "Send to back", "b", "Ctrl+""B",   this, SLOT());
     //ADD_SIGNAL(bringToFrontAction, "Send to front", "f", "Ctrl+""F",this, SLOT());
@@ -154,6 +156,8 @@ void editorInterface::createDynamicToolBar() {
 
     menuBar()->addAction(newTabAction);
     menuBar()->addAction(deleteTabAction);
+    menuBar()->addAction(zoomInAction);
+    menuBar()->addAction(zoomOutAction);
 }
 
 /**
@@ -213,9 +217,9 @@ void editorInterface::actionSaveAs_triggered() {
     file.close();
 }
 
-void editorInterface::actionQuit_triggered() {
-    editorInterface::close();
-}
+//void editorInterface::actionQuit_triggered() {
+//    editorInterface::close();
+//}
 
 void editorInterface::actionNewTab_triggered() {
     tabWidget->addTab(new TabCanvas(this, DiagramType::SEQUENCE, undoStack), "sequence diagram editor");
@@ -270,4 +274,18 @@ void editorInterface::actionCopy_triggered() {
  */
 void editorInterface::actionPaste_triggered() {
     reinterpret_cast<TabCanvas *>(tabWidget->currentWidget())->paste();
+}
+
+/**
+ *
+ */
+void editorInterface::actionZoomIn_triggered() {
+    reinterpret_cast<TabCanvas *>(tabWidget->currentWidget())->zoomIn();
+}
+
+/**
+ *
+ */
+void editorInterface::actionZoomOut_triggered() {
+    reinterpret_cast<TabCanvas *>(tabWidget->currentWidget())->zoomOut();
 }
