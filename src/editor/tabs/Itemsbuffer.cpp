@@ -27,7 +27,7 @@ void ItemsBuffer::fillClassItems(ClassDiagramItem *item) {
     QList<QString> attrs;
 
     for (auto x : item->methods()) {
-        if (x->toPlainText() == "_METHODS_")  {
+        if (x->toPlainText() == "METHODS")  {
             continue;
         }
 

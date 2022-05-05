@@ -26,19 +26,13 @@ void EditorScene::mousePressEvent(QGraphicsSceneMouseEvent *event) {
         oldPos = movingItem->pos();
     }
 
-    //this->update();
-
     QList<QGraphicsItem *> selItems = selectedItems();
     QList<QGraphicsItem *> allItems = items();
-
-    qDebug() << selItems.size() << allItems.size();
 
     for (auto x : selItems) {
         allItems.removeOne(x);
         x->setZValue(1);
     }
-
-    qDebug() << selItems.size() << allItems.size();
 
     ClassDiagramItem *ptr1;
     ActorDiagramItem *ptr2;

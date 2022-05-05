@@ -73,6 +73,8 @@ private:
                       QRandomGenerator::global()->bounded(100));
     }
 
+    void setZvalue(int forSelect, int forOther);
+
 private:
     DiagramType type;
     QUndoStack *undoStack = nullptr;
@@ -89,6 +91,8 @@ private:
     QAction *composition;
     QAction *generalization;
     QAction *association;
+    QAction *dependency;
+    QAction *orientation;
 
     ItemsBuffer *buffer;
     classParams *createItem;
@@ -120,6 +124,8 @@ public slots:
     void composition_triggered();
     void generalization_triggered();
     void association_triggered();
+    void dependency_triggered();
+    void orientation_triggered();
 
     void createScene();
 };

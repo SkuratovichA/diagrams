@@ -121,9 +121,9 @@ ClassDiagramItem::ClassDiagramItem(classParams *params)
                       DiagramItem::Class,
                       params->color()) {
 
-    _rowHeight = (params->height() / 4.0);
+    _rowHeight = 30.0;
     _rowWidth = params->width();
-    _tabText = _rowHeight / 15.0;
+    _tabText = 2.0;
     QGraphicsLineItem *lineAttr;
     CustomAttrText *textAttr;
     _flags = Qt::TextInteractionFlag::TextEditable |
