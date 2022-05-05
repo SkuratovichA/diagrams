@@ -330,7 +330,6 @@ void TabCanvas::addMethod_triggered() {
     auto line = item->createLine(0, item->height());
     item->pushMethodLine(line);
 
-    //auto text = item->createText(item->tabText(), item->height() + item->tabText(), "+ int example()");
     CustomAttrText *text = new CustomAttrText(item, "+ int example()", item->tabText(), item->height() + item->tabText(), item->flags());
     item->pushMethod(text);
 

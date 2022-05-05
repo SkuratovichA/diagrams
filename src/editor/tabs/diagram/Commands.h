@@ -49,6 +49,7 @@ public:
     void redo() override;
 
 private:
+    QList<QGraphicsItem *> listItems;
     QGraphicsItem *diagramItem;
     QGraphicsScene *graphicsScene;
 };

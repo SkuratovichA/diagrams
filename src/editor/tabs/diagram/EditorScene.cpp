@@ -29,25 +29,10 @@ void EditorScene::mousePressEvent(QGraphicsSceneMouseEvent *event) {
     QList<QGraphicsItem *> selItems = selectedItems();
     QList<QGraphicsItem *> allItems = items();
 
+    changeZval(selItems, 1);
     for (auto x : selItems) {
         allItems.removeOne(x);
-        x->setZValue(1);
     }
-
-    ClassDiagramItem *ptr1;
-    ActorDiagramItem *ptr2;
-
-    for (auto x : allItems) {
-        ptr1 = dynamic_cast<ClassDiagramItem *>(x);
-        ptr2 = dynamic_cast<ActorDiagramItem *>(x);
-
-        if (ptr1 == nullptr && ptr2 == nullptr) {
-            continue;
-        }
-
-        x->setZValue(-1);
-    }
-    this->update();
 
     if (multSelect == false) {
         clearSelection();
@@ -64,7 +49,35 @@ void EditorScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
         }
         movingItem = nullptr;
     }
+
+    QList<QGraphicsItem *> selItems = selectedItems();
+    QList<QGraphicsItem *> allItems = items();
+
+    changeZval(selItems, 1);
+    for (auto x : selItems) {
+        allItems.removeOne(x);
+    }
+    changeZval(allItems, -1);
+
     QGraphicsScene::mouseReleaseEvent(event);
+}
+
+void EditorScene::changeZval(QList<QGraphicsItem *> items, int val) {
+    ClassDiagramItem *ptr1;
+    ActorDiagramItem *ptr2;
+
+    for (auto x : items) {
+        //qDebug() << x->type();
+        ptr1 = dynamic_cast<ClassDiagramItem *>(x);
+        ptr2 = dynamic_cast<ActorDiagramItem *>(x);
+
+        if (ptr1 == nullptr && ptr2 == nullptr) {
+            continue;
+        }
+
+        x->setZValue(val);
+    }
+    update();
 }
 
 void EditorScene::keyPressEvent(QKeyEvent *event)
