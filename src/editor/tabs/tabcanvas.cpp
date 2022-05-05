@@ -158,7 +158,7 @@ void TabCanvas::addEntity() {
 
     switch (type) {
         case DiagramType::SEQUENCE:
-            createActor = new actorParams(point.x(), point.y() ,1.0, "_ACTOR_",
+            createActor = new actorParams(point.x(), point.y() , "ACTOR",
                                           generateColor(), 70, 110);
             addCommand = new AddActorCommand(editorScene, createActor);
             delete createActor;
@@ -168,7 +168,7 @@ void TabCanvas::addEntity() {
             attrs.push_back("+ int name");
             methods.push_back("+ int name()");
 
-            createItem = new classParams(point.x(), point.y(), 1.0,"_NAME_",
+            createItem = new classParams(point.x(), point.y(), "NAME",
                                          generateColor(), 120.0, 120.0, attrs, methods);
             addCommand = new AddClassCommand(editorScene, createItem);
             delete createItem;
@@ -331,6 +331,9 @@ void TabCanvas::addMethod_triggered() {
     item->pushMethod(text);
 
     item->setHeight(item->height() + item->rowHeight());
+    for (auto x : item->connections()) {
+        x->trackNodes();
+    }
     qDebug() << "add Method";
 };
 
@@ -360,6 +363,9 @@ void TabCanvas::rmMethod_triggered() {
     item->popMethodsLine();
 
     item->setHeight(item->height() - item->rowHeight());
+    for (auto x : item->connections()) {
+        x->trackNodes();
+    }
     qDebug() << "delete Method";
 };
 
@@ -377,6 +383,14 @@ void TabCanvas::addAttr_triggered() {
     // resize item for one row
     item->setRect(0,0,item->width(), item->height() + item->rowHeight());
 
+    for (auto x : item->attrs()) {
+        qDebug() << "I am an attr";
+    }
+
+    for (auto x : item->attrsLines()) {
+        qDebug() << "I am a line";
+    }
+
     long long inc = item->attrs().size() + 1;
     item->moveTexts(1, inc);
     item->moveLines(1, inc);
@@ -388,7 +402,20 @@ void TabCanvas::addAttr_triggered() {
     CustomAttrText *text = new CustomAttrText(item, "+ int word", item->tabText(), item->rowHeight() * inc + item->tabText(), item->flags());
     item->pushAttr(text);
 
+    qDebug() << "after all";
+
+    for (auto x : item->attrs()) {
+        qDebug() << "I am an attr";
+    }
+
+    for (auto x : item->attrsLines()) {
+        qDebug() << "I am a line";
+    }
+
     item->setHeight(item->height() + item->rowHeight());
+    for (auto x : item->connections()) {
+        x->trackNodes();
+    }
     qDebug() << "add Attr";
 };
 
@@ -424,6 +451,9 @@ void TabCanvas::rmAttr_triggered() {
 
     //item->setPos(tmp_x, tmp_y);
     item->setHeight(item->height() - item->rowHeight());
+    for (auto x : item->connections()) {
+        x->trackNodes();
+    }
     qDebug() << "delete Attr";
 };
 
