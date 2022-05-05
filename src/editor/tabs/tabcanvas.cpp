@@ -474,9 +474,9 @@ void TabCanvas::dependency_triggered() {
 }
 
 void TabCanvas::orientation_triggered() {
-    // TODO
+    auto line = dynamic_cast<ClassConnectionItem *>(selectedObject());
+    line->changeOrientation();
     editorScene->update();
-    return;
 }
 
 /**

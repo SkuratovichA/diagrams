@@ -55,6 +55,7 @@ public:
     }
     void changeOrientation() {
         _orientation = !_orientation;
+        trackNodes();
     }
     void setColor(const QColor &color) {
         _color = color;
