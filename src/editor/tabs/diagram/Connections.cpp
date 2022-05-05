@@ -84,48 +84,153 @@ inline int getOctant(QPointF const &x1y1, QPointF const &x2y2, bool *collision =
  * @return
  */
 QPair<QPointF, QPointF> ClassConnectionItem::edgePoints() const {
-    auto xFrom = _nodeFrom->centre().x(); // this will be changed to the custom point? FIXME
-    auto yFrom = _nodeFrom->centre().y();// this will be changed to the custom point? FIXME
-    auto xTo = _nodeTo->centre().x();// this will be changed to the custom point? FIXME
-    auto yTo = _nodeTo->centre().y();// this will be changed to the custom point? FIXME
+    auto xyFrom = _nodeFrom->socket(_order);
+    auto xyTo = _nodeTo->socket(_order);
 
-    auto octant = getOctant(QPointF(xFrom, yFrom), QPointF(xTo, yTo));
+    auto xFrom = xyFrom.x();
+    auto yFrom = xyFrom.y();
+    auto xTo = xyTo.x();
+    auto yTo = xyTo.y();
+
+    auto octant = getOctant(_nodeFrom->centre(), _nodeTo->centre());
     auto a = yTo - yFrom;
     auto b = xFrom - xTo;
     auto c = -(a * xFrom + b * yFrom);
 
+    auto toHeightHalf = _nodeTo->height() / 2;
+    auto toWidthHalf = _nodeTo->width() / 2;
+    auto fromHeightHalf = _nodeFrom->height() / 2;
+    auto fromWidthHalf = _nodeFrom->width() / 2;
     switch (octant) {
         case 1:
-        case 8:
-            xTo = xTo - _nodeTo->width() / 2; // get the x-axis of the edge point
-            yTo = -(c + a * xTo) / b; // using analytical geometry, compute the coords
-
-            xFrom = xFrom + _nodeFrom->width() / 2;// get the x-axis of the edge point
+            // try to compute interseptions with boxes edges.
+            xTo = _nodeTo->centre().x() - toWidthHalf;
+            yTo = -(c + a * xTo) / b;
+            // if a point is not placed to the centre of the box
+            // compute interseptions like there was #2 octant.
+            // Basically, the idea is the same for all the octants.
+            // If one octant cannot find the interseptions. E.g. line is found using the formula,
+            // the interseption point does not lie on the edge we want ->
+            // use the same formula for finding an interseption point for n+1 octant
+            if (yTo > _nodeTo->bottomLeft().y()) {
+                yTo = _nodeTo->centre().y() + toHeightHalf;
+                xTo = -(c + b * yTo) / a;
+            }
+            xFrom = _nodeFrom->centre().x() + fromWidthHalf;
             yFrom = -(c + a * xFrom) / b;
+            if (yFrom > _nodeFrom->bottomRight().y()) {
+                yFrom = _nodeFrom->centre().y() + _nodeFrom->height() / 2;
+                xFrom = -(c + b * yFrom) / a;
+            } else if (yFrom < _nodeFrom->topRight().y()) {
+                yFrom = _nodeFrom->centre().y() - _nodeFrom->height() / 2;
+                xFrom = -(c + b * yFrom) / a;
+            }
             break;
         case 2:
-        case 3:
-            yTo = yTo + _nodeTo->height() / 2;// get the x-axis of the edge point
+            yTo = _nodeTo->centre().y() + toHeightHalf;
             xTo = -(c + b * yTo) / a;
+            if (xTo < _nodeTo->topLeft().x()) {
+                xTo = _nodeTo->centre().x() - toWidthHalf;
+                yTo = -(c + a * xTo) / b; // using analytical geometry, compute the coords
+            }
 
-            yFrom = yFrom - _nodeFrom->height() / 2;// get the x-axis of the edge point
+            yFrom = _nodeFrom->centre().y() - _nodeFrom->height() / 2;
             xFrom = -(c + b * yFrom) / a;
+            if (xFrom > _nodeFrom->topRight().x()) { // work as with an octant #1
+                xFrom = _nodeFrom->centre().x() + fromWidthHalf;
+                yFrom = -(c + a * xFrom) / b;
+            }
+            break;
+        case 3:
+            yTo = _nodeTo->centre().y() + toHeightHalf;
+            xTo = -(c + b * yTo) / a;
+            if (xTo < _nodeTo->topLeft().x()) {
+                qDebug() << "lala";
+                xTo = _nodeTo->centre().x() + toWidthHalf;
+                yTo = -(c + a * xTo) / b;
+            }
+
+            yFrom = _nodeFrom->centre().y() - _nodeFrom->height() / 2;
+            xFrom = -(c + b * yFrom) / a;
+            if (xFrom < _nodeFrom->topLeft().x()) { // use ali
+                xFrom = _nodeFrom->centre().x() - fromWidthHalf;
+                yFrom = -(c + a * xFrom) / b;
+            }
+            break;
+        case 8:
+            xTo = _nodeTo->centre().x() - toWidthHalf;
+            yTo = -(c + a * xTo) / b; // using analytical geometry, compute the coords
+            if (octant == 1 && yTo > _nodeTo->bottomLeft().y()) {
+                yTo = _nodeTo->centre().y() + toHeightHalf;
+                xTo = -(c + b * yTo) / a;
+            }
+
+            xFrom = _nodeFrom->centre().x() + fromWidthHalf;
+            yFrom = -(c + a * xFrom) / b;
+            if (yFrom > _nodeFrom->bottomRight().y()) { // use #2
+                qDebug() << "jebe";
+                yFrom = _nodeFrom->centre().y() + _nodeFrom->height() / 2;
+                xFrom = -(c + b * yFrom) / a;
+            }
             break;
         case 4:
-        case 5:
-            xTo = xTo + _nodeTo->width() / 2;// get the x-axis of the edge point
+            xTo = _nodeTo->centre().x() + toWidthHalf;
             yTo = -(c + a * xTo) / b;
+            if (yTo > _nodeTo->bottomRight().y()) {
+                yTo = _nodeTo->centre().y() + toHeightHalf;
+                xTo = -(c + b * yTo) / a;
+            }
 
-            xFrom = xFrom - _nodeFrom->width() / 2;// get the x-axis of the edge point
+            xFrom = _nodeFrom->centre().x() - fromWidthHalf;
             yFrom = -(c + a * xFrom) / b;
+            if (yFrom > _nodeFrom->bottomLeft().y()) {
+                yFrom = _nodeFrom->centre().y() - _nodeFrom->height() / 2;
+                xFrom = -(c + b * yFrom) / a;
+            }
+            break;
+        case 5:
+            xTo = _nodeTo->centre().x() + toWidthHalf;
+            yTo = -(c + a * xTo) / b;
+            if (yTo < _nodeTo->topRight().y()) { // use as it is 6
+                qDebug() << "5 thinks she is 6";
+                yTo = _nodeTo->centre().y() - toHeightHalf;
+                xTo = -(c + b * yTo) / a;
+            }
+
+            xFrom = _nodeFrom->centre().x() - fromWidthHalf;
+            yFrom = -(c + a * xFrom) / b;
+            if (yFrom > _nodeFrom->bottomLeft().y()) {
+                yFrom = _nodeFrom->centre().y() + _nodeFrom->height() / 2;
+                xFrom = -(c + b * yFrom) / a;
+            }
             break;
         case 6:
-        case 7:
-            yTo = yTo - _nodeTo->height() / 2;// get the x-axis of the edge point
+            yTo = _nodeTo->centre().y() - toHeightHalf;
             xTo = -(c + b * yTo) / a;
-
-            yFrom = yFrom + _nodeFrom->height() / 2;// get the x-axis of the edge point
+            if (xTo > _nodeTo->topRight().x()) { // 6 thinks it is #5
+                xTo = _nodeTo->centre().x() + toWidthHalf;
+                yTo = -(c + a * xTo) / b;
+            }
+            yFrom = _nodeFrom->centre().y() + _nodeFrom->height() / 2;
             xFrom = -(c + b * yFrom) / a;
+            if (xFrom < _nodeFrom->topLeft().x()) {
+                xFrom = _nodeFrom->centre().x() - fromWidthHalf;
+                yFrom = -(c + a * xFrom) / b;
+            }
+            break;
+        case 7:
+            yTo = _nodeTo->centre().y() - toHeightHalf;
+            xTo = -(c + b * yTo) / a;
+            if (xTo < _nodeTo->topLeft().x()) {
+                xTo = _nodeTo->centre().x() - toWidthHalf;
+                yTo = -(c + a * xTo) / b;
+            }
+            yFrom = _nodeFrom->centre().y() + _nodeFrom->height() / 2;
+            xFrom = -(c + b * yFrom) / a;
+            if (xFrom < _nodeFrom->topLeft().x()) {
+                xFrom = _nodeFrom->centre().x() - fromWidthHalf;
+                yFrom = -(c + a * xFrom) / b;
+            }
             break;
     }
     return {QPointF(xFrom, yFrom), QPointF(xTo, yTo)};
@@ -174,7 +279,7 @@ QPolygonF ClassConnectionItem::lineShaper() const {
     QPointF bottomAdjuster;
     bool collision = false;
     // FIXME: change to the custom centre of the point
-    auto const octant = getOctant(_nodeFrom->centre(), _nodeTo->centre(), &collision);
+    auto const octant = getOctant(_nodeFrom->socket(_order), _nodeTo->socket(_order), &collision);
     switch (ovlpEdges) {
         case 4:
         case 3:
@@ -299,7 +404,7 @@ void ClassConnectionItem::drawLine(QPainter *painter, const QStyleOptionGraphics
  */
 void ClassConnectionItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) {
 #if DEBUG
-    painter->setPen(QPen(QColor(0,0,0,100), 0.5, Qt::DotLine));
+    painter->setPen(QPen(QColor(0, 0, 0, 100), 0.5, Qt::DotLine));
     painter->drawPolygon(lineShaper());
 #endif
     drawLine(painter, option);
@@ -330,7 +435,8 @@ ClassConnectionItem::~ClassConnectionItem() {
  */
 ActorConnectionItem::ActorConnectionItem(ActorDiagramItem *fromNode,
                                          ActorDiagramItem *toNode,
-                                         ActorConnectionType connectionType) {
+                                         ActorConnectionType
+                                         connectionType) {
     nodeFrom = fromNode;
     nodeTo = toNode;
 
@@ -353,7 +459,7 @@ ActorConnectionItem::~ActorConnectionItem() {
         nodeTo->removeConnection(this);
     }
 }
-//
+
 ///**
 // *
 // * @param color
@@ -393,8 +499,7 @@ ActorDiagramItem *ActorConnectionItem::toNode() const {
     return nodeTo;
 }
 
-void ClassConnectionItem::mousePressEvent(QGraphicsSceneMouseEvent *event)
-{
+void ClassConnectionItem::mousePressEvent(QGraphicsSceneMouseEvent *event) {
     if (event->button() == Qt::RightButton) {
         setSelected(true);
     }

@@ -32,7 +32,7 @@ public:
 
     ~ClassConnectionItem();
 
-    /** Public functions
+    /** Getters, setters
      */
 public:
     void setType(ClassConnectionType type) {
@@ -47,8 +47,6 @@ public:
     ClassDiagramItem *nodeTo() const {
         return _nodeTo;
     }
-    void trackNodes();
-
     QColor color() const {
         return _color;
     }
@@ -58,6 +56,11 @@ public:
     void setColor(const QColor &color) {
         _color = color;
     }
+
+    /** Public functions
+     */
+public:
+    void trackNodes();
 
     /** Protected methods
      */

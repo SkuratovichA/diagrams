@@ -169,7 +169,7 @@ ClassDiagramItem::ClassDiagramItem(classParams *params)
     }
 
     setRect(boundingBox());
-    setBrush(QBrush(QColor(255, 255, 255, 255)));
+    setBrush(QBrush(QColor(0, 0, 0, 20)));
 }
 
 /**

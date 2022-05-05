@@ -155,10 +155,6 @@ public:
 
     void removeConnection(ClassConnectionItem *connection);
 
-    QPointF centre() {
-        return {x() + width() / 2.0, y() + height() / 2.0};
-    }
-
     QList<CustomAttrText *> methods() {
         return _methods;
     }
@@ -271,40 +267,29 @@ public:
     }
 
     QPointF socket(uint32_t n) const {
-        auto margin = std::min(std::min(height(), width()), 12.0);
-        QPointF point;
-        auto mod = _numberOfSockets % (n + 1);
+        const auto margin = std::min(std::min(height()/2, width()/2), 50.0);
+        const QPointF points[3] = {QPointF(0, margin), QPointF(-margin, -margin), QPointF(-margin, margin)};
+        return centre() + points[n % 3];
+    }
 
-        switch (mod) {
-            case 0:
-                point = QPointF(
-                                std::min(pos().x() + n * width() / _connectionsPerEdge + margin, pos().x() + width() - margin),
-                                pos().y() + margin);
-                break;
-            case 1:
-                point = QPointF(pos().x() + width() - margin,
-                                std::min(
-                                        pos().y() + (n - _connectionsPerEdge) * height() / _connectionsPerEdge + margin,
-                                        pos().y() + height() - margin
-                                ));
-                break;
-            case 2:
-                point = QPointF(
-                                std::min(pos().x() + (n - _connectionsPerEdge * 2) * width() + margin / _connectionsPerEdge,
-                                         pos().x() + width() - margin
-                                 ),
-                                pos().y() + height() - margin);
-                break;
-            case 3:
-                point = QPointF(pos().x() + margin,
-                                std::min(pos().y() + (n - _connectionsPerEdge * 3) * height() / _connectionsPerEdge,
-                                         pos().y() + height() - margin
-                                 ));
-                break;
-        }
+    QPointF topLeft() const {
+        return pos();
+    }
 
-        qDebug() << "socket : " << n << ": " << point;
-        return point;
+    QPointF topRight() const {
+        return pos() + QPoint(width(), 0);
+    }
+
+    QPointF bottomLeft() const {
+        return pos() + QPoint(0, height());
+    }
+
+    QPointF bottomRight() const {
+        return pos() + QPoint(width(), height());
+    }
+
+    QPointF centre() const {
+        return {x() + width() / 2.0, y() + height() / 2.0};
     }
 
     uint32_t numberOfSockets() const {
