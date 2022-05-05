@@ -139,6 +139,28 @@ void editorInterface::createDynamicToolBar() {
     undoAction = undoStack->createUndoAction(this, tr("&Undo"));
     redoAction = undoStack->createRedoAction(this, tr("&Redo"));
 
+#ifdef __APPLE__
+    QToolBar *a = addToolBar(tr("Edit1"));
+    addToolBarBreak(Qt::TopToolBarArea);
+    QToolBar *b = addToolBar(tr("Edit2"));
+    a->addAction(saveAction);
+    a->addAction(cutAction);
+    a->addAction(pasteAction);
+    a->addAction(copyAction);
+    a->addAction(undoAction);
+    a->addAction(redoAction);
+    b->addAction(addEntityAction);
+    b->addAction(addConnectionAction);
+    b->addAction(deleteAction);
+    b->addAction(newTabAction);
+    b->addAction(deleteTabAction);
+    a->addAction(zoomInAction);
+    a->addAction(zoomOutAction);
+
+    a->setOrientation(Qt::Horizontal);
+    b->setOrientation(Qt::Horizontal);
+
+#else
     fileMenu = menuBar()->addMenu(tr("&File"));
     fileMenu->addAction(saveAction);
 
@@ -158,8 +180,8 @@ void editorInterface::createDynamicToolBar() {
     menuBar()->addAction(deleteTabAction);
     menuBar()->addAction(zoomInAction);
     menuBar()->addAction(zoomOutAction);
+#endif
 }
-
 /**
  *
  * @return
