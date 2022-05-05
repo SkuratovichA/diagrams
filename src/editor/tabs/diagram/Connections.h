@@ -53,6 +53,9 @@ public:
     uint32_t order() const {
         return _order;
     }
+    void changeOrientation() {
+        _orientation = !_orientation;
+    }
     void setColor(const QColor &color) {
         _color = color;
     }
@@ -81,8 +84,8 @@ private:
 private:
     ClassDiagramItem *_nodeFrom;
     ClassDiagramItem *_nodeTo;
-    QLineF connectionLine;
     ClassConnectionType _connectionType;
+    bool _orientation = true;
     QColor _color;
     uint32_t _order;
 };

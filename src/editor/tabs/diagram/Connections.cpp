@@ -241,7 +241,11 @@ QPair<QPointF, QPointF> ClassConnectionItem::edgePoints() const {
  */
 void ClassConnectionItem::trackNodes() {
     auto edgePs = edgePoints();
-    setLine(QLineF(edgePs.first, edgePs.second));
+    if (_orientation) {
+        setLine(QLineF(edgePs.first, edgePs.second));
+    } else {
+        setLine(QLineF(edgePs.second, edgePs.first));
+    }
 }
 
 /**
@@ -444,7 +448,6 @@ ActorConnectionItem::ActorConnectionItem(ActorDiagramItem *fromNode,
     nodeTo->addConnection(this);
 
     setZValue(-1.0);
-//    setColor(Qt::darkRed);
     trackNodes();
 }
 

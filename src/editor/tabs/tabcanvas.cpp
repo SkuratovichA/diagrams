@@ -519,7 +519,6 @@ QPair<T *, T *> TabCanvas::getSelectedDiagramItems() {
                 }
             }
             qDebug() << listl.count() << " elements to select.";
-//            return QPair<T*, T*>();
             first = listl.first();
             listl.removeFirst();
             rest = listl.first();
