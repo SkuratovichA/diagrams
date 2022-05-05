@@ -108,8 +108,8 @@ public slots:
     void paste();
     void zoomIn();
     void zoomOut();
-    void sendToBack();
-    void sendToFront();
+    void toBack();
+    void toFront();
 
     void addMethod_triggered();
     void addAttr_triggered();

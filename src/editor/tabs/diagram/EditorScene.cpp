@@ -26,6 +26,35 @@ void EditorScene::mousePressEvent(QGraphicsSceneMouseEvent *event) {
         oldPos = movingItem->pos();
     }
 
+    //this->update();
+
+    QList<QGraphicsItem *> selItems = selectedItems();
+    QList<QGraphicsItem *> allItems = items();
+
+    qDebug() << selItems.size() << allItems.size();
+
+    for (auto x : selItems) {
+        allItems.removeOne(x);
+        x->setZValue(1);
+    }
+
+    qDebug() << selItems.size() << allItems.size();
+
+    ClassDiagramItem *ptr1;
+    ActorDiagramItem *ptr2;
+
+    for (auto x : allItems) {
+        ptr1 = dynamic_cast<ClassDiagramItem *>(x);
+        ptr2 = dynamic_cast<ActorDiagramItem *>(x);
+
+        if (ptr1 == nullptr && ptr2 == nullptr) {
+            continue;
+        }
+
+        x->setZValue(-1);
+    }
+    this->update();
+
     if (multSelect == false) {
         clearSelection();
     }
@@ -49,6 +78,7 @@ void EditorScene::keyPressEvent(QKeyEvent *event)
     if(event->key() == Qt::Key_Control) {
         multSelect = true;
     }
+    QGraphicsScene::keyPressEvent(event);
 }
 
 void EditorScene::keyReleaseEvent(QKeyEvent *event)
@@ -56,4 +86,5 @@ void EditorScene::keyReleaseEvent(QKeyEvent *event)
     if(event->key() == Qt::Key_Control) {
         multSelect = false;
     }
+    QGraphicsScene::keyReleaseEvent(event);
 }

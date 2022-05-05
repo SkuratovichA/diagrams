@@ -131,9 +131,8 @@ void editorInterface::createDynamicToolBar() {
     ADD_SIGNAL(saveAction, "&Save", "S", "Ctrl+S", this, SLOT(actionSave_triggered()));
     ADD_SIGNAL(zoomInAction, "Zoom &In", "Ctrl+", "Ctrl+", this, SLOT(actionZoomIn_triggered()));
     ADD_SIGNAL(zoomOutAction, "Zoom &Out", "Ctrl-", "Ctrl-", this, SLOT(actionZoomOut_triggered()));
-
-    //ADD_SIGNAL(sendToBackAction, "Send to back", "b", "Ctrl+""B",   this, SLOT());
-    //ADD_SIGNAL(bringToFrontAction, "Send to front", "f", "Ctrl+""F",this, SLOT());
+    ADD_SIGNAL(sendToBackAction, "Send to back", "b", "Ctrl+B",  this, SLOT(actionBack_triggered()));
+    ADD_SIGNAL(bringToFrontAction, "Send to front", "f", "Ctrl+F",this, SLOT(actionFront_triggered()));
     qDebug() << "dynamic toolbar added";
 
     undoAction = undoStack->createUndoAction(this, tr("&Undo"));
@@ -154,6 +153,10 @@ void editorInterface::createDynamicToolBar() {
     b->addAction(deleteAction);
     b->addAction(newTabAction);
     b->addAction(deleteTabAction);
+
+    b->addAction(sendToBackAction);
+    b->addAction(bringToFrontAction);
+
     a->addAction(zoomInAction);
     a->addAction(zoomOutAction);
 
@@ -175,6 +178,8 @@ void editorInterface::createDynamicToolBar() {
     actionMenu->addAction(addEntityAction);
     actionMenu->addAction(addConnectionAction);
     actionMenu->addAction(deleteAction);
+    actionMenu->addAction(sendToBackAction);
+    actionMenu->addAction(bringToFrontAction);
 
     menuBar()->addAction(newTabAction);
     menuBar()->addAction(deleteTabAction);
@@ -310,4 +315,18 @@ void editorInterface::actionZoomIn_triggered() {
  */
 void editorInterface::actionZoomOut_triggered() {
     reinterpret_cast<TabCanvas *>(tabWidget->currentWidget())->zoomOut();
+}
+
+/**
+ *
+ */
+void editorInterface::actionBack_triggered() {
+    reinterpret_cast<TabCanvas *>(tabWidget->currentWidget())->toBack();
+}
+
+/**
+ *
+ */
+void editorInterface::actionFront_triggered() {
+    reinterpret_cast<TabCanvas *>(tabWidget->currentWidget())->toFront();
 }

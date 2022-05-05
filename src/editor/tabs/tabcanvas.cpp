@@ -518,10 +518,55 @@ QPair<T *, T *> TabCanvas::getSelectedDiagramItems() {
     return QPair<T *, T *>(first, rest);
 }
 
-void TabCanvas::sendToBack() {
+void TabCanvas::toBack() {
+    QList<QGraphicsItem *> selItems = editorScene->selectedItems();
+    QList<QGraphicsItem *> allItems = editorScene->items();
 
+    for (auto x : selItems) {
+        allItems.removeOne(x);
+        x->setZValue(-1);
+    }
+
+    ClassDiagramItem *ptr1;
+    ActorDiagramItem *ptr2;
+
+    for (auto x : allItems) {
+        ptr1 = dynamic_cast<ClassDiagramItem *>(x);
+        ptr2 = dynamic_cast<ActorDiagramItem *>(x);
+
+        if (ptr1 == nullptr && ptr2 == nullptr) {
+            continue;
+        }
+
+        x->setZValue(1);
+    }
+
+    editorScene->update();
 }
 
-void TabCanvas::sendToFront() {
+void TabCanvas::toFront() {
+    QList<QGraphicsItem *> selItems = editorScene->selectedItems();
+    QList<QGraphicsItem *> allItems = editorScene->items();
 
+    for (auto x : selItems) {
+        allItems.removeOne(x);
+        x->setZValue(1);
+    }
+
+    ClassDiagramItem *ptr1;
+    ActorDiagramItem *ptr2;
+
+    for (auto x : allItems) {
+        ptr1 = dynamic_cast<ClassDiagramItem *>(x);
+        ptr2 = dynamic_cast<ActorDiagramItem *>(x);
+
+        if (ptr1 == nullptr && ptr2 == nullptr) {
+            continue;
+        }
+
+        x->setZValue(-1);
+    }
+
+    editorScene->update();
 }
+
