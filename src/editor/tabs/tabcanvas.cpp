@@ -387,14 +387,6 @@ void TabCanvas::addAttr_triggered() {
     // resize item for one row
     item->setRect(0,0,item->width(), item->height() + item->rowHeight());
 
-    for (auto x : item->attrs()) {
-        qDebug() << "I am an attr";
-    }
-
-    for (auto x : item->attrsLines()) {
-        qDebug() << "I am a line";
-    }
-
     long long inc = item->attrs().size() + 1;
     item->moveTexts(1, inc);
     item->moveLines(1, inc);
@@ -405,16 +397,6 @@ void TabCanvas::addAttr_triggered() {
     //auto text = item->createText(item->tabText(), item->rowHeight() * inc + item->tabText(), "+ int word");
     CustomAttrText *text = new CustomAttrText(item, "+ int word", item->tabText(), item->rowHeight() * inc + item->tabText(), item->flags());
     item->pushAttr(text);
-
-    qDebug() << "after all";
-
-    for (auto x : item->attrs()) {
-        qDebug() << "I am an attr";
-    }
-
-    for (auto x : item->attrsLines()) {
-        qDebug() << "I am a line";
-    }
 
     item->setHeight(item->height() + item->rowHeight());
     for (auto x : item->connections()) {
