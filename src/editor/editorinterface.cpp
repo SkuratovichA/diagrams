@@ -16,11 +16,11 @@
 #include "tabs/tabcanvas.h"
 
 #define ADD_SIGNAL(obj, name, icon, shortcut, receiver, memberslot) \
-    do {                                                          \
-        obj = new QAction(tr((name)), this);                      \
-        /*obj->setIcon(icon);*/                                   \
-        (obj)->setShortcut(tr(shortcut));                         \
-        connect((obj), SIGNAL(triggered()), receiver, memberslot);\
+    do {                                                            \
+        obj = new QAction(tr((name)), this);                        \
+        /*obj->setIcon(icon);*/                                     \
+        (obj)->setShortcut(tr(shortcut));                           \
+        connect((obj), SIGNAL(triggered()), receiver, memberslot);  \
     } while(0)
 
 /**

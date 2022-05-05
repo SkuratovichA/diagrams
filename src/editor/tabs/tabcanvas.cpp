@@ -158,7 +158,7 @@ void TabCanvas::addEntity() {
 
     switch (type) {
         case DiagramType::SEQUENCE:
-            createActor = new actorParams(point.x(), point.y() ,1.0, "_ACTOR_",
+            createActor = new actorParams(point.x(), point.y() , "ACTOR",
                                           generateColor(), 70, 110);
             addCommand = new AddActorCommand(editorScene, createActor);
             delete createActor;
@@ -166,9 +166,9 @@ void TabCanvas::addEntity() {
             break;
         case DiagramType::CLASS:
             attrs.push_back("+ int name");
-            methods.push_back("+ int name(hhhh)");
+            methods.push_back("+ int name()");
 
-            createItem = new classParams(point.x(), point.y(), 1.0,"_NAME_",
+            createItem = new classParams(point.x(), point.y(), "NAME",
                                          generateColor(), 120.0, 120.0, attrs, methods);
             addCommand = new AddClassCommand(editorScene, createItem);
             delete createItem;

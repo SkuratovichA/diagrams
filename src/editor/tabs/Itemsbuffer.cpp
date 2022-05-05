@@ -38,7 +38,7 @@ void ItemsBuffer::fillClassItems(ClassDiagramItem *item) {
         attrs.push_back(x->toPlainText());
     }
 
-    ptr = new classParams(item->x() + 40, item->y() + 40, 1.0,
+    ptr = new classParams(item->x() + 40, item->y() + 40,
                           item->_head->toPlainText(), item->color(),
                           item->width(), item->height(), attrs, methods);
     pushClassItem(ptr);
@@ -47,7 +47,7 @@ void ItemsBuffer::fillClassItems(ClassDiagramItem *item) {
 void ItemsBuffer::fillActorItems(ActorDiagramItem *item) {
     actorParams *ptr;
 
-    ptr = new actorParams(item->x() + 40, item->y() + 40, 1.0,
+    ptr = new actorParams(item->x() + 40, item->y() + 40,
                           item->_head->toPlainText(), item->color(),
                           item->width(), item->height());
     pushActorItem(ptr);

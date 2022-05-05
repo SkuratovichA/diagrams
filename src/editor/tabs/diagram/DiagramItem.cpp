@@ -63,8 +63,8 @@ void CustomAttrText::keyReleaseEvent(QKeyEvent *event) {
 }
 
 ActorDiagramItem::ActorDiagramItem(actorParams *params)
-        : DiagramItem(params->width() * params->scale(),
-                      params->height() * params->scale(),
+        : DiagramItem(params->width(),
+                      params->height(),
                       DiagramItem::Actor,
                       params->color()) {
 
@@ -77,7 +77,7 @@ ActorDiagramItem::ActorDiagramItem(actorParams *params)
                                              Qt::TextInteractionFlag::TextSelectableByKeyboard;
 
     setPen(QPen(QColor(1, 0, 0, 0)));
-    _head = new NameObject(this, _flags, -15, -40, params->name());
+    _head = new NameObject(this, _flags, -10, -40, params->name());
 
     auto setpen = [this](QGraphicsLineItem *l) {l->setPen(QPen(color(), 3.0));};
     auto legL = new QGraphicsLineItem(35.0, 70.0, 10.0, 110.0, this);
@@ -117,13 +117,13 @@ void ActorDiagramItem::removeConnection(ActorConnectionItem *connection) {
  * @param item
  */
 ClassDiagramItem::ClassDiagramItem(classParams *params)
-        : DiagramItem(params->width() * params->scale(),
-                      params->height() * params->scale(),
+        : DiagramItem(params->width(),
+                      params->height(),
                       DiagramItem::Class,
                       params->color()) {
 
-    _rowHeight = (params->height() / 4.0) * params->scale();
-    _rowWidth = params->width() * params->scale();
+    _rowHeight = (params->height() / 4.0);
+    _rowWidth = params->width();
     _tabText = _rowHeight / 15.0;
     QGraphicsLineItem *lineAttr;
     CustomAttrText *textAttr;
@@ -139,7 +139,7 @@ ClassDiagramItem::ClassDiagramItem(classParams *params)
 
     _head = new NameObject(this, _flags, 5, -40, params->name()); // i do not why coordinates 5, -40
 
-    textAttr = new CustomAttrText(this, "_ATTRIBUTES_", _tabText, _tabText, Qt::NoTextInteraction);
+    textAttr = new CustomAttrText(this, "ATTRIBUTES", _tabText, _tabText, Qt::NoTextInteraction);
     textAttr->setFont(QFont("Times", 10, QFont::Bold));
 
     for (auto attr_name: params->attrs()) {
@@ -155,7 +155,7 @@ ClassDiagramItem::ClassDiagramItem(classParams *params)
     lineAttr = createLine(0, _rowHeight * line);
     _methodsLines.push_back(lineAttr);
 
-    textAttr = new CustomAttrText(this, "_METHODS_", _tabText, _rowHeight * line++ + _tabText, Qt::NoTextInteraction);
+    textAttr = new CustomAttrText(this, "METHODS", _tabText, _rowHeight * line++ + _tabText, Qt::NoTextInteraction);
     textAttr->setFont(QFont("Times", 10, QFont::Bold));
     _methods.push_back(textAttr);
 

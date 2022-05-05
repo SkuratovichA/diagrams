@@ -11,7 +11,7 @@
 
 class objectParams {
 public:
-    objectParams(qreal x, qreal y, qreal scale, QString name,
+    objectParams(qreal x, qreal y, QString name,
                  QColor color, qreal width, qreal height);
     ~objectParams() = default;
 
@@ -21,10 +21,6 @@ public:
 
     qreal y() const {
         return _y;
-    }
-
-    qreal scale() const {
-        return _scale;
     }
 
     QColor color() const {
@@ -45,7 +41,6 @@ public:
 protected:
     qreal _x;
     qreal _y;
-    qreal _scale;
     QColor _color;
     qreal _width;
     qreal _height;
@@ -54,7 +49,7 @@ protected:
 
 class classParams : public objectParams {
 public:
-    classParams(qreal x, qreal y, qreal scale, QString name,
+    classParams(qreal x, qreal y, QString name,
                 QColor color, qreal width, qreal height,
                 QList<QString> attrs, QList<QString> methods);
     ~classParams() = default;
@@ -74,7 +69,7 @@ private:
 
 class actorParams : public objectParams {
 public:
-    actorParams(qreal x, qreal y, qreal scale, QString name,
+    actorParams(qreal x, qreal y, QString name,
                 QColor color, qreal width, qreal height);
     ~actorParams() = default;
 };
