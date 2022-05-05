@@ -146,7 +146,6 @@ ClassDiagramItem::ClassDiagramItem(QGraphicsItem *item)
 
     textAttr = new CustomAttrText(this, "+ int name()", _tabText, _rowHeight * 3 + _tabText, _flags);
     _methods.push_back(textAttr);
-
     setRect(boundingBox());
     setBrush(QBrush(QColor(255,255,255,10)));
 }

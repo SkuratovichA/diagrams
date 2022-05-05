@@ -15,34 +15,54 @@ class ActorDiagramItem;
  *
  */
 class ClassConnectionItem : public QGraphicsLineItem {
+    /** Constructor, destructor
+     */
 public:
     enum ClassConnectionType {
-        Aggregation, Composition, Generalization, Association
+        Aggregation, Composition, Generalization, Association, Dependency
     };
-
     ClassConnectionItem(
             ClassDiagramItem *fromNode,
             ClassDiagramItem *toNode,
-            ClassConnectionType connectionType);
+            ClassConnectionType connectionType,
+            QColor color = QColor(50,45,50,100)
+            );
 
     ~ClassConnectionItem();
 
+    /** Public functions
+     */
+public:
+    void setType(ClassConnectionType type) {
+        _connectionType = type;
+    }
+    ClassConnectionType connectionType() const {
+        return _connectionType;
+    }
     ClassDiagramItem *fromNode() const;
     ClassDiagramItem *toNode() const;
+    void trackNodes();
+
     void setColor(const QColor &color);
     QColor color() const;
 
-    void trackNodes();
+    /** Private methods
+     */
 private:
+    void drawLine(QPainter *painter, const QStyleOptionGraphicsItem *option) const;
     QPolygonF lineShaper() const;
     QPair<QPointF, QPointF> edgePoints() const;
     QPainterPath shape() const;
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
 
+    /** Private attributes
+     */
 private:
     ClassDiagramItem *nodeFrom;
     ClassDiagramItem *nodeTo;
     QLineF connectionLine;
+    ClassConnectionType _connectionType;
+    QColor _color;
 };
 
 /**

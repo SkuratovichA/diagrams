@@ -101,7 +101,7 @@ void TabCanvas::addConnection() {
         if (emptySelect) {
             return;
         }
-        connectionCommand = new AddClassConnectionCommand(nodes.first, nodes.second, ClassConnectionItem::Aggregation,
+        connectionCommand = new AddClassConnectionCommand(nodes.first, nodes.second, ClassConnectionItem::Dependency,
                                                           editorScene);
     } else {
         assert(!"There are only two types: SEQUENCE and CLASS.");
