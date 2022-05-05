@@ -27,6 +27,7 @@ ClassConnectionItem::ClassConnectionItem(ClassDiagramItem *fromNode,
     setFlag(QGraphicsItem::ItemIsSelectable);
     _nodeFrom = fromNode;
     _nodeTo = toNode;
+    _single = fromNode == toNode;
 
     _nodeFrom->addConnection(this);
     _nodeTo->addConnection(this);
@@ -254,6 +255,19 @@ void ClassConnectionItem::trackNodes() {
  */
 QPolygonF ClassConnectionItem::lineShaper() const {
     QPolygonF poly;
+    if (_single) {
+        QPolygonF poly;
+        auto margin = std::min<qreal>(_nodeTo->height(), _nodeTo->width())/3;
+        auto yAbove = _nodeTo->bottomRight().y() - margin    - 17;
+        auto xRight = _nodeTo->bottomRight().x() + margin    + 17;
+        auto xLeft = _nodeTo->bottomRight().x()  - margin    - 17;
+        auto yBelow = _nodeTo->bottomRight().y() + margin    + 17;
+        auto x = _nodeTo->bottomRight().x();
+        auto y = _nodeTo->bottomRight().y();
+        poly << QPointF(x, yAbove) << QPointF(xRight, yAbove)
+             << QPointF(xRight, yBelow) << QPointF(xLeft, yBelow) << QPoint(xLeft, y) << _nodeTo->bottomRight() << QPointF(x, yAbove);
+        return poly;
+    }
 
     auto const fromUpperLeft = _nodeFrom->pos();
     auto const fromUpperRight = fromUpperLeft + QPointF(_nodeFrom->width(), 0);
@@ -282,7 +296,6 @@ QPolygonF ClassConnectionItem::lineShaper() const {
     QPointF topAdjuster;
     QPointF bottomAdjuster;
     bool collision = false;
-    // FIXME: change to the custom centre of the point
     auto const octant = getOctant(_nodeFrom->socket(_order), _nodeTo->socket(_order), &collision);
     switch (ovlpEdges) {
         case 4:
@@ -365,38 +378,78 @@ void ClassConnectionItem::drawLine(QPainter *painter, const QStyleOptionGraphics
     painter->setRenderHint(QPainter::Antialiasing, true);
     auto points = edgePoints();
     QPolygonF poly;
-    QLineF cLine = line();
-    qreal angle = std::atan2(-cLine.dy(), cLine.dx());
-    auto scale = 20;
-    poly.clear();
+    auto cLine = line();
+    QColor clr(_color);
+    QPointF linend;
 
     if (option->state & QStyle::State_Selected) {
         painter->setPen(QPen(_color.darker(), 2.5, Qt::SolidLine));
     }
-    QPointF arrowP1 = cLine.p1() + QPointF(sin(angle + M_PI - M_PI / 3) * scale,
-                                           cos(angle + M_PI - M_PI / 3) * scale);
-    QPointF arrowP2 = cLine.p1() + QPointF(sin(angle + M_PI / 3) * scale,
-                                           cos(angle + M_PI / 3) * scale);
-    QPointF arrowP3 = cLine.p1() + QPointF(sin(angle + M_PI / 2) * scale * 1.7,
-                                           cos(angle + M_PI / 2) * scale * 1.7);
-    QColor clr(_color);
+    QPointF arrowP1;
+    QPointF arrowP2;
+    QPointF arrowP3;
+    qreal angle;
+    QLineF sl1;
+    QLineF sl2;
+    QLineF sl3;
+    QLineF sl4;
+
+    if (!_single) {
+        angle = std::atan2(-cLine.dy(), cLine.dx());
+        linend = cLine.p1();
+    } else {
+        auto margin = std::min<qreal>(_nodeTo->height(), _nodeTo->width())/3;
+        auto yAbove = _nodeTo->bottomRight().y() - margin;
+        auto xRight = _nodeTo->bottomRight().x() + margin;
+        auto xLeft = _nodeTo->bottomRight().x()  - margin;
+        auto yBelow = _nodeTo->bottomRight().y() + margin;
+        auto x = _nodeTo->bottomRight().x();
+        auto y = _nodeTo->bottomRight().y();
+        sl1 = QLineF(QPointF(x, yAbove),
+                     QPointF(xRight, yAbove));
+        sl2 = QLineF(QPointF(xRight, yAbove),
+                     QPointF(xRight, yBelow));
+        sl3 = QLineF(QPointF(xRight, yBelow),
+                     QPointF(xLeft, yBelow));
+        sl4 = QLineF(QPointF(xLeft, yBelow),
+                     QPointF(xLeft, y));
+        angle = -M_PI/2;
+        linend = QPointF(xLeft, y);
+    }
+    auto const scale = 20;
+
+    arrowP1 = linend + QPointF(sin(angle + M_PI - M_PI / 3) * scale,
+                               cos(angle + M_PI - M_PI / 3) * scale);
+    arrowP2 = linend + QPointF(sin(angle + M_PI / 3) * scale,
+                               cos(angle + M_PI / 3) * scale);
+    arrowP3 = linend + QPointF(sin(angle + M_PI / 2) * scale * 1.7,
+                                   cos(angle + M_PI / 2) * scale * 1.7);
+
     switch (_connectionType) {
         case Association:
             break;
         case Aggregation:
             clr = QColor(Qt::white);
         case Composition:
-            poly << cLine.p1() << arrowP1 << arrowP3 << arrowP2;
+            poly << linend << arrowP1 << arrowP3 << arrowP2;
             break;
         case Dependency:
             painter->setPen(QPen(_color, 2, Qt::DashLine));
             clr = QColor(Qt::white);
         case Generalization:
-            poly << cLine.p1() << arrowP1 << arrowP2;
+            poly << linend << arrowP1 << arrowP2;
             break;
     }
     painter->setBrush(clr);
-    painter->drawLine(cLine);
+    if (_single) {
+        painter->drawLine(sl1);
+        painter->drawLine(sl2);
+        painter->drawLine(sl3);
+        painter->drawLine(sl4);
+        painter->drawPolygon(poly);
+    } else {
+        painter->drawLine(cLine);
+    }
     painter->drawPolygon(poly);
 }
 

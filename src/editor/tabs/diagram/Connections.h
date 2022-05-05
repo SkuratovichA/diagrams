@@ -79,6 +79,7 @@ private:
     QPair<QPointF, QPointF> edgePoints() const;
     QPainterPath shape() const;
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
+    bool _single;
 
     /** Private attributes
      */

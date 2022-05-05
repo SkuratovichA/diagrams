@@ -544,10 +544,8 @@ void TabCanvas::setZvalue(int forSelect, int forOther) {
         if (ptr1 == nullptr && ptr2 == nullptr) {
             continue;
         }
-
         x->setZValue(forOther);
     }
-
     editorScene->update();
 }
 
