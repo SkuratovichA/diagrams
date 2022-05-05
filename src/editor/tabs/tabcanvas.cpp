@@ -496,6 +496,7 @@ QPair<T *, T *> TabCanvas::getSelectedDiagramItems() {
     if (items.isEmpty()) {
         return QPair<T*, T*>();
     }
+    QList<T *> listl;
     auto first = dynamic_cast<T *>(items.first());
     T *rest = nullptr;
 
@@ -512,7 +513,16 @@ QPair<T *, T *> TabCanvas::getSelectedDiagramItems() {
             break;
         default:
             qDebug() << items.count() << " nodes were selected. Bad";
-            return QPair<T*, T*>();
+            foreach(auto item, items) {
+                if (dynamic_cast<T *>(item) != nullptr) {
+                    listl.append(dynamic_cast<T* >(item));
+                }
+            }
+            qDebug() << listl.count() << " elements to select.";
+//            return QPair<T*, T*>();
+            first = listl.first();
+            listl.removeFirst();
+            rest = listl.first();
     }
     // first is always T*, the rest is always QVector
     return QPair<T *, T *>(first, rest);
