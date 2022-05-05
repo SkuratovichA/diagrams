@@ -460,21 +460,25 @@ void TabCanvas::rmAttr_triggered() {
 void TabCanvas::aggregation_triggered() {
     auto line = dynamic_cast<ClassConnectionItem *>(selectedObject());
     line->setType(ClassConnectionItem::Aggregation);
+    editorScene->update();
 }
 
 void TabCanvas::composition_triggered() {
     auto line = dynamic_cast<ClassConnectionItem *>(selectedObject());
     line->setType(ClassConnectionItem::Composition);
+    editorScene->update();
 }
 
 void TabCanvas::generalization_triggered() {
     auto line = dynamic_cast<ClassConnectionItem *>(selectedObject());
     line->setType(ClassConnectionItem::Generalization);
+    editorScene->update();
 }
 
 void TabCanvas::association_triggered() {
     auto line = dynamic_cast<ClassConnectionItem *>(selectedObject());
     line->setType(ClassConnectionItem::Association);
+    editorScene->update();
 }
 
 /**

@@ -24,7 +24,8 @@ void EditorScene::mousePressEvent(QGraphicsSceneMouseEvent *event) {
         oldPos = movingItem->pos();
     }
 
-    clearSelection();
+    //TODO:
+    //clearSelection();
     QGraphicsScene::mousePressEvent(event);
 }
 

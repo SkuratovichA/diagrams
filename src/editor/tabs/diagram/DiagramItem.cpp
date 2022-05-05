@@ -160,8 +160,6 @@ ClassDiagramItem::ClassDiagramItem(classParams *params)
     for (auto method_name: params->methods()) {
         lineAttr = createLine(0, _rowHeight * line);
         _methodsLines.push_back(lineAttr);
-        textAttr = new CustomAttrText(this, "+ int name()", _tabText, _rowHeight * 3 + _tabText, _flags);
-        _methods.push_back(textAttr);
         textAttr = new CustomAttrText(this, method_name, _tabText, _rowHeight * line + _tabText, _flags);
         _methods.push_back(textAttr);
 
