@@ -26,6 +26,7 @@ public:
             ClassDiagramItem *fromNode,
             ClassDiagramItem *toNode,
             ClassConnectionType connectionType,
+            uint32_t order = 0,
             QColor color = QColor(50,45,50,100)
             );
 
@@ -46,6 +47,9 @@ public:
 
     void setColor(const QColor &color);
     QColor color() const;
+    uint32_t order() const {
+        return _order;
+    }
 
     /** Protected methods
      */
@@ -69,6 +73,7 @@ private:
     QLineF connectionLine;
     ClassConnectionType _connectionType;
     QColor _color;
+    uint32_t _order;
 };
 
 /**

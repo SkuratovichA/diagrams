@@ -194,7 +194,6 @@ void TabCanvas::addConnection() {
         return;
     } else if (type == DiagramType::CLASS) {
         auto nodes = getSelectedDiagramItems<ClassDiagramItem>();
-        qDebug() << "still alive";
         auto emptySelect = nodes == QPair<ClassDiagramItem *, ClassDiagramItem*>();
         if (emptySelect) {
             return;

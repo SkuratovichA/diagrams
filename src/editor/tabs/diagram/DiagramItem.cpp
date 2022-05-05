@@ -7,7 +7,6 @@
 #include <QDebug>
 #include <QPainter>
 #include <QInputEvent>
-// FIXME: (1) create 2 separate files from this shit. (2) create custom function for adding a line
 
 CustomAttrText::CustomAttrText(ClassDiagramItem *p, QString text, qreal x, qreal y,
                                QFlags<Qt::TextInteractionFlag> flags)
@@ -134,7 +133,7 @@ ClassDiagramItem::ClassDiagramItem(classParams *params)
     // name of the class
     setPen(QPen(color()));
 
-    _head = new NameObject(this, _flags, 5, -40, params->name()); // i do not why coordinates 5, -40
+    _head = new NameObject(this, _flags, 5, -40, params->name()); // i do not know why coordinates 5, -40
 
     textAttr = new CustomAttrText(this, "_ATTRIBUTES_", _tabText, _tabText, Qt::NoTextInteraction);
     textAttr->setFont(QFont("Times", 10, QFont::Bold));
@@ -142,7 +141,6 @@ ClassDiagramItem::ClassDiagramItem(classParams *params)
     for (auto attr_name: params->attrs()) {
         lineAttr = createLine(0, _rowHeight * line);
         _attrsLines.push_back(lineAttr);
-
         textAttr = new CustomAttrText(this, attr_name, _tabText, _rowHeight * line + _tabText, _flags);
         _attrs.push_back(textAttr);
 
@@ -159,7 +157,6 @@ ClassDiagramItem::ClassDiagramItem(classParams *params)
     for (auto method_name: params->methods()) {
         lineAttr = createLine(0, _rowHeight * line);
         _methodsLines.push_back(lineAttr);
-
         textAttr = new CustomAttrText(this, "+ int name()", _tabText, _rowHeight * 3 + _tabText, _flags);
         _methods.push_back(textAttr);
         textAttr = new CustomAttrText(this, method_name, _tabText, _rowHeight * line + _tabText, _flags);
@@ -170,16 +167,6 @@ ClassDiagramItem::ClassDiagramItem(classParams *params)
 
     setRect(boundingBox());
     setBrush(QBrush(QColor(255, 255, 255, 255)));
-}
-
-/**
- *
- */
-ClassDiagramItem::~ClassDiagramItem() {
-    foreach (ClassConnectionItem *connection, _connections) {
-        delete connection;
-        qDebug() << "Connection deleted (diagramItem.cpp)";
-    }
 }
 
 /**
@@ -198,6 +185,12 @@ void ClassDiagramItem::removeConnection(ClassConnectionItem *connection) {
     _connections.remove(connection);
 }
 
+void ClassDiagramItem::mousePressEvent(QGraphicsSceneMouseEvent *event) {
+    if (event->button() == Qt::RightButton) {
+        setSelected(true);
+    }
+}
+
 /**
  *
  * @param change
@@ -211,6 +204,16 @@ QVariant ClassDiagramItem::itemChange(GraphicsItemChange change, const QVariant 
         }
     }
     return QGraphicsItem::itemChange(change, value);
+}
+
+/**
+ *
+ */
+ClassDiagramItem::~ClassDiagramItem() {
+    foreach (ClassConnectionItem *connection, _connections) {
+        delete connection;
+        qDebug() << "Connection deleted (diagramItem.cpp)";
+    }
 }
 
 /**
@@ -244,12 +247,6 @@ void NameObject::keyReleaseEvent(QKeyEvent *event) {
     qreal midO = tmp1 == nullptr ? tmp2->width() : tmp1->width();
     qreal midW = boundingRect().width();
     setPos((midO - midW) / 2, -40);
-}
-
-void ClassDiagramItem::mousePressEvent(QGraphicsSceneMouseEvent *event) {
-    if (event->button() == Qt::RightButton) {
-        setSelected(true);
-    }
 }
 
 NameObject::~NameObject() {

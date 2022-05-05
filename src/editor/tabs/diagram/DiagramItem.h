@@ -90,11 +90,11 @@ public:
         return type() == Actor ? QString("Actor") : QString("Class");
     }
 
-    qreal height() {
+    qreal height() const {
         return _height;
     }
 
-    qreal width() {
+    qreal width() const {
         return _width;
     }
 
@@ -266,6 +266,51 @@ public:
         return _flags;
     }
 
+    qsizetype occupiedSockets() const {
+        return _connections.count();
+    }
+
+    QPointF socket(uint32_t n) const {
+        auto margin = std::min(std::min(height(), width()), 12.0);
+        QPointF point;
+        auto mod = _numberOfSockets % (n + 1);
+
+        switch (mod) {
+            case 0:
+                point = QPointF(
+                                std::min(pos().x() + n * width() / _connectionsPerEdge + margin, pos().x() + width() - margin),
+                                pos().y() + margin);
+                break;
+            case 1:
+                point = QPointF(pos().x() + width() - margin,
+                                std::min(
+                                        pos().y() + (n - _connectionsPerEdge) * height() / _connectionsPerEdge + margin,
+                                        pos().y() + height() - margin
+                                ));
+                break;
+            case 2:
+                point = QPointF(
+                                std::min(pos().x() + (n - _connectionsPerEdge * 2) * width() + margin / _connectionsPerEdge,
+                                         pos().x() + width() - margin
+                                 ),
+                                pos().y() + height() - margin);
+                break;
+            case 3:
+                point = QPointF(pos().x() + margin,
+                                std::min(pos().y() + (n - _connectionsPerEdge * 3) * height() / _connectionsPerEdge,
+                                         pos().y() + height() - margin
+                                 ));
+                break;
+        }
+
+        qDebug() << "socket : " << n << ": " << point;
+        return point;
+    }
+
+    uint32_t numberOfSockets() const {
+        return _numberOfSockets;
+    }
+
     void setTextFlags(QGraphicsTextItem *item) {
         item->setTextInteractionFlags(Qt::TextInteractionFlag::TextEditable |
                                       Qt::TextInteractionFlag::TextSelectableByMouse |
@@ -282,7 +327,6 @@ protected:
     QVariant itemChange(GraphicsItemChange change, const QVariant &value);
 
 private:
-    QSet<ClassConnectionItem *> _connections;
     QList<CustomAttrText *> _attrs;
     QList<CustomAttrText *> _methods;
     QList<QGraphicsLineItem *> _attrsLines;
@@ -291,6 +335,10 @@ private:
     qreal _rowWidth;
     qreal _tabText;
     QFlags<Qt::TextInteractionFlag> _flags;
+
+    QSet<ClassConnectionItem *> _connections;
+    uint32_t _numberOfSockets = 20;
+    uint32_t _connectionsPerEdge = 5;
 };
 
 #endif // Object_H

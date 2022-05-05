@@ -210,12 +210,10 @@ AddClassConnectionCommand::AddClassConnectionCommand(ClassDiagramItem *fromNode,
                                                      QGraphicsScene *scene,
                                                      QUndoCommand *parent)
         : QUndoCommand(parent), graphicsScene(scene) {
-//    static int itemCount = 0;
+    auto maxConnectedElements = std::max(fromNode->occupiedSockets(), toNodes->occupiedSockets());
+    qDebug() << "max number of occupied sockets: " << maxConnectedElements;
 
-    classConnection = new ClassConnectionItem(fromNode, toNodes, connectionType);
-//    initialStartPosition = QPointF(static_cast<qreal>(((itemCount * 20) + 100) % static_cast<int>(scene->width())),
-//                                   static_cast<qreal>(((itemCount * 20) + 100) % static_cast<int>(scene->height())));
-//    itemCount++;
+    classConnection = new ClassConnectionItem(fromNode, toNodes, connectionType, maxConnectedElements);
     scene->update();
 }
 

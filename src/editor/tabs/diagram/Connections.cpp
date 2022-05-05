@@ -21,6 +21,7 @@
 ClassConnectionItem::ClassConnectionItem(ClassDiagramItem *fromNode,
                                          ClassDiagramItem *toNode,
                                          ClassConnectionType connectionType,
+                                         uint32_t order,
                                          QColor color
 ) {
     setFlag(QGraphicsItem::ItemIsSelectable);
@@ -31,6 +32,7 @@ ClassConnectionItem::ClassConnectionItem(ClassDiagramItem *fromNode,
     nodeTo->addConnection(this);
     _connectionType = connectionType;
     _color = color;
+    _order = order;
 
     setZValue(-1.0);
     trackNodes();
