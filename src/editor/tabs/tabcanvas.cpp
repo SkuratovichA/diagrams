@@ -64,12 +64,16 @@ void TabCanvas::createMenusConnections() {
     ADD_SIGNAL(composition,    "Composition &Relation",    "+", "+", this, SLOT(composition_triggered()));
     ADD_SIGNAL(generalization, "Generalization &Relation", "+", "+", this, SLOT(generalization_triggered()));
     ADD_SIGNAL(association,    "Association &Relation",    "+", "+", this, SLOT(association_triggered()));
+    ADD_SIGNAL(dependency,     "Dependency &Relation",     "+", "+", this, SLOT(dependency_triggered()));
+    ADD_SIGNAL(orientation,    "Change &orientation",      "+", "+", this, SLOT(orientation_triggered()));
 
     connectionMenu = new QMenu();
     connectionMenu->addAction(aggregation);
     connectionMenu->addAction(composition);
     connectionMenu->addAction(generalization);
     connectionMenu->addAction(association);
+    connectionMenu->addAction(dependency);
+    connectionMenu->addAction(orientation);
 }
 
 void TabCanvas::ShowContextMenu(const QPoint& pos) // this is a slot
@@ -383,14 +387,6 @@ void TabCanvas::addAttr_triggered() {
     // resize item for one row
     item->setRect(0,0,item->width(), item->height() + item->rowHeight());
 
-    for (auto x : item->attrs()) {
-        qDebug() << "I am an attr";
-    }
-
-    for (auto x : item->attrsLines()) {
-        qDebug() << "I am a line";
-    }
-
     long long inc = item->attrs().size() + 1;
     item->moveTexts(1, inc);
     item->moveLines(1, inc);
@@ -401,16 +397,6 @@ void TabCanvas::addAttr_triggered() {
     //auto text = item->createText(item->tabText(), item->rowHeight() * inc + item->tabText(), "+ int word");
     CustomAttrText *text = new CustomAttrText(item, "+ int word", item->tabText(), item->rowHeight() * inc + item->tabText(), item->flags());
     item->pushAttr(text);
-
-    qDebug() << "after all";
-
-    for (auto x : item->attrs()) {
-        qDebug() << "I am an attr";
-    }
-
-    for (auto x : item->attrsLines()) {
-        qDebug() << "I am a line";
-    }
 
     item->setHeight(item->height() + item->rowHeight());
     for (auto x : item->connections()) {
@@ -481,6 +467,18 @@ void TabCanvas::association_triggered() {
     editorScene->update();
 }
 
+void TabCanvas::dependency_triggered() {
+    auto line = dynamic_cast<ClassConnectionItem *>(selectedObject());
+    line->setType(ClassConnectionItem::Dependency);
+    editorScene->update();
+}
+
+void TabCanvas::orientation_triggered() {
+    // TODO
+    editorScene->update();
+    return;
+}
+
 /**
  *
  * @return
@@ -527,10 +525,37 @@ QPair<T *, T *> TabCanvas::getSelectedDiagramItems() {
     return QPair<T *, T *>(first, rest);
 }
 
-void TabCanvas::sendToBack() {
+void TabCanvas::setZvalue(int forSelect, int forOther) {
+    QList<QGraphicsItem *> selItems = editorScene->selectedItems();
+    QList<QGraphicsItem *> allItems = editorScene->items();
 
+    for (auto x : selItems) {
+        allItems.removeOne(x);
+        x->setZValue(forSelect);
+    }
+
+    ClassDiagramItem *ptr1;
+    ActorDiagramItem *ptr2;
+
+    for (auto x : allItems) {
+        ptr1 = dynamic_cast<ClassDiagramItem *>(x);
+        ptr2 = dynamic_cast<ActorDiagramItem *>(x);
+
+        if (ptr1 == nullptr && ptr2 == nullptr) {
+            continue;
+        }
+
+        x->setZValue(forOther);
+    }
+
+    editorScene->update();
 }
 
-void TabCanvas::sendToFront() {
-
+void TabCanvas::toBack() {
+    setZvalue(-1, 1);
 }
+
+void TabCanvas::toFront() {
+    setZvalue(1, -1);
+}
+

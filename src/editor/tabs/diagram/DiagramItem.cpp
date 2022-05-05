@@ -121,9 +121,9 @@ ClassDiagramItem::ClassDiagramItem(classParams *params)
                       DiagramItem::Class,
                       params->color()) {
 
-    _rowHeight = (params->height() / 4.0);
+    _rowHeight = 30.0;
     _rowWidth = params->width();
-    _tabText = _rowHeight / 15.0;
+    _tabText = 2.0;
     QGraphicsLineItem *lineAttr;
     CustomAttrText *textAttr;
     _flags = Qt::TextInteractionFlag::TextEditable |
@@ -136,7 +136,7 @@ ClassDiagramItem::ClassDiagramItem(classParams *params)
     // name of the class
     setPen(QPen(color()));
 
-    _head = new NameObject(this, _flags, 5, -40, params->name()); // i do not know why coordinates 5, -40
+    _head = new NameObject(this, _flags, 20, -40, params->name()); // i do not know why coordinates 5, -40
 
     textAttr = new CustomAttrText(this, "ATTRIBUTES", _tabText, _tabText, Qt::NoTextInteraction);
     textAttr->setFont(QFont("Times", 10, QFont::Bold));
@@ -167,7 +167,7 @@ ClassDiagramItem::ClassDiagramItem(classParams *params)
     }
 
     setRect(boundingBox());
-    setBrush(QBrush(QColor(0, 0, 0, 20)));
+    setBrush(QBrush(QColor(255, 255, 255, 255)));
 }
 
 /**

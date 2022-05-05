@@ -45,7 +45,6 @@ public:
     void deleteClassItems() {
         for (auto x : _classItems) {
             _classItems.pop_front();
-            qDebug() << "delete item from buffer copy/paste" << x;
             delete x;
         }
     }
@@ -53,7 +52,6 @@ public:
     void deleteActorItems() {
         for (auto x : _actorItems) {
             _actorItems.pop_front();
-            qDebug() << "delete item from buffer copy/paste" << x;
             delete x;
         }
     }

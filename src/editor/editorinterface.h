@@ -64,6 +64,10 @@ private slots:
 
     void actionZoomOut_triggered();
 
+    void actionBack_triggered();
+
+    void actionFront_triggered();
+
     //void actionQuit_triggered();
 
     void newTabSelected();
@@ -99,8 +103,8 @@ private:
     QAction *pasteAction;
     QAction *zoomInAction;
     QAction *zoomOutAction;
-    //QAction *bringToFrontAction;
-    //QAction *sendToBackAction;
+    QAction *bringToFrontAction;
+    QAction *sendToBackAction;
 
     QMenu *editMenu;
     QMenu *actionMenu;
