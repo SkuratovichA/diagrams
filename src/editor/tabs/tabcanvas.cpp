@@ -10,6 +10,14 @@ using namespace SceneType;
 
 class editorInterface;
 
+#define ADD_SIGNAL(obj, name, icon, shortcut, receiver, memberslot) \
+    do {                                                          \
+        obj = new QAction(tr((name)), this);                      \
+        /*obj->setIcon(icon);*/                                   \
+        /*(obj)->setShortcut(tr(shortcut));*/                     \
+        connect((obj), SIGNAL(triggered()), receiver, memberslot);\
+    } while(0)
+
 /**
 *
 * @param parent
@@ -27,6 +35,7 @@ TabCanvas::TabCanvas(QWidget *parent, DiagramType type, QUndoGroup *parentGroup)
 
     createMenusClass();
     createMenusConnections();
+    // TODO: do same for sequence diagram
 }
 
 /**
@@ -38,14 +47,10 @@ TabCanvas::~TabCanvas() {
 }
 
 void TabCanvas::createMenusClass() {
-    addMethod = new QAction(tr("Add &Method"));
-    connect(addMethod, SIGNAL(triggered()), this, SLOT(addMethod_triggered()));
-    rmMethod = new QAction(tr("Delete &Method"));
-    connect(rmMethod, SIGNAL(triggered()), this, SLOT(rmMethod_triggered()));
-    addAttr = new QAction(tr("Add &Attribute"));
-    connect(addAttr, SIGNAL(triggered()), this, SLOT(addAttr_triggered()));
-    rmAttr = new QAction(tr("Delete &Attribute"));
-    connect(rmAttr, SIGNAL(triggered()), this, SLOT(rmAttr_triggered()));
+    ADD_SIGNAL(addMethod, "Add &Method",       "+", "+", this, SLOT(addMethod_triggered()));
+    ADD_SIGNAL(rmMethod,  "Delete &Method",    "+", "+", this, SLOT(rmMethod_triggered()));
+    ADD_SIGNAL(addAttr,   "Add &Attribute",    "+", "+", this, SLOT(addAttr_triggered()));
+    ADD_SIGNAL(rmAttr,    "Delete &Attribute", "+", "+", this, SLOT(rmAttr_triggered()));
 
     classMenu = new QMenu();
     classMenu->addAction(addMethod);
@@ -55,14 +60,10 @@ void TabCanvas::createMenusClass() {
 }
 
 void TabCanvas::createMenusConnections() {
-    aggregation = new QAction(tr("Aggregation &Relation"));
-    connect(aggregation, SIGNAL(triggered()), this, SLOT(aggregation_triggered()));
-    composition = new QAction(tr("Composition &Relation"));
-    connect(composition, SIGNAL(triggered()), this, SLOT(composition_triggered()));
-    generalization = new QAction(tr("Generalization &Relation"));
-    connect(generalization, SIGNAL(triggered()), this, SLOT(generalization_triggered()));
-    association = new QAction(tr("Association &Relation"));
-    connect(association, SIGNAL(triggered()), this, SLOT(association_triggered()));
+    ADD_SIGNAL(aggregation,    "Aggregation &Relation",    "+", "+", this, SLOT(aggregation_triggered()));
+    ADD_SIGNAL(composition,    "Composition &Relation",    "+", "+", this, SLOT(composition_triggered()));
+    ADD_SIGNAL(generalization, "Generalization &Relation", "+", "+", this, SLOT(generalization_triggered()));
+    ADD_SIGNAL(association,    "Association &Relation",    "+", "+", this, SLOT(association_triggered()));
 
     connectionMenu = new QMenu();
     connectionMenu->addAction(aggregation);
