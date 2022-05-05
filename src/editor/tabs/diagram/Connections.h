@@ -46,6 +46,13 @@ public:
     void setColor(const QColor &color);
     QColor color() const;
 
+    void trackNodes();
+
+    /** Protected methods
+     */
+protected:
+    void mousePressEvent(QGraphicsSceneMouseEvent *event);
+
     /** Private methods
      */
 private:

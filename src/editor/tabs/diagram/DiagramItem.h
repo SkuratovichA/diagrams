@@ -11,6 +11,7 @@
 #include <QGraphicsPolygonItem>
 
 #include "Connections.h"
+#include "../fillItems.h"
 
 QT_BEGIN_NAMESPACE
 class QGraphicsItem;
@@ -42,7 +43,7 @@ private:
 
 class NameObject : public QGraphicsTextItem {
 public:
-    NameObject(QGraphicsItem *parent, QFlags<Qt::TextInteractionFlag> flags, qreal x, qreal y);
+    NameObject(QGraphicsItem *parent, QFlags<Qt::TextInteractionFlag> flags, qreal x, qreal y, QString str);
     ~NameObject();
 
     QGraphicsItem *parent() {
@@ -61,14 +62,12 @@ public:
         Actor, Class
     };
 
-    explicit DiagramItem(qreal width, qreal height, DiagramType type) {
+    explicit DiagramItem(qreal width, qreal height, DiagramType type, QColor color) {
         _height = height;
         _width = width;
         _type = type;
         _boundingBox = QRectF(0.0, 0.0, _width, _height);
-        _color = QColor(QRandomGenerator::global()->bounded(256),
-                        QRandomGenerator::global()->bounded(256),
-                        QRandomGenerator::global()->bounded(256), 180);
+        _color = color;
     }
 
     DiagramType type() {
@@ -134,11 +133,14 @@ private:
 
 class ActorDiagramItem : public QGraphicsRectItem, public DiagramItem {
 public:
-    explicit ActorDiagramItem(QGraphicsItem *item = nullptr);
+    explicit ActorDiagramItem(actorParams *params);
 
     void addConnection(ActorConnectionItem *connection);
 
     void removeConnection(ActorConnectionItem *connection);
+
+protected:
+    //void mousePressEvent(QGraphicsSceneMouseEvent *event);
 
 private:
     QSet<ActorConnectionItem *> _connections;
@@ -146,7 +148,7 @@ private:
 
 class ClassDiagramItem : public QGraphicsRectItem, public DiagramItem {
 public:
-    explicit ClassDiagramItem(QGraphicsItem *item = nullptr);
+    explicit ClassDiagramItem(classParams *params);
     ~ClassDiagramItem();
 
     void addConnection(ClassConnectionItem *connection);
@@ -273,6 +275,8 @@ public:
     QSet<ClassConnectionItem *> connections() const {
         return _connections;
     }
+
+    void mousePressEvent(QGraphicsSceneMouseEvent *event);
 
 protected:
     QVariant itemChange(GraphicsItemChange change, const QVariant &value);

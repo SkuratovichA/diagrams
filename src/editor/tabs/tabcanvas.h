@@ -7,9 +7,11 @@
 #include <QMainWindow>
 #include <QMenuBar>
 #include <QUndoGroup>
+#include <QGraphicsView>
 #include "diagram/EditorScene.h"
 #include "diagram/DiagramItem.h"
-
+#include "fillItems.h"
+#include "Itemsbuffer.h"
 
 namespace SceneType {
     enum DiagramType {
@@ -40,38 +42,62 @@ public:
      *
      */
 public:
-    QUndoStack *getUndoStack();
+    QUndoStack *getUndoStack() const {
+        return undoStack;
+    }
 
     std::string getStringRepresentation();
 
+    QGraphicsView *view;
 
-    /** Private functions
-     */
+    void scaleView(qreal scaleFactor);
+
 private:
     template<typename T>
     QPair<T *, T *> getSelectedDiagramItems();
 
-
     QGraphicsItem *selectedObject();
 
-    /** Private variables
-     */
+    void createMenusClass();
+    void createMenusConnections();
+
+    QColor generateColor() {
+        return QColor(QRandomGenerator::global()->bounded(256),
+                      QRandomGenerator::global()->bounded(256),
+                      QRandomGenerator::global()->bounded(256),
+                      180);
+    }
+
+    QPoint generateCoords() {
+        return QPoint(QRandomGenerator::global()->bounded(100),
+                      QRandomGenerator::global()->bounded(100));
+    }
+
 private:
     DiagramType type;
     QUndoStack *undoStack = nullptr;
-    QVBoxLayout *layout = nullptr;
     EditorScene *editorScene = nullptr;
 
-    QMenu *editMenu;
-    //QToolBar *editToolBar;
+    QMenu *classMenu;
     QAction *addMethod;
     QAction *rmMethod;
     QAction *addAttr;
     QAction *rmAttr;
 
+    QMenu *connectionMenu;
+    QAction *aggregation;
+    QAction *composition;
+    QAction *generalization;
+    QAction *association;
+
+    ItemsBuffer *buffer;
+    classParams *createItem;
+    actorParams *createActor;
+
     /** Slots
      */
 public slots:
+    void ShowContextMenu(const QPoint& pos); // this is a slot
     void moveEntity(ActorDiagramItem *movedItem, const QPointF &startPosition);
     void removeEntity();
     void addEntity();
@@ -80,7 +106,8 @@ public slots:
     void cut();
     void copy();
     void paste();
-    void properties();
+    void zoomIn();
+    void zoomOut();
     void sendToBack();
     void sendToFront();
 
@@ -88,6 +115,11 @@ public slots:
     void addAttr_triggered();
     void rmAttr_triggered();
     void rmMethod_triggered();
+
+    void aggregation_triggered();
+    void composition_triggered();
+    void generalization_triggered();
+    void association_triggered();
 
     void createScene();
 };

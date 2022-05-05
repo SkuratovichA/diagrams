@@ -23,6 +23,7 @@ QString createCommandString(QGraphicsItem *item) {
 MoveCommand::MoveCommand(QGraphicsItem *diagramItem, const QPointF &oldPos,
                          QUndoCommand *parent)
         : QUndoCommand(parent), diagramItem(diagramItem), startPos(oldPos), newPos(diagramItem->pos()) {
+    qDebug() << "Move command";
 }
 
 /**
@@ -72,11 +73,12 @@ DeleteCommand::DeleteCommand(QGraphicsScene *scene, QUndoCommand *parent)
     diagramItem = list.first();
     setText(QObject::tr("Delete %1")
                     .arg(createCommandString(diagramItem)));
+
     if (dynamic_cast<ClassDiagramItem *>(diagramItem) != nullptr) {
         auto connections = dynamic_cast<ClassDiagramItem *>(diagramItem)->connections();
-                foreach (ClassConnectionItem *connection, connections) {
-                scene->removeItem(connection);
-            }
+        foreach (ClassConnectionItem *connection, connections) {
+            scene->removeItem(connection);
+        }
     }
 }
 
@@ -87,7 +89,7 @@ void DeleteCommand::undo() {
     graphicsScene->addItem(diagramItem);
     if (dynamic_cast<ClassDiagramItem *>(diagramItem) != nullptr) {
         auto connections = dynamic_cast<ClassDiagramItem *>(diagramItem)->connections();
-                foreach (ClassConnectionItem *connection, connections) {
+        foreach (ClassConnectionItem *connection, connections) {
                 graphicsScene->addItem(connection);
             }
     }
@@ -100,7 +102,7 @@ void DeleteCommand::undo() {
 void DeleteCommand::redo() {
     if (dynamic_cast<ClassDiagramItem *>(diagramItem) != nullptr) {
         auto connections = dynamic_cast<ClassDiagramItem *>(diagramItem)->connections();
-                foreach (ClassConnectionItem *connection, connections) {
+        foreach (ClassConnectionItem *connection, connections) {
                 graphicsScene->removeItem(connection);
             }
     }
@@ -112,16 +114,14 @@ void DeleteCommand::redo() {
 /**
  *
  */
-AddActorCommand::AddActorCommand(QGraphicsScene *scene, QUndoCommand *parent)
+AddActorCommand::AddActorCommand(QGraphicsScene *scene, actorParams *params, QUndoCommand *parent)
         : QUndoCommand(parent), graphicsScene(scene) {
     static int itemCount = 0;
 
-    diagramItem = new ActorDiagramItem();
-    initialStartPosition = QPointF(static_cast<qreal>((itemCount * 15 + 100) % static_cast<int>(scene->width())),
-                                   static_cast<qreal>((itemCount * 15 + 150) % static_cast<int>(scene->height())));
+    diagramItem = new ActorDiagramItem(params);
+    initialStartPosition = QPointF(params->x(), params->y());
     itemCount++;
     scene->update();
-
     setText(QObject::tr("Add %1")
                     .arg(createCommandString(static_cast<QGraphicsItem *>(diagramItem))));
 }
@@ -157,13 +157,12 @@ void AddActorCommand::redo() {
 /**
  *
  */
-AddClassCommand::AddClassCommand(QGraphicsScene *scene, QUndoCommand *parent)
+AddClassCommand::AddClassCommand(QGraphicsScene *scene, classParams *params, QUndoCommand *parent)
         : QUndoCommand(parent), graphicsScene(scene) {
     static int itemCount = 0;
 
-    diagramItem = new ClassDiagramItem();
-    initialStartPosition = QPointF(static_cast<qreal>(((itemCount * 20) + 100) % static_cast<int>(scene->width())),
-                                   static_cast<qreal>(((itemCount * 20) + 100) % static_cast<int>(scene->height())));
+    diagramItem = new ClassDiagramItem(params);
+    initialStartPosition = QPointF(params->x(), params->y());
     itemCount++;
     scene->update();
     setText(QObject::tr("Add %1")

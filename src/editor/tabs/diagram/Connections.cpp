@@ -420,3 +420,10 @@ ActorDiagramItem *ActorConnectionItem::fromNode() const {
 ActorDiagramItem *ActorConnectionItem::toNode() const {
     return nodeTo;
 }
+
+void ClassConnectionItem::mousePressEvent(QGraphicsSceneMouseEvent *event)
+{
+    if (event->button() == Qt::RightButton) {
+        setSelected(true);
+    }
+}
