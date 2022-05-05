@@ -121,8 +121,7 @@ void TabCanvas::createScene() {
     view = new QGraphicsView(editorScene);
 
     view->setDragMode(QGraphicsView::RubberBandDrag);
-    view->setRenderHints(QPainter::Antialiasing
-                         | QPainter::TextAntialiasing);
+    view->setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing);
     view->setContextMenuPolicy(Qt::CustomContextMenu);
     connect(view, SIGNAL(customContextMenuRequested(const QPoint&)),
             this, SLOT(ShowContextMenu(const QPoint&)));
@@ -430,19 +429,23 @@ void TabCanvas::rmAttr_triggered() {
 };
 
 void TabCanvas::aggregation_triggered() {
-    return;
+    auto line = dynamic_cast<ClassConnectionItem *>(selectedObject());
+    line->setType(ClassConnectionItem::Aggregation);
 }
 
 void TabCanvas::composition_triggered() {
-    return;
+    auto line = dynamic_cast<ClassConnectionItem *>(selectedObject());
+    line->setType(ClassConnectionItem::Composition);
 }
 
 void TabCanvas::generalization_triggered() {
-    return;
+    auto line = dynamic_cast<ClassConnectionItem *>(selectedObject());
+    line->setType(ClassConnectionItem::Generalization);
 }
 
 void TabCanvas::association_triggered() {
-    return;
+    auto line = dynamic_cast<ClassConnectionItem *>(selectedObject());
+    line->setType(ClassConnectionItem::Association);
 }
 
 /**

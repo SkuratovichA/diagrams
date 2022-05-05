@@ -9,15 +9,15 @@
 #include <QInputEvent>
 // FIXME: (1) create 2 separate files from this shit. (2) create custom function for adding a line
 
-CustomAttrText::CustomAttrText(ClassDiagramItem *p, QString text, qreal x, qreal y, QFlags<Qt::TextInteractionFlag> flags)
-                            : QGraphicsTextItem(text, p) {
+CustomAttrText::CustomAttrText(ClassDiagramItem *p, QString text, qreal x, qreal y,
+                               QFlags<Qt::TextInteractionFlag> flags)
+        : QGraphicsTextItem(text, p) {
     setTextInteractionFlags(flags);
     setPos(x, y);
     _parent = p;
 }
 
-CustomAttrText::~CustomAttrText()
-{
+CustomAttrText::~CustomAttrText() {
 
 }
 
@@ -30,28 +30,26 @@ void CustomAttrText::keyReleaseEvent(QKeyEvent *event) {
 
     qreal maxLen = 0;
 
-    for (auto item : parent()->attrs()) {
+    for (auto item: parent()->attrs()) {
         maxLen = item->boundingRect().width() > maxLen ? item->boundingRect().width() : maxLen;
     }
-    for (auto item : parent()->methods()) {
+    for (auto item: parent()->methods()) {
         maxLen = item->boundingRect().width() > maxLen ? item->boundingRect().width() : maxLen;
     }
 
     if (maxLen + 30 < parent()->width()) {
         maxLen = parent()->width() - 30;
-    }
-    else if (maxLen + 20 > parent()->width()) {
+    } else if (maxLen + 20 > parent()->width()) {
         maxLen = parent()->width() + 20;
-    }
-    else {
+    } else {
         return;
     }
 
     parent()->setRect(0, 0, maxLen, parent()->height());
-    for (auto item : parent()->attrsLines()) {
+    for (auto item: parent()->attrsLines()) {
         item->setLine(0, 0, maxLen, 0);
     }
-    for (auto item : parent()->methodsLines()) {
+    for (auto item: parent()->methodsLines()) {
         item->setLine(0, 0, maxLen, 0);
     }
     parent()->setWidth(maxLen);
@@ -72,13 +70,13 @@ ActorDiagramItem::ActorDiagramItem(actorParams *params)
     setFlag(QGraphicsItem::ItemSendsGeometryChanges);
 
     QFlags<Qt::TextInteractionFlag> _flags = Qt::TextInteractionFlag::TextEditable |
-             Qt::TextInteractionFlag::TextSelectableByMouse |
-             Qt::TextInteractionFlag::TextSelectableByKeyboard;
+                                             Qt::TextInteractionFlag::TextSelectableByMouse |
+                                             Qt::TextInteractionFlag::TextSelectableByKeyboard;
 
     setPen(QPen(QColor(1, 0, 0, 0)));
     _head = new NameObject(this, _flags, -15, -40, params->name());
 
-    auto setpen = [this](QGraphicsLineItem *l) { l->setPen(QPen(color(), 3.0)); };
+    auto setpen = [this](QGraphicsLineItem *l) {l->setPen(QPen(color(), 3.0));};
     auto legL = new QGraphicsLineItem(35.0, 70.0, 10.0, 110.0, this);
     setpen(legL);
     auto legR = new QGraphicsLineItem(35.0, 70.0, 60.0, 110.0, this);
@@ -118,9 +116,8 @@ void ActorDiagramItem::removeConnection(ActorConnectionItem *connection) {
 ClassDiagramItem::ClassDiagramItem(classParams *params)
         : DiagramItem(params->width() * params->scale(),
                       params->height() * params->scale(),
-                       DiagramItem::Class,
-                       params->color()) {
-
+                      DiagramItem::Class,
+                      params->color()) {
 
     _rowHeight = (params->height() / 4.0) * params->scale();
     _rowWidth = params->width() * params->scale();
@@ -139,10 +136,10 @@ ClassDiagramItem::ClassDiagramItem(classParams *params)
 
     _head = new NameObject(this, _flags, 5, -40, params->name()); // i do not why coordinates 5, -40
 
-    textAttr = new CustomAttrText(this, "_ATTRIBUTES_", _tabText, _tabText,  Qt::NoTextInteraction);
+    textAttr = new CustomAttrText(this, "_ATTRIBUTES_", _tabText, _tabText, Qt::NoTextInteraction);
     textAttr->setFont(QFont("Times", 10, QFont::Bold));
 
-    for (auto attr_name : params->attrs()) {
+    for (auto attr_name: params->attrs()) {
         lineAttr = createLine(0, _rowHeight * line);
         _attrsLines.push_back(lineAttr);
 
@@ -159,12 +156,12 @@ ClassDiagramItem::ClassDiagramItem(classParams *params)
     textAttr->setFont(QFont("Times", 10, QFont::Bold));
     _methods.push_back(textAttr);
 
-    for (auto method_name : params->methods()) {
+    for (auto method_name: params->methods()) {
         lineAttr = createLine(0, _rowHeight * line);
         _methodsLines.push_back(lineAttr);
 
-    textAttr = new CustomAttrText(this, "+ int name()", _tabText, _rowHeight * 3 + _tabText, _flags);
-    _methods.push_back(textAttr);
+        textAttr = new CustomAttrText(this, "+ int name()", _tabText, _rowHeight * 3 + _tabText, _flags);
+        _methods.push_back(textAttr);
         textAttr = new CustomAttrText(this, method_name, _tabText, _rowHeight * line + _tabText, _flags);
         _methods.push_back(textAttr);
 
@@ -172,8 +169,7 @@ ClassDiagramItem::ClassDiagramItem(classParams *params)
     }
 
     setRect(boundingBox());
-    setBrush(QBrush(QColor(255,255,255,255)));
-    //setBrush(QBrush(QColor(240,120,180,60)));
+    setBrush(QBrush(QColor(255, 255, 255, 255)));
 }
 
 /**
@@ -210,7 +206,7 @@ void ClassDiagramItem::removeConnection(ClassConnectionItem *connection) {
  */
 QVariant ClassDiagramItem::itemChange(GraphicsItemChange change, const QVariant &value) {
     if (change == ItemPositionHasChanged) {
-        for(auto *connection : _connections) {
+        for (auto *connection: _connections) {
             connection->trackNodes();
         }
     }
@@ -225,8 +221,7 @@ QVariant ClassDiagramItem::itemChange(GraphicsItemChange change, const QVariant 
  * @param y
  */
 NameObject::NameObject(QGraphicsItem *parent, QFlags<Qt::TextInteractionFlag> flags, qreal x, qreal y, QString str)
-            : QGraphicsTextItem(str, parent)
-    {
+        : QGraphicsTextItem(str, parent) {
     _parent = parent;
     setPos(x, y);
     setFont(QFont("Courier", 20));

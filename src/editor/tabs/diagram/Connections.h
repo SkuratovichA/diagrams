@@ -6,6 +6,7 @@
 #define DIAGRAMS_CONNECTIONS_H
 
 #include <QGraphicsLineItem>
+#include <QGraphicsSceneMouseEvent>
 
 class ClassDiagramItem;
 
@@ -45,8 +46,6 @@ public:
 
     void setColor(const QColor &color);
     QColor color() const;
-
-    void trackNodes();
 
     /** Protected methods
      */
