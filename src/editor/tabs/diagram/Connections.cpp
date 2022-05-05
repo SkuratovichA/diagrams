@@ -25,68 +25,17 @@ ClassConnectionItem::ClassConnectionItem(ClassDiagramItem *fromNode,
                                          QColor color
 ) {
     setFlag(QGraphicsItem::ItemIsSelectable);
-    nodeFrom = fromNode;
-    nodeTo = toNode;
+    _nodeFrom = fromNode;
+    _nodeTo = toNode;
 
-    nodeFrom->addConnection(this);
-    nodeTo->addConnection(this);
+    _nodeFrom->addConnection(this);
+    _nodeTo->addConnection(this);
     _connectionType = connectionType;
     _color = color;
     _order = order;
 
     setZValue(-1.0);
     trackNodes();
-}
-
-/**
- *
- */
-ClassConnectionItem::~ClassConnectionItem() {
-    qDebug() << "removing connections from 'fromNode'";
-    if (nodeFrom != nullptr) {
-        nodeFrom->removeConnection(this);
-    }
-    qDebug() << "DONE";
-
-    qDebug() << "removing connections from 'toNode'";
-    if (nodeTo != nullptr) {
-        nodeTo->removeConnection(this);
-    }
-    qDebug() << "DONE";
-}
-
-/**
- *
- * @return
- */
-ClassDiagramItem *ClassConnectionItem::fromNode() const {
-    return nodeFrom;
-}
-
-/**
- *
- * @return
- */
-ClassDiagramItem *ClassConnectionItem::toNode() const {
-    return nodeTo;
-}
-
-/**
- *
- * @param color
- */
-void ClassConnectionItem::setColor(const QColor &color) {
-    _color = color;
-//    setPen(QPen(color, 1.0));
-}
-
-/**
- *
- * @return
- */
-QColor ClassConnectionItem::color() const {
-    return _color;
-//    return pen().color();
 }
 
 /**
@@ -135,10 +84,10 @@ inline int getOctant(QPointF const &x1y1, QPointF const &x2y2, bool *collision =
  * @return
  */
 QPair<QPointF, QPointF> ClassConnectionItem::edgePoints() const {
-    auto xFrom = nodeFrom->centre().x();
-    auto yFrom = nodeFrom->centre().y();
-    auto xTo = nodeTo->centre().x();
-    auto yTo = nodeTo->centre().y();
+    auto xFrom = _nodeFrom->centre().x(); // this will be changed to the custom point? FIXME
+    auto yFrom = _nodeFrom->centre().y();// this will be changed to the custom point? FIXME
+    auto xTo = _nodeTo->centre().x();// this will be changed to the custom point? FIXME
+    auto yTo = _nodeTo->centre().y();// this will be changed to the custom point? FIXME
 
     auto octant = getOctant(QPointF(xFrom, yFrom), QPointF(xTo, yTo));
     auto a = yTo - yFrom;
@@ -148,34 +97,34 @@ QPair<QPointF, QPointF> ClassConnectionItem::edgePoints() const {
     switch (octant) {
         case 1:
         case 8:
-            xTo = xTo - nodeTo->width() / 2;
-            yTo = -(c + a * xTo) / b;
+            xTo = xTo - _nodeTo->width() / 2; // get the x-axis of the edge point
+            yTo = -(c + a * xTo) / b; // using analytical geometry, compute the coords
 
-            xFrom = xFrom + nodeFrom->width() / 2;
+            xFrom = xFrom + _nodeFrom->width() / 2;// get the x-axis of the edge point
             yFrom = -(c + a * xFrom) / b;
             break;
         case 2:
         case 3:
-            yTo = yTo + nodeTo->height() / 2;
+            yTo = yTo + _nodeTo->height() / 2;// get the x-axis of the edge point
             xTo = -(c + b * yTo) / a;
 
-            yFrom = yFrom - nodeFrom->height() / 2;
+            yFrom = yFrom - _nodeFrom->height() / 2;// get the x-axis of the edge point
             xFrom = -(c + b * yFrom) / a;
             break;
         case 4:
         case 5:
-            xTo = xTo + nodeTo->width() / 2;
+            xTo = xTo + _nodeTo->width() / 2;// get the x-axis of the edge point
             yTo = -(c + a * xTo) / b;
 
-            xFrom = xFrom - nodeFrom->width() / 2;
+            xFrom = xFrom - _nodeFrom->width() / 2;// get the x-axis of the edge point
             yFrom = -(c + a * xFrom) / b;
             break;
         case 6:
         case 7:
-            yTo = yTo - nodeTo->height() / 2;
+            yTo = yTo - _nodeTo->height() / 2;// get the x-axis of the edge point
             xTo = -(c + b * yTo) / a;
 
-            yFrom = yFrom + nodeFrom->height() / 2;
+            yFrom = yFrom + _nodeFrom->height() / 2;// get the x-axis of the edge point
             xFrom = -(c + b * yFrom) / a;
             break;
     }
@@ -197,15 +146,15 @@ void ClassConnectionItem::trackNodes() {
 QPolygonF ClassConnectionItem::lineShaper() const {
     QPolygonF poly;
 
-    auto const fromUpperLeft = nodeFrom->pos();
-    auto const fromUpperRight = fromUpperLeft + QPointF(nodeFrom->width(), 0);
-    auto const fromLowerLeft = fromUpperLeft + QPointF(0, nodeFrom->height());
-    auto const fromLowerRight = fromLowerLeft + QPointF(nodeFrom->width(), 0);
+    auto const fromUpperLeft = _nodeFrom->pos();
+    auto const fromUpperRight = fromUpperLeft + QPointF(_nodeFrom->width(), 0);
+    auto const fromLowerLeft = fromUpperLeft + QPointF(0, _nodeFrom->height());
+    auto const fromLowerRight = fromLowerLeft + QPointF(_nodeFrom->width(), 0);
 
-    auto const toUpperLeft = nodeTo->pos();
-    auto const toUpperRight = toUpperLeft + QPointF(nodeTo->width(), 0);
-    auto const toLowerLeft = toUpperLeft + QPointF(0, nodeTo->height());
-    auto const toLowerRight = toUpperRight + QPointF(0, nodeTo->height());
+    auto const toUpperLeft = _nodeTo->pos();
+    auto const toUpperRight = toUpperLeft + QPointF(_nodeTo->width(), 0);
+    auto const toLowerLeft = toUpperLeft + QPointF(0, _nodeTo->height());
+    auto const toLowerRight = toUpperRight + QPointF(0, _nodeTo->height());
 
 #define ovlp(point) \
         (fromUpperLeft.x() < (point).x() && fromUpperLeft.y() < (point).y() \
@@ -224,7 +173,8 @@ QPolygonF ClassConnectionItem::lineShaper() const {
     QPointF topAdjuster;
     QPointF bottomAdjuster;
     bool collision = false;
-    auto const octant = getOctant(nodeFrom->centre(), nodeTo->centre(), &collision);
+    // FIXME: change to the custom centre of the point
+    auto const octant = getOctant(_nodeFrom->centre(), _nodeTo->centre(), &collision);
     switch (ovlpEdges) {
         case 4:
         case 3:
@@ -357,6 +307,23 @@ void ClassConnectionItem::paint(QPainter *painter, const QStyleOptionGraphicsIte
 
 /**
  *
+ */
+ClassConnectionItem::~ClassConnectionItem() {
+    qDebug() << "removing connections from 'fromNode' (Connections.cpp)";
+    if (_nodeFrom != nullptr) {
+        _nodeFrom->removeConnection(this);
+    }
+    qDebug() << "\tremoved";
+
+    qDebug() << "removing connections from 'toNode' (Conneictions.cpp)";
+    if (_nodeTo != nullptr) {
+        _nodeTo->removeConnection(this);
+    }
+    qDebug() << "\tremoved";
+}
+
+/**
+ *
  * @param fromNode
  * @param toNode
  * @param connectionType
@@ -371,8 +338,7 @@ ActorConnectionItem::ActorConnectionItem(ActorDiagramItem *fromNode,
     nodeTo->addConnection(this);
 
     setZValue(-1.0);
-
-    setColor(Qt::darkRed);
+//    setColor(Qt::darkRed);
     trackNodes();
 }
 
@@ -380,17 +346,21 @@ ActorConnectionItem::ActorConnectionItem(ActorDiagramItem *fromNode,
  *
  */
 ActorConnectionItem::~ActorConnectionItem() {
-    nodeFrom->removeConnection(this);
-    nodeTo->removeConnection(this);
+    if (nodeFrom != nullptr) {
+        nodeFrom->removeConnection(this);
+    }
+    if (nodeTo != nullptr) {
+        nodeTo->removeConnection(this);
+    }
 }
-
-/**
- *
- * @param color
- */
-void ActorConnectionItem::setColor(const QColor &color) {
-    setPen(QPen(color, 1.0));
-}
+//
+///**
+// *
+// * @param color
+// */
+//void ActorConnectionItem::setColor(const QColor &color) {
+//    setPen(QPen(color, 1.0));
+//}
 
 /**
  *

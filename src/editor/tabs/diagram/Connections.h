@@ -41,14 +41,22 @@ public:
     ClassConnectionType connectionType() const {
         return _connectionType;
     }
-    ClassDiagramItem *fromNode() const;
-    ClassDiagramItem *toNode() const;
+    ClassDiagramItem *nodeFrom() const {
+        return _nodeFrom;
+    }
+    ClassDiagramItem *nodeTo() const {
+        return _nodeTo;
+    }
     void trackNodes();
 
-    void setColor(const QColor &color);
-    QColor color() const;
+    QColor color() const {
+        return _color;
+    }
     uint32_t order() const {
         return _order;
+    }
+    void setColor(const QColor &color) {
+        _color = color;
     }
 
     /** Protected methods
@@ -68,8 +76,8 @@ private:
     /** Private attributes
      */
 private:
-    ClassDiagramItem *nodeFrom;
-    ClassDiagramItem *nodeTo;
+    ClassDiagramItem *_nodeFrom;
+    ClassDiagramItem *_nodeTo;
     QLineF connectionLine;
     ClassConnectionType _connectionType;
     QColor _color;
@@ -91,8 +99,6 @@ public:
             ActorConnectionType connectionType);
 
     ~ActorConnectionItem();
-
-    void setColor(const QColor &color);
 
     QColor color() const;
 
