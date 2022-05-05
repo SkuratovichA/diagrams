@@ -73,7 +73,7 @@ private:
                       QRandomGenerator::global()->bounded(100));
     }
 
-    void setZvalue(int forSelect, int forOther);
+    void setZvalue(QList<QGraphicsItem *> items, int val);
 
 private:
     DiagramType type;

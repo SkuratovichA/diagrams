@@ -21,7 +21,7 @@ class EditorScene : public QGraphicsScene {
 
 public:
     explicit EditorScene(QObject *parent = nullptr);
-    void changeZval(QList<QGraphicsItem *> items, int val);
+    void changeZval();
 
 signals:
     void itemMoved(ActorDiagramItem *movedItem, const QPointF &movedFromPosition);
