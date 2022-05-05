@@ -8,7 +8,9 @@
 
 EditorScene::EditorScene(QObject *parent)
         : QGraphicsScene(parent)
-{}
+{
+    multSelect = false;
+}
 
 /**
  *
@@ -24,8 +26,10 @@ void EditorScene::mousePressEvent(QGraphicsSceneMouseEvent *event) {
         oldPos = movingItem->pos();
     }
 
-    //TODO:
-    //clearSelection();
+    if (multSelect == false) {
+        clearSelection();
+    }
+
     QGraphicsScene::mousePressEvent(event);
 }
 
@@ -38,4 +42,18 @@ void EditorScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
         movingItem = nullptr;
     }
     QGraphicsScene::mouseReleaseEvent(event);
+}
+
+void EditorScene::keyPressEvent(QKeyEvent *event)
+{
+    if(event->key() == Qt::Key_Control) {
+        multSelect = true;
+    }
+}
+
+void EditorScene::keyReleaseEvent(QKeyEvent *event)
+{
+    if(event->key() == Qt::Key_Control) {
+        multSelect = false;
+    }
 }

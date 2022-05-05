@@ -28,9 +28,12 @@ signals:
 protected:
     void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
     void mouseReleaseEvent(QGraphicsSceneMouseEvent *event) override;
+    void keyPressEvent(QKeyEvent *event) override;
+    void keyReleaseEvent(QKeyEvent *event) override;
 
 
 private:
+    bool multSelect;
     QGraphicsItem *movingItem = nullptr;
     QPointF oldPos;
 

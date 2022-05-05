@@ -267,7 +267,7 @@ public:
     }
 
     QPointF socket(uint32_t n) const {
-        const auto margin = std::min(std::min(height()/2, width()/2), 50.0);
+        const auto margin = std::min(std::min(height()/2, width()/2), 10.0);
         const QPointF points[3] = {QPointF(0, margin), QPointF(-margin, -margin), QPointF(-margin, margin)};
         return centre() + points[n % 3];
     }
