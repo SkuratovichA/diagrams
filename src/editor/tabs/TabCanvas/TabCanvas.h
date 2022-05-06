@@ -15,6 +15,8 @@
 #include "../fillItems.h"
 #include "../Itemsbuffer.h"
 
+class editorInterface;
+
 #define ADD_SIGNAL(obj, name, icon, shortcut, receiver, memberslot) \
     do {                                                            \
         obj = new QAction(tr((name)), this);                        \
@@ -32,6 +34,7 @@ public:
             QWidget *parent = nullptr,
             QUndoGroup *parentGroup = nullptr
     ) {
+
         _undoStack = new QUndoStack(parentGroup);
         buffer = new ItemsBuffer();
     }
@@ -192,7 +195,8 @@ public slots:
 protected:
     EditorScene *editorScene = nullptr;
     QUndoStack *_undoStack = nullptr;
-    ItemsBuffer *buffer;
+//    EditorInterface *editorInterface = nullptr;
+    ItemsBuffer *buffer = nullptr;
 
 private:
     QGraphicsView *view;
@@ -303,6 +307,8 @@ private:
     QAction *createMessage;
     QAction *deleteMessage;
     actorParams *createActor;
+
+    editorInterface *parentInterface;
 };
 
 #endif // TABCANVAS_H
