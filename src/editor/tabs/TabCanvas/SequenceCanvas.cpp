@@ -50,6 +50,10 @@ void SequenceCanvas::showContextMenu(const QPoint &pos) {
     }
 }
 
+std::string SequenceCanvas::getStringRepresentation() const {
+    return {"hui"};
+}
+
 void SequenceCanvas::asynchronousMessage_triggered() {
     auto line = (selectedObject<ClassConnectionItem>());
     line->setType(ClassConnectionItem::Aggregation);
