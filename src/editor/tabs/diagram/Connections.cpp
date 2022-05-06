@@ -120,10 +120,10 @@ QPair<QPointF, QPointF> ClassConnectionItem::edgePoints() const {
             xFrom = _nodeFrom->centre().x() + fromWidthHalf;
             yFrom = -(c + a * xFrom) / b;
             if (yFrom > _nodeFrom->bottomRight().y()) {
-                yFrom = _nodeFrom->centre().y() + _nodeFrom->height() / 2;
+                yFrom = _nodeFrom->centre().y() + fromHeightHalf;
                 xFrom = -(c + b * yFrom) / a;
             } else if (yFrom < _nodeFrom->topRight().y()) {
-                yFrom = _nodeFrom->centre().y() - _nodeFrom->height() / 2;
+                yFrom = _nodeFrom->centre().y() - fromHeightHalf;
                 xFrom = -(c + b * yFrom) / a;
             }
             break;
@@ -135,7 +135,7 @@ QPair<QPointF, QPointF> ClassConnectionItem::edgePoints() const {
                 yTo = -(c + a * xTo) / b; // using analytical geometry, compute the coords
             }
 
-            yFrom = _nodeFrom->centre().y() - _nodeFrom->height() / 2;
+            yFrom = _nodeFrom->centre().y() - fromHeightHalf;
             xFrom = -(c + b * yFrom) / a;
             if (xFrom > _nodeFrom->topRight().x()) { // work as with an octant #1
                 xFrom = _nodeFrom->centre().x() + fromWidthHalf;
@@ -151,7 +151,7 @@ QPair<QPointF, QPointF> ClassConnectionItem::edgePoints() const {
                 yTo = -(c + a * xTo) / b;
             }
 
-            yFrom = _nodeFrom->centre().y() - _nodeFrom->height() / 2;
+            yFrom = _nodeFrom->centre().y() - fromHeightHalf;
             xFrom = -(c + b * yFrom) / a;
             if (xFrom < _nodeFrom->topLeft().x()) { // use ali
                 xFrom = _nodeFrom->centre().x() - fromWidthHalf;
@@ -170,7 +170,7 @@ QPair<QPointF, QPointF> ClassConnectionItem::edgePoints() const {
             yFrom = -(c + a * xFrom) / b;
             if (yFrom > _nodeFrom->bottomRight().y()) { // use #2
                 qDebug() << "jebe";
-                yFrom = _nodeFrom->centre().y() + _nodeFrom->height() / 2;
+                yFrom = _nodeFrom->centre().y() + fromHeightHalf;
                 xFrom = -(c + b * yFrom) / a;
             }
             break;
@@ -185,7 +185,7 @@ QPair<QPointF, QPointF> ClassConnectionItem::edgePoints() const {
             xFrom = _nodeFrom->centre().x() - fromWidthHalf;
             yFrom = -(c + a * xFrom) / b;
             if (yFrom > _nodeFrom->bottomLeft().y()) {
-                yFrom = _nodeFrom->centre().y() - _nodeFrom->height() / 2;
+                yFrom = _nodeFrom->centre().y() - fromHeightHalf;
                 xFrom = -(c + b * yFrom) / a;
             }
             break;
@@ -201,7 +201,7 @@ QPair<QPointF, QPointF> ClassConnectionItem::edgePoints() const {
             xFrom = _nodeFrom->centre().x() - fromWidthHalf;
             yFrom = -(c + a * xFrom) / b;
             if (yFrom > _nodeFrom->bottomLeft().y()) {
-                yFrom = _nodeFrom->centre().y() + _nodeFrom->height() / 2;
+                yFrom = _nodeFrom->centre().y() + fromHeightHalf;
                 xFrom = -(c + b * yFrom) / a;
             }
             break;
@@ -212,7 +212,7 @@ QPair<QPointF, QPointF> ClassConnectionItem::edgePoints() const {
                 xTo = _nodeTo->centre().x() + toWidthHalf;
                 yTo = -(c + a * xTo) / b;
             }
-            yFrom = _nodeFrom->centre().y() + _nodeFrom->height() / 2;
+            yFrom = _nodeFrom->centre().y() + fromHeightHalf;
             xFrom = -(c + b * yFrom) / a;
             if (xFrom < _nodeFrom->topLeft().x()) {
                 xFrom = _nodeFrom->centre().x() - fromWidthHalf;
@@ -226,7 +226,7 @@ QPair<QPointF, QPointF> ClassConnectionItem::edgePoints() const {
                 xTo = _nodeTo->centre().x() - toWidthHalf;
                 yTo = -(c + a * xTo) / b;
             }
-            yFrom = _nodeFrom->centre().y() + _nodeFrom->height() / 2;
+            yFrom = _nodeFrom->centre().y() + fromHeightHalf;
             xFrom = -(c + b * yFrom) / a;
             if (xFrom < _nodeFrom->topLeft().x()) {
                 xFrom = _nodeFrom->centre().x() - fromWidthHalf;
@@ -378,6 +378,7 @@ void ClassConnectionItem::drawLine(QPainter *painter, const QStyleOptionGraphics
     painter->setRenderHint(QPainter::Antialiasing, true);
     auto points = edgePoints();
     QPolygonF poly;
+    poly.clear();
     auto cLine = line();
     QColor clr(_color);
     QPointF linend;
@@ -417,7 +418,6 @@ void ClassConnectionItem::drawLine(QPainter *painter, const QStyleOptionGraphics
         linend = QPointF(xLeft, y);
     }
     auto const scale = 20;
-
     arrowP1 = linend + QPointF(sin(angle + M_PI - M_PI / 3) * scale,
                                cos(angle + M_PI - M_PI / 3) * scale);
     arrowP2 = linend + QPointF(sin(angle + M_PI / 3) * scale,

@@ -158,6 +158,7 @@ void TabCanvas::addEntity() {
     QUndoCommand *addCommand = nullptr;
     QList<QString> attrs;
     QList<QString> methods;
+    static uint64_t actorStep = 0;
     QPoint point = generateCoords();
 
     switch (type) {

@@ -69,8 +69,8 @@ private:
     }
 
     QPoint generateCoords() {
-        return QPoint(QRandomGenerator::global()->bounded(100),
-                      QRandomGenerator::global()->bounded(100));
+        return QPoint(QRandomGenerator::global()->bounded(600),
+                      30);
     }
 
     void setZvalue(int forSelect, int forOther);

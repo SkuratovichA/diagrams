@@ -74,7 +74,6 @@ editorInterface::editorInterface(
     createDynamicToolBar();
     //createStaticToolBar();
 
-//    qDebug() << "before creating tabs";
     createTabs();
     setCentralWidget(tabWidget);
 }
