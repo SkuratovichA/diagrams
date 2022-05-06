@@ -10,7 +10,9 @@
 
 class ClassDiagramItem;
 
-class SequenceDiagramItem;
+class ActorDiagramItem;
+
+class msgText;
 
 /**
  *
