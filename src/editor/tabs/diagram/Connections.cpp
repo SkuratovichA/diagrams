@@ -39,8 +39,6 @@ ClassConnectionItem::ClassConnectionItem(ClassDiagramItem *fromNode,
              Qt::TextInteractionFlag::TextSelectableByMouse |
              Qt::TextInteractionFlag::TextSelectableByKeyboard;
 
-    msg = new msgText(this, _flags, 20, -40, "MSG");
-
     setZValue(-1.0);
     trackNodes();
 }
@@ -592,29 +590,4 @@ void ClassConnectionItem::mousePressEvent(QGraphicsSceneMouseEvent *event) {
     if (event->button() == Qt::RightButton) {
         setSelected(true);
     }
-}
-
-msgText::msgText(QGraphicsItem *parent, QFlags<Qt::TextInteractionFlag> flags, qreal x, qreal y, QString str)
-        : QGraphicsTextItem(str, parent) {
-    _parent = parent;
-    setPos(x, y);
-    setFont(QFont("Courier", 10));
-    setTextInteractionFlags(flags);
-    topLevelItem();
-}
-
-void msgText::keyReleaseEvent(QKeyEvent *event) {
-    if ((event->key() == Qt::Key_Enter) || (event->key() == Qt::Key_Return)) {
-        setPlainText(toPlainText().remove('\n'));
-        clearFocus();
-        return;
-    }
-
-    //ClassConnectionItem *tmp1 = dynamic_cast<ClassConnectionItem *>(parent());
-    //ActorConnectionItem *tmp2 = dynamic_cast<ActorConnectionItem *>(parent());
-    QRectF rect = parent()->boundingRect();
-    qDebug() << "rect width" << rect.width();
-    qreal midO = rect.width();
-    qreal midW = boundingRect().width();
-    setPos((midO - midW) / 2, -40);
 }

@@ -11,6 +11,7 @@
 class editorInterface;
 
 ClassCanvas::ClassCanvas(QWidget *parent, QUndoGroup *parentGroup) : TabCanvas(parent, parentGroup) {
+    createScene();
     createEntityClassContextMenu();
     createConnectionContextMenu();
 }

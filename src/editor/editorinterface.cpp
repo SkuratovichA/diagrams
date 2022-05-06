@@ -160,7 +160,6 @@ void editorInterface::createDynamicToolBar() {
 
     a->setOrientation(Qt::Horizontal);
     b->setOrientation(Qt::Horizontal);
-
 #else
     fileMenu = menuBar()->addMenu(tr("&File"));
     fileMenu->addAction(saveAction);

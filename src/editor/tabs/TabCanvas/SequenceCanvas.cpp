@@ -14,6 +14,7 @@
 class editorInterface;
 
 SequenceCanvas::SequenceCanvas(QWidget *parent, QUndoGroup *parentGroup) : TabCanvas(parent, parentGroup) {
+    createScene();
     createSequenceContextMenu();
 }
 
@@ -37,7 +38,7 @@ void SequenceCanvas::createSequenceContextMenu() {
 }
 
 void SequenceCanvas::showContextMenu(const QPoint &pos) {
-    auto *item = selectedObject<ClassDiagramItem>();
+    auto *item = selectedObject<SequenceDiagramItem>();
 
     if (item == nullptr) {
         return;

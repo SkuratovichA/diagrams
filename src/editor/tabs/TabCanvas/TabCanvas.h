@@ -33,7 +33,6 @@ public:
             QUndoGroup *parentGroup = nullptr
     ) {
         _undoStack = new QUndoStack(parentGroup);
-        createScene();
         buffer = new ItemsBuffer();
     }
 
@@ -56,18 +55,6 @@ public /*slots*/:
 // region Implemented methods
     // region methods
 private:
-    void createScene() {
-        editorScene = new EditorScene(this);
-        editorScene->setSceneRect(QRect(0, 0, _sceneWidth, _sceneHeight));
-        connect(editorScene, SIGNAL(EditorScene::itemMoved), this, SLOT(TabCanvas::moveEntity));
-        view = new QGraphicsView(editorScene);
-        view->setDragMode(QGraphicsView::RubberBandDrag);
-        view->setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing);
-        view->setContextMenuPolicy(Qt::CustomContextMenu);
-        connect(view, SIGNAL(customContextMenuRequested(const QPoint&)),
-                this, SLOT(ShowContextMenu(const QPoint&)));
-        setCentralWidget(view);
-    }
 
     void scaleView(qreal scaleFactor) {
         qreal factor = view->transform().scale(scaleFactor, scaleFactor).mapRect(QRectF(0, 0, 1, 1)).width();
@@ -158,6 +145,18 @@ public:
 
     QUndoStack *undoStack() const {
         return _undoStack;
+    }
+    void createScene() {
+        editorScene = new EditorScene(this);
+        editorScene->setSceneRect(QRect(0, 0, _sceneWidth, _sceneHeight));
+        connect(editorScene, &EditorScene::itemMoved, this, &TabCanvas::moveEntity);
+        view = new QGraphicsView(editorScene);
+        view->setDragMode(QGraphicsView::RubberBandDrag);
+        view->setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing);
+        view->setContextMenuPolicy(Qt::CustomContextMenu);
+        connect(view, SIGNAL(customContextMenuRequested(const QPoint&)),
+                this, SLOT(showContextMenu(const QPoint&)));
+        setCentralWidget(view);
     }
     // endregion
 
