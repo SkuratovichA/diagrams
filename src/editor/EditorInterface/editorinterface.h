@@ -6,7 +6,7 @@
 #include <QUndoView>
 #include "../Tabs/TabCanvas/TabCanvas.h"
 #include "../Tabs/DiagramItem/DiagramItem.h"
-#include "backend/parse.h"
+#include "../Backend/Parse.h"
 
 namespace Ui {
     class editorInterface;

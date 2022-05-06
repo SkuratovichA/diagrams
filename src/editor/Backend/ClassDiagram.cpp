@@ -1,4 +1,4 @@
-#include "parse.h"
+#include "Parse.h"
 
 void Class::push_color(const json el) {
     this->color = el.is_null() ? "" : el.get<std::string>();

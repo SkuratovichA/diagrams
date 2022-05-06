@@ -8,8 +8,8 @@
 #include <fstream>
 #include "json.hpp"
 
-#include "seq_diagram.h"
-#include "class_diagram.h"
+#include "SeqDiagram.h"
+#include "ClassDiagram.h"
 
 using json = nlohmann::json;
 

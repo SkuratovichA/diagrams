@@ -129,11 +129,11 @@ QPair<QPointF, QPointF> ClassConnectionItem::edgePoints() const {
             xTo = _nodeTo->centre().x() - toWidthHalf;
             yTo = -(c + a * xTo) / b;
             // if a point is not placed to the centre of the box
-            // compute interseptions like there was #2 octant.
+            // compute intersections like there was #2 octant.
             // Basically, the idea is the same for all the octants.
-            // If one octant cannot find the interseptions. E.g. line is found using the formula,
-            // the interseption point does not lie on the edge we want ->
-            // use the same formula for finding an interseption point for n+1 octant
+            // If one octant cannot find the intersections. E.g. line is found using the formula,
+            // the intersection point does not lie on the edge we want ->
+            // use the same formula for finding an intersection point for n+1 octant
             if (yTo > _nodeTo->bottomLeft().y()) {
                 yTo = _nodeTo->centre().y() + toHeightHalf;
                 xTo = -(c + b * yTo) / a;
