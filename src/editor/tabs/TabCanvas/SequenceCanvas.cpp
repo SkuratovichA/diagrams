@@ -10,10 +10,13 @@
 #include <QUndoGroup>
 
 #include "TabCanvas.h"
+#include "../../editorinterface.h"
 
-class editorInterface;
+//class editorInterface;
 
 SequenceCanvas::SequenceCanvas(QWidget *parent, QUndoGroup *parentGroup) : TabCanvas(parent, parentGroup) {
+    parentInterface = dynamic_cast<editorInterface *>(parent);
+    createScene();
     createSequenceContextMenu();
 }
 
@@ -37,7 +40,7 @@ void SequenceCanvas::createSequenceContextMenu() {
 }
 
 void SequenceCanvas::showContextMenu(const QPoint &pos) {
-    auto *item = selectedObject<ClassDiagramItem>();
+    auto *item = selectedObject<SequenceDiagramItem>();
 
     if (item == nullptr) {
         return;
@@ -85,15 +88,11 @@ void SequenceCanvas::deleteMessage_triggered() {
 }
 
 void SequenceCanvas::addEntity() {
-    QList<QString> attrs;
-    QList<QString> methods;
+    qDebug() << "add enttity pressed. Do something!";
     QPoint point = generateCoords();
+    QString className = "hello";
 
-    actorParams *createActor;
-    attrs.push_back("+ int name");
-    methods.push_back("+ int name()");
-
-    createActor = new actorParams(point.x(), point.y(), "ACTOR", color(), 80, 50);
+    createActor = new actorParams(point.x(), point.y(), className, color(), 80, 50);
 
     _undoStack->push(
             new AddActorCommand(editorScene, createActor)

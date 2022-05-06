@@ -17,15 +17,27 @@ find_package(Qt6 COMPONENTS
 
 add_executable(proj
         src/main.cpp
-        src/mainwindow.cpp                        src/mainwindow.h
-        src/editor/editorinterface.cpp            src/editor/editorinterface.h
+        src/mainwindow.cpp
+        src/editor/editorinterface.cpp
         src/editor/tabs/TabCanvas/ClassCanvas.cpp
+        src/editor/tabs/diagram/DiagramItem.cpp
+        src/editor/tabs/diagram/EditorScene.cpp
+        src/editor/tabs/diagram/Commands.cpp
+        src/editor/tabs/diagram/Connections.cpp
+        src/editor/tabs/Itemsbuffer.cpp
+        src/editor/tabs/fillItems.cpp
+        src/editor/tabs/TabCanvas/SequenceCanvas.cpp
+
+        src/mainwindow.h
+        src/editor/tabs/fillItems.h
+        src/editor/tabs/diagram/DiagramItem.h
+        src/editor/tabs/diagram/EditorScene.h
+        src/editor/tabs/diagram/Commands.h
+        src/editor/tabs/diagram/Connections.h
+        src/editor/editorinterface.h
         src/editor/tabs/TabCanvas/TabCanvas.h
-        src/editor/tabs/TabCanvas/TabCanvas.h
-        src/editor/tabs/diagram/DiagramItem.cpp src/editor/tabs/diagram/DiagramItem.h
-        src/editor/tabs/diagram/EditorScene.cpp src/editor/tabs/diagram/EditorScene.h
-        src/editor/tabs/diagram/Commands.cpp src/editor/tabs/diagram/Commands.h
-        src/editor/tabs/diagram/Connections.cpp src/editor/tabs/diagram/Connections.h src/editor/tabs/Itemsbuffer.cpp src/editor/tabs/Itemsbuffer.h src/editor/tabs/fillItems.cpp src/editor/tabs/fillItems.h src/editor/tabs/TabCanvas/SequenceCanvas.cpp)
+        src/editor/tabs/Itemsbuffer.h
+        )
 target_link_libraries(proj
         Qt::Core
         Qt::Gui
