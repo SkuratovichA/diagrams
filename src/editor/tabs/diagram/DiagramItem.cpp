@@ -76,7 +76,7 @@ ActorDiagramItem::ActorDiagramItem(actorParams *params)
                                              Qt::TextInteractionFlag::TextSelectableByKeyboard;
 
     setPen(QPen(QColor(1, 0, 0, 0)));
-    _head = new NameObject(this, _flags, -10, -40, params->name());
+    _head = new NameObject(this, _flags, -3, -40, params->name());
 
     auto setpen = [this](QGraphicsLineItem *l) {l->setPen(QPen(color(), 3.0));};
 //    auto legL = new QGraphicsLineItem(35.0, 70.0, 10.0, 110.0, this);
@@ -94,6 +94,9 @@ ActorDiagramItem::ActorDiagramItem(actorParams *params)
     auto actorRect = new QGraphicsRectItem(0, 0, params->width(), params->height(), this);
     actorRect->setPen(QPen(QColor(Qt::black), 3.0));
     actorRect->setBrush(QBrush(color()));
+
+    line = new QGraphicsLineItem(params->width()/2.0, params->height(), params->width()/2.0, 800, this);
+    line->setPen(QPen(Qt::black, 2, Qt::DashLine));
     setRect(boundingBox());
 }
 

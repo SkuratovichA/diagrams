@@ -169,6 +169,7 @@ protected:
 
 private:
     QSet<ActorConnectionItem *> _connections;
+    QGraphicsLineItem *line;
 };
 
 class ClassDiagramItem : public QGraphicsRectItem, public DiagramItem {

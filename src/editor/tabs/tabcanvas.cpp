@@ -35,6 +35,7 @@ TabCanvas::TabCanvas(QWidget *parent, DiagramType type, QUndoGroup *parentGroup)
 
     createMenusClass();
     createMenusConnections();
+    createMenusSequence();
     // TODO: do same for sequence diagram
 }
 
@@ -76,15 +77,37 @@ void TabCanvas::createMenusConnections() {
     connectionMenu->addAction(orientation);
 }
 
+void TabCanvas::createMenusSequence() {
+    void request_triggered();
+    void response_triggered();
+    void deletion_triggered();
+    void creation_triggered();
+    ADD_SIGNAL(requestMsg,  "Request &Message", "+", "+", this, SLOT(request_triggered()));
+    ADD_SIGNAL(responseMsg, "Response &Message", "+", "+", this, SLOT(response_triggered()));
+    ADD_SIGNAL(createMsg,   "Create &Message", "+", "+", this, SLOT(creation_triggered()));
+    ADD_SIGNAL(deleteMsg,   "Delete &Message", "+", "+", this, SLOT(deletion_triggered()));
+
+    sequenceMenu = new QMenu();
+    sequenceMenu->addAction(requestMsg);
+    sequenceMenu->addAction(responseMsg);
+    sequenceMenu->addAction(createMsg);
+    sequenceMenu->addAction(deleteMsg);
+}
+
+// I CHANGE THIS FUNCTION FOR SEQUENCE DIAGRAM
 void TabCanvas::ShowContextMenu(const QPoint& pos) // this is a slot
 {
-    QGraphicsItem *item = selectedObject();
+    QList<QGraphicsItem *>items = editorScene->selectedItems();
+    qDebug() << items.count();
     ClassDiagramItem *ptr1;
     ActorDiagramItem *ptr2;
+    ActorDiagramItem *ptr3;
 
-    if (item == nullptr) {
+    if (items.isEmpty()) {
         return;
     }
+
+    QGraphicsItem *item = items.first();
 
     switch (type) {
         case SceneType::CLASS:
@@ -99,20 +122,25 @@ void TabCanvas::ShowContextMenu(const QPoint& pos) // this is a slot
 
             break;
         case SceneType::SEQUENCE:
-            ptr2 = dynamic_cast<ActorDiagramItem *>(item);
+            if (items.count() < 2) {
+                return;
+            }
+            qDebug() << "apapapa";
+            ptr2 = dynamic_cast<ActorDiagramItem *>(items.takeAt(0));
+            ptr3 = dynamic_cast<ActorDiagramItem *>(items.takeAt(0));
 
-            if (ptr2 != nullptr) {
-                // TODO: actor
+            if (ptr2 == nullptr || ptr3 == nullptr) {
+                return;
             }
-            else {
-                // TODO: message
-            }
+
+            sequenceMenu->exec(this->mapToGlobal(pos));
 
             break;
         default:
             assert(!"This statement must not be reached");
     }
 }
+////////////////////////////////////////////////////////////
 
 /**
  *
@@ -478,6 +506,22 @@ void TabCanvas::orientation_triggered() {
     auto line = dynamic_cast<ClassConnectionItem *>(selectedObject());
     line->changeOrientation();
     editorScene->update();
+}
+
+void TabCanvas::request_triggered() {
+    qDebug() << "request triggered";
+}
+
+void TabCanvas::response_triggered() {
+    qDebug() << "response triggered";
+}
+
+void TabCanvas::deletion_triggered() {
+    qDebug() << "deletion triggered";
+}
+
+void TabCanvas::creation_triggered() {
+    qDebug() << "creation triggered";
 }
 
 /**

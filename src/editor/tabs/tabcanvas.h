@@ -60,6 +60,7 @@ private:
 
     void createMenusClass();
     void createMenusConnections();
+    void createMenusSequence();
 
     QColor generateColor() {
         return QColor(QRandomGenerator::global()->bounded(256),
@@ -94,6 +95,14 @@ private:
     QAction *dependency;
     QAction *orientation;
 
+    //////////////////////////////////////////////////////
+    QMenu *sequenceMenu;
+    QAction *requestMsg;
+    QAction *responseMsg;
+    QAction *deleteMsg;
+    QAction *createMsg;
+    ////////////////////////////////////////////////////////
+
     ItemsBuffer *buffer;
     classParams *createItem;
     actorParams *createActor;
@@ -126,6 +135,13 @@ public slots:
     void association_triggered();
     void dependency_triggered();
     void orientation_triggered();
+
+    /////////////////////////////////////////////////
+    void request_triggered();
+    void response_triggered();
+    void deletion_triggered();
+    void creation_triggered();
+    //////////////////////////////////////////////////
 
     void createScene();
 };
