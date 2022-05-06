@@ -99,6 +99,8 @@ private:
     QColor _color;
     uint32_t _order;
     msgText *msg;
+    msgText *leftNum;
+    msgText *rightNum;
 };
 
 /**

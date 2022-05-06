@@ -6,6 +6,7 @@
 #include <QUndoView>
 #include "tabs/TabCanvas/TabCanvas.h"
 #include "tabs/diagram/DiagramItem.h"
+#include "backend/parse.h"
 
 namespace Ui {
     class editorInterface;

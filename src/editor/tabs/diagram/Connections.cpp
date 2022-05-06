@@ -35,7 +35,9 @@ ClassConnectionItem::ClassConnectionItem(ClassDiagramItem *fromNode,
     _color = color;
     _order = order;
 
-    msg = new msgText(this, getFlags(), 20, -40, "MSG");
+    leftNum = new msgText(this, getFlags(), 0, 0, "0..n");
+    msg = new msgText(this, getFlags(), 0, 0, "Method");
+    rightNum = new msgText(this, getFlags(), 0, 0, "1..n");
 
     setZValue(-1.0);
     trackNodes();
@@ -484,10 +486,30 @@ void ClassConnectionItem::paint(QPainter *painter, const QStyleOptionGraphicsIte
     painter->drawPolygon(lineShaper());
 #endif
     drawLine(painter, option);
-    auto p = (_nodeTo->socket(order()) + _nodeFrom->socket(order()))/2;
-    QGraphicsItem *text = this->childItems().first();
-    qreal widthText = text->boundingRect().width();
-    text->setPos(p.x() - widthText/2.0, p.y() - 30);
+    QPointF pText = (_nodeTo->socket(order()) + _nodeFrom->socket(order()))/2;
+    QPair<QPointF, QPointF> ep = edgePoints();
+
+//    QPointF pLeft = QPointF(
+//            _nodeFrom->pos().x() + _nodeFrom->width() + 20,
+//            _nodeFrom->pos().y() + _nodeFrom->height()/2.0 + 20);
+//    QPointF pRight = QPointF(
+//            _nodeTo->pos().x() - 20,
+//            _nodeTo->pos().y() + _nodeTo->height()/2.0 + 20);
+
+    qreal widthText = msg->boundingRect().width();
+    qreal widthLeft = leftNum->boundingRect().width();
+    qreal widthRight = rightNum->boundingRect().width();
+
+    QPointF pLeft = QPointF(
+            ep.first.x() + _nodeFrom->width() + 20,
+            _nodeFrom->pos().y() + _nodeFrom->height()/2.0 + 20);
+    QPointF pRight = QPointF(
+            _nodeTo->pos().x() - 20,
+            _nodeTo->pos().y() + _nodeTo->height()/2.0 + 20);
+
+    msg->setPos(pText.x() - widthText/2.0, pText.y() - 30);
+    leftNum->setPos(pLeft);
+    rightNum->setPos(pRight);
 }
 
 /**

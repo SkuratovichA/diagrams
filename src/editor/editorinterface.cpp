@@ -193,6 +193,7 @@ QString editorInterface::get_text_representation() {
     auto size = tabWidget->count();
     std::string prg;
     for (int i = 0; i < size; i++) {
+        //reinterpret_cast<TabCanvas *>(tabWidget->widget(i))->editorScene->items();
 //        prg += reinterpret_cast<TabCanvas *>(tabWidget->widget(i))->getStringRepresentation();
     }
     return {prg.c_str()};
