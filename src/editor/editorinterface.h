@@ -84,6 +84,7 @@ private:
 
 private:
     QTabWidget *tabWidget;
+    Program prg;
 
     QUndoGroup *undoStack = nullptr;
     QUndoView *undoView = nullptr;

@@ -13,14 +13,6 @@
 
 using json = nlohmann::json;
 
-class Note {
-public:
-    std::vector<double> coords;
-    std::string msg;
-
-    void fill_note(const json el);
-};
-
 json check_null(std::string val);
 
 class Program {
@@ -29,6 +21,7 @@ public:
     std::vector<dgrm_seq_t> diagram_sequence;
     DiagramClass obj_cl;
     DiagramSequence obj_se;
+
 
     void parse_file(const json file);
 

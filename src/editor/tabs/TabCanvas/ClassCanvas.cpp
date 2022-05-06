@@ -20,6 +20,10 @@ QPoint ClassCanvas::generateCoords() const {
     return QPoint(QRandomGenerator::global()->bounded(600), QRandomGenerator::global()->bounded(600));
 }
 
+void ClassCanvas::getStringRepresentation(Program &prg) {
+    return;
+}
+
 void ClassCanvas::createEntityClassContextMenu() {
     ADD_SIGNAL(addMethod, "Add &Method", "+", "+", this, SLOT(addMethod_triggered()));
     ADD_SIGNAL(rmMethod, "Delete &Method", "+", "+", this, SLOT(rmMethod_triggered()));

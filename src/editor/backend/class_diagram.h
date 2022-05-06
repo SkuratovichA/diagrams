@@ -2,8 +2,6 @@
 
 using json = nlohmann::json;
 
-class Note;
-
 typedef struct attrs {
     std::string perm;
     std::string type;

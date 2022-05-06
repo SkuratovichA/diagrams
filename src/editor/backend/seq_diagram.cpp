@@ -11,11 +11,6 @@ void Activate::fill_activate(const json el) {
     this->who = el.at("who").get<std::string>();
 }
 
-void Alt::fill_alt(const json el) {
-    this->if_cond = el.at("if_cond").get<std::string>();
-    this->else_cond = el.at("else_cond").get<std::string>();;
-}
-
 void DiagramSequence::fill_structure_actor(const json el, dgrm_seq_t& o) {
     for (auto x : el) {
         o.actors.push_back(x.at("actor").get<std::string>());
@@ -36,15 +31,6 @@ void DiagramSequence::fill_structure_activate(const json el, dgrm_seq_t& o) {
         Program::push_coords(x.at("coords"), tmp.coords);
         tmp.fill_activate(x);
         o.activates.push_back(tmp);
-    }
-}
-
-void DiagramSequence::fill_structure_alt(const json el, dgrm_seq_t& o) {
-    for (auto x : el) {
-        Alt tmp;
-        Program::push_coords(x.at("coords"), tmp.coords);
-        tmp.fill_alt(x);
-        o.alts.push_back(tmp);
     }
 }
 
@@ -86,24 +72,6 @@ void DiagramSequence::add_activate_to_file(json& j, std::vector<Activate> ac) {
                 }
             },
             {"who" , x.who }
-        };
-    }
-}
-
-void DiagramSequence::add_alt_to_file(json& j, std::vector<Alt> al) {
-    int i = 0;
-
-    for (auto& x : al) {
-        j["alts"][i++] =
-        {
-            {"coords",
-                {
-                    {"x" , x.coords[0]},
-                    {"y" , x.coords[1]}
-                }
-            },
-            {"if_cond" , x.if_cond },
-            {"else_cond" , x.else_cond }
         };
     }
 }

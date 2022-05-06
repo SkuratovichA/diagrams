@@ -9,6 +9,7 @@
 #include <QUndoGroup>
 #include <QGraphicsView>
 
+#include "../../backend/parse.h"
 #include "../diagram/EditorScene.h"
 #include "../diagram/Commands.h"
 #include "../diagram/DiagramItem.h"
@@ -166,7 +167,7 @@ public:
     // region Virtual methods
 public:
     virtual QPoint generateCoords() const = 0;
-    virtual std::string getStringRepresentation() const = 0;
+    virtual void getStringRepresentation(Program &prg) = 0;
     // endregion
 // endregion
 
@@ -213,7 +214,7 @@ public:
     ClassCanvas(QWidget *parent = nullptr, QUndoGroup *parentGroup = nullptr);
 
 public:
-    std::string getStringRepresentation() const override {return {"hui"};}
+    void getStringRepresentation(Program &prg) override;
 
     QPoint generateCoords() const override;
 
@@ -292,7 +293,7 @@ public slots:
     void deleteMessage_triggered();
 
 public:
-    std::string getStringRepresentation() const override;
+    void getStringRepresentation(Program &prg) override;
     QPoint generateCoords() const override;
 
 private:

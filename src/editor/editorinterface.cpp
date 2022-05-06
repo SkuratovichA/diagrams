@@ -215,9 +215,11 @@ void editorInterface::actionSave_triggered() {
     }
 
     QTextStream in(&file);
-    auto prg = get_text_representation();
-    qDebug() << prg;
-    in << prg;
+    get_text_representation();
+    //prg.fill_file();
+
+    //qDebug() << prg;
+    //in << prg;
     file.close();
 }
 
@@ -237,9 +239,11 @@ void editorInterface::actionSaveAs_triggered() {
         return;
     }
     QTextStream in(&file);
-    auto prg = get_text_representation();
-    qDebug() << prg;
-    in << prg;
+    get_text_representation();
+    //prg.fill_file();
+
+    //qDebug() << prg;
+    //in << prg;
     file.close();
 }
 
