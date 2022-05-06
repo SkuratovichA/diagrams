@@ -25,10 +25,10 @@ class QPointF;
 QT_END_NAMESPACE
 
 // for attrs and table expanding
-class CustomAttrText : public QGraphicsTextItem {
+class ClassTextAttr : public QGraphicsTextItem {
 public:
-    CustomAttrText(ClassDiagramItem *p, QString text, qreal x, qreal y, QFlags<Qt::TextInteractionFlag> flags);
-    ~CustomAttrText();
+    ClassTextAttr(ClassDiagramItem *p, QString text, qreal x, qreal y, QFlags<Qt::TextInteractionFlag> flags);
+    ~ClassTextAttr();
 
     ClassDiagramItem *parent() {
         return _parent;
@@ -63,11 +63,26 @@ public:
     };
 
     explicit DiagramItem(qreal width, qreal height, DiagramType type, QColor color) {
+        _rowHeight = 30.0;
+        _rowWidth = width;
+        _tabText = 2.0;
         _height = height;
         _width = width;
         _type = type;
         _boundingBox = QRectF(0.0, 0.0, _width, _height);
         _color = color;
+    }
+
+    qreal rowHeight() const {
+        return _rowHeight;
+    }
+
+    qreal rowWidth() const {
+        return _rowWidth;
+    }
+
+    qreal tabText() const {
+        return _tabText;
     }
 
     DiagramType type() {
@@ -124,6 +139,9 @@ public:
 
     NameObject *_head;
 private:
+    qreal _rowHeight;
+    qreal _rowWidth;
+    qreal _tabText;
     qreal _height;
     qreal _width;
     QRectF _boundingBox;
@@ -155,7 +173,7 @@ public:
 
     void removeConnection(ClassConnectionItem *connection);
 
-    QList<CustomAttrText *> methods() {
+    QList<ClassTextAttr *> methods() {
         return _methods;
     }
 
@@ -163,7 +181,7 @@ public:
         return _methodsLines;
     }
 
-    QList<CustomAttrText *> attrs() {
+    QList<ClassTextAttr *> attrs() {
         return _attrs;
     }
 
@@ -175,7 +193,7 @@ public:
         if (_methods.isEmpty()) {
             return;
         }
-        CustomAttrText *tmp = _methods.takeLast();
+        ClassTextAttr *tmp = _methods.takeLast();
         delete tmp;
     }
 
@@ -191,7 +209,7 @@ public:
         if (_attrs.isEmpty()) {
             return;
         }
-        CustomAttrText *tmp = _attrs.takeLast();
+        ClassTextAttr *tmp = _attrs.takeLast();
         delete tmp;
     }
 
@@ -203,11 +221,11 @@ public:
         delete tmp;
     }
 
-    void pushAttr(CustomAttrText *item) {
+    void pushAttr(ClassTextAttr *item) {
         _attrs.push_back(item);
     }
 
-    void pushMethod(CustomAttrText *item) {
+    void pushMethod(ClassTextAttr *item) {
         _methods.push_back(item);
     }
 
@@ -219,34 +237,22 @@ public:
         _attrsLines.push_back(item);
     }
 
-    qreal rowHeight() const {
-        return _rowHeight;
-    }
-
-    qreal rowWidth() const {
-        return _rowWidth;
-    }
-
-    qreal tabText() const {
-        return _tabText;
-    }
-
     void moveLines(int st, long long el) {
                 foreach (QGraphicsLineItem *val, _methodsLines) {
-                val->setPos(0, (el + st) * _rowHeight);
+                val->setPos(0, (el + st) * rowHeight());
                 st++;
             }
     }
 
     void moveTexts(int st, long long el) {
-                foreach (CustomAttrText *val, _methods) {
-                val->setPos(0, (el + st) * _rowHeight + _tabText);
+                foreach (ClassTextAttr *val, _methods) {
+                val->setPos(0, (el + st) * rowHeight() + tabText());
                 st++;
             }
     }
 
     QGraphicsLineItem *createLine(qreal x, qreal y) {
-        auto line = new QGraphicsLineItem(0, 0, _rowWidth, 0, this);
+        auto line = new QGraphicsLineItem(0, 0, rowWidth(), 0, this);
         line->setPos(x, y);
         return line;
     }
@@ -312,18 +318,14 @@ protected:
     QVariant itemChange(GraphicsItemChange change, const QVariant &value);
 
 private:
-    QList<CustomAttrText *> _attrs;
-    QList<CustomAttrText *> _methods;
+    QList<ClassTextAttr *> _attrs;
+    QList<ClassTextAttr *> _methods;
     QList<QGraphicsLineItem *> _attrsLines;
     QList<QGraphicsLineItem *> _methodsLines;
-    qreal _rowHeight;
-    qreal _rowWidth;
-    qreal _tabText;
     QFlags<Qt::TextInteractionFlag> _flags;
 
     QSet<ClassConnectionItem *> _connections;
     uint32_t _numberOfSockets = 20;
-    uint32_t _connectionsPerEdge = 5;
 };
 
 #endif // Object_H

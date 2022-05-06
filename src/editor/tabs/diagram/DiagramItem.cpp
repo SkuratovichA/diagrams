@@ -8,19 +8,19 @@
 #include <QPainter>
 #include <QInputEvent>
 
-CustomAttrText::CustomAttrText(ClassDiagramItem *p, QString text, qreal x, qreal y,
-                               QFlags<Qt::TextInteractionFlag> flags)
+ClassTextAttr::ClassTextAttr(ClassDiagramItem *p, QString text, qreal x, qreal y,
+                             QFlags<Qt::TextInteractionFlag> flags)
         : QGraphicsTextItem(text, p) {
     setTextInteractionFlags(flags);
     setPos(x, y);
     _parent = p;
 }
 
-CustomAttrText::~CustomAttrText() {
+ClassTextAttr::~ClassTextAttr() {
 
 }
 
-void CustomAttrText::keyReleaseEvent(QKeyEvent *event) {
+void ClassTextAttr::keyReleaseEvent(QKeyEvent *event) {
     if ((event->key() == Qt::Key_Enter) || (event->key() == Qt::Key_Return)) {
         setPlainText(toPlainText().remove('\n'));
         clearFocus();
@@ -79,19 +79,21 @@ ActorDiagramItem::ActorDiagramItem(actorParams *params)
     _head = new NameObject(this, _flags, -10, -40, params->name());
 
     auto setpen = [this](QGraphicsLineItem *l) {l->setPen(QPen(color(), 3.0));};
-    auto legL = new QGraphicsLineItem(35.0, 70.0, 10.0, 110.0, this);
-    setpen(legL);
-    auto legR = new QGraphicsLineItem(35.0, 70.0, 60.0, 110.0, this);
-    setpen(legR);
-    auto handL = new QGraphicsLineItem(35.0, 45.0, 0.0, 35.0, this);
-    setpen(handL);
-    auto handR = new QGraphicsLineItem(35.0, 45.0, 70.0, 35.0, this);
-    setpen(handR);
-    auto body = new QGraphicsLineItem(35.0, 30.0, 35.0, 70.0, this);
-    setpen(body);
-    auto head = new QGraphicsEllipseItem(20.0, 0.0, 30.0, 30.0, this);
-    head->setPen(QPen(color(), 3.0));
-    head->setBrush(QBrush(color()));
+//    auto legL = new QGraphicsLineItem(35.0, 70.0, 10.0, 110.0, this);
+//    setpen(legL);
+//    auto legR = new QGraphicsLineItem(35.0, 70.0, 60.0, 110.0, this);
+//    setpen(legR);
+//    auto handL = new QGraphicsLineItem(35.0, 45.0, 0.0, 35.0, this);
+//    setpen(handL);
+//    auto handR = new QGraphicsLineItem(35.0, 45.0, 70.0, 35.0, this);
+//    setpen(handR);
+//    auto body = new QGraphicsLineItem(35.0, 30.0, 35.0, 70.0, this);
+//    setpen(body);
+//    auto head = new QGraphicsEllipseItem(20.0, 0.0, 30.0, 30.0, this);
+//    auto textAttr = new ClassTextAttr(this, params->name(), tabText(), rowHeight() + tabText(), _flags);
+    auto actorRect = new QGraphicsRectItem(0, 0, 100, 50, this);
+    actorRect->setPen(QPen(QColor(Qt::black), 3.0));
+    actorRect->setBrush(QBrush(color()));
     setRect(boundingBox());
 }
 
@@ -121,11 +123,11 @@ ClassDiagramItem::ClassDiagramItem(classParams *params)
                       DiagramItem::Class,
                       params->color()) {
 
-    _rowHeight = 30.0;
-    _rowWidth = params->width();
-    _tabText = 2.0;
+//    rowHeight() = 30.0;
+//    _rowWidth = params->width();
+//    tabText() = 2.0;
     QGraphicsLineItem *lineAttr;
-    CustomAttrText *textAttr;
+    ClassTextAttr *textAttr;
     _flags = Qt::TextInteractionFlag::TextEditable |
              Qt::TextInteractionFlag::TextSelectableByMouse |
              Qt::TextInteractionFlag::TextSelectableByKeyboard;
@@ -138,29 +140,29 @@ ClassDiagramItem::ClassDiagramItem(classParams *params)
 
     _head = new NameObject(this, _flags, 20, -40, params->name()); // i do not know why coordinates 5, -40
 
-    textAttr = new CustomAttrText(this, "ATTRIBUTES", _tabText, _tabText, Qt::NoTextInteraction);
+    textAttr = new ClassTextAttr(this, "ATTRIBUTES", tabText(), tabText(), Qt::NoTextInteraction);
     textAttr->setFont(QFont("Times", 10, QFont::Bold));
 
     for (auto attr_name: params->attrs()) {
-        lineAttr = createLine(0, _rowHeight * line);
+        lineAttr = createLine(0, rowHeight() * line);
         _attrsLines.push_back(lineAttr);
-        textAttr = new CustomAttrText(this, attr_name, _tabText, _rowHeight * line + _tabText, _flags);
+        textAttr = new ClassTextAttr(this, attr_name, tabText(), rowHeight() * line + tabText(), _flags);
         _attrs.push_back(textAttr);
 
         line++;
     }
 
-    lineAttr = createLine(0, _rowHeight * line);
+    lineAttr = createLine(0, rowHeight() * line);
     _methodsLines.push_back(lineAttr);
 
-    textAttr = new CustomAttrText(this, "METHODS", _tabText, _rowHeight * line++ + _tabText, Qt::NoTextInteraction);
+    textAttr = new ClassTextAttr(this, "METHODS", tabText(), rowHeight() * line++ + tabText(), Qt::NoTextInteraction);
     textAttr->setFont(QFont("Times", 10, QFont::Bold));
     _methods.push_back(textAttr);
 
     for (auto method_name: params->methods()) {
-        lineAttr = createLine(0, _rowHeight * line);
+        lineAttr = createLine(0, rowHeight() * line);
         _methodsLines.push_back(lineAttr);
-        textAttr = new CustomAttrText(this, method_name, _tabText, _rowHeight * line + _tabText, _flags);
+        textAttr = new ClassTextAttr(this, method_name, tabText(), rowHeight() * line + tabText(), _flags);
         _methods.push_back(textAttr);
 
         line++;
