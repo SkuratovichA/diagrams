@@ -113,6 +113,20 @@ public:
     }
 
     template<typename T>
+    QList<T *> getItems() {
+        QList<T *> items;
+        for (auto x : editorScene->items()) {
+            if (dynamic_cast<T *>(x) == nullptr) {
+                continue;
+            }
+
+            items.push_back(dynamic_cast<T *>(x));
+        }
+
+        return items;
+    }
+
+    template<typename T>
     void setZvalue(QList<QGraphicsItem *> items, int val) {
         T *ptr1;
         for (auto x: items) {

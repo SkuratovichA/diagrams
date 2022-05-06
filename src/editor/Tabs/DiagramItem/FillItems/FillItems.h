@@ -12,7 +12,14 @@
 class objectParams {
 public:
     objectParams(qreal x, qreal y, QString name,
-                 QColor color, qreal width, qreal height);
+                 QColor color, qreal width, qreal height) {
+        _x = x;
+        _y = y;
+        _color = color;
+        _width = width;
+        _height = height;
+        _name = name;
+    };
     ~objectParams() = default;
 
     qreal x() const {

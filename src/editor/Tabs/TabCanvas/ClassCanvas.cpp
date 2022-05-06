@@ -20,7 +20,21 @@ QPoint ClassCanvas::generateCoords() const {
 }
 
 void ClassCanvas::getStringRepresentation(Program &prg) {
-    return;
+    std::vector<Class> objects;
+    std::vector<Conct> connects;
+    ItemsBuffer buf;
+
+    for (auto x : getItems<ClassDiagramItem>()) {
+        buf.fillClassItems(x);
+    }
+
+//    for (auto x : getItems<ClassConnectionItem>()) {
+//        buf.fillConnectsItems(x);
+//    }
+
+    for (auto x : buf.classItems()) {
+        qDebug() << "class";
+    }
 }
 
 void ClassCanvas::createEntityClassContextMenu() {
