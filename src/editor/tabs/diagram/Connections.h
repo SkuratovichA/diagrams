@@ -8,9 +8,9 @@
 #include <QGraphicsLineItem>
 #include <QGraphicsSceneMouseEvent>
 
-class ClassDiagramItem;
 
-class ActorDiagramItem;
+class ClassDiagramItem;
+class SequenceDiagramItem;
 
 class msgText;
 
@@ -63,6 +63,12 @@ public:
         _color = color;
     }
 
+    QFlags<Qt::TextInteractionFlag> getFlags() {
+        return Qt::TextInteractionFlag::TextEditable |
+               Qt::TextInteractionFlag::TextSelectableByMouse |
+               Qt::TextInteractionFlag::TextSelectableByKeyboard;
+    }
+
     /** Public functions
      */
 public:
@@ -92,6 +98,7 @@ private:
     bool _orientation = true;
     QColor _color;
     uint32_t _order;
+    msgText *msg;
 };
 
 /**
@@ -125,6 +132,22 @@ private:
     SequenceDiagramItem *nodeFrom;
     SequenceDiagramItem *nodeTo;
     QLineF connectionLine;
+};
+
+class msgText : public QGraphicsTextItem {
+public:
+    msgText(QGraphicsItem *parent, QFlags<Qt::TextInteractionFlag> flags, qreal x, qreal y, QString str);
+    //~msgText();
+
+    QGraphicsItem *parent() {
+        return _parent;
+    }
+
+protected:
+    void keyReleaseEvent(QKeyEvent *event);
+
+private:
+    QGraphicsItem *_parent;
 };
 
 #endif //DIAGRAMS_CONNECTIONS_H
