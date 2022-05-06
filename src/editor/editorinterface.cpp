@@ -72,7 +72,6 @@ editorInterface::editorInterface(
 
     createUndoView();
     createDynamicToolBar();
-    //createStaticToolBar();
 
     createTabs();
     setCentralWidget(tabWidget);

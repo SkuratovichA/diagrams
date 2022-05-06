@@ -91,7 +91,7 @@ ActorDiagramItem::ActorDiagramItem(actorParams *params)
 //    setpen(body);
 //    auto head = new QGraphicsEllipseItem(20.0, 0.0, 30.0, 30.0, this);
 //    auto textAttr = new ClassTextAttr(this, params->name(), tabText(), rowHeight() + tabText(), _flags);
-    auto actorRect = new QGraphicsRectItem(0, 0, 100, 50, this);
+    auto actorRect = new QGraphicsRectItem(0, 0, params->width(), params->height(), this);
     actorRect->setPen(QPen(QColor(Qt::black), 3.0));
     actorRect->setBrush(QBrush(color()));
     setRect(boundingBox());
@@ -123,9 +123,6 @@ ClassDiagramItem::ClassDiagramItem(classParams *params)
                       DiagramItem::Class,
                       params->color()) {
 
-//    rowHeight() = 30.0;
-//    _rowWidth = params->width();
-//    tabText() = 2.0;
     QGraphicsLineItem *lineAttr;
     ClassTextAttr *textAttr;
     _flags = Qt::TextInteractionFlag::TextEditable |
@@ -253,5 +250,11 @@ void NameObject::keyReleaseEvent(QKeyEvent *event) {
 }
 
 NameObject::~NameObject() {
+
+}
+
+ActorLine::ActorLine(QGraphicsItem *parent) : QGraphicsItem(parent) {}
+
+ActorLine::~ActorLine() {
 
 }

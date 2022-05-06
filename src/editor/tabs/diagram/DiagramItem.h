@@ -149,6 +149,12 @@ private:
     QColor _color;
 };
 
+class ActorLine : public QGraphicsItem {
+public:
+    ActorLine(QGraphicsItem *parent);
+    ~ActorLine();
+};
+
 class ActorDiagramItem : public QGraphicsRectItem, public DiagramItem {
 public:
     explicit ActorDiagramItem(actorParams *params);

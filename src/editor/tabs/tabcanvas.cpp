@@ -164,7 +164,7 @@ void TabCanvas::addEntity() {
     switch (type) {
         case DiagramType::SEQUENCE:
             createActor = new actorParams(point.x(), point.y() , "ACTOR",
-                                          generateColor(), 70, 110);
+                                          generateColor(), 80, 50);
             addCommand = new AddActorCommand(editorScene, createActor);
             delete createActor;
 
