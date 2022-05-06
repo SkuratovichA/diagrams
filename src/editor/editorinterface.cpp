@@ -129,8 +129,8 @@ void editorInterface::createDynamicToolBar() {
     ADD_SIGNAL(saveAction, "&Save", "S", "Ctrl+S", this, SLOT(actionSave_triggered()));
     ADD_SIGNAL(zoomInAction, "Zoom &In", "Ctrl+", "Ctrl+", this, SLOT(actionZoomIn_triggered()));
     ADD_SIGNAL(zoomOutAction, "Zoom &Out", "Ctrl-", "Ctrl-", this, SLOT(actionZoomOut_triggered()));
-    ADD_SIGNAL(sendToBackAction, "Send to back", "b", "Ctrl+B",  this, SLOT(actionBack_triggered()));
-    ADD_SIGNAL(bringToFrontAction, "Send to front", "f", "Ctrl+F",this, SLOT(actionFront_triggered()));
+    ADD_SIGNAL(sendToBackAction, "Send to back", "b", "Ctrl+B", this, SLOT(actionBack_triggered()));
+    ADD_SIGNAL(bringToFrontAction, "Send to front", "f", "Ctrl+F", this, SLOT(actionFront_triggered()));
     qDebug() << "dynamic toolbar added";
 
     undoAction = undoStack->createUndoAction(this, tr("&Undo"));
@@ -185,6 +185,7 @@ void editorInterface::createDynamicToolBar() {
     menuBar()->addAction(zoomOutAction);
 #endif
 }
+
 /**
  *
  * @return

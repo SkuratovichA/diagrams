@@ -70,7 +70,7 @@ DeleteCommand::DeleteCommand(QGraphicsScene *scene, QUndoCommand *parent)
         : QUndoCommand(parent), graphicsScene(scene) {
     listItems = graphicsScene->selectedItems();
 
-    for (auto x : listItems) {
+    for (auto x: listItems) {
         setText(QObject::tr("Delete %1")
                         .arg(createCommandString(x)));
 
@@ -88,13 +88,13 @@ DeleteCommand::DeleteCommand(QGraphicsScene *scene, QUndoCommand *parent)
  */
 void DeleteCommand::undo() {
 
-    for (auto x : listItems) {
+    for (auto x: listItems) {
         graphicsScene->addItem(x);
         if (dynamic_cast<ClassDiagramItem *>(x) != nullptr) {
             auto connections = dynamic_cast<ClassDiagramItem *>(x)->connections();
-            foreach (ClassConnectionItem *connection, connections) {
+                    foreach (ClassConnectionItem *connection, connections) {
                     graphicsScene->addItem(connection);
-            }
+                }
         }
     }
     graphicsScene->update();
@@ -105,7 +105,7 @@ void DeleteCommand::undo() {
  */
 void DeleteCommand::redo() {
 
-    for (auto x : listItems) {
+    for (auto x: listItems) {
         if (dynamic_cast<ClassDiagramItem *>(x) != nullptr) {
             auto connections = dynamic_cast<ClassDiagramItem *>(x)->connections();
                     foreach (ClassConnectionItem *connection, connections) {

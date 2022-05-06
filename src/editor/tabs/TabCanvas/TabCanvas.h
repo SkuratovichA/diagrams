@@ -117,7 +117,7 @@ public:
     void setZvalue(QList<QGraphicsItem *> items, int val) {
         T *ptr1;
         for (auto x: items) {
-            ptr1 = dynamic_cast<T*>(x);
+            ptr1 = dynamic_cast<T *>(x);
             if (ptr1 == nullptr) {
                 continue;
             }
@@ -126,7 +126,7 @@ public:
         editorScene->update();
     }
 
-    template <typename T>
+    template<typename T>
     void _toZchange(bool toFront) {
         QList<QGraphicsItem *> selItems = editorScene->selectedItems();
         QList<QGraphicsItem *> allItems = editorScene->items();
@@ -147,6 +147,7 @@ public:
                 QRandomGenerator::global()->bounded(256),
                 180};
     }
+
     QUndoStack *undoStack() const {
         return _undoStack;
     }
@@ -160,9 +161,11 @@ public:
 // endregion
 
 public slots:
+
     void moveEntity(QGraphicsItem *movedItem, const QPointF &startPosition) {
         _undoStack->push(new MoveCommand(movedItem, startPosition));
     }
+
     void removeEntity() {
         if (editorScene->selectedItems().isEmpty()) {
             return;
@@ -170,13 +173,14 @@ public slots:
         QUndoCommand *deleteCommand = new DeleteCommand(editorScene);
         _undoStack->push(deleteCommand);
     }
+
     void zoomIn() {
         scaleView(qreal(1.2));
     }
+
     void zoomOut() {
         scaleView(1 / qreal(1.2));
     }
-
 
 protected:
     EditorScene *editorScene = nullptr;
@@ -192,13 +196,14 @@ private:
 };
 
 class ClassCanvas : public TabCanvas {
-    Q_OBJECT
+Q_OBJECT
 
 public:
     ClassCanvas(QWidget *parent = nullptr, QUndoGroup *parentGroup = nullptr);
 
 public:
-    std::string getStringRepresentation() const override{return {"hui"};}
+    std::string getStringRepresentation() const override {return {"hui"};}
+
     QPoint generateCoords() const override;
 
 private:
@@ -206,14 +211,14 @@ private:
     void createConnectionContextMenu();
 
 public slots:
-    void paste() override ;
-    void cut() override ;
-    void copy() override ;
-    void addEntity() override ;
-    void addConnection() override ;
-    void showContextMenu(const QPoint &pos) override ;
-    void toBack() override ;
-    void toFront() override ;
+    void paste() override;
+    void cut() override;
+    void copy() override;
+    void addEntity() override;
+    void addConnection() override;
+    void showContextMenu(const QPoint &pos) override;
+    void toBack() override;
+    void toFront() override;
 
     void addMethod_triggered();
     void addAttr_triggered();
@@ -246,23 +251,32 @@ private:
 };
 
 class SequenceCanvas : public TabCanvas {
-    Q_OBJECT
+Q_OBJECT
 
 public:
-    SequenceCanvas(QWidget *parent = nullptr, QUndoGroup *parentGroup = nullptr){}
+    SequenceCanvas(QWidget *parent = nullptr, QUndoGroup *parentGroup = nullptr) {}
 
 public slots:
+
     void paste() override {};
-    void cut()  override {};
-    void copy()  override {};
-    void addEntity()  override {};
-    void addConnection()  override {};
-    void showContextMenu(const QPoint &pos)  override {};
-    virtual void toBack()  override {};
-    virtual void toFront()  override {};
+
+    void cut() override {};
+
+    void copy() override {};
+
+    void addEntity() override {};
+
+    void addConnection() override {};
+
+    void showContextMenu(const QPoint &pos) override {};
+
+    virtual void toBack() override {};
+
+    virtual void toFront() override {};
 
 public:
-    std::string getStringRepresentation() const override{ return {"hui"};};
+    std::string getStringRepresentation() const override {return {"hui"};};
+
     QPoint generateCoords() const override {
         return QPoint(QRandomGenerator::global()->bounded(600), 30);
     }

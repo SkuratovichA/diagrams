@@ -56,7 +56,7 @@ void ClassTextAttr::keyReleaseEvent(QKeyEvent *event) {
     qreal midW = parent()->_head->boundingRect().width();
     qreal midO = parent()->width();
     parent()->_head->setPos((midO - midW) / 2, -40);
-    for (auto x : this->parent()->connections()) {
+    for (auto x: this->parent()->connections()) {
         x->trackNodes();
     }
 }
@@ -95,7 +95,7 @@ SequenceDiagramItem::SequenceDiagramItem(actorParams *params)
     actorRect->setPen(QPen(QColor(Qt::black), 3.0));
     actorRect->setBrush(QBrush(color()));
 
-    auto lifetime = new ActorLifetime(this, QPointF(width()/2, height())) ;
+    auto lifetime = new ActorLifetime(this, QPointF(width() / 2, height()));
     setRect(boundingBox());
 }
 
@@ -212,10 +212,10 @@ QVariant ClassDiagramItem::itemChange(GraphicsItemChange change, const QVariant 
  *
  */
 ClassDiagramItem::~ClassDiagramItem() {
-    foreach (ClassConnectionItem *connection, _connections) {
-        delete connection;
-        qDebug() << "Connection deleted (diagramItem.cpp)";
-    }
+            foreach (ClassConnectionItem *connection, _connections) {
+            delete connection;
+            qDebug() << "Connection deleted (diagramItem.cpp)";
+        }
 }
 
 /**
@@ -266,7 +266,7 @@ NameObject::~NameObject() {
 ActorLifetime::ActorLifetime(QGraphicsItem *parent, QPointF startPoint) : QGraphicsLineItem(parent) {
     auto x = startPoint.x();
     auto y = startPoint.y();
-    auto endPoint = QPoint(x, y+400);
+    auto endPoint = QPoint(x, y + 400);
     auto lline = new QGraphicsLineItem(QLineF(startPoint, endPoint), this);
     lline->setPen(QPen(QColor(Qt::black), 2.0, Qt::DashLine));
 }
