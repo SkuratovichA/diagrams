@@ -35,6 +35,12 @@ ClassConnectionItem::ClassConnectionItem(ClassDiagramItem *fromNode,
     _color = color;
     _order = order;
 
+    QFlags<Qt::TextInteractionFlag> _flags = Qt::TextInteractionFlag::TextEditable |
+             Qt::TextInteractionFlag::TextSelectableByMouse |
+             Qt::TextInteractionFlag::TextSelectableByKeyboard;
+
+    msg = new msgText(this, _flags, 20, -40, "MSG");
+
     setZValue(-1.0);
     trackNodes();
 }
@@ -460,11 +466,21 @@ void ClassConnectionItem::drawLine(QPainter *painter, const QStyleOptionGraphics
  * @param widget
  */
 void ClassConnectionItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) {
+    auto p = (_nodeTo->socket(order()) + _nodeFrom->socket(order()))/2;
+
+    QString str = "jjjjjjjjjjjjj";
+    QFontMetricsF metrics{qApp->font()};
+    QRectF rect = metrics.boundingRect(str);
 #if DEBUG
     painter->setPen(QPen(QColor(0, 0, 0, 100), 0.5, Qt::DotLine));
     painter->drawPolygon(lineShaper());
+    auto qpoly = QRectF(rect.topLeft() + p, rect.bottomRight()+p);
+    painter->drawPolygon(qpoly);
 #endif
     drawLine(painter, option);
+    painter->setPen(Qt::black);
+
+    painter->drawText(QRectF(rect.topLeft() + p, rect.bottomRight()+p), str);
 }
 
 /**
@@ -493,15 +509,32 @@ ClassConnectionItem::~ClassConnectionItem() {
 ActorConnectionItem::ActorConnectionItem(SequenceDiagramItem *fromNode,
                                          SequenceDiagramItem *toNode,
                                          ActorConnectionType
-                                         connectionType) {
+                                         connectionType){
     nodeFrom = fromNode;
     nodeTo = toNode;
 
     nodeFrom->addConnection(this);
     nodeTo->addConnection(this);
+    //setPen(QPen(Qt::black));
+    auto wid1 = nodeFrom->width()/2.0;
+    auto wid2 = nodeTo->width()/2.0;
+    //auto line = QGraphicsLineItem(wid1, 400, wid2, 400, this);
+    //setLine(wid1, 200, wid2, 200);
+    //setFlags(QGraphicsItem::ItemIsSelectable | QGraphicsItem::ItemIsMovable | QGraphicsItem::ItemSendsGeometryChanges);
+    //setZValue(-1.0);
+    
+    //trackNodes();
+}
 
-    setZValue(-1.0);
-    trackNodes();
+QVariant ActorConnectionItem::itemChange(GraphicsItemChange change, const QVariant &value) {
+    if (change == ItemPositionChange)
+        return QPointF(pos().x(), value.toPointF().y());
+    return QGraphicsItem::itemChange( change, value );
+}
+
+void ActorConnectionItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) {
+    painter->drawLine(nodeFrom->width()/2.0, y(), nodeTo->width()/2.0, y());
+    qDebug() << "paint" << nodeFrom->width()/2.0 << y() << nodeTo->width()/2.0 << y();
 }
 
 /**
@@ -559,4 +592,29 @@ void ClassConnectionItem::mousePressEvent(QGraphicsSceneMouseEvent *event) {
     if (event->button() == Qt::RightButton) {
         setSelected(true);
     }
+}
+
+msgText::msgText(QGraphicsItem *parent, QFlags<Qt::TextInteractionFlag> flags, qreal x, qreal y, QString str)
+        : QGraphicsTextItem(str, parent) {
+    _parent = parent;
+    setPos(x, y);
+    setFont(QFont("Courier", 10));
+    setTextInteractionFlags(flags);
+    topLevelItem();
+}
+
+void msgText::keyReleaseEvent(QKeyEvent *event) {
+    if ((event->key() == Qt::Key_Enter) || (event->key() == Qt::Key_Return)) {
+        setPlainText(toPlainText().remove('\n'));
+        clearFocus();
+        return;
+    }
+
+    //ClassConnectionItem *tmp1 = dynamic_cast<ClassConnectionItem *>(parent());
+    //ActorConnectionItem *tmp2 = dynamic_cast<ActorConnectionItem *>(parent());
+    QRectF rect = parent()->boundingRect();
+    qDebug() << "rect width" << rect.width();
+    qreal midO = rect.width();
+    qreal midW = boundingRect().width();
+    setPos((midO - midW) / 2, -40);
 }

@@ -98,7 +98,7 @@ private:
 class ActorConnectionItem : public QGraphicsLineItem {
 public:
     enum ActorConnectionType {
-        Request, Response
+        Request, Response, Delete, Create
     };
 
     ActorConnectionItem(
@@ -115,6 +115,9 @@ public:
     SequenceDiagramItem *fromNode() const;
 
     SequenceDiagramItem *toNode() const;
+public:
+    QVariant itemChange(GraphicsItemChange change, const QVariant &value);
+    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
 
 private:
     SequenceDiagramItem *nodeFrom;

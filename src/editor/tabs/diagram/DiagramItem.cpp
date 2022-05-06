@@ -56,7 +56,7 @@ void ClassTextAttr::keyReleaseEvent(QKeyEvent *event) {
     qreal midW = parent()->_head->boundingRect().width();
     qreal midO = parent()->width();
     parent()->_head->setPos((midO - midW) / 2, -40);
-    for (auto x: this->parent()->connections()) {
+    for (auto x : this->parent()->connections()) {
         x->trackNodes();
     }
 }
@@ -76,7 +76,7 @@ SequenceDiagramItem::SequenceDiagramItem(actorParams *params)
                                              Qt::TextInteractionFlag::TextSelectableByKeyboard;
 
     setPen(QPen(QColor(1, 0, 0, 0)));
-    _head = new NameObject(this, _flags, -10, -40, params->name());
+    _head = new NameObject(this, _flags, -3, -40, params->name());
 
     auto setpen = [this](QGraphicsLineItem *l) {l->setPen(QPen(color(), 3.0));};
 //    auto legL = new QGraphicsLineItem(35.0, 70.0, 10.0, 110.0, this);
@@ -97,6 +97,12 @@ SequenceDiagramItem::SequenceDiagramItem(actorParams *params)
 
     auto lifetime = new ActorLifetime(this, QPointF(width() / 2, height()));
     setRect(boundingBox());
+}
+
+QVariant SequenceDiagramItem::itemChange(GraphicsItemChange change, const QVariant &value) {
+    if (change == ItemPositionChange)
+        return QPointF(value.toPointF().x(), pos().y());
+    return QGraphicsItem::itemChange( change, value );
 }
 
 /**
@@ -212,10 +218,10 @@ QVariant ClassDiagramItem::itemChange(GraphicsItemChange change, const QVariant 
  *
  */
 ClassDiagramItem::~ClassDiagramItem() {
-            foreach (ClassConnectionItem *connection, _connections) {
-            delete connection;
-            qDebug() << "Connection deleted (diagramItem.cpp)";
-        }
+    foreach (ClassConnectionItem *connection, _connections) {
+        delete connection;
+        qDebug() << "Connection deleted (diagramItem.cpp)";
+    }
 }
 
 /**
@@ -251,9 +257,6 @@ void NameObject::keyReleaseEvent(QKeyEvent *event) {
     setPos((midO - midW) / 2, -40);
 }
 
-/**
- *
- */
 NameObject::~NameObject() {
 
 }

@@ -165,10 +165,12 @@ public:
     void removeConnection(ActorConnectionItem *connection);
 
 protected:
+    QVariant itemChange(GraphicsItemChange change, const QVariant &value);
     //void mousePressEvent(QGraphicsSceneMouseEvent *event);
 
 private:
     QSet<ActorConnectionItem *> _connections;
+    QGraphicsLineItem *line;
 };
 
 class ClassDiagramItem : public QGraphicsRectItem, public DiagramItem {
