@@ -493,15 +493,32 @@ ClassConnectionItem::~ClassConnectionItem() {
 ActorConnectionItem::ActorConnectionItem(ActorDiagramItem *fromNode,
                                          ActorDiagramItem *toNode,
                                          ActorConnectionType
-                                         connectionType) {
+                                         connectionType){
     nodeFrom = fromNode;
     nodeTo = toNode;
 
     nodeFrom->addConnection(this);
     nodeTo->addConnection(this);
+    //setPen(QPen(Qt::black));
+    auto wid1 = nodeFrom->width()/2.0;
+    auto wid2 = nodeTo->width()/2.0;
+    //auto line = QGraphicsLineItem(wid1, 400, wid2, 400, this);
+    //setLine(wid1, 200, wid2, 200);
+    //setFlags(QGraphicsItem::ItemIsSelectable | QGraphicsItem::ItemIsMovable | QGraphicsItem::ItemSendsGeometryChanges);
+    //setZValue(-1.0);
+    
+    //trackNodes();
+}
 
-    setZValue(-1.0);
-    trackNodes();
+QVariant ActorConnectionItem::itemChange(GraphicsItemChange change, const QVariant &value) {
+    if (change == ItemPositionChange)
+        return QPointF(pos().x(), value.toPointF().y());
+    return QGraphicsItem::itemChange( change, value );
+}
+
+void ActorConnectionItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) {
+    painter->drawLine(nodeFrom->width()/2.0, y(), nodeTo->width()/2.0, y());
+    qDebug() << "paint" << nodeFrom->width()/2.0 << y() << nodeTo->width()/2.0 << y();
 }
 
 /**

@@ -507,8 +507,14 @@ void TabCanvas::orientation_triggered() {
     line->changeOrientation();
     editorScene->update();
 }
-
+//////////////////////////////////////////////////
 void TabCanvas::request_triggered() {
+    auto a = editorScene->selectedItems();
+    qDebug() << "num of selected items: " << a.count();
+    auto node1 = dynamic_cast<ActorDiagramItem *>(a.takeAt(0));
+    auto node2 = dynamic_cast<ActorDiagramItem *>(a.takeAt(0));
+    auto line = new ActorConnectionItem(node1, node2, ActorConnectionItem::Request);
+    editorScene->update();
     qDebug() << "request triggered";
 }
 
@@ -523,6 +529,7 @@ void TabCanvas::deletion_triggered() {
 void TabCanvas::creation_triggered() {
     qDebug() << "creation triggered";
 }
+//////////////////////////////////////////////////
 
 /**
  *
