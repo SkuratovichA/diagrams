@@ -6,6 +6,7 @@
 #include <QUndoView>
 #include "../Tabs/TabCanvas/TabCanvas.h"
 #include "../Tabs/DiagramItem/DiagramItem.h"
+#include "../PropertiesDialog/propertiesdialog.h"
 
 namespace Ui {
     class editorInterface;
@@ -109,6 +110,7 @@ private:
     QMenu *editMenu;
     QMenu *actionMenu;
     QMenu *fileMenu;
+//    PropertiesDialog *propertiesdialog;
 
     QAction *newTabAction;
     QAction *saveAction;

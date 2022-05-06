@@ -43,7 +43,6 @@ mainWindow::~mainWindow()
     delete ui;
 }
 
-////////////////////////////////////////////////////////////////////////////
 // create a new file.
 // filename will not be provided - just create a window with a default interface
 void mainWindow::on_create_clicked()

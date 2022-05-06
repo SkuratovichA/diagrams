@@ -87,17 +87,24 @@ void SequenceCanvas::deleteMessage_triggered() {
     editorScene->update();
 }
 
-void SequenceCanvas::addEntity() {
+SequenceDiagramItem* SequenceCanvas::addEntity(QString className) {
     qDebug() << "add enttity pressed. Do something!";
     QPoint point = generateCoords();
-    QString className = "hello";
+    className = "hello " + className;
 
     createActor = new actorParams(point.x(), point.y(), className, color(), 80, 50);
 
     _undoStack->push(
             new AddActorCommand(editorScene, createActor)
     );
+
+    // TODO 2: probably dont delete this, because there will be a need to remember a pointer or something...
+    // TODO 3: just get a pointer to the SequenceDiagramItem to know there it located.
+    // TODO 4: probably, there will be a need to do something with deletioen of a sequence diagram?
+    // TODO 4; maybe just set a pointer to nullptr, and then check in caller.
     delete createActor;
+
+    return something; // TODO 1 return a pointier points to the actor
 }
 
 void SequenceCanvas::addConnection() {

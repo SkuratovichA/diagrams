@@ -14,6 +14,7 @@
 #include <QUndoView>
 
 #include "../Tabs/TabCanvas/TabCanvas.h"
+#include "../PropertiesDialog/propertiesdialog.h"
 
 #define ADD_SIGNAL(obj, name, icon, shortcut, receiver, memberslot) \
     do {                                                            \
@@ -38,7 +39,7 @@ editorInterface::editorInterface(
         ui(new Ui::editorInterface) {
     setAttribute(Qt::WA_DeleteOnClose); // automatically delete itself when window is closed
 
-    (void) exampleName;
+    exampleName;
 #if 0
     //    QString text = "";
     //
@@ -266,7 +267,26 @@ void editorInterface::actionAddEntity_triggered() {
     if (tabWidget->currentIndex() == 0) {
         reinterpret_cast<ClassCanvas *>(tabWidget->currentWidget())->addEntity();
     } else {
-        reinterpret_cast<SequenceCanvas *>(tabWidget->currentWidget())->addEntity();
+        auto sequenceTab = reinterpret_cast<ClassCanvas *>(tabWidget->currentWidget());
+        QList<QString> existingClasses;
+
+        existingClasses.append(QString("Tatiana Fedorova"));
+        existingClasses.append(QString("heer, there will be a list of classes"));
+        auto classStringPairs = sequenceTab->getClassStringPairs();
+
+        for (auto cs : classStringPairs) {
+            existingClasse.append(cs.first);
+        }
+
+        PropertiesDialog propertiesDialog(this, existingClasses);
+        propertiesDialog.exec();
+
+        auto selectedClassName = propertiesDialog.selectedClassName();
+        if (selectedClassName == QString()) {
+            return;
+        }
+
+        auto entity = sequenceTab->addEntity(selectedClassName);
     }
 }
 

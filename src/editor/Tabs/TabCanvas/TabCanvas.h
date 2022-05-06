@@ -275,7 +275,8 @@ public slots:
 
     void copy() override;
 
-    void addEntity() override;
+    void addEntity() override {};
+    SequenceDiagramItem* addEntity(QString className);
 
     void addConnection() override;
 
