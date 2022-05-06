@@ -4,8 +4,8 @@
 
 
 #include "Commands.h"
-#include "Connections.h"
-#include "DiagramItem.h"
+#include "../Connections/Connections.h"
+#include "../DiagramItem.h"
 
 #include <QGraphicsScene>
 

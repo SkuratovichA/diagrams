@@ -4,8 +4,8 @@
 #include <QMainWindow>
 #include <QUndoGroup>
 #include <QUndoView>
-#include "tabs/TabCanvas/TabCanvas.h"
-#include "tabs/diagram/DiagramItem.h"
+#include "../Tabs/TabCanvas/TabCanvas.h"
+#include "../Tabs/DiagramItem/DiagramItem.h"
 
 namespace Ui {
     class editorInterface;

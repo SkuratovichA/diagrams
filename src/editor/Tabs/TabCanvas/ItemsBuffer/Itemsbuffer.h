@@ -5,8 +5,8 @@
 #ifndef DIAGRAMS_ITEMSBUFFER_H
 #define DIAGRAMS_ITEMSBUFFER_H
 
-#include "diagram/DiagramItem.h"
-#include "fillItems.h"
+#include "../../DiagramItem/DiagramItem.h"
+#include "../../DiagramItem/FillItems/FillItems.h"
 
 class ItemsBuffer {
 public:

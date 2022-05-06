@@ -10,7 +10,7 @@
 #include <QUndoGroup>
 
 #include "TabCanvas.h"
-#include "../../editorinterface.h"
+#include "../../EditorInterface/editorinterface.h"
 
 //class editorInterface;
 

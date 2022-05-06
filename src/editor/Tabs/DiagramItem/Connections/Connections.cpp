@@ -10,7 +10,7 @@
 #include <QPainter>
 
 #include "Connections.h"
-#include "DiagramItem.h"
+#include "../DiagramItem.h"
 
 /**
  *

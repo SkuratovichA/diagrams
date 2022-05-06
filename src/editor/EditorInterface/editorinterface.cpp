@@ -13,7 +13,7 @@
 #include <QDir>
 #include <QUndoView>
 
-#include "tabs/TabCanvas/TabCanvas.h"
+#include "../Tabs/TabCanvas/TabCanvas.h"
 
 #define ADD_SIGNAL(obj, name, icon, shortcut, receiver, memberslot) \
     do {                                                            \
@@ -51,7 +51,7 @@ editorInterface::editorInterface(
     //                                                          tr("Open a file"),
     //                                                          QDir::homePath(),
     //                                                          this->filenameFilter);
-    //            // TODO: add implementation for reading the diagram from the .json file
+    //            // TODO: add implementation for reading the Diagram from the .json file
     //            assert(!"NOT IMPLEMENTED ERROR");
     //            break;
     //        case NO_FILE:
@@ -110,8 +110,8 @@ void editorInterface::createUndoView() {
 void editorInterface::createTabs() {
     tabWidget = new QTabWidget(this);
     connect(tabWidget, SIGNAL(currentChanged(int)), this, SLOT(newTabSelected()));
-    tabWidget->addTab(new ClassCanvas(this, undoStack), "class diagram");
-    tabWidget->addTab(new SequenceCanvas(this, undoStack), "sequence diagram");
+    tabWidget->addTab(new ClassCanvas(this, undoStack), "class Diagram");
+    tabWidget->addTab(new SequenceCanvas(this, undoStack), "sequence Diagram");
 }
 
 /**
@@ -247,13 +247,13 @@ void editorInterface::actionSaveAs_triggered() {
 //}
 
 void editorInterface::actionNewTab_triggered() {
-    tabWidget->addTab(new SequenceCanvas(this, undoStack), "sequence diagram editor");
+    tabWidget->addTab(new SequenceCanvas(this, undoStack), "sequence Diagram editor");
 }
 
 void editorInterface::actionDeleteTab_triggered() {
     auto ci = tabWidget->currentIndex();
     if (ci == 0) {
-        QMessageBox::warning(this, "Warning", "You cannot close the class diagram");
+        QMessageBox::warning(this, "Warning", "You cannot close the class Diagram");
         return;
     }
     tabWidget->removeTab(ci);

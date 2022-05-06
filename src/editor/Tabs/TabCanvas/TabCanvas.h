@@ -9,11 +9,11 @@
 #include <QUndoGroup>
 #include <QGraphicsView>
 
-#include "../diagram/EditorScene.h"
-#include "../diagram/Commands.h"
-#include "../diagram/DiagramItem.h"
-#include "../fillItems.h"
-#include "../Itemsbuffer.h"
+#include "../DiagramItem/EditorScene/EditorScene.h"
+#include "../DiagramItem/Commands/Commands.h"
+#include "../DiagramItem/DiagramItem.h"
+#include "../DiagramItem/FillItems/FillItems.h"
+#include "ItemsBuffer/Itemsbuffer.h"
 
 class editorInterface;
 

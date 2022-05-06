@@ -7,9 +7,9 @@
 #define DIAGRAMS_COMMANDS_H
 
 #include <QUndoCommand>
-#include "Connections.h"
-#include "DiagramItem.h"
-#include "../fillItems.h"
+#include "../Connections/Connections.h"
+#include "../DiagramItem.h"
+#include "../FillItems/FillItems.h"
 
 /**
  *

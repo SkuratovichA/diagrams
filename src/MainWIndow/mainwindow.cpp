@@ -15,7 +15,7 @@ mainWindow::mainWindow(QWidget *parent)
     qDebug() << "create Mainwindow : constructor mainWindow.cpp";
     qDebug() << "create Editorinterface ui : constructor mainWindow.cpp";
     ui->setupUi(this);
-    this->setWindowTitle("diagram");
+    this->setWindowTitle("Diagram");
 
     QDir directory(QDir::current()); // or you can use root()
     //qDebug() << directory.absolutePath();
