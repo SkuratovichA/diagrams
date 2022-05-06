@@ -97,6 +97,12 @@ ActorDiagramItem::ActorDiagramItem(actorParams *params)
     setRect(boundingBox());
 }
 
+QVariant ActorDiagramItem::itemChange(GraphicsItemChange change, const QVariant &value) {
+    if (change == ItemPositionChange)
+        return QPointF(value.toPointF().x(), pos().y());
+    return QGraphicsItem::itemChange( change, value );
+}
+
 /**
  *
  * @param connection
