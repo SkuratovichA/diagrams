@@ -2,7 +2,7 @@
 // Created by shchepa on 4.5.22.
 //
 
-#include "fillItems.h"
+#include "FillItems.h"
 
 objectParams::objectParams(qreal x, qreal y, QString name,
         QColor color, qreal width, qreal height) {

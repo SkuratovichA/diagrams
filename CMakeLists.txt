@@ -17,29 +17,31 @@ find_package(Qt6 COMPONENTS
 
 add_executable(proj
         src/main.cpp
-        src/mainwindow.cpp
-        src/editor/editorinterface.cpp
-        src/editor/tabs/TabCanvas/ClassCanvas.cpp
-        src/editor/tabs/diagram/DiagramItem.cpp
-        src/editor/tabs/diagram/EditorScene.cpp
-        src/editor/tabs/diagram/Commands.cpp
-        src/editor/tabs/diagram/Connections.cpp
-        src/editor/tabs/Itemsbuffer.cpp
-        src/editor/tabs/fillItems.cpp
-        src/editor/tabs/TabCanvas/SequenceCanvas.cpp
+        src/MainWIndow/mainwindow.cpp
+        src/editor/EditorInterface/editorinterface.cpp
+        src/editor/PropertiesDialog/propertiesdialog.cpp
+        src/editor/Tabs/TabCanvas/ClassCanvas.cpp
+        src/editor/Tabs/DiagramItem/DiagramItem.cpp
+        src/editor/Tabs/DiagramItem/EditorScene/EditorScene.cpp
+        src/editor/Tabs/DiagramItem/Commands/Commands.cpp
+        src/editor/Tabs/DiagramItem/Connections/Connections.cpp
+        src/editor/Tabs/TabCanvas/ItemsBuffer/Itemsbuffer.cpp
+        src/editor/Tabs/DiagramItem/FillItems/FillItems.cpp
+        src/editor/Tabs/TabCanvas/SequenceCanvas.cpp
         src/editor/backend/class_diagram.cpp
         src/editor/backend/parse.cpp
         src/editor/backend/seq_diagram.cpp
 
-        src/mainwindow.h
-        src/editor/tabs/fillItems.h
-        src/editor/tabs/diagram/DiagramItem.h
-        src/editor/tabs/diagram/EditorScene.h
-        src/editor/tabs/diagram/Commands.h
-        src/editor/tabs/diagram/Connections.h
-        src/editor/editorinterface.h
-        src/editor/tabs/TabCanvas/TabCanvas.h
-        src/editor/tabs/Itemsbuffer.h
+        src/MainWIndow/mainwindow.h
+        src/editor/PropertiesDialog/propertiesdialog.h
+        src/editor/Tabs/DiagramItem/FillItems/FillItems.h
+        src/editor/Tabs/DiagramItem/DiagramItem.h
+        src/editor/Tabs/DiagramItem/EditorScene/EditorScene.h
+        src/editor/Tabs/DiagramItem/Commands/Commands.h
+        src/editor/Tabs/DiagramItem/Connections/Connections.h
+        src/editor/EditorInterface/editorinterface.h
+        src/editor/Tabs/TabCanvas/TabCanvas.h
+        src/editor/Tabs/TabCanvas/ItemsBuffer/Itemsbuffer.h
         src/editor/backend/class_diagram.h
         src/editor/backend/parse.h
         src/editor/backend/seq_diagram.h

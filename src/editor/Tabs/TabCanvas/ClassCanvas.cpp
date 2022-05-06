@@ -6,7 +6,6 @@
 #include <QUndoGroup>
 
 #include "TabCanvas.h"
-#include "../diagram/Commands.h"
 
 class editorInterface;
 

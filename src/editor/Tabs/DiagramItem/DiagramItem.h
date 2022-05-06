@@ -10,8 +10,8 @@
 #include <QRandomGenerator>
 #include <QGraphicsPolygonItem>
 
-#include "Connections.h"
-#include "../fillItems.h"
+#include "Connections/Connections.h"
+#include "FillItems/FillItems.h"
 
 QT_BEGIN_NAMESPACE
 class QGraphicsItem;
