@@ -12,6 +12,8 @@ class ClassDiagramItem;
 
 class ActorDiagramItem;
 
+class msgText;
+
 /**
  *
  */
@@ -64,6 +66,7 @@ public:
     /** Public functions
      */
 public:
+    msgText *msg;
     void trackNodes();
 
     /** Protected methods
@@ -83,6 +86,7 @@ private:
 
     /** Private attributes
      */
+
 private:
     ClassDiagramItem *_nodeFrom;
     ClassDiagramItem *_nodeTo;
@@ -91,6 +95,8 @@ private:
     QColor _color;
     uint32_t _order;
 };
+
+
 
 /**
  *
@@ -123,6 +129,22 @@ private:
     ActorDiagramItem *nodeFrom;
     ActorDiagramItem *nodeTo;
     QLineF connectionLine;
+};
+
+class msgText : public QGraphicsTextItem {
+public:
+    msgText(QGraphicsItem *parent, QFlags<Qt::TextInteractionFlag> flags, qreal x, qreal y, QString str);
+    //~msgText();
+
+    QGraphicsItem *parent() {
+        return _parent;
+    }
+
+protected:
+    void keyReleaseEvent(QKeyEvent *event);
+
+private:
+    QGraphicsItem *_parent;
 };
 
 #endif //DIAGRAMS_CONNECTIONS_H
