@@ -526,35 +526,40 @@ QPair<T *, T *> TabCanvas::getSelectedDiagramItems() {
     return QPair<T *, T *>(first, rest);
 }
 
-void TabCanvas::setZvalue(int forSelect, int forOther) {
-    QList<QGraphicsItem *> selItems = editorScene->selectedItems();
-    QList<QGraphicsItem *> allItems = editorScene->items();
-
-    for (auto x : selItems) {
-        allItems.removeOne(x);
-        x->setZValue(forSelect);
-    }
-
+void TabCanvas::setZvalue(QList<QGraphicsItem *> items, int val) {
     ClassDiagramItem *ptr1;
     ActorDiagramItem *ptr2;
 
-    for (auto x : allItems) {
+    for (auto x : items) {
         ptr1 = dynamic_cast<ClassDiagramItem *>(x);
         ptr2 = dynamic_cast<ActorDiagramItem *>(x);
-
         if (ptr1 == nullptr && ptr2 == nullptr) {
             continue;
         }
-        x->setZValue(forOther);
+        x->setZValue(val);
     }
     editorScene->update();
 }
 
 void TabCanvas::toBack() {
-    setZvalue(-1, 1);
+    QList<QGraphicsItem *> selItems = editorScene->selectedItems();
+    QList<QGraphicsItem *> allItems = editorScene->items();
+
+    setZvalue(selItems, -1);
+    for (auto x : selItems) {
+        allItems.removeOne(x);
+    }
+    setZvalue(allItems, 1);
 }
 
 void TabCanvas::toFront() {
-    setZvalue(1, -1);
+    QList<QGraphicsItem *> selItems = editorScene->selectedItems();
+    QList<QGraphicsItem *> allItems = editorScene->items();
+
+    setZvalue(selItems, 1);
+    for (auto x : selItems) {
+        allItems.removeOne(x);
+    }
+    setZvalue(allItems, -1);
 }
 

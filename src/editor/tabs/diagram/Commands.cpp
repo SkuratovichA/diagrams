@@ -68,16 +68,17 @@ void MoveCommand::redo() {
  */
 DeleteCommand::DeleteCommand(QGraphicsScene *scene, QUndoCommand *parent)
         : QUndoCommand(parent), graphicsScene(scene) {
-    QList<QGraphicsItem *> list = graphicsScene->selectedItems();
-    list.first()->setSelected(false);
-    diagramItem = list.first();
-    setText(QObject::tr("Delete %1")
-                    .arg(createCommandString(diagramItem)));
+    listItems = graphicsScene->selectedItems();
 
-    if (dynamic_cast<ClassDiagramItem *>(diagramItem) != nullptr) {
-        auto connections = dynamic_cast<ClassDiagramItem *>(diagramItem)->connections();
-        foreach (ClassConnectionItem *connection, connections) {
-            scene->removeItem(connection);
+    for (auto x : listItems) {
+        setText(QObject::tr("Delete %1")
+                        .arg(createCommandString(x)));
+
+        if (dynamic_cast<ClassDiagramItem *>(x) != nullptr) {
+            auto connections = dynamic_cast<ClassDiagramItem *>(x)->connections();
+                    foreach (ClassConnectionItem *connection, connections) {
+                    scene->removeItem(connection);
+                }
         }
     }
 }
@@ -86,12 +87,15 @@ DeleteCommand::DeleteCommand(QGraphicsScene *scene, QUndoCommand *parent)
  *
  */
 void DeleteCommand::undo() {
-    graphicsScene->addItem(diagramItem);
-    if (dynamic_cast<ClassDiagramItem *>(diagramItem) != nullptr) {
-        auto connections = dynamic_cast<ClassDiagramItem *>(diagramItem)->connections();
-        foreach (ClassConnectionItem *connection, connections) {
-                graphicsScene->addItem(connection);
+
+    for (auto x : listItems) {
+        graphicsScene->addItem(x);
+        if (dynamic_cast<ClassDiagramItem *>(x) != nullptr) {
+            auto connections = dynamic_cast<ClassDiagramItem *>(x)->connections();
+            foreach (ClassConnectionItem *connection, connections) {
+                    graphicsScene->addItem(connection);
             }
+        }
     }
     graphicsScene->update();
 }
@@ -100,13 +104,16 @@ void DeleteCommand::undo() {
  *
  */
 void DeleteCommand::redo() {
-    if (dynamic_cast<ClassDiagramItem *>(diagramItem) != nullptr) {
-        auto connections = dynamic_cast<ClassDiagramItem *>(diagramItem)->connections();
-        foreach (ClassConnectionItem *connection, connections) {
-                graphicsScene->removeItem(connection);
-            }
+
+    for (auto x : listItems) {
+        if (dynamic_cast<ClassDiagramItem *>(x) != nullptr) {
+            auto connections = dynamic_cast<ClassDiagramItem *>(x)->connections();
+                    foreach (ClassConnectionItem *connection, connections) {
+                    graphicsScene->removeItem(connection);
+                }
+        }
+        graphicsScene->removeItem(x);
     }
-    graphicsScene->removeItem(diagramItem);
 }
 
 
@@ -214,6 +221,9 @@ AddClassConnectionCommand::AddClassConnectionCommand(ClassDiagramItem *fromNode,
     qDebug() << "max number of occupied sockets: " << maxConnectedElements;
 
     classConnection = new ClassConnectionItem(fromNode, toNodes, connectionType, maxConnectedElements);
+    setText(QObject::tr("Connect %1")
+                    .arg(createCommandString(static_cast<ClassConnectionItem *>(classConnection))));
+
     scene->update();
 }
 
@@ -225,7 +235,6 @@ AddClassConnectionCommand::~AddClassConnectionCommand() {
         return;
     }
     qDebug() << "This shit of code causes segfault";
-//    delete classConnection;
 }
 
 /**
@@ -241,7 +250,6 @@ void AddClassConnectionCommand::undo() {
  */
 void AddClassConnectionCommand::redo() {
     graphicsScene->addItem(classConnection);
-//    classConnection->setPos(initialStartPosition);
     graphicsScene->clearSelection();
     graphicsScene->update();
 }
@@ -255,12 +263,7 @@ AddActorConnectionCommand::AddActorConnectionCommand(ActorDiagramItem *fromNode,
                                                      QGraphicsScene *scene,
                                                      QUndoCommand *parent)
         : QUndoCommand(parent), graphicsScene(scene) {
-//    static int itemCount = 0;
-
     actorConnection = new ActorConnectionItem(fromNode, toNode, connectionType);
-//    initialStartPosition = QPointF(static_cast<qreal>(((itemCount * 20) + 100) % static_cast<int>(scene->width())),
-//                                   static_cast<qreal>(((itemCount * 20) + 100) % static_cast<int>(scene->height())));
-//    itemCount++;
     scene->update();
 }
 
@@ -287,7 +290,6 @@ void AddActorConnectionCommand::undo() {
  */
 void AddActorConnectionCommand::redo() {
     graphicsScene->addItem(actorConnection);
-//    actorConnection->setPos(initialStartPosition);
     graphicsScene->clearSelection();
     graphicsScene->update();
 }

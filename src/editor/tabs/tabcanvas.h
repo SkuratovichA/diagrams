@@ -73,7 +73,7 @@ private:
                       30);
     }
 
-    void setZvalue(int forSelect, int forOther);
+    void setZvalue(QList<QGraphicsItem *> items, int val);
 
 private:
     DiagramType type;

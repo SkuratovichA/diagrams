@@ -24,12 +24,11 @@ public:
                 QUndoCommand *parent = nullptr);
 
     void undo() override;
-
     void redo() override;
 
     bool mergeWith(const QUndoCommand *command) override;
 
-     int id() const override { return Id; }
+    int id() const override { return Id; }
 
 private:
     QGraphicsItem *diagramItem;
@@ -45,11 +44,10 @@ public:
     explicit DeleteCommand(QGraphicsScene *graphicsScene, QUndoCommand *parent = nullptr);
 
     void undo() override;
-
     void redo() override;
 
 private:
-    QGraphicsItem *diagramItem;
+    QList<QGraphicsItem *> listItems;
     QGraphicsScene *graphicsScene;
 };
 
@@ -63,7 +61,6 @@ public:
     ~AddActorCommand();
 
     void undo() override;
-
     void redo() override;
 
 private:
@@ -83,7 +80,6 @@ public:
     ~AddClassCommand();
 
     void undo() override;
-
     void redo() override;
 
 private:
@@ -107,7 +103,6 @@ public:
     ~AddActorConnectionCommand();
 
     void undo() override;
-
     void redo() override;
 
 private:
@@ -131,7 +126,6 @@ public:
     ~AddClassConnectionCommand();
 
     void undo() override;
-
     void redo() override;
 
 private:
