@@ -61,7 +61,7 @@ void ClassTextAttr::keyReleaseEvent(QKeyEvent *event) {
     }
 }
 
-ActorDiagramItem::ActorDiagramItem(actorParams *params)
+SequenceDiagramItem::SequenceDiagramItem(actorParams *params)
         : DiagramItem(params->width(),
                       params->height(),
                       DiagramItem::Actor,
@@ -94,6 +94,8 @@ ActorDiagramItem::ActorDiagramItem(actorParams *params)
     auto actorRect = new QGraphicsRectItem(0, 0, params->width(), params->height(), this);
     actorRect->setPen(QPen(QColor(Qt::black), 3.0));
     actorRect->setBrush(QBrush(color()));
+
+    auto lifetime = new ActorLifetime(this, QPointF(width()/2, height())) ;
     setRect(boundingBox());
 }
 
@@ -101,7 +103,7 @@ ActorDiagramItem::ActorDiagramItem(actorParams *params)
  *
  * @param connection
  */
-void ActorDiagramItem::addConnection(ActorConnectionItem *connection) {
+void SequenceDiagramItem::addConnection(ActorConnectionItem *connection) {
     _connections.insert(connection);
 }
 
@@ -109,7 +111,7 @@ void ActorDiagramItem::addConnection(ActorConnectionItem *connection) {
  *
  * @param connection
  */
-void ActorDiagramItem::removeConnection(ActorConnectionItem *connection) {
+void SequenceDiagramItem::removeConnection(ActorConnectionItem *connection) {
     _connections.remove(connection);
 }
 
@@ -242,19 +244,40 @@ void NameObject::keyReleaseEvent(QKeyEvent *event) {
         clearFocus();
         return;
     }
-    ClassDiagramItem *tmp1 = dynamic_cast<ClassDiagramItem *>(parent());
-    ActorDiagramItem *tmp2 = dynamic_cast<ActorDiagramItem *>(parent());
+    auto *tmp1 = dynamic_cast<ClassDiagramItem *>(parent());
+    auto *tmp2 = dynamic_cast<SequenceDiagramItem *>(parent());
     qreal midO = tmp1 == nullptr ? tmp2->width() : tmp1->width();
     qreal midW = boundingRect().width();
     setPos((midO - midW) / 2, -40);
 }
 
+/**
+ *
+ */
 NameObject::~NameObject() {
 
 }
 
-ActorLine::ActorLine(QGraphicsItem *parent) : QGraphicsItem(parent) {}
+/**
+ *
+ * @param parent
+ * @param startPoint
+ */
+ActorLifetime::ActorLifetime(QGraphicsItem *parent, QPointF startPoint) : QGraphicsLineItem(parent) {
+    auto x = startPoint.x();
+    auto y = startPoint.y();
+    auto endPoint = QPoint(x, y+400);
+    auto lline = new QGraphicsLineItem(QLineF(startPoint, endPoint), this);
+    lline->setPen(QPen(QColor(Qt::black), 2.0, Qt::DashLine));
+}
 
-ActorLine::~ActorLine() {
+//void ActorLifetime::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) {
+//
+//}
+
+/**
+ *
+ */
+ActorLifetime::~ActorLifetime() {
 
 }

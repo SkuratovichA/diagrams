@@ -13,7 +13,7 @@
 #include <QDir>
 #include <QUndoView>
 
-#include "tabs/tabcanvas.h"
+#include "tabs/TabCanvas/TabCanvas.h"
 
 #define ADD_SIGNAL(obj, name, icon, shortcut, receiver, memberslot) \
     do {                                                            \
@@ -91,7 +91,7 @@ editorInterface::~editorInterface() {
  * Change the active stack in the stackGroup to display ins members (history) for the tab.
  */
 void editorInterface::newTabSelected() {
-    undoStack->setActiveStack(reinterpret_cast<TabCanvas *>(tabWidget->currentWidget())->getUndoStack());
+    undoStack->setActiveStack(reinterpret_cast<TabCanvas *>(tabWidget->currentWidget())->undoStack());
 }
 
 /**
@@ -110,8 +110,8 @@ void editorInterface::createUndoView() {
 void editorInterface::createTabs() {
     tabWidget = new QTabWidget(this);
     connect(tabWidget, SIGNAL(currentChanged(int)), this, SLOT(newTabSelected()));
-    tabWidget->addTab(new TabCanvas(this, DiagramType::CLASS, undoStack), "class diagram editor");
-    tabWidget->addTab(new TabCanvas(this, DiagramType::SEQUENCE, undoStack), "sequence diagram editor");
+    tabWidget->addTab(new ClassCanvas(this, undoStack), "class diagram");
+    tabWidget->addTab(new SequenceCanvas(this, undoStack), "sequence diagram");
 }
 
 /**
@@ -193,7 +193,7 @@ QString editorInterface::get_text_representation() {
     auto size = tabWidget->count();
     std::string prg;
     for (int i = 0; i < size; i++) {
-        prg += reinterpret_cast<TabCanvas *>(tabWidget->widget(i))->getStringRepresentation();
+//        prg += reinterpret_cast<TabCanvas *>(tabWidget->widget(i))->getStringRepresentation();
     }
     return {prg.c_str()};
 }
@@ -247,7 +247,7 @@ void editorInterface::actionSaveAs_triggered() {
 //}
 
 void editorInterface::actionNewTab_triggered() {
-    tabWidget->addTab(new TabCanvas(this, DiagramType::SEQUENCE, undoStack), "sequence diagram editor");
+    tabWidget->addTab(new SequenceCanvas(this, undoStack), "sequence diagram editor");
 }
 
 void editorInterface::actionDeleteTab_triggered() {
@@ -263,42 +263,66 @@ void editorInterface::actionDeleteTab_triggered() {
  *
  */
 void editorInterface::actionAddEntity_triggered() {
-    reinterpret_cast<TabCanvas *>(tabWidget->currentWidget())->addEntity();
+    if (tabWidget->currentIndex() == 0) {
+        reinterpret_cast<ClassCanvas *>(tabWidget->currentWidget())->addEntity();
+    } else {
+        reinterpret_cast<SequenceCanvas *>(tabWidget->currentWidget())->addEntity();
+    }
 }
 
 /**
  *
  */
 void editorInterface::actionAddConnection_triggered() {
-    reinterpret_cast<TabCanvas *>(tabWidget->currentWidget())->addConnection();
+    if (tabWidget->currentIndex() == 0) {
+        reinterpret_cast<ClassCanvas *>(tabWidget->currentWidget())->addConnection();
+    } else {
+        reinterpret_cast<SequenceCanvas *>(tabWidget->currentWidget())->addConnection();
+    }
 }
 
 /**
  *
  */
 void editorInterface::actionRemove_triggered() {
-    reinterpret_cast<TabCanvas *>(tabWidget->currentWidget())->removeEntity();
+    if (tabWidget->currentIndex() == 0) {
+        reinterpret_cast<ClassCanvas *>(tabWidget->currentWidget())->removeEntity();
+    } else {
+        reinterpret_cast<SequenceCanvas *>(tabWidget->currentWidget())->removeEntity();
+    }
 }
 
 /**
  *
  */
 void editorInterface::actionCut_triggered() {
-    reinterpret_cast<TabCanvas *>(tabWidget->currentWidget())->cut();
+    if (tabWidget->currentIndex() == 0) {
+        reinterpret_cast<ClassCanvas *>(tabWidget->currentWidget())->cut();
+    } else {
+        reinterpret_cast<SequenceCanvas *>(tabWidget->currentWidget())->cut();
+    }
 }
 
 /**
  *
  */
 void editorInterface::actionCopy_triggered() {
-    reinterpret_cast<TabCanvas *>(tabWidget->currentWidget())->copy();
+    if (tabWidget->currentIndex() == 0) {
+        reinterpret_cast<ClassCanvas *>(tabWidget->currentWidget())->copy();
+    } else {
+        reinterpret_cast<SequenceCanvas *>(tabWidget->currentWidget())->copy();
+    }
 }
 
 /**
  *
  */
 void editorInterface::actionPaste_triggered() {
-    reinterpret_cast<TabCanvas *>(tabWidget->currentWidget())->paste();
+    if (tabWidget->currentIndex() == 0) {
+        reinterpret_cast<ClassCanvas *>(tabWidget->currentWidget())->paste();
+    } else {
+        reinterpret_cast<SequenceCanvas *>(tabWidget->currentWidget())->paste();
+    }
 }
 
 /**
@@ -319,12 +343,20 @@ void editorInterface::actionZoomOut_triggered() {
  *
  */
 void editorInterface::actionBack_triggered() {
-    reinterpret_cast<TabCanvas *>(tabWidget->currentWidget())->toBack();
+    if (tabWidget->currentIndex() == 0) {
+        reinterpret_cast<ClassCanvas *>(tabWidget->currentWidget())->toBack();
+    } else {
+        reinterpret_cast<SequenceCanvas *>(tabWidget->currentWidget())->toBack();
+    }
 }
 
 /**
  *
  */
 void editorInterface::actionFront_triggered() {
-    reinterpret_cast<TabCanvas *>(tabWidget->currentWidget())->toFront();
+    if (tabWidget->currentIndex() == 0) {
+        reinterpret_cast<ClassCanvas *>(tabWidget->currentWidget())->toFront();
+    } else {
+        reinterpret_cast<SequenceCanvas *>(tabWidget->currentWidget())->toFront();
+    }
 }

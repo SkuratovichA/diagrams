@@ -4,7 +4,7 @@
 #include <QMainWindow>
 #include <QUndoGroup>
 #include <QUndoView>
-#include "tabs/tabcanvas.h"
+#include "tabs/TabCanvas/TabCanvas.h"
 #include "tabs/diagram/DiagramItem.h"
 
 namespace Ui {

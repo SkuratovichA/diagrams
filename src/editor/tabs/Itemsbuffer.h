@@ -15,7 +15,7 @@ public:
 
     //void createClassItems();
     void fillClassItems(ClassDiagramItem *item);
-    void fillActorItems(ActorDiagramItem *item);
+    void fillActorItems(SequenceDiagramItem *item);
     void clearBuffer();
 
     QList<classParams *> classItems() const {

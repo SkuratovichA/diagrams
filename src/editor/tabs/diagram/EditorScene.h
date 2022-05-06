@@ -10,7 +10,7 @@
 #include <QGraphicsScene>
 #include "DiagramItem.h"
 
-class ActorDiagramItem;
+class SequenceDiagramItem;
 QT_BEGIN_NAMESPACE
 class QGraphicsSceneDragDropEvent;
 class QGraphicsViewItem;
@@ -24,7 +24,7 @@ public:
     void changeZval();
 
 signals:
-    void itemMoved(ActorDiagramItem *movedItem, const QPointF &movedFromPosition);
+    void itemMoved(SequenceDiagramItem *movedItem, const QPointF &movedFromPosition);
 
 protected:
     void mousePressEvent(QGraphicsSceneMouseEvent *event) override;

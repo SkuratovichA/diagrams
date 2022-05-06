@@ -64,7 +64,7 @@ public:
     void redo() override;
 
 private:
-    ActorDiagramItem *diagramItem;
+    SequenceDiagramItem *diagramItem;
     QGraphicsScene *graphicsScene;
     QPointF initialStartPosition;
     QPointF initialEndPosition;
@@ -94,8 +94,8 @@ private:
  */
 class AddActorConnectionCommand : public QUndoCommand {
 public:
-    explicit AddActorConnectionCommand(ActorDiagramItem *fromNode,
-                                       ActorDiagramItem *toNode,
+    explicit AddActorConnectionCommand(SequenceDiagramItem *fromNode,
+                                       SequenceDiagramItem *toNode,
                                        ActorConnectionItem::ActorConnectionType connectionType,
                                        QGraphicsScene *scene,
                                        QUndoCommand *parent = nullptr);
@@ -136,6 +136,6 @@ private:
 };
 
 
-QString createCommandString(ActorDiagramItem *item, const QPointF &point);
+QString createCommandString(SequenceDiagramItem *item, const QPointF &point);
 
 #endif //DIAGRAMS_COMMANDS_H

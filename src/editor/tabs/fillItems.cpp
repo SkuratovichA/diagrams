@@ -19,7 +19,6 @@ classParams::classParams(qreal x, qreal y, QString name,
                          QColor color, qreal width, qreal height,
                          QList<QString> attrs, QList<QString> methods)
                          : objectParams(x, y, name, color, width, height) {
-
     for (auto val : attrs) {
         _attrs.push_back(val);
     }

@@ -149,15 +149,16 @@ private:
     QColor _color;
 };
 
-class ActorLine : public QGraphicsItem {
+class ActorLifetime : public QGraphicsLineItem {
 public:
-    ActorLine(QGraphicsItem *parent);
-    ~ActorLine();
+    ActorLifetime(QGraphicsItem *parent, QPointF startPoint);
+
+    ~ActorLifetime();
 };
 
-class ActorDiagramItem : public QGraphicsRectItem, public DiagramItem {
+class SequenceDiagramItem : public QGraphicsRectItem, public DiagramItem {
 public:
-    explicit ActorDiagramItem(actorParams *params);
+    explicit SequenceDiagramItem(actorParams *params);
 
     void addConnection(ActorConnectionItem *connection);
 

@@ -490,8 +490,8 @@ ClassConnectionItem::~ClassConnectionItem() {
  * @param toNode
  * @param connectionType
  */
-ActorConnectionItem::ActorConnectionItem(ActorDiagramItem *fromNode,
-                                         ActorDiagramItem *toNode,
+ActorConnectionItem::ActorConnectionItem(SequenceDiagramItem *fromNode,
+                                         SequenceDiagramItem *toNode,
                                          ActorConnectionType
                                          connectionType) {
     nodeFrom = fromNode;
@@ -543,7 +543,7 @@ void ActorConnectionItem::trackNodes() {
  *
  * @return
  */
-ActorDiagramItem *ActorConnectionItem::fromNode() const {
+SequenceDiagramItem *ActorConnectionItem::fromNode() const {
     return nodeFrom;
 }
 
@@ -551,7 +551,7 @@ ActorDiagramItem *ActorConnectionItem::fromNode() const {
  *
  * @return
  */
-ActorDiagramItem *ActorConnectionItem::toNode() const {
+SequenceDiagramItem *ActorConnectionItem::toNode() const {
     return nodeTo;
 }
 

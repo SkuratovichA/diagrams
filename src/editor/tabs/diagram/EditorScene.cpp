@@ -39,7 +39,7 @@ void EditorScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
     if (movingItem != nullptr && event->button() == Qt::LeftButton) {
         if (oldPos != movingItem->pos()) {
-            emit itemMoved(qgraphicsitem_cast<ActorDiagramItem *>(movingItem), oldPos);
+            emit itemMoved(qgraphicsitem_cast<SequenceDiagramItem *>(movingItem), oldPos);
         }
         movingItem = nullptr;
     }
@@ -62,11 +62,11 @@ void EditorScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 void EditorScene::changeZval() {
     QList<QGraphicsItem *> selItems = selectedItems();
     ClassDiagramItem *ptr1;
-    ActorDiagramItem *ptr2;
+    SequenceDiagramItem *ptr2;
 
     for (auto x : selItems) {
         ptr1 = dynamic_cast<ClassDiagramItem *>(x);
-        ptr2 = dynamic_cast<ActorDiagramItem *>(x);
+        ptr2 = dynamic_cast<SequenceDiagramItem *>(x);
 
         if (ptr1 == nullptr && ptr2 == nullptr) {
             continue;

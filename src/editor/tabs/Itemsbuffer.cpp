@@ -44,7 +44,7 @@ void ItemsBuffer::fillClassItems(ClassDiagramItem *item) {
     pushClassItem(ptr);
 }
 
-void ItemsBuffer::fillActorItems(ActorDiagramItem *item) {
+void ItemsBuffer::fillActorItems(SequenceDiagramItem *item) {
     actorParams *ptr;
 
     ptr = new actorParams(item->x() + 40, item->y() + 40,

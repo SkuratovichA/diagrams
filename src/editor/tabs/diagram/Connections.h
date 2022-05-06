@@ -10,7 +10,7 @@
 
 class ClassDiagramItem;
 
-class ActorDiagramItem;
+class SequenceDiagramItem;
 
 /**
  *
@@ -102,8 +102,8 @@ public:
     };
 
     ActorConnectionItem(
-            ActorDiagramItem *fromNode,
-            ActorDiagramItem *toNode,
+            SequenceDiagramItem *fromNode,
+            SequenceDiagramItem *toNode,
             ActorConnectionType connectionType);
 
     ~ActorConnectionItem();
@@ -112,13 +112,13 @@ public:
 
     void trackNodes();
 
-    ActorDiagramItem *fromNode() const;
+    SequenceDiagramItem *fromNode() const;
 
-    ActorDiagramItem *toNode() const;
+    SequenceDiagramItem *toNode() const;
 
 private:
-    ActorDiagramItem *nodeFrom;
-    ActorDiagramItem *nodeTo;
+    SequenceDiagramItem *nodeFrom;
+    SequenceDiagramItem *nodeTo;
     QLineF connectionLine;
 };
 

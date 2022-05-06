@@ -125,7 +125,7 @@ AddActorCommand::AddActorCommand(QGraphicsScene *scene, actorParams *params, QUn
         : QUndoCommand(parent), graphicsScene(scene) {
     static int itemCount = 0;
 
-    diagramItem = new ActorDiagramItem(params);
+    diagramItem = new SequenceDiagramItem(params);
     initialStartPosition = QPointF(params->x(), params->y());
     itemCount++;
     scene->update();
@@ -257,8 +257,8 @@ void AddClassConnectionCommand::redo() {
 /**
  *
  */
-AddActorConnectionCommand::AddActorConnectionCommand(ActorDiagramItem *fromNode,
-                                                     ActorDiagramItem *toNode,
+AddActorConnectionCommand::AddActorConnectionCommand(SequenceDiagramItem *fromNode,
+                                                     SequenceDiagramItem *toNode,
                                                      ActorConnectionItem::ActorConnectionType connectionType,
                                                      QGraphicsScene *scene,
                                                      QUndoCommand *parent)
