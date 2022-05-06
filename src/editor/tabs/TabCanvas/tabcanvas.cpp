@@ -2,7 +2,7 @@
 #include <QUndoStack>
 #include <QUndoGroup>
 #include "tabcanvas.h"
-#include "diagram/Commands.h"
+#include "../diagram/Commands.h"
 #include <QRandomGenerator>
 #include <QColor>
 
@@ -78,10 +78,6 @@ void TabCanvas::createMenusConnections() {
 }
 
 void TabCanvas::createMenusSequence() {
-    void request_triggered();
-    void response_triggered();
-    void deletion_triggered();
-    void creation_triggered();
     ADD_SIGNAL(requestMsg,  "Request &Message", "+", "+", this, SLOT(request_triggered()));
     ADD_SIGNAL(responseMsg, "Response &Message", "+", "+", this, SLOT(response_triggered()));
     ADD_SIGNAL(createMsg,   "Create &Message", "+", "+", this, SLOT(creation_triggered()));

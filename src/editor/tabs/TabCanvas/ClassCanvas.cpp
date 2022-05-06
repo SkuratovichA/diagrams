@@ -8,14 +8,6 @@
 #include "TabCanvas.h"
 #include "../diagram/Commands.h"
 
-#define ADD_SIGNAL(obj, name, icon, shortcut, receiver, memberslot) \
-    do {                                                            \
-        obj = new QAction(tr((name)), this);                        \
-        /*obj->setIcon(icon);*/                                     \
-        (obj)->setShortcut(tr(shortcut));                           \
-        connect((obj), SIGNAL(triggered()), receiver, memberslot);  \
-    } while(0)
-
 class editorInterface;
 
 ClassCanvas::ClassCanvas(QWidget *parent, QUndoGroup *parentGroup) : TabCanvas(parent, parentGroup) {
@@ -215,13 +207,10 @@ void ClassCanvas::orientation_triggered() {
 }
 
 void ClassCanvas::addEntity() {
-    QUndoCommand *addCommand = nullptr;
     QList<QString> attrs;
     QList<QString> methods;
-    static uint64_t actorStep = 0;
     QPoint point = generateCoords();
 
-    actorParams *createActor;
     attrs.push_back("+ int name");
     methods.push_back("+ int name()");
 

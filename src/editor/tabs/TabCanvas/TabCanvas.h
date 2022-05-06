@@ -15,6 +15,14 @@
 #include "../fillItems.h"
 #include "../Itemsbuffer.h"
 
+#define ADD_SIGNAL(obj, name, icon, shortcut, receiver, memberslot) \
+    do {                                                            \
+        obj = new QAction(tr((name)), this);                        \
+        /*obj->setIcon(icon);*/                                     \
+        (obj)->setShortcut(tr(shortcut));                           \
+        connect((obj), SIGNAL(triggered()), receiver, memberslot);  \
+    } while(0)
+
 class TabCanvas : public QMainWindow {
 Q_OBJECT
 
@@ -254,32 +262,48 @@ class SequenceCanvas : public TabCanvas {
 Q_OBJECT
 
 public:
-    SequenceCanvas(QWidget *parent = nullptr, QUndoGroup *parentGroup = nullptr) {}
+    SequenceCanvas(QWidget *parent = nullptr, QUndoGroup *parentGroup = nullptr);
 
 public slots:
 
-    void paste() override {};
+    void paste() override;
 
-    void cut() override {};
+    void cut() override;
 
-    void copy() override {};
+    void copy() override;
 
-    void addEntity() override {};
+    void addEntity() override;
 
-    void addConnection() override {};
+    void addConnection() override;
 
-    void showContextMenu(const QPoint &pos) override {};
+    void showContextMenu(const QPoint &pos) override;
 
-    virtual void toBack() override {};
+    void toBack() override;
 
-    virtual void toFront() override {};
+    void toFront() override;
+
+    void asynchronousMessage_triggered();
+    void synchronousMessage_triggered();
+    void returnMessage_triggered();
+    void createMessage_triggered();
+    void deleteMessage_triggered();
 
 public:
-    std::string getStringRepresentation() const override {return {"hui"};};
+    std::string getStringRepresentation() const override;
+    QPoint generateCoords() const override;
 
-    QPoint generateCoords() const override {
-        return QPoint(QRandomGenerator::global()->bounded(600), 30);
-    }
+private:
+    void createSequenceContextMenu();
+
+private:
+    QMenu *sequenceMenu;
+
+    QAction *asynchronousMessage;
+    QAction *synchronousMessage;
+    QAction *returnMessage;
+    QAction *createMessage;
+    QAction *deleteMessage;
+    actorParams *createActor;
 };
 
 #endif // TABCANVAS_H

@@ -26,7 +26,7 @@ public:
         return _connectionItems;
     }
 
-    QList<actorParams *> actorItems() const {
+    QList<actorParams *> sequenceItems() const {
         return _actorItems;
     }
 
