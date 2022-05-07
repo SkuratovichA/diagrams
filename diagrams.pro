@@ -9,6 +9,7 @@ CONFIG += c++17
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+        src/editor/Tabs/TabCanvas/sequenceconnectioncontextmenu.cpp \
         src/main.cpp  \
         src/MainWIndow/mainwindow.cpp \
         src/editor/EditorInterface/editorinterface.cpp \
@@ -20,7 +21,9 @@ SOURCES += \
         src/editor/Tabs/DiagramItem/Connections/Connections.cpp \
         src/editor/Tabs/TabCanvas/ItemsBuffer/Itemsbuffer.cpp \
         src/editor/Tabs/DiagramItem/FillItems/FillItems.cpp \
-        src/editor/Tabs/TabCanvas/SequenceCanvas.cpp
+        src/editor/Tabs/TabCanvas/SequenceCanvas.cpp \
+        src/sequenceconnectiondialog.cpp \
+        src/sequenceconnectionproperties.cpp
 
 HEADERS += \
         src/MainWIndow/mainwindow.h \
@@ -32,12 +35,16 @@ HEADERS += \
         src/editor/Tabs/DiagramItem/Connections/Connections.h \
         src/editor/EditorInterface/editorinterface.h \
         src/editor/Tabs/TabCanvas/TabCanvas.h \
-        src/editor/Tabs/TabCanvas/ItemsBuffer/Itemsbuffer.h
+        src/editor/Tabs/TabCanvas/ItemsBuffer/Itemsbuffer.h \
+        src/editor/Tabs/TabCanvas/sequenceconnectioncontextmenu.h \
+        src/sequenceconnectiondialog.h \
+        src/sequenceconnectionproperties.h
 
 FORMS += \
     src/editor/EditorInterface/editorinterface.ui \
     src/editor/PropertiesDialog/propertiesdialog.ui \
-    src/MainWindow/mainwindow.ui
+    src/MainWindow/mainwindow.ui \
+    src/sequenceconnectiondialog.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

@@ -27,7 +27,6 @@ QList<QPair<ClassDiagramItem *, QString>> ClassCanvas::getClassStringPairs() {
         pair.first = x;
         pair.second = x->_head->toPlainText();
         listPairs.append(pair);
-//        listPairs.push_back(pair);
     }
 
     return listPairs;
@@ -298,26 +297,6 @@ void ClassCanvas::cut() {
         editorScene->removeItem(val);
     }
 }
-//
-//void ClassCanvas::toBack()  {
-//    QList<QGraphicsItem *> selItems = editorScene->selectedItems();
-//    QList<QGraphicsItem *> allItems = editorScene->items();
-//    setZvalue<ClassCanvas>(selItems, 1);
-//    for (auto x: selItems) {
-//        allItems.removeOne(x);
-//    }
-//    setZvalue<ClassCanvas *>(allItems, -1);
-//}
-//
-//void ClassCanvas::toFront()  {
-//    QList<QGraphicsItem *> selItems = editorScene->selectedItems();
-//    QList<QGraphicsItem *> allItems = editorScene->items();
-//    setZvalue<ClassCanvas>(selItems, -1);
-//    for (auto x: selItems) {
-//        allItems.removeOne(x);
-//    }
-//    setZvalue<ClassCanvas>(allItems, 1);
-//}
 
 void ClassCanvas::toBack() {
     _toZchange<ClassCanvas>(false);

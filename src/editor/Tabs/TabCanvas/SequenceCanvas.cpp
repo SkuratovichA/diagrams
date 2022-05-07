@@ -11,6 +11,7 @@
 
 #include "TabCanvas.h"
 #include "../../EditorInterface/editorinterface.h"
+#include "SequenceConnectionDialog/sequenceconnectiondialog.h"
 
 //class editorInterface;
 
@@ -102,7 +103,20 @@ void SequenceCanvas::addEntity(ClassDiagramItem *classDiagramItemParent) {
 }
 
 void SequenceCanvas::addConnection() {
-    assert(!"create new sequence conection command");
+    auto scd = SequenceConnectionDialog(this);
+    scd.exec();
+
+    auto nodes = getSelectedDiagramItems<SequenceDiagramItem>();
+    auto emptySelect = nodes == QPair<SequenceDiagramItem *, SequenceDiagramItem *>();
+    if (emptySelect) {
+        return;
+    }
+
+//    _undoStack->push(
+//            new AddSequenceConnectionCommand(nodes.first, nodes.second, scd.messageType(), editorScene)
+//    );
+
+
 //    auto nodes = getSelectedDiagramItems<SequenceDiagramItem>();
 //    auto emptySelect = nodes == QPair<SequenceDiagramItem *, SequenceDiagramItem *>();
 //    if (emptySelect) {
