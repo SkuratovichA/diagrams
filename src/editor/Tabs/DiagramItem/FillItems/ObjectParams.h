@@ -2,8 +2,8 @@
 // Created by shchepa on 4.5.22.
 //
 
-#ifndef DIAGRAMS_FILLITEMS_H
-#define DIAGRAMS_FILLITEMS_H
+#ifndef DIAGRAMS_OBJECTPARAMS_H
+#define DIAGRAMS_OBJECTPARAMS_H
 
 #include <QString>
 #include <QList>
@@ -82,4 +82,4 @@ public:
 };
 
 
-#endif //DIAGRAMS_FILLITEMS_H
+#endif //DIAGRAMS_OBJECTPARAMS_H
