@@ -272,15 +272,15 @@ void editorInterface::actionAddEntity_triggered() {
     if (tabWidget->currentIndex() == 0) {
         reinterpret_cast<ClassCanvas *>(tabWidget->currentWidget())->addEntity();
     } else {
-        auto sequenceTab = reinterpret_cast<ClassCanvas *>(tabWidget->currentWidget());
+        auto sequenceTab = reinterpret_cast<SequenceCanvas *>(tabWidget->currentWidget());
         QList<QString> existingClasses;
 
         existingClasses.append(QString("Tatiana Fedorova"));
         existingClasses.append(QString("heer, there will be a list of classes"));
-        auto classStringPairs = sequenceTab->getClassStringPairs();
+        auto classStringPairs = reinterpret_cast<ClassCanvas *>(tabWidget->widget(0))->getClassStringPairs();
 
         for (auto cs : classStringPairs) {
-            existingClasse.append(cs.first);
+            existingClasses.append(cs.second);
         }
 
         PropertiesDialog propertiesDialog(this, existingClasses);

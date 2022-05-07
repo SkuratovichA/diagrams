@@ -229,7 +229,7 @@ public:
 
 public:
     void getStringRepresentation(Program &prg) override;
-
+    QList<QPair<ClassDiagramItem *, QString>> getClassStringPairs();
     QPoint generateCoords() const override;
 
 private:

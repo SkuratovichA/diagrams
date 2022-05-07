@@ -19,6 +19,19 @@ QPoint ClassCanvas::generateCoords() const {
     return QPoint(QRandomGenerator::global()->bounded(600), QRandomGenerator::global()->bounded(600));
 }
 
+QList<QPair<ClassDiagramItem *, QString>> ClassCanvas::getClassStringPairs() {
+    QList<QPair<ClassDiagramItem *, QString>> listPairs;
+
+    for (auto x : getItems<ClassDiagramItem>()) {
+        QPair<ClassDiagramItem *, QString> pair;
+        pair.first = x;
+        pair.second = x->_head->toPlainText();
+        listPairs.push_back(pair);
+    }
+
+    return listPairs;
+}
+
 void ClassCanvas::getStringRepresentation(Program &prg) {
     std::vector<Class> objects;
     std::vector<Conct> connects;
