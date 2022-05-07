@@ -9,16 +9,35 @@
 
 class editorInterface;
 
+/**
+ * A constructor.
+ *
+ * This constructor creates a tab with a class diagram.
+ *
+ * @param p parent widget
+ * @param parentGroup pointer to the main undo stack
+ * to create a local undo stask
+ */
 ClassCanvas::ClassCanvas(QWidget *parent, QUndoGroup *parentGroup) : TabCanvas(parent, parentGroup) {
     createScene();
     createEntityClassContextMenu();
     createConnectionContextMenu();
 }
 
+/**
+ * Generate random [x, y] coordinates ranging from 0 to 600
+ *
+ * @return coordinates on the scene for new item
+ */
 QPoint ClassCanvas::generateCoords() const {
     return QPoint(QRandomGenerator::global()->bounded(600), QRandomGenerator::global()->bounded(600));
 }
 
+/**
+ * // TODO
+ * @return list with elements as a pair pointer to the class object
+ * and name of this object
+ */
 QList<QPair<ClassDiagramItem *, QString>> ClassCanvas::getClassStringPairs() {
     QList<QPair<ClassDiagramItem *, QString>> listPairs;
 
@@ -33,6 +52,10 @@ QList<QPair<ClassDiagramItem *, QString>> ClassCanvas::getClassStringPairs() {
     return listPairs;
 }
 
+/**
+ * // TODO
+ * @param prg
+ */
 void ClassCanvas::getStringRepresentation(Program &prg) {
     std::vector<Class> objects;
     std::vector<Conct> connects;
@@ -41,10 +64,6 @@ void ClassCanvas::getStringRepresentation(Program &prg) {
     for (auto x : getItems<ClassDiagramItem>()) {
         buf.fillClassItems(x);
     }
-
-//    for (auto x : getItems<ClassConnectionItem>()) {
-//        buf.fillConnectsItems(x);
-//    }
 
     for (auto x : buf.classItems()) {
         Class tmp;
@@ -55,6 +74,9 @@ void ClassCanvas::getStringRepresentation(Program &prg) {
     }
 }
 
+/**
+ * Create and connect all signals for interaction with clasees.
+ */
 void ClassCanvas::createEntityClassContextMenu() {
     ADD_SIGNAL(addMethod, "Add &Method", "+", "+", this, SLOT(addMethod_triggered()));
     ADD_SIGNAL(rmMethod, "Delete &Method", "+", "+", this, SLOT(rmMethod_triggered()));
@@ -68,6 +90,9 @@ void ClassCanvas::createEntityClassContextMenu() {
     classMenu->addAction(rmAttr);
 }
 
+/**
+ * Create and connect all signals for interaction with relation arrows.
+ */
 void ClassCanvas::createConnectionContextMenu() {
     ADD_SIGNAL(aggregation, "Aggregation &Relation", "+", "+", this, SLOT(aggregation_triggered()));
     ADD_SIGNAL(composition, "Composition &Relation", "+", "+", this, SLOT(composition_triggered()));
@@ -85,6 +110,11 @@ void ClassCanvas::createConnectionContextMenu() {
     connectionMenu->addAction(orientation);
 }
 
+/**
+ * Show a context menu with actions for objects.
+ *
+ * @param pos position on the scene where the click was handled
+ */
 void ClassCanvas::showContextMenu(const QPoint &pos) {
     auto *item = selectedObject<ClassDiagramItem>();
 
@@ -99,6 +129,9 @@ void ClassCanvas::showContextMenu(const QPoint &pos) {
     }
 }
 
+/**
+ * Add a new method to the selected class at the end.
+ */
 void ClassCanvas::addMethod_triggered() {
     auto *item = selectedObject<ClassDiagramItem>();
 
@@ -122,6 +155,9 @@ void ClassCanvas::addMethod_triggered() {
     }
 };
 
+/**
+ * Delete the last method from the selected class.
+ */
 void ClassCanvas::rmMethod_triggered() {
     auto *item = selectedObject<ClassDiagramItem>();
 
@@ -150,6 +186,9 @@ void ClassCanvas::rmMethod_triggered() {
     }
 };
 
+/**
+ * Add a new attribute to the selected class at the end.
+ */
 void ClassCanvas::addAttr_triggered() {
     auto *item = selectedObject<ClassDiagramItem>();
     if (item == nullptr) {
@@ -176,6 +215,9 @@ void ClassCanvas::addAttr_triggered() {
     }
 };
 
+/**
+ * Delete the last method from the selected class.
+ */
 void ClassCanvas::rmAttr_triggered() {
     ClassDiagramItem *item = selectedObject<ClassDiagramItem>();
     if (item == nullptr) {
@@ -204,18 +246,27 @@ void ClassCanvas::rmAttr_triggered() {
     }
 };
 
+/**
+ * Create an aggregation relation between two selected classes.
+ */
 void ClassCanvas::aggregation_triggered() {
     auto line = (selectedObject<ClassConnectionItem>());
     line->setType(ClassConnectionItem::Aggregation);
     editorScene->update();
 }
 
+/**
+ * Create a composition relation between two selected classes.
+ */
 void ClassCanvas::composition_triggered() {
     auto line = (selectedObject<ClassConnectionItem>());
     line->setType(ClassConnectionItem::Composition);
     editorScene->update();
 }
 
+/**
+ * Create a generalization relation between two selected classes.
+ */
 void ClassCanvas::generalization_triggered() {
     auto line = selectedObject<ClassConnectionItem>();
     line->setType(ClassConnectionItem::Generalization);
@@ -228,18 +279,27 @@ void ClassCanvas::association_triggered() {
     editorScene->update();
 }
 
+/**
+ * Create an dependency relation between two selected classes.
+ */
 void ClassCanvas::dependency_triggered() {
     auto line = selectedObject<ClassConnectionItem>();
     line->setType(ClassConnectionItem::Dependency);
     editorScene->update();
 }
 
+/**
+ * Change the orientation of the arrow.
+ */
 void ClassCanvas::orientation_triggered() {
     auto line = selectedObject<ClassConnectionItem>();
     line->changeOrientation();
     editorScene->update();
 }
 
+/**
+ * Add a new entity to the class diagram.
+ */
 void ClassCanvas::addEntity() {
     QList<QString> attrs;
     QList<QString> methods;
@@ -257,6 +317,9 @@ void ClassCanvas::addEntity() {
     delete createItem;
 }
 
+/**
+ * // TODO
+ */
 void ClassCanvas::addConnection() {
     auto nodes = getSelectedDiagramItems<ClassDiagramItem>();
     auto emptySelect = nodes == QPair<ClassDiagramItem *, ClassDiagramItem *>();
@@ -268,6 +331,9 @@ void ClassCanvas::addConnection() {
     );
 }
 
+/**
+ * Paste all selected items from the local "copy" buffer to the scene.
+ */
 void ClassCanvas::paste() {
     for (auto ptr: buffer->classItems()) {
         auto *diagramItem = new ClassDiagramItem(ptr);
@@ -277,6 +343,9 @@ void ClassCanvas::paste() {
     editorScene->update();
 }
 
+/**
+ * Copy all selected items to the local "copy" buffer from the scene.
+ */
 void ClassCanvas::copy() {
     ClassDiagramItem *ptr;
     QList<QGraphicsItem *> items = editorScene->selectedItems();
@@ -289,6 +358,10 @@ void ClassCanvas::copy() {
     }
 }
 
+/**
+ * Copy all selected items to the local "copy" buffer from the scene
+ * and the delete them.
+ */
 void ClassCanvas::cut() {
     copy();
     QList<QGraphicsItem *> items = editorScene->selectedItems();
@@ -296,31 +369,17 @@ void ClassCanvas::cut() {
         editorScene->removeItem(val);
     }
 }
-//
-//void ClassCanvas::toBack()  {
-//    QList<QGraphicsItem *> selItems = editorScene->selectedItems();
-//    QList<QGraphicsItem *> allItems = editorScene->items();
-//    setZvalue<ClassCanvas>(selItems, 1);
-//    for (auto x: selItems) {
-//        allItems.removeOne(x);
-//    }
-//    setZvalue<ClassCanvas *>(allItems, -1);
-//}
-//
-//void ClassCanvas::toFront()  {
-//    QList<QGraphicsItem *> selItems = editorScene->selectedItems();
-//    QList<QGraphicsItem *> allItems = editorScene->items();
-//    setZvalue<ClassCanvas>(selItems, -1);
-//    for (auto x: selItems) {
-//        allItems.removeOne(x);
-//    }
-//    setZvalue<ClassCanvas>(allItems, 1);
-//}
 
+/**
+ * Decrease Z value of the selected items and send them to back.
+ */
 void ClassCanvas::toBack() {
     _toZchange<ClassCanvas>(false);
 }
 
+/**
+ * Increase Z value of the selected items and send them to front.
+ */
 void ClassCanvas::toFront() {
     _toZchange<ClassCanvas>(true);
 }

@@ -89,7 +89,7 @@ void ClassTextAttr::keyReleaseEvent(QKeyEvent *event) {
  *
  * @param params class with all necessary information to create an object.
  */
-SequenceDiagramItem::SequenceDiagramItem(actorParams *params)
+SequenceDiagramItem::SequenceDiagramItem(actorParams *params, ClassDiagramItem *parentClassDiagramItem_)
         : DiagramItem(params->width(),
                       params->height(),
                       DiagramItem::Actor,
@@ -105,7 +105,7 @@ SequenceDiagramItem::SequenceDiagramItem(actorParams *params)
 
     setPen(QPen(QColor(1, 0, 0, 0)));
     _head = new NameObject(this, _flags, QPointF(-3, -40), params->name());
-    _parentClassDiagramItem = parentCLassDiagramItem_;
+    _parentClassDiagramItem = parentClassDiagramItem_;
 
     auto actorRect = new QGraphicsRectItem(0, 0, params->width(), params->height(), this);
     actorRect->setPen(QPen(QColor(Qt::black), 3.0));
