@@ -30,7 +30,7 @@ public:
         return _actorItems;
     }
 
-    QList<ActorConnectionItem *> messageItems() const {
+    QList<SequenceConnectionItem *> messageItems() const {
         return _messageItems;
     }
 
@@ -60,7 +60,7 @@ private:
     QList<classParams *> _classItems;
     QList<ClassConnectionItem *> _connectionItems;
     QList<actorParams *> _actorItems;
-    QList<ActorConnectionItem *> _messageItems;
+    QList<SequenceConnectionItem *> _messageItems;
 };
 
 

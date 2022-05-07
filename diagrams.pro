@@ -9,42 +9,46 @@ CONFIG += c++17
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-        src/editor/Tabs/TabCanvas/sequenceconnectioncontextmenu.cpp \
-        src/main.cpp  \
+        src/main.cpp \
         src/MainWIndow/mainwindow.cpp \
         src/editor/EditorInterface/editorinterface.cpp \
         src/editor/PropertiesDialog/propertiesdialog.cpp \
         src/editor/Tabs/TabCanvas/ClassCanvas.cpp \
+        src/editor/Tabs/TabCanvas/SequenceConnectionDialog/sequenceconnectiondialog.cpp \
         src/editor/Tabs/DiagramItem/DiagramItem.cpp \
         src/editor/Tabs/DiagramItem/EditorScene/EditorScene.cpp \
         src/editor/Tabs/DiagramItem/Commands/Commands.cpp \
         src/editor/Tabs/DiagramItem/Connections/Connections.cpp \
         src/editor/Tabs/TabCanvas/ItemsBuffer/Itemsbuffer.cpp \
-        src/editor/Tabs/DiagramItem/FillItems/FillItems.cpp \
+        src/editor/Tabs/DiagramItem/FillItems/ObjectParams.cpp \
         src/editor/Tabs/TabCanvas/SequenceCanvas.cpp \
-        src/sequenceconnectiondialog.cpp \
-        src/sequenceconnectionproperties.cpp
+        src/editor/Backend/ClassDiagram.cpp \
+        src/editor/Backend/Parse.cpp \
+        src/editor/Backend/SeqDiagram.cpp
 
 HEADERS += \
         src/MainWIndow/mainwindow.h \
         src/editor/PropertiesDialog/propertiesdialog.h \
-        src/editor/Tabs/DiagramItem/FillItems/FillItems.h \
+        src/editor/Tabs/DiagramItem/FillItems/ObjectParams.h \
         src/editor/Tabs/DiagramItem/DiagramItem.h \
         src/editor/Tabs/DiagramItem/EditorScene/EditorScene.h \
         src/editor/Tabs/DiagramItem/Commands/Commands.h \
         src/editor/Tabs/DiagramItem/Connections/Connections.h \
         src/editor/EditorInterface/editorinterface.h \
         src/editor/Tabs/TabCanvas/TabCanvas.h \
+        src/editor/Tabs/TabCanvas/SequenceConnectionDialog/sequenceconnectiondialog.h \
         src/editor/Tabs/TabCanvas/ItemsBuffer/Itemsbuffer.h \
-        src/editor/Tabs/TabCanvas/sequenceconnectioncontextmenu.h \
-        src/sequenceconnectiondialog.h \
-        src/sequenceconnectionproperties.h
+        src/editor/Backend/ClassDiagram.h \
+        src/editor/Backend/Parse.h \
+        src/editor/Backend/SeqDiagram.h \
+        src/editor/Backend/json.hpp
 
 FORMS += \
     src/editor/EditorInterface/editorinterface.ui \
     src/editor/PropertiesDialog/propertiesdialog.ui \
     src/MainWindow/mainwindow.ui \
-    src/sequenceconnectiondialog.ui
+    src/editor/Tabs/TabCanvas/SequenceConnectionDialog/sequenceconnectiondialog.ui
+
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

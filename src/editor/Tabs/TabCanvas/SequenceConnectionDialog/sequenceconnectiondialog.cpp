@@ -16,12 +16,12 @@ SequenceConnectionDialog::~SequenceConnectionDialog() {
     delete ui;
 }
 
-SequenceConnectionDialog::messageTypes SequenceConnectionDialog::messageType() {
+SequenceConnectionItem::SequenceConnectionType SequenceConnectionDialog::messageType() {
     return index;
 }
 
 void SequenceConnectionDialog::on_pushButton_clicked() {
-    index = static_cast<messageTypes>(ui->listWidget->currentRow());
+    index = static_cast<SequenceConnectionItem::SequenceConnectionType>(ui->listWidget->currentRow());
     close();
 }
 

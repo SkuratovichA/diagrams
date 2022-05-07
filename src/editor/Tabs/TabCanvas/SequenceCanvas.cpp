@@ -96,7 +96,7 @@ void SequenceCanvas::addEntity(ClassDiagramItem *classDiagramItemParent) {
                                   classDiagramItemParent->color(), 80, 50);
 
     _undoStack->push(
-            new AddActorCommand(editorScene, createActor, classDiagramItemParent)
+            new AddSequenceCommand(editorScene, createActor, classDiagramItemParent)
     );
 
     delete createActor;
@@ -112,19 +112,9 @@ void SequenceCanvas::addConnection() {
         return;
     }
 
-//    _undoStack->push(
-//            new AddSequenceConnectionCommand(nodes.first, nodes.second, scd.messageType(), editorScene)
-//    );
-
-
-//    auto nodes = getSelectedDiagramItems<SequenceDiagramItem>();
-//    auto emptySelect = nodes == QPair<SequenceDiagramItem *, SequenceDiagramItem *>();
-//    if (emptySelect) {
-//        return;
-//    }
-//    _undoStack->push(
-//            new AddActorConnectionCommand(nodes.first, nodes.second, editorScene)
-//    );
+    _undoStack->push(
+            new AddSequenceConnectionCommand(nodes.first, nodes.second, scd.messageType(), editorScene)
+    );
 }
 
 void SequenceCanvas::paste() {

@@ -25,7 +25,7 @@ add_executable(proj
         src/editor/Tabs/DiagramItem/DiagramItem.cpp
         src/editor/Tabs/DiagramItem/EditorScene/EditorScene.cpp
         src/editor/Tabs/DiagramItem/Commands/Commands.cpp
-        src/editor/Tabs/DiagramItem/Connections/Connections.cpp
+        src/editor/Tabs/DiagramItem/Connections/ClassConnectinos.cpp
         src/editor/Tabs/TabCanvas/ItemsBuffer/Itemsbuffer.cpp
         src/editor/Tabs/DiagramItem/FillItems/ObjectParams.cpp
         src/editor/Tabs/TabCanvas/SequenceCanvas.cpp
@@ -48,7 +48,7 @@ add_executable(proj
         src/editor/Backend/Parse.h
         src/editor/Backend/SeqDiagram.h
         src/editor/Backend/json.hpp
-        )
+        src/editor/Tabs/DiagramItem/Connections/SequenceConnections.cpp)
 target_link_libraries(proj
         Qt::Core
         Qt::Gui

@@ -121,7 +121,8 @@ void DeleteCommand::redo() {
 /**
  *
  */
-AddActorCommand::AddActorCommand(QGraphicsScene *scene, actorParams *params, ClassDiagramItem *parentClassDiagramItem,QUndoCommand *parent)
+AddSequenceCommand::AddSequenceCommand(QGraphicsScene *scene, actorParams *params,
+                                       ClassDiagramItem *parentClassDiagramItem, QUndoCommand *parent)
         : QUndoCommand(parent), graphicsScene(scene) {
     static int itemCount = 0;
 
@@ -136,7 +137,7 @@ AddActorCommand::AddActorCommand(QGraphicsScene *scene, actorParams *params, Cla
 /**
  *
  */
-AddActorCommand::~AddActorCommand() {
+AddSequenceCommand::~AddSequenceCommand() {
     if (diagramItem->scene() == nullptr) {
         return;
     }
@@ -146,7 +147,7 @@ AddActorCommand::~AddActorCommand() {
 /**
  *
  */
-void AddActorCommand::undo() {
+void AddSequenceCommand::undo() {
     graphicsScene->removeItem(diagramItem);
     graphicsScene->update();
 }
@@ -154,7 +155,7 @@ void AddActorCommand::undo() {
 /**
  *
  */
-void AddActorCommand::redo() {
+void AddSequenceCommand::redo() {
     graphicsScene->addItem(diagramItem);
     diagramItem->setPos(initialStartPosition);
     graphicsScene->clearSelection();
@@ -257,20 +258,20 @@ void AddClassConnectionCommand::redo() {
 /**
  *
  */
-AddActorConnectionCommand::AddActorConnectionCommand(SequenceDiagramItem *fromNode,
-                                                     SequenceDiagramItem *toNode,
-                                                     ActorConnectionItem::ActorConnectionType connectionType,
-                                                     QGraphicsScene *scene,
-                                                     QUndoCommand *parent)
+AddSequenceConnectionCommand::AddSequenceConnectionCommand(SequenceDiagramItem *fromNode,
+                                                           SequenceDiagramItem *toNode,
+                                                           SequenceConnectionItem::SequenceConnectionType connectionType,
+                                                           QGraphicsScene *scene,
+                                                           QUndoCommand *parent)
         : QUndoCommand(parent), graphicsScene(scene) {
-    actorConnection = new ActorConnectionItem(fromNode, toNode, connectionType);
+    actorConnection = new SequenceConnectionItem(fromNode, toNode, connectionType);
     scene->update();
 }
 
 /**
  *
  */
-AddActorConnectionCommand::~AddActorConnectionCommand() {
+AddSequenceConnectionCommand::~AddSequenceConnectionCommand() {
     if (actorConnection->scene() != nullptr) {
         return;
     }
@@ -280,7 +281,7 @@ AddActorConnectionCommand::~AddActorConnectionCommand() {
 /**
  *
  */
-void AddActorConnectionCommand::undo() {
+void AddSequenceConnectionCommand::undo() {
     graphicsScene->removeItem(actorConnection);
     graphicsScene->update();
 }
@@ -288,7 +289,7 @@ void AddActorConnectionCommand::undo() {
 /**
  *
  */
-void AddActorConnectionCommand::redo() {
+void AddSequenceConnectionCommand::redo() {
     graphicsScene->addItem(actorConnection);
     graphicsScene->clearSelection();
     graphicsScene->update();

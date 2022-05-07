@@ -340,9 +340,9 @@ class SequenceDiagramItem : public QGraphicsRectItem, public DiagramItem {
 public:
     explicit SequenceDiagramItem(actorParams *params, ClassDiagramItem *parentClassDiagramItem_ = nullptr);
 
-    void addConnection(ActorConnectionItem *connection);
+    void addConnection(SequenceConnectionItem *connection);
 
-    void removeConnection(ActorConnectionItem *connection);
+    void removeConnection(SequenceConnectionItem *connection);
 
     ClassDiagramItem *parentClassDiagramItem() const {
         return _parentClassDiagramItem;
@@ -354,7 +354,7 @@ protected:
 
 private:
     ClassDiagramItem *_parentClassDiagramItem = nullptr;
-    QSet<ActorConnectionItem *> _connections;
+    QSet<SequenceConnectionItem *> _connections;
     QGraphicsLineItem *line;
 };
 

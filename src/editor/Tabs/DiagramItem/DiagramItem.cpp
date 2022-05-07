@@ -97,7 +97,7 @@ QVariant SequenceDiagramItem::itemChange(GraphicsItemChange change, const QVaria
  *
  * @param connection
  */
-void SequenceDiagramItem::addConnection(ActorConnectionItem *connection) {
+void SequenceDiagramItem::addConnection(SequenceConnectionItem *connection) {
     _connections.insert(connection);
 }
 
@@ -105,7 +105,7 @@ void SequenceDiagramItem::addConnection(ActorConnectionItem *connection) {
  *
  * @param connection
  */
-void SequenceDiagramItem::removeConnection(ActorConnectionItem *connection) {
+void SequenceDiagramItem::removeConnection(SequenceConnectionItem *connection) {
     _connections.remove(connection);
 }
 

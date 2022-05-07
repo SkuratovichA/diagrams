@@ -8,8 +8,8 @@
 #include <QGraphicsLineItem>
 #include <QGraphicsSceneMouseEvent>
 
-
 class ClassDiagramItem;
+
 class SequenceDiagramItem;
 
 class msgText;
@@ -29,8 +29,8 @@ public:
             ClassDiagramItem *toNode,
             ClassConnectionType connectionType,
             uint32_t order = 0,
-            QColor color = QColor(50,45,50,100)
-            );
+            QColor color = QColor(50, 45, 50, 100)
+    );
 
     ~ClassConnectionItem();
 
@@ -40,25 +40,32 @@ public:
     void setType(ClassConnectionType type) {
         _connectionType = type;
     }
+
     ClassConnectionType connectionType() const {
         return _connectionType;
     }
+
     ClassDiagramItem *nodeFrom() const {
         return _nodeFrom;
     }
+
     ClassDiagramItem *nodeTo() const {
         return _nodeTo;
     }
+
     QColor color() const {
         return _color;
     }
+
     uint32_t order() const {
         return _order;
     }
+
     void changeOrientation() {
         _orientation = !_orientation;
         trackNodes();
     }
+
     void setColor(const QColor &color) {
         _color = color;
     }
@@ -106,18 +113,18 @@ private:
 /**
  *
  */
-class ActorConnectionItem : public QGraphicsLineItem {
+class SequenceConnectionItem : public QGraphicsLineItem {
 public:
-    enum ActorConnectionType {
-        Request, Response, Delete, Create
+    enum SequenceConnectionType {
+        Synchronous, Asynchronous, Reply, Create, Delete,
     };
 
-    ActorConnectionItem(
+    SequenceConnectionItem(
             SequenceDiagramItem *fromNode,
             SequenceDiagramItem *toNode,
-            ActorConnectionType connectionType);
+            SequenceConnectionType connectionType);
 
-    ~ActorConnectionItem();
+    ~SequenceConnectionItem();
 
     QColor color() const;
 

@@ -44,7 +44,7 @@ ClassConnectionItem::ClassConnectionItem(ClassDiagramItem *fromNode,
 }
 
 msgText::msgText(QGraphicsItem *parent, QFlags<Qt::TextInteractionFlag> flags, qreal x, qreal y, QString str)
- : QGraphicsTextItem(str, parent) {
+        : QGraphicsTextItem(str, parent) {
     _parent = parent;
     setPos(x, y);
     setFont(QFont("Courier", 10));
@@ -205,7 +205,7 @@ QPair<QPointF, QPointF> ClassConnectionItem::edgePoints() const {
             }
 
             leftNum->setPos(xFrom + 10, yFrom + 5);
-            rightNum->setPos(xTo -50, yTo + 5);
+            rightNum->setPos(xTo - 50, yTo + 5);
             break;
         case 4:
             xTo = _nodeTo->centre().x() + toWidthHalf;
@@ -302,15 +302,16 @@ QPolygonF ClassConnectionItem::lineShaper() const {
     QPolygonF poly;
     if (_single) {
         QPolygonF poly;
-        auto margin = std::min<qreal>(_nodeTo->height(), _nodeTo->width())/3;
-        auto yAbove = _nodeTo->bottomRight().y() - margin    - 17;
-        auto xRight = _nodeTo->bottomRight().x() + margin    + 17;
-        auto xLeft = _nodeTo->bottomRight().x()  - margin    - 17;
-        auto yBelow = _nodeTo->bottomRight().y() + margin    + 17;
+        auto margin = std::min<qreal>(_nodeTo->height(), _nodeTo->width()) / 3;
+        auto yAbove = _nodeTo->bottomRight().y() - margin - 17;
+        auto xRight = _nodeTo->bottomRight().x() + margin + 17;
+        auto xLeft = _nodeTo->bottomRight().x() - margin - 17;
+        auto yBelow = _nodeTo->bottomRight().y() + margin + 17;
         auto x = _nodeTo->bottomRight().x();
         auto y = _nodeTo->bottomRight().y();
         poly << QPointF(x, yAbove) << QPointF(xRight, yAbove)
-             << QPointF(xRight, yBelow) << QPointF(xLeft, yBelow) << QPoint(xLeft, y) << _nodeTo->bottomRight() << QPointF(x, yAbove);
+             << QPointF(xRight, yBelow) << QPointF(xLeft, yBelow) << QPoint(xLeft, y) << _nodeTo->bottomRight()
+             << QPointF(x, yAbove);
         return poly;
     }
 
@@ -444,10 +445,10 @@ void ClassConnectionItem::drawLine(QPainter *painter, const QStyleOptionGraphics
         angle = std::atan2(-cLine.dy(), cLine.dx());
         linend = cLine.p1();
     } else {
-        auto margin = std::min<qreal>(_nodeTo->height(), _nodeTo->width())/3;
+        auto margin = std::min<qreal>(_nodeTo->height(), _nodeTo->width()) / 3;
         auto yAbove = _nodeTo->bottomRight().y() - margin;
         auto xRight = _nodeTo->bottomRight().x() + margin;
-        auto xLeft = _nodeTo->bottomRight().x()  - margin;
+        auto xLeft = _nodeTo->bottomRight().x() - margin;
         auto yBelow = _nodeTo->bottomRight().y() + margin;
         auto x = _nodeTo->bottomRight().x();
         auto y = _nodeTo->bottomRight().y();
@@ -459,7 +460,7 @@ void ClassConnectionItem::drawLine(QPainter *painter, const QStyleOptionGraphics
                      QPointF(xLeft, yBelow));
         sl4 = QLineF(QPointF(xLeft, yBelow),
                      QPointF(xLeft, y));
-        angle = -M_PI/2;
+        angle = -M_PI / 2;
         linend = QPointF(xLeft, y);
     }
     auto const scale = 20;
@@ -468,7 +469,7 @@ void ClassConnectionItem::drawLine(QPainter *painter, const QStyleOptionGraphics
     arrowP2 = linend + QPointF(sin(angle + M_PI / 3) * scale,
                                cos(angle + M_PI / 3) * scale);
     arrowP3 = linend + QPointF(sin(angle + M_PI / 2) * scale * 1.7,
-                                   cos(angle + M_PI / 2) * scale * 1.7);
+                               cos(angle + M_PI / 2) * scale * 1.7);
 
     switch (_connectionType) {
         case Association:
@@ -510,15 +511,8 @@ void ClassConnectionItem::paint(QPainter *painter, const QStyleOptionGraphicsIte
     painter->drawPolygon(lineShaper());
 #endif
     drawLine(painter, option);
-    QPointF pText = (_nodeTo->socket(order()) + _nodeFrom->socket(order()))/2;
+    QPointF pText = (_nodeTo->socket(order()) + _nodeFrom->socket(order())) / 2;
     QPair<QPointF, QPointF> ep = edgePoints();
-
-//    QPointF pLeft = QPointF(
-//            _nodeFrom->pos().x() + _nodeFrom->width() + 20,
-//            _nodeFrom->pos().y() + _nodeFrom->height()/2.0 + 20);
-//    QPointF pRight = QPointF(
-//            _nodeTo->pos().x() - 20,
-//            _nodeTo->pos().y() + _nodeTo->height()/2.0 + 20);
 
     qreal widthText = msg->boundingRect().width();
     qreal widthLeft = leftNum->boundingRect().width();
@@ -526,121 +520,30 @@ void ClassConnectionItem::paint(QPainter *painter, const QStyleOptionGraphicsIte
 
     QPointF pLeft = QPointF(
             ep.first.x() + _nodeFrom->width() + 20,
-            _nodeFrom->pos().y() + _nodeFrom->height()/2.0 + 20);
+            _nodeFrom->pos().y() + _nodeFrom->height() / 2.0 + 20);
     QPointF pRight = QPointF(
             _nodeTo->pos().x() - 20,
-            _nodeTo->pos().y() + _nodeTo->height()/2.0 + 20);
+            _nodeTo->pos().y() + _nodeTo->height() / 2.0 + 20);
 
-    msg->setPos(pText.x() - widthText/2.0, pText.y() - 30);
-    //leftNum->setPos(pLeft);
-    //rightNum->setPos(pRight);
+    msg->setPos(pText.x() - widthText / 2.0, pText.y() - 30);
 }
 
 /**
  *
  */
 ClassConnectionItem::~ClassConnectionItem() {
-    qDebug() << "removing connections from 'fromNode' (Connections.cpp)";
     if (_nodeFrom != nullptr) {
         _nodeFrom->removeConnection(this);
     }
-    qDebug() << "\tremoved";
-
-    qDebug() << "removing connections from 'toNode' (Conneictions.cpp)";
     if (_nodeTo != nullptr) {
         _nodeTo->removeConnection(this);
     }
-    qDebug() << "\tremoved";
 }
 
 /**
  *
- * @param fromNode
- * @param toNode
- * @param connectionType
+ * @param event
  */
-ActorConnectionItem::ActorConnectionItem(SequenceDiagramItem *fromNode,
-                                         SequenceDiagramItem *toNode,
-                                         ActorConnectionType
-                                         connectionType){
-    nodeFrom = fromNode;
-    nodeTo = toNode;
-
-    nodeFrom->addConnection(this);
-    nodeTo->addConnection(this);
-    //setPen(QPen(Qt::black));
-    auto wid1 = nodeFrom->width()/2.0;
-    auto wid2 = nodeTo->width()/2.0;
-    //auto line = QGraphicsLineItem(wid1, 400, wid2, 400, this);
-    //setLine(wid1, 200, wid2, 200);
-    //setFlags(QGraphicsItem::ItemIsSelectable | QGraphicsItem::ItemIsMovable | QGraphicsItem::ItemSendsGeometryChanges);
-    //setZValue(-1.0);
-    
-    //trackNodes();
-}
-
-QVariant ActorConnectionItem::itemChange(GraphicsItemChange change, const QVariant &value) {
-    if (change == ItemPositionChange)
-        return QPointF(pos().x(), value.toPointF().y());
-    return QGraphicsItem::itemChange( change, value );
-}
-
-void ActorConnectionItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) {
-    painter->drawLine(nodeFrom->width()/2.0, y(), nodeTo->width()/2.0, y());
-    qDebug() << "paint" << nodeFrom->width()/2.0 << y() << nodeTo->width()/2.0 << y();
-}
-
-/**
- *
- */
-ActorConnectionItem::~ActorConnectionItem() {
-    if (nodeFrom != nullptr) {
-        nodeFrom->removeConnection(this);
-    }
-    if (nodeTo != nullptr) {
-        nodeTo->removeConnection(this);
-    }
-}
-
-///**
-// *
-// * @param color
-// */
-//void ActorConnectionItem::setColor(const QColor &color) {
-//    setPen(QPen(color, 1.0));
-//}
-
-/**
- *
- * @return
- */
-QColor ActorConnectionItem::color() const {
-    return pen().color();
-}
-
-/**
- *
- */
-void ActorConnectionItem::trackNodes() {
-    setLine(QLineF(nodeFrom->pos(), nodeTo->pos()));
-}
-
-/**
- *
- * @return
- */
-SequenceDiagramItem *ActorConnectionItem::fromNode() const {
-    return nodeFrom;
-}
-
-/**
- *
- * @return
- */
-SequenceDiagramItem *ActorConnectionItem::toNode() const {
-    return nodeTo;
-}
-
 void ClassConnectionItem::mousePressEvent(QGraphicsSceneMouseEvent *event) {
     if (event->button() == Qt::RightButton) {
         setSelected(true);
