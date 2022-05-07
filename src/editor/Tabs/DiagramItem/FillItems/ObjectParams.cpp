@@ -3,19 +3,16 @@
 //
 
 #include "ObjectParams.h"
-#include "../DiagramItem.h"
-
 
 objectParams::objectParams(qreal x, qreal y, QString name,
-                           QColor color, qreal width, qreal height,
-                           ClassDiagramItem *classDiagramItemParent) {
+                           QColor color, qreal width, qreal height
+) {
     _x = x;
     _y = y;
     _color = color;
     _width = width;
     _height = height;
     _name = name;
-    _classDiagramItemParent = classDiagramItemParent;
 };
 
 classParams::classParams(qreal x, qreal y, QString name,
@@ -31,8 +28,8 @@ classParams::classParams(qreal x, qreal y, QString name,
 };
 
 actorParams::actorParams(qreal x, qreal y, QString name, QColor color,
-                         qreal width, qreal height,
-                         ClassDiagramItem *classDiagramItemParent)
-        : objectParams(x, y, name, color, width, height, classDiagramItemParent) {
+                         qreal width, qreal height
+)
+        : objectParams(x, y, name, color, width, height) {
 
 };

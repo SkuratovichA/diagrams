@@ -294,9 +294,6 @@ void editorInterface::actionAddEntity_triggered() {
             return;
         }
 
-        qDebug() << "position: " << positionOfSelectedClassName;
-        qDebug() << "value: " << classStringPairs.at(positionOfSelectedClassName);
-        qDebug() << "name (class)" << classStringPairs.at(positionOfSelectedClassName).first->name();
         sequenceTab->addEntity(classStringPairs.at(positionOfSelectedClassName).first);
     }
 }

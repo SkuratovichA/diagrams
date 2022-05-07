@@ -183,6 +183,10 @@ public:
 
     void removeConnection(ClassConnectionItem *connection);
 
+    QString name() const {
+        return _head->toPlainText();
+    }
+
     QList<ClassTextAttr *> methods() {
         return _methods;
     }
