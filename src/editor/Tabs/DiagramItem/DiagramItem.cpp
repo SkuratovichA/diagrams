@@ -8,18 +8,37 @@
 #include <QPainter>
 #include <QInputEvent>
 
-ClassTextAttr::ClassTextAttr(ClassDiagramItem *p, QString text, qreal x, qreal y,
+/**
+ * A constructor.
+ *
+ * This constructor creates a text connected with its parent.
+ *
+ * @param p parent item
+ * @param text text represented by a string
+ * @param pos position of the text
+ * @param flags flags for text that make it editable
+ */
+ClassTextAttr::ClassTextAttr(ClassDiagramItem *p, QString text, QPointF pos,
                              QFlags<Qt::TextInteractionFlag> flags)
         : QGraphicsTextItem(text, p) {
     setTextInteractionFlags(flags);
-    setPos(x, y);
+    setPos(pos);
     _parent = p;
 }
 
+/**
+ * A destructor.
+ */
 ClassTextAttr::~ClassTextAttr() {
 
 }
 
+/**
+ * Handle an event of the text editing for object attributes to align it.
+ * In the case of entering "Key_Enter" the text editing is ended.
+ *
+ * @param event key event
+ */
 void ClassTextAttr::keyReleaseEvent(QKeyEvent *event) {
     if ((event->key() == Qt::Key_Enter) || (event->key() == Qt::Key_Return)) {
         setPlainText(toPlainText().remove('\n'));
@@ -61,7 +80,16 @@ void ClassTextAttr::keyReleaseEvent(QKeyEvent *event) {
     }
 }
 
-SequenceDiagramItem::SequenceDiagramItem(actorParams *params, ClassDiagramItem *parentCLassDiagramItem_)
+/**
+ * A constructor.
+ *
+ * This constructor creates an entity for the sequence diagram.
+ * It is a simple rectangle with a child item, which represents
+ * the name of the object.
+ *
+ * @param params class with all necessary information to create an object.
+ */
+SequenceDiagramItem::SequenceDiagramItem(actorParams *params, ClassDiagramItem *parentClassDiagramItem_)
         : DiagramItem(params->width(),
                       params->height(),
                       DiagramItem::Actor,
@@ -74,10 +102,11 @@ SequenceDiagramItem::SequenceDiagramItem(actorParams *params, ClassDiagramItem *
     QFlags<Qt::TextInteractionFlag> _flags = Qt::TextInteractionFlag::TextEditable |
                                              Qt::TextInteractionFlag::TextSelectableByMouse |
                                              Qt::TextInteractionFlag::TextSelectableByKeyboard;
-
+    QColor colo2 = QColor(244, 120, 9, 10);
+    qDebug() << colo2.red() << colo2.green() << colo2.blue() << colo2.alpha();
     setPen(QPen(QColor(1, 0, 0, 0)));
-    _head = new NameObject(this, _flags, -3, -40, params->name());
-    _parentClassDiagramItem = parentCLassDiagramItem_;
+    _head = new NameObject(this, _flags, QPointF(-3, -40), params->name());
+    _parentClassDiagramItem = parentClassDiagramItem_;
 
     auto actorRect = new QGraphicsRectItem(0, 0, params->width(), params->height(), this);
     actorRect->setPen(QPen(QColor(Qt::black), 3.0));
@@ -87,6 +116,17 @@ SequenceDiagramItem::SequenceDiagramItem(actorParams *params, ClassDiagramItem *
     setRect(boundingBox());
 }
 
+
+/**
+ * Notify custom items that some part of the item's state changes.
+ * Reimplementation of this function provides a possibility to move
+ * an item only on x axis.
+ *
+ * @param change what was changed
+ * @param value new value of changed item
+ *
+ * @return new value
+ */
 QVariant SequenceDiagramItem::itemChange(GraphicsItemChange change, const QVariant &value) {
     if (change == ItemPositionChange)
         return QPointF(value.toPointF().x(), pos().y());
@@ -94,24 +134,30 @@ QVariant SequenceDiagramItem::itemChange(GraphicsItemChange change, const QVaria
 }
 
 /**
+ * Add a connection to the set of connections for certain item.
  *
- * @param connection
+ * @param connection message arrow between objects
  */
 void SequenceDiagramItem::addConnection(SequenceConnectionItem *connection) {
     _connections.insert(connection);
 }
 
 /**
+ * Remove a connection to the set of connections for certain item.
  *
- * @param connection
+ * @param connection message arrow between objects
  */
 void SequenceDiagramItem::removeConnection(SequenceConnectionItem *connection) {
     _connections.remove(connection);
 }
 
 /**
+ * A constructor.
  *
- * @param item
+ * This constructor creates an entity for the class diagram.
+ * TODO description
+ *
+ * @param params class with all necessary information to create an object.
  */
 ClassDiagramItem::ClassDiagramItem(classParams *params)
         : DiagramItem(params->width(),
@@ -131,15 +177,15 @@ ClassDiagramItem::ClassDiagramItem(classParams *params)
     // name of the class
     setPen(QPen(color()));
 
-    _head = new NameObject(this, _flags, 20, -40, params->name()); // i do not know why coordinates 5, -40
+    _head = new NameObject(this, _flags, QPointF(20, -40), params->name()); // i do not know why coordinates 5, -40
 
-    textAttr = new ClassTextAttr(this, "ATTRIBUTES", tabText(), tabText(), Qt::NoTextInteraction);
+    textAttr = new ClassTextAttr(this, "ATTRIBUTES", QPointF(tabText(), tabText()), Qt::NoTextInteraction);
     textAttr->setFont(QFont("Times", 10, QFont::Bold));
 
     for (auto attr_name: params->attrs()) {
         lineAttr = createLine(0, rowHeight() * line);
         _attrsLines.push_back(lineAttr);
-        textAttr = new ClassTextAttr(this, attr_name, tabText(), rowHeight() * line + tabText(), _flags);
+        textAttr = new ClassTextAttr(this, attr_name, QPointF(tabText(), rowHeight() * line + tabText()), _flags);
         _attrs.push_back(textAttr);
 
         line++;
@@ -148,14 +194,14 @@ ClassDiagramItem::ClassDiagramItem(classParams *params)
     lineAttr = createLine(0, rowHeight() * line);
     _methodsLines.push_back(lineAttr);
 
-    textAttr = new ClassTextAttr(this, "METHODS", tabText(), rowHeight() * line++ + tabText(), Qt::NoTextInteraction);
+    textAttr = new ClassTextAttr(this, "METHODS", QPointF(tabText(), rowHeight() * line++ + tabText()), Qt::NoTextInteraction);
     textAttr->setFont(QFont("Times", 10, QFont::Bold));
     _methods.push_back(textAttr);
 
     for (auto method_name: params->methods()) {
         lineAttr = createLine(0, rowHeight() * line);
         _methodsLines.push_back(lineAttr);
-        textAttr = new ClassTextAttr(this, method_name, tabText(), rowHeight() * line + tabText(), _flags);
+        textAttr = new ClassTextAttr(this, method_name, QPointF(tabText(), rowHeight() * line + tabText()), _flags);
         _methods.push_back(textAttr);
 
         line++;
@@ -166,21 +212,29 @@ ClassDiagramItem::ClassDiagramItem(classParams *params)
 }
 
 /**
+ * Add a connection to the set of connections for certain item.
  *
- * @param connection
+ * @param connection relation arrow between objects
  */
 void ClassDiagramItem::addConnection(ClassConnectionItem *connection) {
     _connections.insert(connection);
 }
 
 /**
+ * Remove a connection to the set of connections for certain item.
  *
- * @param connection
+ * @param connection relation arrow between objects
  */
 void ClassDiagramItem::removeConnection(ClassConnectionItem *connection) {
     _connections.remove(connection);
 }
 
+/**
+ * Handle an event of the item selection.
+ * In the case of the Right button click, the item becomes a selected.
+ *
+ * @param event mouse event
+ */
 void ClassDiagramItem::mousePressEvent(QGraphicsSceneMouseEvent *event) {
     if (event->button() == Qt::RightButton) {
         setSelected(true);
@@ -188,10 +242,14 @@ void ClassDiagramItem::mousePressEvent(QGraphicsSceneMouseEvent *event) {
 }
 
 /**
+ * Notify custom items that some part of the item's state changes.
+ * Reimplementation of this function provides a possibility for relation
+ * arrows to track a moved item on the scene.
  *
- * @param change
- * @param value
- * @return
+ * @param change what was changed
+ * @param value new value of changed item
+ *
+ * @return new value
  */
 QVariant ClassDiagramItem::itemChange(GraphicsItemChange change, const QVariant &value) {
     if (change == ItemPositionHasChanged) {
@@ -203,7 +261,7 @@ QVariant ClassDiagramItem::itemChange(GraphicsItemChange change, const QVariant 
 }
 
 /**
- *
+ * A destructor.
  */
 ClassDiagramItem::~ClassDiagramItem() {
             foreach (ClassConnectionItem *connection, _connections) {
@@ -213,24 +271,29 @@ ClassDiagramItem::~ClassDiagramItem() {
 }
 
 /**
+ * A constructor.
  *
- * @param parent
- * @param flags
- * @param x
- * @param y
+ * This constructor creates a text connected with its parent.
+ *
+ * @param parent parent item
+ * @param flags flags for text that make it editable
+ * @param pos position of the text
+ * @param str text represented by a string
  */
-NameObject::NameObject(QGraphicsItem *parent, QFlags<Qt::TextInteractionFlag> flags, qreal x, qreal y, QString str)
+NameObject::NameObject(QGraphicsItem *parent, QFlags<Qt::TextInteractionFlag> flags, QPointF pos, QString str)
         : QGraphicsTextItem(str, parent) {
     _parent = parent;
-    setPos(x, y);
+    setPos(pos);
     setFont(QFont("Courier", 20));
     setTextInteractionFlags(flags);
     topLevelItem();
 }
 
 /**
+ * Handle an event of the text editing for object name to align it.
+ * In the case of entering "Key_Enter" the text editing is ended.
  *
- * @param event
+ * @param event key event
  */
 void NameObject::keyReleaseEvent(QKeyEvent *event) {
     if ((event->key() == Qt::Key_Enter) || (event->key() == Qt::Key_Return)) {
@@ -245,14 +308,14 @@ void NameObject::keyReleaseEvent(QKeyEvent *event) {
     setPos((midO - midW) / 2, -40);
 }
 
-NameObject::~NameObject() {
-
-}
-
 /**
+ * A constructor.
  *
- * @param parent
- * @param startPoint
+ * This constructor creates lifetime line for an entity and connects
+ * with parent item.
+ *
+ * @param parent parent item
+ * @param startPoint start position of life time
  */
 ActorLifetime::ActorLifetime(QGraphicsItem *parent, QPointF startPoint) : QGraphicsLineItem(parent) {
     auto x = startPoint.x();
@@ -262,13 +325,3 @@ ActorLifetime::ActorLifetime(QGraphicsItem *parent, QPointF startPoint) : QGraph
     lline->setPen(QPen(QColor(Qt::black), 2.0, Qt::DashLine));
 }
 
-//void ActorLifetime::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) {
-//
-//}
-
-/**
- *
- */
-ActorLifetime::~ActorLifetime() {
-
-}

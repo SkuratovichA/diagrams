@@ -1,11 +1,13 @@
 #include "Parse.h"
 
 void Class::push_color(const json el) {
-    this->color = el.is_null() ? "" : el.get<std::string>();
+    this->color.r = el.at("r").get<int>();
+    this->color.g = el.at("g").get<int>();
+    this->color.b = el.at("b").get<int>();
+    this->color.a = el.at("a").get<int>();
 }
 
 void Class::push_name(const json el) {
-
     this->name = el.get<std::string>();
 }
 
@@ -18,27 +20,27 @@ void Class::push_height(const json el) {
 }
 
 void Class::push_attrs(const json el, std::vector<attrs_t>& obj) {
-    std::string tmp;
+    //std::string tmp;
 
     for(auto x : el) {
-        tmp = x.at("perm").is_null() ? "" : x.at("perm").get<std::string>();
-        obj.push_back( { .perm = tmp,
+        //tmp = x.at("perm").is_null() ? "" : x.at("perm").get<std::string>();
+        obj.push_back( { .perm = x.at("perm").get<std::string>(),
                          .type = x.at("type").get<std::string>(),
                          .name = x.at("name").get<std::string>() } );
     }
 }
 
 void Conct::fill_connection(const json el) {
-    std::string tmp1 = el.at("left_num" ).is_null() ? "" : el.at("left_num").get<std::string>();
-    std::string tmp2 = el.at("right_num").is_null() ? "" : el.at("right_num").get<std::string>();
-    std::string tmp3 = el.at("msg").is_null() ? "" : el.at("msg").get<std::string>();
-
+    //std::string tmp1 = el.at("left_num" ).is_null() ? "" : el.at("left_num").get<std::string>();
+    //std::string tmp2 = el.at("right_num").is_null() ? "" : el.at("right_num").get<std::string>();
+    //std::string tmp3 = el.at("msg").is_null() ? "" : el.at("msg").get<std::string>();
+    //
     this->left_obj  = el.at("left_obj" ).get<std::string>();
-    this->left_num  = tmp1;
+    this->left_num  = el.at("left_num" ).get<std::string>();
     this->arrow     = el.at("arrow"    ).get<std::string>();
     this->right_obj = el.at("right_obj").get<std::string>();
-    this->right_num = tmp2;
-    this->msg       = tmp3;
+    this->right_num = el.at("right_num" ).get<std::string>();
+    this->msg       = el.at("msg" ).get<std::string>();
 }
 
 void DiagramClass::fill_structure_conct(const json el, dgrm_class_t& o) {
@@ -71,12 +73,12 @@ void DiagramClass::add_connect_to_file(json& j, std::vector<Conct> cn) {
     for (auto& x : cn) {
         j["connections"][i++] =
         {
-            {"left_obj" ,  x.left_obj },
-            {"left_num" , check_null(x.left_num) },
-            {"arrow" , x.arrow },
-            {"right_num", check_null(x.right_num) },
+            {"left_obj" , x.left_obj },
+            {"left_num" , x.left_num },
+            {"arrow" ,    x.arrow },
+            {"right_num", x.right_num },
             {"right_obj", x.right_obj },
-            {"msg", check_null(x.msg) }
+            {"msg",       x.msg }
         };
     }
 }
@@ -87,7 +89,14 @@ void DiagramClass::add_class_to_file(json& j, std::vector<Class> cl) {
     for (auto& x : cl) {
         j["class"][i++] =
         {
-            {"color" , check_null(x.color) },
+            {"color" ,
+                {
+                    {"r", x.color.r},
+                    {"g", x.color.g},
+                    {"b", x.color.b},
+                    {"a", x.color.a},
+                }
+            },
             {"name" , x.name },
             {"coords",
                 {
@@ -110,7 +119,7 @@ json DiagramClass::add_attrs(std::vector<attrs_t> x) {
     if (x.size() != 0) {
         for (auto & xx : x) {
             tmp[j++] = {
-                {"perm" , check_null(xx.perm)},
+                {"perm" , xx.perm},
                 {"type" , xx.type},
                 {"name" , xx.name}
             };

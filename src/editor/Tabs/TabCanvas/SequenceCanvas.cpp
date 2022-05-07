@@ -13,22 +13,41 @@
 #include "../../EditorInterface/editorinterface.h"
 #include "SequenceConnectionDialog/sequenceconnectiondialog.h"
 
-//class editorInterface;
-
+/**
+ * A constructor.
+ *
+ * This constructor creates a tab with a sequence diagram.
+ *
+ * @param p parent widget
+ * @param parentGroup pointer to the main undo stack
+ * to create a local undo stask
+ */
 SequenceCanvas::SequenceCanvas(QWidget *parent, QUndoGroup *parentGroup) : TabCanvas(parent, parentGroup) {
     parentInterface = dynamic_cast<editorInterface *>(parent);
     createScene();
     createSequenceContextMenu();
 }
 
+/**
+ * Generate random [x, y] coordinates ranging from 0 to 600
+ *
+ * @return coordinates on the scene for new item
+ */
 QPoint SequenceCanvas::generateCoords() const {
     return QPoint(QRandomGenerator::global()->bounded(600), QRandomGenerator::global()->bounded(600));
 }
 
+/**
+ * // TODO
+ * @param prg
+ */
 void SequenceCanvas::getStringRepresentation(Program &prg) {
     return;
 }
 
+/**
+ * Create and connect all signals for interaction with objects.
+ */
 void SequenceCanvas::createSequenceContextMenu() {
     ADD_SIGNAL(asynchronousMessage, "Asynchronous Message", "+", "+", this, SLOT(asynchronousMessage_triggered()));
     ADD_SIGNAL(synchronousMessage, "Synchronous Message", "+", "+", this, SLOT(synchronousMessage_triggered()));
@@ -44,6 +63,11 @@ void SequenceCanvas::createSequenceContextMenu() {
     sequenceMenu->addAction(deleteMessage);
 }
 
+/**
+ * Show a context menu with actions for objects.
+ *
+ * @param pos position on the scene where the click was handled
+ */
 void SequenceCanvas::showContextMenu(const QPoint &pos) {
     auto *item = selectedObject<SequenceDiagramItem>();
 
@@ -58,36 +82,56 @@ void SequenceCanvas::showContextMenu(const QPoint &pos) {
     }
 }
 
+/**
+ * Create an asynchronous message between two objects.
+ */
 void SequenceCanvas::asynchronousMessage_triggered() {
     auto line = (selectedObject<ClassConnectionItem>());
     line->setType(ClassConnectionItem::Aggregation);
     editorScene->update();
 }
 
+/**
+ * Create a synchronous message between two objects.
+ */
 void SequenceCanvas::synchronousMessage_triggered() {
     auto line = (selectedObject<ClassConnectionItem>());
     line->setType(ClassConnectionItem::Composition);
     editorScene->update();
 }
 
+/**
+ * Create a return message between two objects.
+ */
 void SequenceCanvas::returnMessage_triggered() {
     auto line = selectedObject<ClassConnectionItem>();
     line->setType(ClassConnectionItem::Generalization);
     editorScene->update();
 }
 
+/**
+ * Create a message for creating a new object.
+ */
 void SequenceCanvas::createMessage_triggered() {
     auto line = selectedObject<ClassConnectionItem>();
     line->setType(ClassConnectionItem::Association);
     editorScene->update();
 }
 
+/**
+ * Create a message for deleting an object.
+ */
 void SequenceCanvas::deleteMessage_triggered() {
     auto line = selectedObject<ClassConnectionItem>();
     line->setType(ClassConnectionItem::Dependency);
     editorScene->update();
 }
 
+/**
+ * Add a new entity to the sequence diagram with the same name as the parent item.
+ *
+ * @param classDiagramItemParent pointer to an object from a class diagram scene
+ */
 void SequenceCanvas::addEntity(ClassDiagramItem *classDiagramItemParent) {
     qDebug() << "got name: in constructor " << classDiagramItemParent->name();
     QPoint point = generateCoords();
@@ -102,6 +146,9 @@ void SequenceCanvas::addEntity(ClassDiagramItem *classDiagramItemParent) {
     delete createActor;
 }
 
+/**
+ * // TODO
+ */
 void SequenceCanvas::addConnection() {
     auto scd = SequenceConnectionDialog(this);
     scd.exec();
@@ -117,6 +164,9 @@ void SequenceCanvas::addConnection() {
     );
 }
 
+/**
+ * Paste all selected items from the local "copy" buffer to the scene.
+ */
 void SequenceCanvas::paste() {
     for (auto ptr: buffer->sequenceItems()) {
         auto *diagramItem = new SequenceDiagramItem(ptr);
@@ -126,6 +176,9 @@ void SequenceCanvas::paste() {
     editorScene->update();
 }
 
+/**
+ * Copy all selected items to the local "copy" buffer from the scene.
+ */
 void SequenceCanvas::copy() {
     SequenceDiagramItem *ptr;
     QList<QGraphicsItem *> items = editorScene->selectedItems();
@@ -138,6 +191,10 @@ void SequenceCanvas::copy() {
     }
 }
 
+/**
+ * Copy all selected items to the local "copy" buffer from the scene
+ * and the delete them.
+ */
 void SequenceCanvas::cut() {
     copy();
     QList<QGraphicsItem *> items = editorScene->selectedItems();
@@ -146,10 +203,16 @@ void SequenceCanvas::cut() {
     }
 }
 
+/**
+ * Decrease Z value of the selected items and send them to back.
+ */
 void SequenceCanvas::toBack() {
     _toZchange<SequenceCanvas>(false);
 }
 
+/**
+ * Increase Z value of the selected items and send them to front.
+ */
 void SequenceCanvas::toFront() {
     _toZchange<SequenceCanvas>(true);
 }

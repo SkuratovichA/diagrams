@@ -1,6 +1,14 @@
 #pragma once
 
+#include "ClassDiagram.h"
+
 using json = nlohmann::json;
+
+class Actor {
+public:
+    std::string name;
+    Color color;
+};
 
 class Action {
 public:
@@ -21,7 +29,7 @@ public:
 };
 
 typedef struct dgrm_seq {
-    std::vector<std::string> actors;
+    std::vector<Actor> actors;
     std::vector<Action> actions;
     std::vector<Activate> activates;
 } dgrm_seq_t;
@@ -34,7 +42,7 @@ public:
 
     void fill_structure_activate(const json el, dgrm_seq_t& o);
 
-    void add_actor_to_file(json& j, std::vector<std::string> ac);
+    void add_actor_to_file(json& j, std::vector<Actor> ac);
 
     void add_action_to_file(json& j, std::vector<Action> ac);
 

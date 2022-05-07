@@ -31,8 +31,7 @@ void Program::parse_file(const json file) {
 void Program::push_coords(const json el, std::vector<double>& coords) {
 
     coords.insert( coords.end(),
-                   { el.at("x").get<double>(),
-                     el.at("y").get<double>() } );
+               { el.at("x").get<double>(), el.at("y").get<double>() } );
 }
 
 void Program::fill_file() {

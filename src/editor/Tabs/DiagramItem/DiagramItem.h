@@ -27,7 +27,7 @@ QT_END_NAMESPACE
 // for attrs and table expanding
 class ClassTextAttr : public QGraphicsTextItem {
 public:
-    ClassTextAttr(ClassDiagramItem *p, QString text, qreal x, qreal y, QFlags<Qt::TextInteractionFlag> flags);
+    ClassTextAttr(ClassDiagramItem *p, QString text, QPointF pos, QFlags<Qt::TextInteractionFlag> flags);
     ~ClassTextAttr();
 
     ClassDiagramItem *parent() {
@@ -43,8 +43,7 @@ private:
 
 class NameObject : public QGraphicsTextItem {
 public:
-    NameObject(QGraphicsItem *parent, QFlags<Qt::TextInteractionFlag> flags, qreal x, qreal y, QString str);
-    ~NameObject();
+    NameObject(QGraphicsItem *parent, QFlags<Qt::TextInteractionFlag> flags, QPointF pos, QString str);
 
 public:
     QString name() const {
@@ -169,8 +168,6 @@ private:
 class ActorLifetime : public QGraphicsLineItem {
 public:
     ActorLifetime(QGraphicsItem *parent, QPointF startPoint);
-
-    ~ActorLifetime();
 };
 
 class ClassDiagramItem : public QGraphicsRectItem, public DiagramItem {

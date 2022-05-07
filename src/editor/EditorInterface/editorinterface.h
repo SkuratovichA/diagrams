@@ -13,19 +13,20 @@ namespace Ui {
     class editorInterface;
 }
 
+/*! An editorInterface class */
 class editorInterface : public QMainWindow {
 Q_OBJECT
 
 public:
+    /** An enum type.
+     *  Represent a selected option by the user.
+     */
     enum newWindowType {
-        // just open a new canvas with default template
-        NO_FILE,
+        NO_FILE,     /**< just open a new canvas with default template */
 
-        // open a dialogue file window to open a file and edit it
-        OPEN_FILE,
+        OPEN_FILE,   /**< open a dialogue file window to open a file and edit it */
 
-        // load one of the provided examples to open
-        EXAMPLE_FILE
+        EXAMPLE_FILE /**< load one of the provided examples to open */
     };
 
     // name of an example
@@ -43,31 +44,18 @@ public:
 private slots:
 
     void actionSaveAs_triggered();
-
     void actionSave_triggered();
-
     void actionDeleteTab_triggered();
-
     void actionNewTab_triggered();
-
     void actionAddEntity_triggered();
-
     void actionAddConnection_triggered();
-
     void actionRemove_triggered();
-
     void actionCut_triggered();
-
     void actionCopy_triggered();
-
     void actionPaste_triggered();
-
     void actionZoomIn_triggered();
-
     void actionZoomOut_triggered();
-
     void actionBack_triggered();
-
     void actionFront_triggered();
 
     //void actionQuit_triggered();
@@ -76,11 +64,8 @@ private slots:
 
 private:
     void createUndoView();
-
     void createTabs();
-
     void createDynamicToolBar();
-
     void get_text_representation();
 
 private:
@@ -94,9 +79,6 @@ private:
     QString filename = nullptr;
     QString filenameFilter = "Diagram Files (*.gae)";
 
-/**
- * actions
- */
 private:
     QAction *addEntityAction;
     QAction *addConnectionAction;
@@ -108,17 +90,15 @@ private:
     QAction *zoomOutAction;
     QAction *bringToFrontAction;
     QAction *sendToBackAction;
-
-    QMenu *editMenu;
-    QMenu *actionMenu;
-    QMenu *fileMenu;
-
     QAction *newTabAction;
     QAction *saveAction;
     QAction *deleteTabAction;
     QAction *undoAction;
     QAction *redoAction;
 
+    QMenu *editMenu;
+    QMenu *actionMenu;
+    QMenu *fileMenu;
 };
 
 #endif // EDITORINTERFACE_H
