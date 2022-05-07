@@ -7,11 +7,8 @@
 #include <filesystem>
 #include <QDirIterator>
 
-
 mainWindow::mainWindow(QWidget *parent)
-    : QMainWindow(parent)
-    , ui(new Ui::mainWindow)
-{
+        : QMainWindow(parent), ui(new Ui::mainWindow) {
     qDebug() << "create Mainwindow : constructor mainWindow.cpp";
     qDebug() << "create Editorinterface ui : constructor mainWindow.cpp";
     ui->setupUi(this);
@@ -31,13 +28,12 @@ mainWindow::mainWindow(QWidget *parent)
         auto *item = new QListWidgetItem(it.fileName());
         ui->listWidget->addItem(item);
         it.next();
-    } while(it.hasNext());
+    } while (it.hasNext());
 
     editor_window = nullptr;
 }
 
-mainWindow::~mainWindow()
-{
+mainWindow::~mainWindow() {
     qDebug() << "delete Mainwindow : destructor mainWindow.cpp";
     qDebug() << "delete Editorinterface ui : destructor mainWindow.cpp";
     delete ui;
@@ -45,11 +41,10 @@ mainWindow::~mainWindow()
 
 // create a new file.
 // filename will not be provided - just create a window with a default interface
-void mainWindow::on_create_clicked()
-{
+void mainWindow::on_create_clicked() {
     try {
         this->editor_window = new editorInterface(this, nullptr, editorInterface::NO_FILE);
-    } catch (const char* msg) {
+    } catch (const char *msg) {
         QMessageBox::warning(this, "Error", msg);
         return;
     }
@@ -57,11 +52,10 @@ void mainWindow::on_create_clicked()
 }
 
 // open file from a given list
-void mainWindow::on_open_clicked()
-{
+void mainWindow::on_open_clicked() {
     try {
-         this->editor_window = new editorInterface(this, nullptr, editorInterface::OPEN_FILE);
-    } catch (const char* msg) {
+        this->editor_window = new editorInterface(this, nullptr, editorInterface::OPEN_FILE);
+    } catch (const char *msg) {
         QMessageBox::warning(this, "Error", msg);
         return;
     }
@@ -72,8 +66,7 @@ void mainWindow::on_open_clicked()
  * Open a canvas with a default template
  * when saving, the path will must be specified
  */
-void mainWindow::on_pushButton_clicked()
-{
+void mainWindow::on_pushButton_clicked() {
     if (ui->listWidget->currentItem() == nullptr) {
         QMessageBox::information(this, "No such file", "pizda");
         return;
@@ -81,7 +74,7 @@ void mainWindow::on_pushButton_clicked()
     QString example_name = ui->listWidget->currentItem()->text();
     try {
         this->editor_window = new editorInterface(this, example_name, editorInterface::EXAMPLE_FILE);
-    } catch (const char* msg) {
+    } catch (const char *msg) {
         QMessageBox::warning(this, "Error", msg);
         return;
     }

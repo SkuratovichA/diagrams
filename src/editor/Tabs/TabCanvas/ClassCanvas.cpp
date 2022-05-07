@@ -41,7 +41,7 @@ QPoint ClassCanvas::generateCoords() const {
 QList<QPair<ClassDiagramItem *, QString>> ClassCanvas::getClassStringPairs() {
     QList<QPair<ClassDiagramItem *, QString>> listPairs;
 
-    for (auto x : getItems<ClassDiagramItem>()) {
+    for (auto x: getItems<ClassDiagramItem>()) {
         QPair<ClassDiagramItem *, QString> pair;
         pair.first = x;
         pair.second = x->_head->toPlainText();
@@ -60,16 +60,15 @@ void ClassCanvas::getStringRepresentation(Program &prg) {
     std::vector<Conct> connects;
     ItemsBuffer buf;
 
-    for (auto x : getItems<ClassDiagramItem>()) {
+    for (auto x: getItems<ClassDiagramItem>()) {
         buf.fillClassItems(x);
     }
 
-    for (auto x : buf.classItems()) {
+    for (auto x: buf.classItems()) {
         Class tmp;
         tmp.name = x->name().toStdString();
         tmp.width = x->width();
         tmp.height = x->height();
-        qDebug() << "class" << x->name() << x->color();
     }
 }
 
@@ -145,7 +144,8 @@ void ClassCanvas::addMethod_triggered() {
     auto line = item->createLine(0, item->height());
     item->pushMethodLine(line);
 
-    auto *text = new ClassTextAttr(item, "+ int example()", QPointF(item->tabText(), item->height() + item->tabText()), item->flags());
+    auto *text = new ClassTextAttr(item, "+ int example()", QPointF(item->tabText(), item->height() + item->tabText()),
+                                   item->flags());
     item->pushMethod(text);
 
     item->setHeight(item->height() + item->rowHeight());
@@ -206,7 +206,8 @@ void ClassCanvas::addAttr_triggered() {
 
     //auto text = item->createText(item->tabText(), item->rowHeight() * inc + item->tabText(), "+ int word");
     ClassTextAttr *text = new ClassTextAttr(item, "+ int word", QPointF(item->tabText(),
-                                            item->rowHeight() * inc + item->tabText()), item->flags());
+                                                                        item->rowHeight() * inc + item->tabText()),
+                                            item->flags());
     item->pushAttr(text);
     item->setHeight(item->height() + item->rowHeight());
     for (auto x: item->connections()) {

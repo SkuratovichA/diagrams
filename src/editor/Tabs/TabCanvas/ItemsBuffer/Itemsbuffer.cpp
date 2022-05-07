@@ -4,15 +4,12 @@
 
 #include "Itemsbuffer.h"
 
-
 ItemsBuffer::ItemsBuffer() {
 
 }
 
 ItemsBuffer::~ItemsBuffer() {
-    qDebug() << "I was called, without loop!";
-    for (auto x : classItems()) {
-        qDebug() << "I was called!";
+    for (auto x: classItems()) {
         delete x;
     }
 }
@@ -26,15 +23,15 @@ void ItemsBuffer::fillClassItems(ClassDiagramItem *item) {
     QList<QString> methods;
     QList<QString> attrs;
 
-    for (auto x : item->methods()) {
-        if (x->toPlainText() == "METHODS")  {
+    for (auto x: item->methods()) {
+        if (x->toPlainText() == "METHODS") {
             continue;
         }
 
         methods.push_back(x->toPlainText());
     }
 
-    for (auto x : item->attrs()) {
+    for (auto x: item->attrs()) {
         attrs.push_back(x->toPlainText());
     }
 

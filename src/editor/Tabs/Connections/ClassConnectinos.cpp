@@ -199,7 +199,6 @@ QPair<QPointF, QPointF> ClassConnectionItem::edgePoints() const {
             xFrom = _nodeFrom->centre().x() + fromWidthHalf;
             yFrom = -(c + a * xFrom) / b;
             if (yFrom > _nodeFrom->bottomRight().y()) { // use #2
-                qDebug() << "jebe";
                 yFrom = _nodeFrom->centre().y() + fromHeightHalf;
                 xFrom = -(c + b * yFrom) / a;
             }
@@ -229,7 +228,6 @@ QPair<QPointF, QPointF> ClassConnectionItem::edgePoints() const {
             xTo = _nodeTo->centre().x() + toWidthHalf;
             yTo = -(c + a * xTo) / b;
             if (yTo < _nodeTo->topRight().y()) { // use as it is 6
-                qDebug() << "5 thinks she is 6";
                 yTo = _nodeTo->centre().y() - toHeightHalf;
                 xTo = -(c + b * yTo) / a;
             }

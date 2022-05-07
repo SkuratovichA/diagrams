@@ -87,7 +87,6 @@ public:
             case 1:
                 rest = dynamic_cast<T *>(items.first());
                 if (first == nullptr || rest == nullptr) {
-                    qDebug() << "shit fuck";
                     return QPair<T *, T *>();
                 }
                 break;
@@ -215,9 +214,8 @@ protected:
 private:
     QGraphicsView *view;
 
-    qreal _sceneWidth = 600;
-    qreal _sceneHeight = 600;
-
+    qreal _sceneWidth = 1400;
+    qreal _sceneHeight = 1400;
 };
 
 class ClassCanvas : public TabCanvas {
