@@ -149,7 +149,7 @@ QPair<QPointF, QPointF> ClassConnectionItem::edgePoints() const {
             }
 
             leftNum->setPos(xFrom + 10, yFrom + 5);
-            rightNum->setPos(xTo + 10, xTo + 5);
+            rightNum->setPos(xTo - 50, yTo + 5);
             break;
         case 2:
             yTo = _nodeTo->centre().y() + toHeightHalf;
@@ -167,6 +167,7 @@ QPair<QPointF, QPointF> ClassConnectionItem::edgePoints() const {
             }
 
             leftNum->setPos(xFrom + 10, yFrom - 50);
+            rightNum->setPos(xTo + 20, yTo + 10);
             break;
         case 3:
             yTo = _nodeTo->centre().y() + toHeightHalf;
@@ -185,7 +186,7 @@ QPair<QPointF, QPointF> ClassConnectionItem::edgePoints() const {
             }
 
             leftNum->setPos(xFrom + 10, yFrom - 50);
-            //rightNum->setPos(xTo + 10, yFrom - 50);
+            rightNum->setPos(xTo + 20, yTo + 10);
             break;
         case 8:
             xTo = _nodeTo->centre().x() - toWidthHalf;
@@ -204,6 +205,7 @@ QPair<QPointF, QPointF> ClassConnectionItem::edgePoints() const {
             }
 
             leftNum->setPos(xFrom + 10, yFrom + 5);
+            rightNum->setPos(xTo -50, yTo + 5);
             break;
         case 4:
             xTo = _nodeTo->centre().x() + toWidthHalf;
@@ -221,6 +223,7 @@ QPair<QPointF, QPointF> ClassConnectionItem::edgePoints() const {
             }
 
             leftNum->setPos(xFrom - 50, yFrom + 5);
+            rightNum->setPos(xTo + 10, yTo + 5);
             break;
         case 5:
             xTo = _nodeTo->centre().x() + toWidthHalf;
@@ -239,6 +242,7 @@ QPair<QPointF, QPointF> ClassConnectionItem::edgePoints() const {
             }
 
             leftNum->setPos(xFrom - 50, yFrom + 5);
+            rightNum->setPos(xTo + 10, yTo + 5);
             break;
         case 6:
             yTo = _nodeTo->centre().y() - toHeightHalf;
@@ -255,6 +259,7 @@ QPair<QPointF, QPointF> ClassConnectionItem::edgePoints() const {
             }
 
             leftNum->setPos(xFrom - 20, yFrom + 15);
+            rightNum->setPos(xTo - 20, yTo - 50);
             break;
         case 7:
             yTo = _nodeTo->centre().y() - toHeightHalf;
@@ -271,6 +276,7 @@ QPair<QPointF, QPointF> ClassConnectionItem::edgePoints() const {
             }
 
             leftNum->setPos(xFrom - 20, yFrom + 15);
+            rightNum->setPos(xTo - 20, yTo - 50);
             break;
     }
     return {QPointF(xFrom, yFrom), QPointF(xTo, yTo)};
