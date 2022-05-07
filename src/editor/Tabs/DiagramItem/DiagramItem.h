@@ -24,6 +24,8 @@ class QPointF;
 
 QT_END_NAMESPACE
 
+class SequenceDiagramLifeLine;
+
 // for attrs and table expanding
 class ClassTextAttr : public QGraphicsTextItem {
 public:
@@ -50,7 +52,7 @@ public:
         return toPlainText();
     }
 
-    void setName(const QString& name) {
+    void setName(const QString &name) {
         setPlainText(name.toStdString().c_str());
     }
 
@@ -91,7 +93,7 @@ public:
         return _rowHeight;
     }
 
-    void setName(const QString& name) const {
+    void setName(const QString &name) const {
         _head->setName(name);
     }
 
@@ -186,7 +188,7 @@ public:
         return _head->toPlainText();
     }
 
-    [[nodiscard]] QPointF centre() const override {
+    QPointF centre() const override {
         return {x() + width() / 2.0, y() + height() / 2.0};
     }
 
@@ -279,7 +281,7 @@ public:
         return line;
     }
 
-    QGraphicsTextItem *createText(qreal x, qreal y, const QString& text) {
+    QGraphicsTextItem *createText(qreal x, qreal y, const QString &text) {
         auto attr = new QGraphicsTextItem(text, this);
         setTextFlags(attr);
         attr->setPos(x, y);
@@ -341,24 +343,23 @@ class SequenceDiagramItem : public QGraphicsRectItem, public DiagramItem {
 public:
     explicit SequenceDiagramItem(actorParams *params, ClassDiagramItem *parentClassDiagramItem_ = nullptr);
 
-
 public:
     [[nodiscard]] QString name() const override {
         return _head->toPlainText();
     }
 
     [[nodiscard]] QPointF centre() const override {
-        return {x() + width() / 2.0, y()};
+        return {x() + width() / 2.0, y() + height()};
     }
 
     [[nodiscard]] qsizetype occupiedSockets() const override {
         return _connections.count();
     }
 
-
 public:
     void addConnection(SequenceConnectionItem *connection);
     void removeConnection(SequenceConnectionItem *connection);
+
     [[nodiscard]] ClassDiagramItem *parentClassDiagramItem() const {
         return _parentClassDiagramItem;
     }
@@ -370,6 +371,7 @@ private:
     ClassDiagramItem *_parentClassDiagramItem = nullptr;
     QSet<SequenceConnectionItem *> _connections;
     QGraphicsLineItem *line;
+    SequenceDiagramLifeLine *lifeLine = nullptr;
 };
 
 #endif // Object_H

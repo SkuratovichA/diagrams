@@ -8,6 +8,7 @@
 
 #include <QGraphicsLineItem>
 #include <QGraphicsSceneMouseEvent>
+#include "DiagramItem.h"
 
 /** Implementation of a custom Life Line for an object (actor)
  */
@@ -15,9 +16,12 @@ class SequenceDiagramLifeLine : public QGraphicsLineItem {
     /** Constructor, Destructor
      */
 public:
-    SequenceDiagramLifeLine(qreal yFrom, qreal yTo);
-    ~SequenceDiagramLifeLine();
+    SequenceDiagramLifeLine(SequenceDiagramItem *parent, qreal yFrom, qreal height);
+    ~SequenceDiagramLifeLine() override;
 
+
+public:
+    void trackNodes();
     /** Getters, setters
      */
 public:
@@ -25,12 +29,8 @@ public:
         return _yFrom;
     }
 
-    [[nodiscard]] qreal yTo() const {
-        return _yTo;
-    }
-
-    [[nodiscard]] qreal lifelineLength() const {
-        return _lifeLineLength;
+    [[nodiscard]] qreal height() const {
+        return _height;
     }
 
     [[nodiscard]] const QList<QPair<qreal, qreal>> &activeRegions() const {
@@ -54,12 +54,8 @@ public:
         _yFrom = yFrom;
     }
 
-    void setYTo(qreal yTo) {
-        _yTo = yTo;
-    }
-
-    void setLifeLineLength(qreal lifeLineLength) {
-        _lifeLineLength = lifeLineLength;
+    void setYTo(qreal height) {
+        _height = height;
     }
 
     void addActiveRegion(const QPair<qreal, qreal> activeRegions) {
@@ -75,11 +71,15 @@ public:
     }
 
 private:
-    qreal _yFrom = 0;
+    void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
+    [[nodiscard]] QPainterPath shape() const override;
+    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
+    QPolygonF lineShaper() const;
 
-private:
-    qreal _yTo = 0;
-    qreal _lifeLineLength = 0;
+    qreal _yFrom = 0;
+    qreal _height = 0;
+    QLineF _line;
+    SequenceDiagramItem *_parent;
 
     // Usually from/to, but in case to is -1, use default length.
     QList<QPair<qreal /*from*/, qreal /*to*/>> _activeRegions;

@@ -3,6 +3,7 @@
 // Date: 07.05.2022
 
 #include "DiagramItem.h"
+#include "SequenceDiagramLifeLine.h"
 
 #include <QtGui>
 #include <QStyleOptionGraphicsItem>
@@ -42,11 +43,10 @@ SequenceDiagramItem::SequenceDiagramItem(actorParams *params, ClassDiagramItem *
     actorRect->setPen(QPen(QColor(Qt::black), 3.0));
     actorRect->setBrush(QBrush(color()));
 
-    // TODO: connect LIFE TIME
-//    auto lifetime = new ActorLifetime(this, QPointF(width() / 2, height()));
+    // TOOD: add a possibility to expand a line
+    lifeLine = new SequenceDiagramLifeLine(this, 0, 400);
     setRect(boundingBox());
 }
-
 
 /**
  * Notify custom items that some part of the item's state changes.
@@ -59,8 +59,9 @@ SequenceDiagramItem::SequenceDiagramItem(actorParams *params, ClassDiagramItem *
  * @return new value
  */
 QVariant SequenceDiagramItem::itemChange(GraphicsItemChange change, const QVariant &value) {
-    if (change == ItemPositionChange)
+    if (change == ItemPositionChange) {
         return QPointF(value.toPointF().x(), pos().y());
+    }
     return QGraphicsItem::itemChange(change, value);
 }
 
