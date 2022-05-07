@@ -42,10 +42,10 @@ QVariant SequenceConnectionItem::itemChange(GraphicsItemChange change, const QVa
     return QGraphicsItem::itemChange(change, value);
 }
 
-//void SequenceConnectionItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) {
-//    painter->drawLine(nodeFrom->width() / 2.0, y(), nodeTo->width() / 2.0, y());
-//    qDebug() << "paint" << nodeFrom->width() / 2.0 << y() << nodeTo->width() / 2.0 << y();
-//}
+void SequenceConnectionItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) {
+    painter->drawLine(nodeFrom->width() / 2.0, y(), nodeTo->width() / 2.0, y());
+    qDebug() << "paint" << nodeFrom->width() / 2.0 << y() << nodeTo->width() / 2.0 << y();
+}
 
 /**
  *
