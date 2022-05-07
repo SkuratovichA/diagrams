@@ -189,14 +189,12 @@ void editorInterface::createDynamicToolBar() {
  *
  * @return
  */
-QString editorInterface::get_text_representation() {
+void editorInterface::get_text_representation() {
     auto size = tabWidget->count();
-    std::string prg;
+    qDebug() << size;
     for (int i = 0; i < size; i++) {
-        //reinterpret_cast<TabCanvas *>(tabWidget->widget(i))->editorScene->items();
-//        prg += reinterpret_cast<TabCanvas *>(tabWidget->widget(i))->getStringRepresentation();
+        reinterpret_cast<TabCanvas *>(tabWidget->widget(i))->getStringRepresentation(prg);
     }
-    return {prg.c_str()};
 }
 
 /**
@@ -229,6 +227,8 @@ void editorInterface::actionSave_triggered() {
 void editorInterface::actionSaveAs_triggered() {
     filename = QFileDialog::getSaveFileName(this, tr("Save Address Book"), QDir::homePath(),
                                             filenameFilter);
+
+    qDebug() << filename << "save here";
     if (filename == nullptr || filename.isEmpty()) {
         return;
     }

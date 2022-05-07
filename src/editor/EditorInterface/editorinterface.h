@@ -80,7 +80,7 @@ private:
 
     void createDynamicToolBar();
 
-    QString get_text_representation();
+    void get_text_representation();
 
 private:
     QTabWidget *tabWidget;

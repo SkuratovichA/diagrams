@@ -33,7 +33,11 @@ void ClassCanvas::getStringRepresentation(Program &prg) {
 //    }
 
     for (auto x : buf.classItems()) {
-        qDebug() << "class";
+        Class tmp;
+        tmp.name = x->name().toStdString();
+        tmp.width = x->width();
+        tmp.height = x->height();
+        qDebug() << "class" << x->name() << x->color();
     }
 }
 
