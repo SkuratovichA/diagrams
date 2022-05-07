@@ -102,7 +102,8 @@ SequenceDiagramItem::SequenceDiagramItem(actorParams *params, ClassDiagramItem *
     QFlags<Qt::TextInteractionFlag> _flags = Qt::TextInteractionFlag::TextEditable |
                                              Qt::TextInteractionFlag::TextSelectableByMouse |
                                              Qt::TextInteractionFlag::TextSelectableByKeyboard;
-
+    QColor colo2 = QColor(244, 120, 9, 10);
+    qDebug() << colo2.red() << colo2.green() << colo2.blue() << colo2.alpha();
     setPen(QPen(QColor(1, 0, 0, 0)));
     _head = new NameObject(this, _flags, QPointF(-3, -40), params->name());
     _parentClassDiagramItem = parentClassDiagramItem_;

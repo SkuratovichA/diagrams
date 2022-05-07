@@ -2,6 +2,14 @@
 
 using json = nlohmann::json;
 
+class Color {
+public:
+    int r;
+    int g;
+    int b;
+    int a;
+};
+
 typedef struct attrs {
     std::string perm;
     std::string type;
@@ -12,7 +20,7 @@ class Class {
 public:
     std::vector<double> coords;
     std::string name;
-    std::string color;
+    Color color;
     std::vector<attrs_t> attrs;
     std::vector<attrs_t> methods;
     double width;

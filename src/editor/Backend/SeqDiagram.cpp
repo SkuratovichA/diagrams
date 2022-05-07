@@ -13,7 +13,13 @@ void Activate::fill_activate(const json el) {
 
 void DiagramSequence::fill_structure_actor(const json el, dgrm_seq_t& o) {
     for (auto x : el) {
-        o.actors.push_back(x.at("actor").get<std::string>());
+        Actor act;
+        act.name = x.at("name").get<std::string>();
+        act.color.r = x.at("color").at("r").get<int>();
+        act.color.g = x.at("color").at("g").get<int>();
+        act.color.b = x.at("color").at("b").get<int>();
+        act.color.a = x.at("color").at("a").get<int>();
+        o.actors.push_back(act);
     }
 }
 
@@ -34,13 +40,21 @@ void DiagramSequence::fill_structure_activate(const json el, dgrm_seq_t& o) {
     }
 }
 
-void DiagramSequence::add_actor_to_file(json& j, std::vector<std::string> ac) {
+void DiagramSequence::add_actor_to_file(json& j, std::vector<Actor> ac) {
     int i = 0;
 
     for (auto& x : ac) {
         j["actors"][i++] =
         {
-            {"actor" ,  x }
+            {"actor" ,  x.name },
+            {"color",
+                {
+                    {"r" , x.color.r},
+                    {"g" , x.color.g},
+                    {"b" , x.color.b},
+                    {"a" , x.color.a}
+                }
+            }
         };
     }
 }

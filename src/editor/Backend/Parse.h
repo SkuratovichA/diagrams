@@ -9,11 +9,11 @@
 #include "json.hpp"
 
 #include "SeqDiagram.h"
-#include "ClassDiagram.h"
+//#include "ClassDiagram.h"
 
 using json = nlohmann::json;
 
-json check_null(std::string val);
+//json check_null(std::string val);
 
 class Program {
 public:
