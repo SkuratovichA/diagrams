@@ -34,8 +34,6 @@ SequenceDiagramItem::SequenceDiagramItem(actorParams *params, ClassDiagramItem *
     QFlags<Qt::TextInteractionFlag> _flags = Qt::TextInteractionFlag::TextEditable |
                                              Qt::TextInteractionFlag::TextSelectableByMouse |
                                              Qt::TextInteractionFlag::TextSelectableByKeyboard;
-//    QColor colo2 = QColor(244, 120, 9, 10);
-//    qDebug() << colo2.red() << colo2.green() << colo2.blue() << colo2.alpha();
     setPen(QPen(QColor(1, 0, 0, 0)));
     _head = new NameObject(this, _flags, QPointF(-3, -40), params->name());
     _parentClassDiagramItem = parentClassDiagramItem_;
@@ -44,6 +42,7 @@ SequenceDiagramItem::SequenceDiagramItem(actorParams *params, ClassDiagramItem *
     actorRect->setPen(QPen(QColor(Qt::black), 3.0));
     actorRect->setBrush(QBrush(color()));
 
+    // TODO: connect LIFE TIME
 //    auto lifetime = new ActorLifetime(this, QPointF(width() / 2, height()));
     setRect(boundingBox());
 }

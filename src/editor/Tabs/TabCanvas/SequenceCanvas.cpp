@@ -29,12 +29,14 @@ SequenceCanvas::SequenceCanvas(QWidget *parent, QUndoGroup *parentGroup) : TabCa
 }
 
 /**
- * Generate random [x, y] coordinates ranging from 0 to 600
+ * Generate random [x, y] coordinates ranging from 0 to 1200 with a margin
  *
  * @return coordinates on the scene for new item
  */
 QPoint SequenceCanvas::generateCoords() const {
-    return QPoint(QRandomGenerator::global()->bounded(600), QRandomGenerator::global()->bounded(600));
+    auto x = QRandomGenerator::global()->bounded(600) + 20;
+    auto y = 100;
+    return QPoint(x, y);
 }
 
 /**
@@ -42,7 +44,6 @@ QPoint SequenceCanvas::generateCoords() const {
  * @param prg
  */
 void SequenceCanvas::getStringRepresentation(Program &prg) {
-    return;
 }
 
 /**
@@ -133,7 +134,7 @@ void SequenceCanvas::deleteMessage_triggered() {
  * @param classDiagramItemParent pointer to an object from a class diagram scene
  */
 void SequenceCanvas::addEntity(ClassDiagramItem *classDiagramItemParent) {
-    qDebug() << "got name: in constructor " << classDiagramItemParent->name();
+//    qDebug() << "got name: in constructor " << classDiagramItemParent->name();
     QPoint point = generateCoords();
 
     createActor = new actorParams(point.x(), point.y(), classDiagramItemParent->name(),

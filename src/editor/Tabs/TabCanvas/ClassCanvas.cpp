@@ -40,14 +40,12 @@ QPoint ClassCanvas::generateCoords() const {
  */
 QList<QPair<ClassDiagramItem *, QString>> ClassCanvas::getClassStringPairs() {
     QList<QPair<ClassDiagramItem *, QString>> listPairs;
-
     for (auto x: getItems<ClassDiagramItem>()) {
         QPair<ClassDiagramItem *, QString> pair;
         pair.first = x;
         pair.second = x->_head->toPlainText();
         listPairs.append(pair);
     }
-
     return listPairs;
 }
 

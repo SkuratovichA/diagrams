@@ -213,9 +213,8 @@ protected:
 
 private:
     QGraphicsView *view;
-
-    qreal _sceneWidth = 1400;
-    qreal _sceneHeight = 1400;
+    const qreal _sceneWidth = 600;
+    const qreal _sceneHeight = 400;
 };
 
 class ClassCanvas : public TabCanvas {
@@ -312,16 +311,15 @@ private:
     void createSequenceContextMenu();
 
 private:
-    QList<QPair<ClassDiagramItem *, SequenceDiagramItem *>> pairClassSequence = QList<QPair<ClassDiagramItem *, SequenceDiagramItem *>>();
+    QList<QPair<ClassDiagramItem *, SequenceDiagramItem *>> pairClassSequence =
+            QList<QPair<ClassDiagramItem *, SequenceDiagramItem *>>();
     QMenu *sequenceMenu = nullptr;
-
     QAction *asynchronousMessage = nullptr;
     QAction *synchronousMessage = nullptr;
     QAction *returnMessage = nullptr;
     QAction *createMessage = nullptr;
     QAction *deleteMessage = nullptr;
     actorParams *createActor = nullptr;
-
     editorInterface *parentInterface = nullptr;
 };
 

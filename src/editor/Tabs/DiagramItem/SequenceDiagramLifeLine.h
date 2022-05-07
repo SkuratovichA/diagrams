@@ -9,6 +9,8 @@
 #include <QGraphicsLineItem>
 #include <QGraphicsSceneMouseEvent>
 
+/** Implementation of a custom Life Line for an object (actor)
+ */
 class SequenceDiagramLifeLine : public QGraphicsLineItem {
     /** Constructor, Destructor
      */
@@ -19,49 +21,74 @@ public:
     /** Getters, setters
      */
 public:
+    [[nodiscard]] qreal yFrom() const {
+        return _yFrom;
+    }
+
+    [[nodiscard]] qreal yTo() const {
+        return _yTo;
+    }
+
+    [[nodiscard]] qreal lifelineLength() const {
+        return _lifeLineLength;
+    }
+
+    [[nodiscard]] const QList<QPair<qreal, qreal>> &activeRegions() const {
+        return _activeRegions;
+    }
+
+    [[nodiscard]] qreal defaultActiveRegionLength() const {
+        return _defaultActiveRegionLength;
+    }
+
+    [[nodiscard]] const QList<qreal> &synchronousPoints() const {
+        return _synchronousPoints;
+    }
+
+    [[nodiscard]] bool isIsWaitingForResponce() const {
+        return _isWaitingForResponce;
+    }
+
+public:
     void setYFrom(qreal yFrom) {
-        SequenceDiagramLifeLine::yFrom = yFrom;
+        _yFrom = yFrom;
     }
 
     void setYTo(qreal yTo) {
-        SequenceDiagramLifeLine::yTo = yTo;
+        _yTo = yTo;
     }
 
-    void setLlLength(qreal llLength) {
-        LLLength = llLength;
+    void setLifeLineLength(qreal lifeLineLength) {
+        _lifeLineLength = lifeLineLength;
     }
 
-    void setActiveRegions(const QList<QPair<qreal, qreal>> &activeRegions) {
-        SequenceDiagramLifeLine::activeRegions = activeRegions;
+    void addActiveRegion(const QPair<qreal, qreal> activeRegions) {
+        _activeRegions.push_back(activeRegions);
     }
 
-    void setDefaultActiveRegionLength(qreal defaultActiveRegionLength) {
-        SequenceDiagramLifeLine::defaultActiveRegionLength = defaultActiveRegionLength;
-    }
-
-    void setSynchronousPoints(const QList<qreal> &synchronousPoints) {
-        SequenceDiagramLifeLine::synchronousPoints = synchronousPoints;
+    void addSynchronousPoint(const qreal synchronousPoint) {
+        _synchronousPoints.push_back(synchronousPoint);
     }
 
     void setIsWaitingForResponce(bool isWaitingForResponce) {
-        SequenceDiagramLifeLine::isWaitingForResponce = isWaitingForResponce;
+        _isWaitingForResponce = isWaitingForResponce;
     }
 
 private:
-    qreal yFrom = 0;
-    qreal yTo = 0;
-    qreal LLLength = 0;
+    qreal _yFrom = 0;
+
+private:
+    qreal _yTo = 0;
+    qreal _lifeLineLength = 0;
 
     // Usually from/to, but in case to is -1, use default length.
-    QList<QPair<qreal /*from*/, qreal /*to*/>> activeRegions;
-    qreal defaultActiveRegionLength = 20;
+    QList<QPair<qreal /*from*/, qreal /*to*/>> _activeRegions;
+    qreal const _defaultActiveRegionLength = 20;
 
     // the first point is an entrypoint. Each point will switch
     // a boolean flag, and, hence, activate or diactivate a region.
-    QList<qreal> synchronousPoints;
-    bool isWaitingForResponce = false;
-
-
+    QList<qreal> _synchronousPoints;
+    bool _isWaitingForResponce = false;
 };
 
 #endif //DIAGRAMS_SEQUENCEDIAGRAMLIFELINE_H

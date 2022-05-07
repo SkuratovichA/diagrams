@@ -85,16 +85,16 @@ public:
     /** Protected methods
      */
 protected:
-    void mousePressEvent(QGraphicsSceneMouseEvent *event);
+    void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
 
     /** Private methods
      */
 private:
     void drawLine(QPainter *painter, const QStyleOptionGraphicsItem *option) const;
-    QPolygonF lineShaper() const;
-    QPair<QPointF, QPointF> edgePoints() const;
-    QPainterPath shape() const;
-    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
+    [[nodiscard]] QPolygonF lineShaper() const;
+    [[nodiscard]] QPair<QPointF, QPointF> edgePoints() const;
+    [[nodiscard]] QPainterPath shape() const override;
+    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
     bool _single;
 
     /** Private attributes
