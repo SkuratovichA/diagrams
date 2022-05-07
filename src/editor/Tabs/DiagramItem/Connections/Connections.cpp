@@ -147,6 +147,9 @@ QPair<QPointF, QPointF> ClassConnectionItem::edgePoints() const {
                 yFrom = _nodeFrom->centre().y() - fromHeightHalf;
                 xFrom = -(c + b * yFrom) / a;
             }
+
+            leftNum->setPos(xFrom + 10, yFrom + 5);
+            rightNum->setPos(xTo + 10, xTo + 5);
             break;
         case 2:
             yTo = _nodeTo->centre().y() + toHeightHalf;
@@ -162,6 +165,8 @@ QPair<QPointF, QPointF> ClassConnectionItem::edgePoints() const {
                 xFrom = _nodeFrom->centre().x() + fromWidthHalf;
                 yFrom = -(c + a * xFrom) / b;
             }
+
+            leftNum->setPos(xFrom + 10, yFrom - 50);
             break;
         case 3:
             yTo = _nodeTo->centre().y() + toHeightHalf;
@@ -178,6 +183,9 @@ QPair<QPointF, QPointF> ClassConnectionItem::edgePoints() const {
                 xFrom = _nodeFrom->centre().x() - fromWidthHalf;
                 yFrom = -(c + a * xFrom) / b;
             }
+
+            leftNum->setPos(xFrom + 10, yFrom - 50);
+            //rightNum->setPos(xTo + 10, yFrom - 50);
             break;
         case 8:
             xTo = _nodeTo->centre().x() - toWidthHalf;
@@ -194,6 +202,8 @@ QPair<QPointF, QPointF> ClassConnectionItem::edgePoints() const {
                 yFrom = _nodeFrom->centre().y() + fromHeightHalf;
                 xFrom = -(c + b * yFrom) / a;
             }
+
+            leftNum->setPos(xFrom + 10, yFrom + 5);
             break;
         case 4:
             xTo = _nodeTo->centre().x() + toWidthHalf;
@@ -209,6 +219,8 @@ QPair<QPointF, QPointF> ClassConnectionItem::edgePoints() const {
                 yFrom = _nodeFrom->centre().y() - fromHeightHalf;
                 xFrom = -(c + b * yFrom) / a;
             }
+
+            leftNum->setPos(xFrom - 50, yFrom + 5);
             break;
         case 5:
             xTo = _nodeTo->centre().x() + toWidthHalf;
@@ -225,6 +237,8 @@ QPair<QPointF, QPointF> ClassConnectionItem::edgePoints() const {
                 yFrom = _nodeFrom->centre().y() + fromHeightHalf;
                 xFrom = -(c + b * yFrom) / a;
             }
+
+            leftNum->setPos(xFrom - 50, yFrom + 5);
             break;
         case 6:
             yTo = _nodeTo->centre().y() - toHeightHalf;
@@ -239,6 +253,8 @@ QPair<QPointF, QPointF> ClassConnectionItem::edgePoints() const {
                 xFrom = _nodeFrom->centre().x() - fromWidthHalf;
                 yFrom = -(c + a * xFrom) / b;
             }
+
+            leftNum->setPos(xFrom - 20, yFrom + 15);
             break;
         case 7:
             yTo = _nodeTo->centre().y() - toHeightHalf;
@@ -253,6 +269,8 @@ QPair<QPointF, QPointF> ClassConnectionItem::edgePoints() const {
                 xFrom = _nodeFrom->centre().x() - fromWidthHalf;
                 yFrom = -(c + a * xFrom) / b;
             }
+
+            leftNum->setPos(xFrom - 20, yFrom + 15);
             break;
     }
     return {QPointF(xFrom, yFrom), QPointF(xTo, yTo)};
@@ -508,8 +526,8 @@ void ClassConnectionItem::paint(QPainter *painter, const QStyleOptionGraphicsIte
             _nodeTo->pos().y() + _nodeTo->height()/2.0 + 20);
 
     msg->setPos(pText.x() - widthText/2.0, pText.y() - 30);
-    leftNum->setPos(pLeft);
-    rightNum->setPos(pRight);
+    //leftNum->setPos(pLeft);
+    //rightNum->setPos(pRight);
 }
 
 /**
