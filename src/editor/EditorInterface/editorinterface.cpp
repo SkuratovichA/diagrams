@@ -25,10 +25,14 @@
     } while(0)
 
 /**
+ * A constructor.
  *
- * @param parent
- * @param exampleName
- * @param new_type
+ * This constructor creates an interface for diagram editing, a toolbar with actions
+ * and tabs for each type of diagram.
+ *
+ * @param parent // TODO
+ * @param exampleName name of the file with example diagrams
+ * @param new_type // TODO
  */
 editorInterface::editorInterface(
         QWidget *parent,
@@ -63,10 +67,7 @@ editorInterface::editorInterface(
     //        }
     //    }
 #endif
-    qDebug() << "create editorinterface: constructor editorInterface";
-
     ui->setupUi(this);
-    qDebug() << "create undo stack: constructor editorInterface";
     undoStack = new QUndoGroup(this);
 
     this->setWindowTitle("editor");
@@ -79,12 +80,10 @@ editorInterface::editorInterface(
 }
 
 /**
- *
+ * A destructor. // TODO we need these comments???
  */
 editorInterface::~editorInterface() {
-    qDebug() << "delete QUndoView undowView : destructor editorInterface";
     delete undoView;
-    qDebug() << "delete ui : destructor editorInterface";
     delete ui;
 }
 
@@ -96,7 +95,7 @@ void editorInterface::newTabSelected() {
 }
 
 /**
- *
+ * Create a window with a displayed undo stack.
  */
 void editorInterface::createUndoView() {
     undoView = new QUndoView(undoStack);
@@ -106,7 +105,7 @@ void editorInterface::createUndoView() {
 }
 
 /**
- *
+ * Create 2 default tabs, one for the class diagram and another for the sequence diagram.
  */
 void editorInterface::createTabs() {
     tabWidget = new QTabWidget(this);
@@ -116,7 +115,7 @@ void editorInterface::createTabs() {
 }
 
 /**
- *
+ * Create and connect all signals for interaction with tabs.
  */
 void editorInterface::createDynamicToolBar() {
     ADD_SIGNAL(addEntityAction, "New &Entity", "+", "Ctrl+N", this, SLOT(actionAddEntity_triggered()));
@@ -187,8 +186,7 @@ void editorInterface::createDynamicToolBar() {
 }
 
 /**
- *
- * @return
+ * TODO
  */
 void editorInterface::get_text_representation() {
     auto size = tabWidget->count();
@@ -199,7 +197,10 @@ void editorInterface::get_text_representation() {
 }
 
 /**
+ * A trigger for "Save" action.
  *
+ * If the file is not specified, the action "Save As" will be triggered.
+ * File will be opened as a stream and the text in the required format will be written.
  */
 void editorInterface::actionSave_triggered() {
     if (filename == nullptr || filename == "") {
@@ -223,7 +224,9 @@ void editorInterface::actionSave_triggered() {
 }
 
 /**
+ * A trigger for "Save As" action.
  *
+ * File will be opened as a stream and the text in the required format will be written.
  */
 void editorInterface::actionSaveAs_triggered() {
     filename = QFileDialog::getSaveFileName(this, tr("Save Address Book"), QDir::homePath(),
@@ -252,10 +255,21 @@ void editorInterface::actionSaveAs_triggered() {
 //    editorInterface::close();
 //}
 
+/**
+ * A trigger for "New Tab" action.
+ *
+ * Create a new tab for sequence diagram.
+ */
 void editorInterface::actionNewTab_triggered() {
     tabWidget->addTab(new SequenceCanvas(this, undoStack), "sequence Diagram editor");
 }
 
+/**
+ * A trigger for "Delete Tab" action.
+ *
+ * Delete the currently active diagram.
+ * @note You can not delete a class diagram.
+ */
 void editorInterface::actionDeleteTab_triggered() {
     auto ci = tabWidget->currentIndex();
     if (ci == 0) {
@@ -266,7 +280,13 @@ void editorInterface::actionDeleteTab_triggered() {
 }
 
 /**
+ * A trigger for "Add Entity" action.
  *
+ * @details Create a new entity on the active tab.
+ * If an active tab contains diagram class, will be created a default class.
+ * Otherwise all entities from class diagram will be read to QList.
+ * Then the user will be offered the option to create an object
+ * from the list in the sequence diagram.
  */
 void editorInterface::actionAddEntity_triggered() {
     if (tabWidget->currentIndex() == 0) {
@@ -276,7 +296,7 @@ void editorInterface::actionAddEntity_triggered() {
         // all strings with class names to put in na widget
         QList<QString> existingClassesNames;
 
-        // all clasess, to connect with a seuqence item
+        // all classes, to connect with a sequence item
         auto classStringPairs = reinterpret_cast<ClassCanvas *>(tabWidget->widget(0))->getClassStringPairs();
 
         for (auto cs : classStringPairs) {
@@ -299,7 +319,10 @@ void editorInterface::actionAddEntity_triggered() {
 }
 
 /**
+ * A trigger for "Add Connection" action.
  *
+ * Depending on the active diagram will be created connection
+ * between the selected objects.
  */
 void editorInterface::actionAddConnection_triggered() {
     if (tabWidget->currentIndex() == 0) {
@@ -310,7 +333,9 @@ void editorInterface::actionAddConnection_triggered() {
 }
 
 /**
+ * A trigger for "Remove" action.
  *
+ * Depending on the active diagram will be removed all selected entities.
  */
 void editorInterface::actionRemove_triggered() {
     if (tabWidget->currentIndex() == 0) {
@@ -321,7 +346,11 @@ void editorInterface::actionRemove_triggered() {
 }
 
 /**
+ * A trigger for "Cut" action.
  *
+ * Depending on the active diagram will be cut all selected
+ * entities to the local buffer.
+ * @note Cutting can not be applied to connections.
  */
 void editorInterface::actionCut_triggered() {
     if (tabWidget->currentIndex() == 0) {
@@ -332,7 +361,11 @@ void editorInterface::actionCut_triggered() {
 }
 
 /**
+ * A trigger for "Copy" action.
  *
+ * Depending on the active diagram will be copied all selected
+ * entities to the local buffer.
+ * @note Copying can not be applied to connections.
  */
 void editorInterface::actionCopy_triggered() {
     if (tabWidget->currentIndex() == 0) {
@@ -343,7 +376,10 @@ void editorInterface::actionCopy_triggered() {
 }
 
 /**
+ * A trigger for "Paste" action.
  *
+ * Depending on the active diagram will be pasted all selected
+ * entities from the local buffer.
  */
 void editorInterface::actionPaste_triggered() {
     if (tabWidget->currentIndex() == 0) {
@@ -354,21 +390,27 @@ void editorInterface::actionPaste_triggered() {
 }
 
 /**
+ * A trigger for "Zoom In" action.
  *
+ * Zoom in the current tab 1.2 times.
  */
 void editorInterface::actionZoomIn_triggered() {
     reinterpret_cast<TabCanvas *>(tabWidget->currentWidget())->zoomIn();
 }
 
 /**
+ * A trigger for "Zoom out" action.
  *
+ * Zoom out the current tab 1.2 times.
  */
 void editorInterface::actionZoomOut_triggered() {
     reinterpret_cast<TabCanvas *>(tabWidget->currentWidget())->zoomOut();
 }
 
 /**
+ * A trigger for "Send to back" action.
  *
+ * Decrease Z value of the selected items and send them to back.
  */
 void editorInterface::actionBack_triggered() {
     if (tabWidget->currentIndex() == 0) {
@@ -379,7 +421,9 @@ void editorInterface::actionBack_triggered() {
 }
 
 /**
+ * A trigger for "Send to front" action.
  *
+ * Increase Z value of the selected items and send them to front.
  */
 void editorInterface::actionFront_triggered() {
     if (tabWidget->currentIndex() == 0) {

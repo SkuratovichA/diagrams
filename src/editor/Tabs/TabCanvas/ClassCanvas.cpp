@@ -112,9 +112,7 @@ void ClassCanvas::addMethod_triggered() {
     auto line = item->createLine(0, item->height());
     item->pushMethodLine(line);
 
-    //auto text = item->createText(item->tabText(), item->height() + item->tabText(), "+ int example()");
-    auto *text = new ClassTextAttr(item, "+ int example()", item->tabText(), item->height() + item->tabText(),
-                                   item->flags());
+    auto *text = new ClassTextAttr(item, "+ int example()", QPointF(item->tabText(), item->height() + item->tabText()), item->flags());
     item->pushMethod(text);
 
     item->setHeight(item->height() + item->rowHeight());
@@ -168,8 +166,8 @@ void ClassCanvas::addAttr_triggered() {
     item->pushAttrLine(line);
 
     //auto text = item->createText(item->tabText(), item->rowHeight() * inc + item->tabText(), "+ int word");
-    ClassTextAttr *text = new ClassTextAttr(item, "+ int word", item->tabText(),
-                                            item->rowHeight() * inc + item->tabText(), item->flags());
+    ClassTextAttr *text = new ClassTextAttr(item, "+ int word", QPointF(item->tabText(),
+                                            item->rowHeight() * inc + item->tabText()), item->flags());
     item->pushAttr(text);
     item->setHeight(item->height() + item->rowHeight());
     for (auto x: item->connections()) {
