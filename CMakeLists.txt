@@ -26,7 +26,7 @@ add_executable(proj
         src/editor/Tabs/DiagramItem/Commands/Commands.cpp
         src/editor/Tabs/DiagramItem/Connections/Connections.cpp
         src/editor/Tabs/TabCanvas/ItemsBuffer/Itemsbuffer.cpp
-        src/editor/Tabs/DiagramItem/FillItems/FillItems.cpp
+        src/editor/Tabs/DiagramItem/FillItems/ObjectParams.cpp
         src/editor/Tabs/TabCanvas/SequenceCanvas.cpp
         src/editor/Backend/ClassDiagram.cpp
         src/editor/Backend/Parse.cpp
@@ -34,7 +34,7 @@ add_executable(proj
 
         src/MainWIndow/mainwindow.h
         src/editor/PropertiesDialog/propertiesdialog.h
-        src/editor/Tabs/DiagramItem/FillItems/FillItems.h
+        src/editor/Tabs/DiagramItem/FillItems/ObjectParams.h
         src/editor/Tabs/DiagramItem/DiagramItem.h
         src/editor/Tabs/DiagramItem/EditorScene/EditorScene.h
         src/editor/Tabs/DiagramItem/Commands/Commands.h

@@ -12,7 +12,7 @@
 #include "../DiagramItem/EditorScene/EditorScene.h"
 #include "../DiagramItem/Commands/Commands.h"
 #include "../DiagramItem/DiagramItem.h"
-#include "../DiagramItem/FillItems/FillItems.h"
+#include "../DiagramItem/FillItems/ObjectParams.h"
 #include "ItemsBuffer/Itemsbuffer.h"
 #include "../../Backend/Parse.h"
 
@@ -115,7 +115,7 @@ public:
     template<typename T>
     QList<T *> getItems() {
         QList<T *> items;
-        for (auto x : editorScene->items()) {
+        for (auto x: editorScene->items()) {
             if (dynamic_cast<T *>(x) == nullptr) {
                 continue;
             }
@@ -164,6 +164,7 @@ public:
     QUndoStack *undoStack() const {
         return _undoStack;
     }
+
     void createScene() {
         editorScene = new EditorScene(this);
         editorScene->setSceneRect(QRect(0, 0, _sceneWidth, _sceneHeight));
@@ -291,7 +292,7 @@ public slots:
     void copy() override;
 
     void addEntity() override {};
-    SequenceDiagramItem* addEntity(QString className);
+    void addEntity(ClassDiagramItem *classDiagramItemParent);
 
     void addConnection() override;
 
@@ -315,16 +316,17 @@ private:
     void createSequenceContextMenu();
 
 private:
-    QMenu *sequenceMenu;
+    QList<QPair<ClassDiagramItem *, SequenceDiagramItem *>> pairClassSequence = QList<QPair<ClassDiagramItem *, SequenceDiagramItem *>>();
+    QMenu *sequenceMenu = nullptr;
 
-    QAction *asynchronousMessage;
-    QAction *synchronousMessage;
-    QAction *returnMessage;
-    QAction *createMessage;
-    QAction *deleteMessage;
-    actorParams *createActor;
+    QAction *asynchronousMessage = nullptr;
+    QAction *synchronousMessage = nullptr;
+    QAction *returnMessage = nullptr;
+    QAction *createMessage = nullptr;
+    QAction *deleteMessage = nullptr;
+    actorParams *createActor = nullptr;
 
-    editorInterface *parentInterface;
+    editorInterface *parentInterface = nullptr;
 };
 
 #endif // TABCANVAS_H

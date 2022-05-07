@@ -56,7 +56,7 @@ void ClassTextAttr::keyReleaseEvent(QKeyEvent *event) {
     qreal midW = parent()->_head->boundingRect().width();
     qreal midO = parent()->width();
     parent()->_head->setPos((midO - midW) / 2, -40);
-    for (auto x : this->parent()->connections()) {
+    for (auto x: this->parent()->connections()) {
         x->trackNodes();
     }
 }
@@ -218,10 +218,10 @@ QVariant ClassDiagramItem::itemChange(GraphicsItemChange change, const QVariant 
  *
  */
 ClassDiagramItem::~ClassDiagramItem() {
-    foreach (ClassConnectionItem *connection, _connections) {
-        delete connection;
-        qDebug() << "Connection deleted (diagramItem.cpp)";
-    }
+            foreach (ClassConnectionItem *connection, _connections) {
+            delete connection;
+            qDebug() << "Connection deleted (diagramItem.cpp)";
+        }
 }
 
 /**

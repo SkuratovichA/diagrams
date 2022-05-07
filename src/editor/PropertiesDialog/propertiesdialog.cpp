@@ -26,14 +26,20 @@ PropertiesDialog::~PropertiesDialog() {
 void PropertiesDialog::on_pushButton_clicked() {
     if (ui->listWidget->count() == 0) {
         QMessageBox::warning(this, "", "No classes in the class diagram tab. Create at least one.");
-        goto close;
+        goto close; // hehe
     }
     _selectedClassName = ui->listWidget->currentItem()->text();
+    _positionOfSelectedClassName = ui->listWidget->currentIndex().row();
     close:
     this->close();
 }
 
-QString PropertiesDialog::selectedClassName() {
+QString PropertiesDialog::selectedClassName() const {
     return _selectedClassName;
 }
+
+int PropertiesDialog::positionOfSelectedClassName() const {
+    return _positionOfSelectedClassName;
+}
+
 

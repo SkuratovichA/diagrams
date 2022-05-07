@@ -15,7 +15,8 @@ public:
     ~PropertiesDialog();
 
 public:
-    QString selectedClassName();
+    int positionOfSelectedClassName() const;
+    QString selectedClassName() const;
 
 private slots:
     void on_pushButton_clicked();
@@ -23,6 +24,7 @@ private slots:
 private:
     Ui::PropertiesDialog *ui;
     QString _selectedClassName = QString();
+    int _positionOfSelectedClassName = -42;
 };
 
 #endif // PROPERTIESDIALOG_H

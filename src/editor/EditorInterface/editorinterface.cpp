@@ -273,25 +273,31 @@ void editorInterface::actionAddEntity_triggered() {
         reinterpret_cast<ClassCanvas *>(tabWidget->currentWidget())->addEntity();
     } else {
         auto sequenceTab = reinterpret_cast<SequenceCanvas *>(tabWidget->currentWidget());
-        QList<QString> existingClasses;
+        // all strings with class names to put in na widget
+        QList<QString> existingClassesNames;
 
-        existingClasses.append(QString("Tatiana Fedorova"));
-        existingClasses.append(QString("heer, there will be a list of classes"));
+        // all clasess, to connect with a seuqence item
         auto classStringPairs = reinterpret_cast<ClassCanvas *>(tabWidget->widget(0))->getClassStringPairs();
 
         for (auto cs : classStringPairs) {
-            existingClasses.append(cs.second);
+            existingClassesNames.append(cs.second);
         }
 
-        PropertiesDialog propertiesDialog(this, existingClasses);
+        PropertiesDialog propertiesDialog(this, existingClassesNames);
         propertiesDialog.exec();
 
         auto selectedClassName = propertiesDialog.selectedClassName();
-        if (selectedClassName == QString()) {
+        int positionOfSelectedClassName = propertiesDialog.positionOfSelectedClassName();
+
+        // empty
+        if (positionOfSelectedClassName == -42) {
             return;
         }
 
-        auto entity = sequenceTab->addEntity(selectedClassName);
+        qDebug() << "position: " << positionOfSelectedClassName;
+        qDebug() << "value: " << classStringPairs.at(positionOfSelectedClassName);
+        qDebug() << "name (class)" << classStringPairs.at(positionOfSelectedClassName).first->name();
+        sequenceTab->addEntity(classStringPairs.at(positionOfSelectedClassName).first);
     }
 }
 

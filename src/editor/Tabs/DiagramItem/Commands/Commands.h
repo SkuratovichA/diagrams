@@ -9,7 +9,7 @@
 #include <QUndoCommand>
 #include "../Connections/Connections.h"
 #include "../DiagramItem.h"
-#include "../FillItems/FillItems.h"
+#include "../FillItems/ObjectParams.h"
 
 /**
  *

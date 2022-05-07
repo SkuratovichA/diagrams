@@ -11,7 +11,8 @@
 #include <QGraphicsPolygonItem>
 
 #include "Connections/Connections.h"
-#include "FillItems/FillItems.h"
+#include "FillItems/ObjectParams.h"
+
 
 QT_BEGIN_NAMESPACE
 class QGraphicsItem;
@@ -186,15 +187,15 @@ public:
         return _methods;
     }
 
-    QList<QGraphicsLineItem *> methodsLines() {
+    QList<QGraphicsLineItem *> methodsLines() const {
         return _methodsLines;
     }
 
-    QList<ClassTextAttr *> attrs() {
+    QList<ClassTextAttr *> attrs() const {
         return _attrs;
     }
 
-    QList<QGraphicsLineItem *> attrsLines() {
+    QList<QGraphicsLineItem *> attrsLines() const {
         return _attrsLines;
     }
 
@@ -273,7 +274,7 @@ public:
         return attr;
     }
 
-    QFlags<Qt::TextInteractionFlag> flags() {
+    QFlags<Qt::TextInteractionFlag> flags() const {
         return _flags;
     }
 
@@ -305,10 +306,6 @@ public:
 
     QPointF centre() const {
         return {x() + width() / 2.0, y() + height() / 2.0};
-    }
-
-    uint32_t numberOfSockets() const {
-        return _numberOfSockets;
     }
 
     void setTextFlags(QGraphicsTextItem *item) {
