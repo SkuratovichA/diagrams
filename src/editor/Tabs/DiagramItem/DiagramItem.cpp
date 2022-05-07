@@ -93,8 +93,8 @@ SequenceDiagramItem::SequenceDiagramItem(actorParams *params)
         : DiagramItem(params->width(),
                       params->height(),
                       DiagramItem::Actor,
-                      params->color()) {
-
+                      params->color()
+) {
     setFlag(QGraphicsItem::ItemIsSelectable);
     setFlag(QGraphicsItem::ItemIsMovable);
     setFlag(QGraphicsItem::ItemSendsGeometryChanges);
@@ -105,20 +105,8 @@ SequenceDiagramItem::SequenceDiagramItem(actorParams *params)
 
     setPen(QPen(QColor(1, 0, 0, 0)));
     _head = new NameObject(this, _flags, QPointF(-3, -40), params->name());
+    _parentClassDiagramItem = parentCLassDiagramItem_;
 
-    auto setpen = [this](QGraphicsLineItem *l) {l->setPen(QPen(color(), 3.0));};
-//    auto legL = new QGraphicsLineItem(35.0, 70.0, 10.0, 110.0, this);
-//    setpen(legL);
-//    auto legR = new QGraphicsLineItem(35.0, 70.0, 60.0, 110.0, this);
-//    setpen(legR);
-//    auto handL = new QGraphicsLineItem(35.0, 45.0, 0.0, 35.0, this);
-//    setpen(handL);
-//    auto handR = new QGraphicsLineItem(35.0, 45.0, 70.0, 35.0, this);
-//    setpen(handR);
-//    auto body = new QGraphicsLineItem(35.0, 30.0, 35.0, 70.0, this);
-//    setpen(body);
-//    auto head = new QGraphicsEllipseItem(20.0, 0.0, 30.0, 30.0, this);
-//    auto textAttr = new ClassTextAttr(this, params->name(), tabText(), rowHeight() + tabText(), _flags);
     auto actorRect = new QGraphicsRectItem(0, 0, params->width(), params->height(), this);
     actorRect->setPen(QPen(QColor(Qt::black), 3.0));
     actorRect->setBrush(QBrush(color()));
@@ -141,7 +129,7 @@ SequenceDiagramItem::SequenceDiagramItem(actorParams *params)
 QVariant SequenceDiagramItem::itemChange(GraphicsItemChange change, const QVariant &value) {
     if (change == ItemPositionChange)
         return QPointF(value.toPointF().x(), pos().y());
-    return QGraphicsItem::itemChange( change, value );
+    return QGraphicsItem::itemChange(change, value);
 }
 
 /**

@@ -67,6 +67,7 @@ editorInterface::editorInterface(
     //        }
     //    }
 #endif
+
     ui->setupUi(this);
     undoStack = new QUndoGroup(this);
 
@@ -91,7 +92,40 @@ editorInterface::~editorInterface() {
  * Change the active stack in the stackGroup to display ins members (history) for the tab.
  */
 void editorInterface::newTabSelected() {
+    qDebug() << "new tab selected";
+
+    static QWidget *prevWidget = nullptr;
+    qDebug() << "wee wee (1)";
+    if (prevWidget != nullptr) {
+        qDebug() << "wee wee (1) prevWidget is not nullptr";
+        // moved from the sequence canvas, hence, there is a need to update all class connecitons
+        auto previousSequenceCanvas = dynamic_cast<SequenceCanvas *>(prevWidget);
+        if (previousSequenceCanvas != nullptr) {
+            qDebug() << "wee wee (1.1) changin from SequenceCanvas!";
+            for (SequenceDiagramItem *sequenceItem: previousSequenceCanvas->getItems<SequenceDiagramItem>()) {
+                qDebug() << "1.1.1 sequenceItem: " << sequenceItem;
+                auto newName = sequenceItem->name();
+                qDebug() << "1.1.2 new name: " << newName;
+                qDebug() << "1.1.3 parent class diagram" << sequenceItem->parentClassDiagramItem();
+                qDebug() << "1.1.4 prev name: " << sequenceItem->parentClassDiagramItem()->name();
+                if (newName != sequenceItem->parentClassDiagramItem()->name()) {
+                    sequenceItem->parentClassDiagramItem()->setName(newName);
+                }
+            }
+        }
+        // moved from something (does not matter) to the sequence canvas. There is a need to update a sequence canvas
+        auto destSequenceCanvas = dynamic_cast<SequenceCanvas *>(tabWidget->currentWidget());
+        if (destSequenceCanvas != nullptr) {
+            for (SequenceDiagramItem *sequenceItem: destSequenceCanvas->getItems<SequenceDiagramItem>()) {
+                auto newName = sequenceItem->parentClassDiagramItem()->name();
+                if (newName != sequenceItem->name()) {
+                    sequenceItem->setName(newName);
+                }
+            }
+        }
+    }
     undoStack->setActiveStack(reinterpret_cast<TabCanvas *>(tabWidget->currentWidget())->undoStack());
+    prevWidget = tabWidget->currentWidget();
 }
 
 /**
@@ -293,23 +327,30 @@ void editorInterface::actionAddEntity_triggered() {
         reinterpret_cast<ClassCanvas *>(tabWidget->currentWidget())->addEntity();
     } else {
         auto sequenceTab = reinterpret_cast<SequenceCanvas *>(tabWidget->currentWidget());
-        // all strings with class names to put in na widget
-        QList<QString> existingClassesNames;
 
-        // all classes, to connect with a sequence item
-        auto classStringPairs = reinterpret_cast<ClassCanvas *>(tabWidget->widget(0))->getClassStringPairs();
+        // all clases from the class tab
+        QList<QPair<ClassDiagramItem *, QString>> classStringPairs = reinterpret_cast<ClassCanvas *>(tabWidget->widget(
+                0))->getClassStringPairs();
 
-        for (auto cs : classStringPairs) {
-            existingClassesNames.append(cs.second);
+        QList<QPair<ClassDiagramItem *, QString>> sequenceClassStringPairs;
+        for (auto actor: sequenceTab->getItems<SequenceDiagramItem>()) {
+            sequenceClassStringPairs.push_back(
+                    QPair<ClassDiagramItem *, QString>(
+                            actor->parentClassDiagramItem(),
+                            actor->parentClassDiagramItem()->name())
+            );
+        }
+        for (auto x: classStringPairs) {
+            if (sequenceClassStringPairs.contains(x)) {
+                classStringPairs.removeOne(x);
+            }
         }
 
-        PropertiesDialog propertiesDialog(this, existingClassesNames);
+        PropertiesDialog propertiesDialog(this, classStringPairs);
         propertiesDialog.exec();
-
         auto selectedClassName = propertiesDialog.selectedClassName();
         int positionOfSelectedClassName = propertiesDialog.positionOfSelectedClassName();
 
-        // empty
         if (positionOfSelectedClassName == -42) {
             return;
         }

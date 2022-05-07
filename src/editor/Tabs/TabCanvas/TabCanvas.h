@@ -119,10 +119,8 @@ public:
             if (dynamic_cast<T *>(x) == nullptr) {
                 continue;
             }
-
             items.push_back(dynamic_cast<T *>(x));
         }
-
         return items;
     }
 

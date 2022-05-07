@@ -7,8 +7,7 @@
 #include "EditorScene.h"
 
 EditorScene::EditorScene(QObject *parent)
-        : QGraphicsScene(parent)
-{
+        : QGraphicsScene(parent) {
     multSelect = false;
 }
 
@@ -36,7 +35,7 @@ void EditorScene::mousePressEvent(QGraphicsSceneMouseEvent *event) {
     if (movingItem != nullptr && event->button() == Qt::LeftButton) {
         oldPos = movingItem->pos();
     }
-    
+
     changeZval();
 
     if (multSelect == false) {
@@ -46,8 +45,7 @@ void EditorScene::mousePressEvent(QGraphicsSceneMouseEvent *event) {
     QGraphicsScene::mousePressEvent(event);
 }
 
-void EditorScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
-{
+void EditorScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
     if (movingItem != nullptr && event->button() == Qt::LeftButton) {
         if (oldPos != movingItem->pos()) {
             emit itemMoved(qgraphicsitem_cast<SequenceDiagramItem *>(movingItem), oldPos);
@@ -57,11 +55,11 @@ void EditorScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 
     QList<QGraphicsItem *> selItems = selectedItems();
 
-    for (auto x : selItems) {
+    for (auto x: selItems) {
         QList<QGraphicsItem *> collid = collidingItems(x);
         x->setZValue(1);
 
-        for (auto y : collid) {
+        for (auto y: collid) {
             y->setZValue(-1);
         }
     }
@@ -75,7 +73,7 @@ void EditorScene::changeZval() {
     ClassDiagramItem *ptr1;
     SequenceDiagramItem *ptr2;
 
-    for (auto x : selItems) {
+    for (auto x: selItems) {
         ptr1 = dynamic_cast<ClassDiagramItem *>(x);
         ptr2 = dynamic_cast<SequenceDiagramItem *>(x);
 
@@ -86,24 +84,22 @@ void EditorScene::changeZval() {
         QList<QGraphicsItem *> collid = collidingItems(x);
         x->setZValue(1);
 
-        for (auto y : collid) {
+        for (auto y: collid) {
             y->setZValue(-1);
         }
     }
     update();
 }
 
-void EditorScene::keyPressEvent(QKeyEvent *event)
-{
-    if(event->key() == Qt::Key_Control) {
+void EditorScene::keyPressEvent(QKeyEvent *event) {
+    if (event->key() == Qt::Key_Control) {
         multSelect = true;
     }
     QGraphicsScene::keyPressEvent(event);
 }
 
-void EditorScene::keyReleaseEvent(QKeyEvent *event)
-{
-    if(event->key() == Qt::Key_Control) {
+void EditorScene::keyReleaseEvent(QKeyEvent *event) {
+    if (event->key() == Qt::Key_Control) {
         multSelect = false;
     }
     QGraphicsScene::keyReleaseEvent(event);

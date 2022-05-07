@@ -132,14 +132,14 @@ void SequenceCanvas::deleteMessage_triggered() {
  * @param classDiagramItemParent pointer to an object from a class diagram scene
  */
 void SequenceCanvas::addEntity(ClassDiagramItem *classDiagramItemParent) {
-    qDebug() << __FILE__ << "name: " << classDiagramItemParent->name();
+    qDebug() << "got name: in constructor " << classDiagramItemParent->name();
     QPoint point = generateCoords();
 
     createActor = new actorParams(point.x(), point.y(), classDiagramItemParent->name(),
                                   classDiagramItemParent->color(), 80, 50);
 
     _undoStack->push(
-            new AddActorCommand(editorScene, createActor)
+            new AddActorCommand(editorScene, createActor, classDiagramItemParent)
     );
 
     delete createActor;
