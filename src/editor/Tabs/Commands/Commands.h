@@ -8,7 +8,7 @@
 
 #include <QUndoCommand>
 #include "../Connections/Connections.h"
-#include "../DiagramItem.h"
+#include "../DiagramItem/DiagramItem.h"
 #include "../FillItems/ObjectParams.h"
 
 /**

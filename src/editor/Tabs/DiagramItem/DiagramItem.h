@@ -10,8 +10,8 @@
 #include <QRandomGenerator>
 #include <QGraphicsPolygonItem>
 
-#include "Connections/Connections.h"
-#include "FillItems/ObjectParams.h"
+#include "../Connections/Connections.h"
+#include "../FillItems/ObjectParams.h"
 
 QT_BEGIN_NAMESPACE
 class QGraphicsItem;
@@ -81,13 +81,16 @@ public:
         _color = color;
     }
 
+public:
+    virtual QString name() const = 0;
+    virtual QPointF centre() const = 0;
+    virtual qsizetype occupiedSockets() const = 0;
+
+public:
     qreal rowHeight() const {
         return _rowHeight;
     }
 
-    QString name() const {
-        return _head->name();
-    }
 
     void setName(QString name) {
         _head->setName(name);
@@ -164,11 +167,11 @@ private:
     DiagramType _type;
     QColor _color;
 };
-
-class ActorLifetime : public QGraphicsLineItem {
-public:
-    ActorLifetime(QGraphicsItem *parent, QPointF startPoint);
-};
+//
+//class ActorLifetime : public QGraphicsLineItem {
+//public:
+//    ActorLifetime(QGraphicsItem *parent, QPointF startPoint);
+//};
 
 class ClassDiagramItem : public QGraphicsRectItem, public DiagramItem {
 public:
@@ -179,10 +182,20 @@ public:
 
     void removeConnection(ClassConnectionItem *connection);
 
-    QString name() const {
+public:
+    QString name() const override {
         return _head->toPlainText();
     }
 
+    QPointF centre() const override {
+        return {x() + width() / 2.0, y() + height() / 2.0};
+    }
+
+    qsizetype occupiedSockets() const override {
+        return _connections.count();
+    }
+
+public:
     QList<ClassTextAttr *> methods() {
         return _methods;
     }
@@ -278,10 +291,6 @@ public:
         return _flags;
     }
 
-    qsizetype occupiedSockets() const {
-        return _connections.count();
-    }
-
     QPointF socket(uint32_t n) const {
         const auto margin = std::min(std::min(height() / 2, width() / 2), 10.0);
         const QPointF points[3] = {QPointF(0, margin), QPointF(-margin, -margin), QPointF(-margin, margin)};
@@ -304,10 +313,6 @@ public:
         return pos() + QPoint(width(), height());
     }
 
-    QPointF centre() const {
-        return {x() + width() / 2.0, y() + height() / 2.0};
-    }
-
     void setTextFlags(QGraphicsTextItem *item) {
         item->setTextInteractionFlags(Qt::TextInteractionFlag::TextEditable |
                                       Qt::TextInteractionFlag::TextSelectableByMouse |
@@ -318,10 +323,10 @@ public:
         return _connections;
     }
 
-    void mousePressEvent(QGraphicsSceneMouseEvent *event);
+    void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
 
 protected:
-    QVariant itemChange(GraphicsItemChange change, const QVariant &value);
+    QVariant itemChange(GraphicsItemChange change, const QVariant &value) override;
 
 private:
     QList<ClassTextAttr *> _attrs;
@@ -337,17 +342,30 @@ class SequenceDiagramItem : public QGraphicsRectItem, public DiagramItem {
 public:
     explicit SequenceDiagramItem(actorParams *params, ClassDiagramItem *parentClassDiagramItem_ = nullptr);
 
+
+public:
+    QString name() const override {
+        return _head->toPlainText();
+    }
+
+    QPointF centre() const override {
+        return {x() + width() / 2.0, y()};
+    }
+
+    qsizetype occupiedSockets() const override {
+        return _connections.count();
+    }
+
+
+public:
     void addConnection(SequenceConnectionItem *connection);
-
     void removeConnection(SequenceConnectionItem *connection);
-
     ClassDiagramItem *parentClassDiagramItem() const {
         return _parentClassDiagramItem;
     }
 
 protected:
-    QVariant itemChange(GraphicsItemChange change, const QVariant &value);
-    //void mousePressEvent(QGraphicsSceneMouseEvent *event);
+    QVariant itemChange(GraphicsItemChange change, const QVariant &value) override;
 
 private:
     ClassDiagramItem *_parentClassDiagramItem = nullptr;

@@ -23,11 +23,11 @@ add_executable(proj
         src/editor/Tabs/TabCanvas/ClassCanvas.cpp
         src/editor/Tabs/TabCanvas/SequenceConnectionDialog/sequenceconnectiondialog.cpp
         src/editor/Tabs/DiagramItem/DiagramItem.cpp
-        src/editor/Tabs/DiagramItem/EditorScene/EditorScene.cpp
-        src/editor/Tabs/DiagramItem/Commands/Commands.cpp
-        src/editor/Tabs/DiagramItem/Connections/ClassConnectinos.cpp
+        src/editor/Tabs/EditorScene/EditorScene.cpp
+        src/editor/Tabs/Commands/Commands.cpp
+        src/editor/Tabs/Connections/ClassConnectinos.cpp
         src/editor/Tabs/TabCanvas/ItemsBuffer/Itemsbuffer.cpp
-        src/editor/Tabs/DiagramItem/FillItems/ObjectParams.cpp
+        src/editor/Tabs/FillItems/ObjectParams.cpp
         src/editor/Tabs/TabCanvas/SequenceCanvas.cpp
         src/editor/Backend/ClassDiagram.cpp
         src/editor/Backend/Parse.cpp
@@ -35,11 +35,11 @@ add_executable(proj
 
         src/MainWIndow/mainwindow.h
         src/editor/PropertiesDialog/propertiesdialog.h
-        src/editor/Tabs/DiagramItem/FillItems/ObjectParams.h
+        src/editor/Tabs/FillItems/ObjectParams.h
         src/editor/Tabs/DiagramItem/DiagramItem.h
-        src/editor/Tabs/DiagramItem/EditorScene/EditorScene.h
-        src/editor/Tabs/DiagramItem/Commands/Commands.h
-        src/editor/Tabs/DiagramItem/Connections/Connections.h
+        src/editor/Tabs/EditorScene/EditorScene.h
+        src/editor/Tabs/Commands/Commands.h
+        src/editor/Tabs/Connections/Connections.h
         src/editor/EditorInterface/editorinterface.h
         src/editor/Tabs/TabCanvas/TabCanvas.h
         src/editor/Tabs/TabCanvas/SequenceConnectionDialog/sequenceconnectiondialog.h
@@ -48,7 +48,7 @@ add_executable(proj
         src/editor/Backend/Parse.h
         src/editor/Backend/SeqDiagram.h
         src/editor/Backend/json.hpp
-        src/editor/Tabs/DiagramItem/Connections/SequenceConnections.cpp)
+        src/editor/Tabs/Connections/SequenceConnections.cpp src/editor/Tabs/DiagramItem/ClassDiagramItem.cpp src/editor/Tabs/DiagramItem/SequenceDiagramItem.cpp src/editor/Tabs/DiagramItem/SequenceDiagramLifeLine.cpp src/editor/Tabs/DiagramItem/SequenceDiagramLifeLine.h)
 target_link_libraries(proj
         Qt::Core
         Qt::Gui

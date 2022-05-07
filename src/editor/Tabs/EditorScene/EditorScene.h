@@ -8,7 +8,7 @@
 
 #include <QObject>
 #include <QGraphicsScene>
-#include "../DiagramItem.h"
+#include "../DiagramItem/DiagramItem.h"
 
 class SequenceDiagramItem;
 QT_BEGIN_NAMESPACE

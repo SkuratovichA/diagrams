@@ -6,7 +6,7 @@
 #define DIAGRAMS_ITEMSBUFFER_H
 
 #include "../../DiagramItem/DiagramItem.h"
-#include "../../DiagramItem/FillItems/ObjectParams.h"
+#include "../../FillItems/ObjectParams.h"
 
 class ItemsBuffer {
 public:

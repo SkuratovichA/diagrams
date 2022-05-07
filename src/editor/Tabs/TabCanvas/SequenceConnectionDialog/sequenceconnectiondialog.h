@@ -2,7 +2,7 @@
 #define SEQUENCECONNECTIONDIALOG_H
 
 #include <QDialog>
-#include "../../DiagramItem/Connections/Connections.h"
+#include "../../Connections/Connections.h"
 
 namespace Ui {
     class SequenceConnectionDialog;

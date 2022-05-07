@@ -9,10 +9,10 @@
 #include <QUndoGroup>
 #include <QGraphicsView>
 
-#include "../DiagramItem/EditorScene/EditorScene.h"
-#include "../DiagramItem/Commands/Commands.h"
+#include "../EditorScene/EditorScene.h"
+#include "../Commands/Commands.h"
 #include "../DiagramItem/DiagramItem.h"
-#include "../DiagramItem/FillItems/ObjectParams.h"
+#include "../FillItems/ObjectParams.h"
 #include "ItemsBuffer/Itemsbuffer.h"
 #include "../../Backend/Parse.h"
 

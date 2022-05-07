@@ -10,7 +10,7 @@
 #include <QPainter>
 
 #include "Connections.h"
-#include "../DiagramItem.h"
+#include "../DiagramItem/DiagramItem.h"
 
 /**
  *
@@ -21,12 +21,14 @@
 SequenceConnectionItem::SequenceConnectionItem(SequenceDiagramItem *fromNode,
                                                SequenceDiagramItem *toNode,
                                                SequenceConnectionType connectionType) {
+    // rememder connections
     nodeFrom = fromNode;
     nodeTo = toNode;
     nodeFrom->addConnection(this);
     nodeTo->addConnection(this);
 
     setPen(QPen(Qt::black));
+
     auto wid1 = nodeFrom->width() / 2.0;
     auto wid2 = nodeTo->width() / 2.0;
     auto line = QGraphicsLineItem(wid1, 400, wid2, 400, this);
@@ -42,8 +44,10 @@ QVariant SequenceConnectionItem::itemChange(GraphicsItemChange change, const QVa
     return QGraphicsItem::itemChange(change, value);
 }
 
+
+
 void SequenceConnectionItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) {
-    painter->drawLine(nodeFrom->width() / 2.0, y(), nodeTo->width() / 2.0, y());
+    painter->drawLine(nodeFrom->centre().x(), y(), nodeTo->centre().y(), y());
     qDebug() << "paint" << nodeFrom->width() / 2.0 << y() << nodeTo->width() / 2.0 << y();
 }
 
@@ -80,20 +84,4 @@ QColor SequenceConnectionItem::color() const {
  */
 void SequenceConnectionItem::trackNodes() {
     setLine(QLineF(nodeFrom->pos(), nodeTo->pos()));
-}
-
-/**
- *
- * @return
- */
-SequenceDiagramItem *SequenceConnectionItem::fromNode() const {
-    return nodeFrom;
-}
-
-/**
- *
- * @return
- */
-SequenceDiagramItem *SequenceConnectionItem::toNode() const {
-    return nodeTo;
 }

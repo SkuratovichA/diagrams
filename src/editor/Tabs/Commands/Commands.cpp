@@ -5,7 +5,7 @@
 
 #include "Commands.h"
 #include "../Connections/Connections.h"
-#include "../DiagramItem.h"
+#include "../DiagramItem/DiagramItem.h"
 
 #include <QGraphicsScene>
 

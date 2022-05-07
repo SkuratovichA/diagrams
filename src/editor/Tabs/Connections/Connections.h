@@ -14,6 +14,7 @@ class SequenceDiagramItem;
 
 class msgText;
 
+
 /**
  *
  */
@@ -119,6 +120,7 @@ public:
         Synchronous, Asynchronous, Reply, Create, Delete,
     };
 
+public:
     SequenceConnectionItem(
             SequenceDiagramItem *fromNode,
             SequenceDiagramItem *toNode,
@@ -126,13 +128,18 @@ public:
 
     ~SequenceConnectionItem();
 
+public:
     QColor color() const;
-
     void trackNodes();
 
-    SequenceDiagramItem *fromNode() const;
+    SequenceDiagramItem *fromNode() const {
+        return nodeFrom;
+    };
 
-    SequenceDiagramItem *toNode() const;
+    SequenceDiagramItem *toNode() const {
+        return nodeTo;
+    };
+
 public:
     QVariant itemChange(GraphicsItemChange change, const QVariant &value);
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
