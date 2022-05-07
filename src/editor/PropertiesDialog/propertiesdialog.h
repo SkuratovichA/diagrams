@@ -2,6 +2,7 @@
 #define PROPERTIESDIALOG_H
 
 #include <QDialog>
+#include "../Tabs/DiagramItem/DiagramItem.h"
 
 namespace Ui {
     class PropertiesDialog;
@@ -11,7 +12,7 @@ class PropertiesDialog : public QDialog {
 Q_OBJECT
 
 public:
-    explicit PropertiesDialog(QWidget *parent = nullptr, QList<QString> existingClasses = QList<QString>());
+    explicit PropertiesDialog(QWidget *parent, QList<QPair<ClassDiagramItem *, QString>> &existingClasses);
     ~PropertiesDialog();
 
 public:

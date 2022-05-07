@@ -26,7 +26,8 @@ QList<QPair<ClassDiagramItem *, QString>> ClassCanvas::getClassStringPairs() {
         QPair<ClassDiagramItem *, QString> pair;
         pair.first = x;
         pair.second = x->_head->toPlainText();
-        listPairs.push_back(pair);
+        listPairs.append(pair);
+//        listPairs.push_back(pair);
     }
 
     return listPairs;

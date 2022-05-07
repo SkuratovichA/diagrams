@@ -7,14 +7,15 @@
 
 #include "propertiesdialog.h"
 #include "ui_propertiesdialog.h"
+#include "../Tabs/DiagramItem/DiagramItem.h"
 
-PropertiesDialog::PropertiesDialog(QWidget *parent, QList<QString> existingClasses) :
+PropertiesDialog::PropertiesDialog(QWidget *parent, QList<QPair<ClassDiagramItem * , QString>> &existingClasses) :
         QDialog(parent),
         ui(new Ui::PropertiesDialog) {
     ui->setupUi(this);
 
-    for (auto classname: existingClasses) {
-        auto *item = new QListWidgetItem(classname);
+    for (auto classAddressClassname: existingClasses) {
+        auto *item = new QListWidgetItem(classAddressClassname.second);
         ui->listWidget->addItem(item);
     }
 }

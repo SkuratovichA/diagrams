@@ -13,7 +13,6 @@
 #include "Connections/Connections.h"
 #include "FillItems/ObjectParams.h"
 
-
 QT_BEGIN_NAMESPACE
 class QGraphicsItem;
 
@@ -47,6 +46,15 @@ public:
     NameObject(QGraphicsItem *parent, QFlags<Qt::TextInteractionFlag> flags, qreal x, qreal y, QString str);
     ~NameObject();
 
+public:
+    QString name() const {
+        return toPlainText();
+    }
+
+    void setName(QString name) {
+        setPlainText(name.toStdString().c_str());
+    }
+
     QGraphicsItem *parent() {
         return _parent;
     }
@@ -76,6 +84,14 @@ public:
 
     qreal rowHeight() const {
         return _rowHeight;
+    }
+
+    QString name() const {
+        return _head->name();
+    }
+
+    void setName(QString name) {
+        _head->setName(name);
     }
 
     qreal rowWidth() const {
@@ -155,23 +171,6 @@ public:
     ActorLifetime(QGraphicsItem *parent, QPointF startPoint);
 
     ~ActorLifetime();
-};
-
-class SequenceDiagramItem : public QGraphicsRectItem, public DiagramItem {
-public:
-    explicit SequenceDiagramItem(actorParams *params);
-
-    void addConnection(ActorConnectionItem *connection);
-
-    void removeConnection(ActorConnectionItem *connection);
-
-protected:
-    QVariant itemChange(GraphicsItemChange change, const QVariant &value);
-    //void mousePressEvent(QGraphicsSceneMouseEvent *event);
-
-private:
-    QSet<ActorConnectionItem *> _connections;
-    QGraphicsLineItem *line;
 };
 
 class ClassDiagramItem : public QGraphicsRectItem, public DiagramItem {
@@ -287,7 +286,7 @@ public:
     }
 
     QPointF socket(uint32_t n) const {
-        const auto margin = std::min(std::min(height()/2, width()/2), 10.0);
+        const auto margin = std::min(std::min(height() / 2, width() / 2), 10.0);
         const QPointF points[3] = {QPointF(0, margin), QPointF(-margin, -margin), QPointF(-margin, margin)};
         return centre() + points[n % 3];
     }
@@ -335,7 +334,28 @@ private:
     QFlags<Qt::TextInteractionFlag> _flags;
 
     QSet<ClassConnectionItem *> _connections;
-    uint32_t _numberOfSockets = 20;
+};
+
+class SequenceDiagramItem : public QGraphicsRectItem, public DiagramItem {
+public:
+    explicit SequenceDiagramItem(actorParams *params, ClassDiagramItem *parentClassDiagramItem_ = nullptr);
+
+    void addConnection(ActorConnectionItem *connection);
+
+    void removeConnection(ActorConnectionItem *connection);
+
+    ClassDiagramItem *parentClassDiagramItem() const {
+        return _parentClassDiagramItem;
+    }
+
+protected:
+    QVariant itemChange(GraphicsItemChange change, const QVariant &value);
+    //void mousePressEvent(QGraphicsSceneMouseEvent *event);
+
+private:
+    ClassDiagramItem *_parentClassDiagramItem = nullptr;
+    QSet<ActorConnectionItem *> _connections;
+    QGraphicsLineItem *line;
 };
 
 #endif // Object_H

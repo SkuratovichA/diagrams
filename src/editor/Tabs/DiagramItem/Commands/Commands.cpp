@@ -121,11 +121,11 @@ void DeleteCommand::redo() {
 /**
  *
  */
-AddActorCommand::AddActorCommand(QGraphicsScene *scene, actorParams *params, QUndoCommand *parent)
+AddActorCommand::AddActorCommand(QGraphicsScene *scene, actorParams *params, ClassDiagramItem *parentClassDiagramItem,QUndoCommand *parent)
         : QUndoCommand(parent), graphicsScene(scene) {
     static int itemCount = 0;
 
-    diagramItem = new SequenceDiagramItem(params);
+    diagramItem = new SequenceDiagramItem(params, parentClassDiagramItem);
     initialStartPosition = QPointF(params->x(), params->y());
     itemCount++;
     scene->update();

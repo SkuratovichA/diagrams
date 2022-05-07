@@ -28,7 +28,7 @@ public:
 
     bool mergeWith(const QUndoCommand *command) override;
 
-    int id() const override { return Id; }
+    int id() const override {return Id;}
 
 private:
     QGraphicsItem *diagramItem;
@@ -56,7 +56,8 @@ private:
  */
 class AddActorCommand : public QUndoCommand {
 public:
-    explicit AddActorCommand(QGraphicsScene *scene, actorParams *params, QUndoCommand *parent = nullptr);
+    explicit AddActorCommand(QGraphicsScene *scene, actorParams *params, ClassDiagramItem *parentClassDiagramItem,
+                             QUndoCommand *parent = nullptr);
 
     ~AddActorCommand();
 
@@ -75,7 +76,7 @@ private:
  */
 class AddClassCommand : public QUndoCommand {
 public:
-    explicit AddClassCommand(QGraphicsScene *scene, classParams* params, QUndoCommand *parent = nullptr);
+    explicit AddClassCommand(QGraphicsScene *scene, classParams *params, QUndoCommand *parent = nullptr);
 
     ~AddClassCommand();
 
@@ -134,7 +135,6 @@ private:
 //    QPointF initialStartPosition;
 //    QPointF initialEndPosition;
 };
-
 
 QString createCommandString(SequenceDiagramItem *item, const QPointF &point);
 

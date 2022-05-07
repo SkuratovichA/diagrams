@@ -118,6 +118,7 @@ private:
     QAction *deleteTabAction;
     QAction *undoAction;
     QAction *redoAction;
+
 };
 
 #endif // EDITORINTERFACE_H
