@@ -34,7 +34,7 @@ ClassTextAttr::~ClassTextAttr() {
 }
 
 /**
- * Handle an event of the text editing to align it.
+ * Handle an event of the text editing for object attributes to align it.
  * In the case of entering "Key_Enter" the text editing is ended.
  *
  * @param event key event
@@ -127,6 +127,17 @@ SequenceDiagramItem::SequenceDiagramItem(actorParams *params)
     setRect(boundingBox());
 }
 
+
+/**
+ * Notify custom items that some part of the item's state changes.
+ * Reimplementation of this function provides a possibility to move
+ * an item only on x axis.
+ *
+ * @param change what was changed
+ * @param value new value of changed item
+ *
+ * @return new value
+ */
 QVariant SequenceDiagramItem::itemChange(GraphicsItemChange change, const QVariant &value) {
     if (change == ItemPositionChange)
         return QPointF(value.toPointF().x(), pos().y());
@@ -134,16 +145,18 @@ QVariant SequenceDiagramItem::itemChange(GraphicsItemChange change, const QVaria
 }
 
 /**
+ * Add a connection to the set of connections for certain item.
  *
- * @param connection
+ * @param connection message arrow between objects
  */
 void SequenceDiagramItem::addConnection(ActorConnectionItem *connection) {
     _connections.insert(connection);
 }
 
 /**
+ * Remove a connection to the set of connections for certain item.
  *
- * @param connection
+ * @param connection message arrow between objects
  */
 void SequenceDiagramItem::removeConnection(ActorConnectionItem *connection) {
     _connections.remove(connection);
@@ -210,21 +223,29 @@ ClassDiagramItem::ClassDiagramItem(classParams *params)
 }
 
 /**
+ * Add a connection to the set of connections for certain item.
  *
- * @param connection
+ * @param connection relation arrow between objects
  */
 void ClassDiagramItem::addConnection(ClassConnectionItem *connection) {
     _connections.insert(connection);
 }
 
 /**
+ * Remove a connection to the set of connections for certain item.
  *
- * @param connection
+ * @param connection relation arrow between objects
  */
 void ClassDiagramItem::removeConnection(ClassConnectionItem *connection) {
     _connections.remove(connection);
 }
 
+/**
+ * Handle an event of the item selection.
+ * In the case of the Right button click, the item becomes a selected.
+ *
+ * @param event mouse event
+ */
 void ClassDiagramItem::mousePressEvent(QGraphicsSceneMouseEvent *event) {
     if (event->button() == Qt::RightButton) {
         setSelected(true);
@@ -232,10 +253,14 @@ void ClassDiagramItem::mousePressEvent(QGraphicsSceneMouseEvent *event) {
 }
 
 /**
+ * Notify custom items that some part of the item's state changes.
+ * Reimplementation of this function provides a possibility for relation
+ * arrows to track a moved item on the scene.
  *
- * @param change
- * @param value
- * @return
+ * @param change what was changed
+ * @param value new value of changed item
+ *
+ * @return new value
  */
 QVariant ClassDiagramItem::itemChange(GraphicsItemChange change, const QVariant &value) {
     if (change == ItemPositionHasChanged) {
@@ -276,8 +301,10 @@ NameObject::NameObject(QGraphicsItem *parent, QFlags<Qt::TextInteractionFlag> fl
 }
 
 /**
+ * Handle an event of the text editing for object name to align it.
+ * In the case of entering "Key_Enter" the text editing is ended.
  *
- * @param event
+ * @param event key event
  */
 void NameObject::keyReleaseEvent(QKeyEvent *event) {
     if ((event->key() == Qt::Key_Enter) || (event->key() == Qt::Key_Return)) {
@@ -293,9 +320,13 @@ void NameObject::keyReleaseEvent(QKeyEvent *event) {
 }
 
 /**
+ * A constructor.
  *
- * @param parent
- * @param startPoint
+ * This constructor creates lifetime line for an entity and connects
+ * with parent item.
+ *
+ * @param parent parent item
+ * @param startPoint start position of life time
  */
 ActorLifetime::ActorLifetime(QGraphicsItem *parent, QPointF startPoint) : QGraphicsLineItem(parent) {
     auto x = startPoint.x();
