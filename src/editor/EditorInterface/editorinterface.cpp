@@ -190,13 +190,12 @@ void editorInterface::createDynamicToolBar() {
  *
  * @return
  */
-QString editorInterface::get_text_representation() {
+void editorInterface::get_text_representation() {
     auto size = tabWidget->count();
-    std::string prg;
+    qDebug() << size;
     for (int i = 0; i < size; i++) {
-//        prg += reinterpret_cast<TabCanvas *>(tabWidget->widget(i))->getStringRepresentation();
+        reinterpret_cast<TabCanvas *>(tabWidget->widget(i))->getStringRepresentation(prg);
     }
-    return {prg.c_str()};
 }
 
 /**
@@ -215,9 +214,11 @@ void editorInterface::actionSave_triggered() {
     }
 
     QTextStream in(&file);
-    auto prg = get_text_representation();
-    qDebug() << prg;
-    in << prg;
+    get_text_representation();
+    //prg.fill_file();
+
+    //qDebug() << prg;
+    //in << prg;
     file.close();
 }
 
@@ -227,6 +228,8 @@ void editorInterface::actionSave_triggered() {
 void editorInterface::actionSaveAs_triggered() {
     filename = QFileDialog::getSaveFileName(this, tr("Save Address Book"), QDir::homePath(),
                                             filenameFilter);
+
+    qDebug() << filename << "save here";
     if (filename == nullptr || filename.isEmpty()) {
         return;
     }
@@ -237,9 +240,11 @@ void editorInterface::actionSaveAs_triggered() {
         return;
     }
     QTextStream in(&file);
-    auto prg = get_text_representation();
-    qDebug() << prg;
-    in << prg;
+    get_text_representation();
+    //prg.fill_file();
+
+    //qDebug() << prg;
+    //in << prg;
     file.close();
 }
 

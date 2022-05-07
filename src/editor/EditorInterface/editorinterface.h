@@ -7,6 +7,7 @@
 #include "../Tabs/TabCanvas/TabCanvas.h"
 #include "../Tabs/DiagramItem/DiagramItem.h"
 #include "../PropertiesDialog/propertiesdialog.h"
+#include "../Backend/Parse.h"
 
 namespace Ui {
     class editorInterface;
@@ -80,10 +81,11 @@ private:
 
     void createDynamicToolBar();
 
-    QString get_text_representation();
+    void get_text_representation();
 
 private:
     QTabWidget *tabWidget;
+    Program prg;
 
     QUndoGroup *undoStack = nullptr;
     QUndoView *undoView = nullptr;
@@ -110,7 +112,6 @@ private:
     QMenu *editMenu;
     QMenu *actionMenu;
     QMenu *fileMenu;
-//    PropertiesDialog *propertiesdialog;
 
     QAction *newTabAction;
     QAction *saveAction;

@@ -19,7 +19,18 @@ EditorScene::EditorScene(QObject *parent)
 void EditorScene::mousePressEvent(QGraphicsSceneMouseEvent *event) {
     QPointF mousePos(event->buttonDownScenePos(Qt::LeftButton).x(),
                      event->buttonDownScenePos(Qt::LeftButton).y());
-    const QList<QGraphicsItem *> itemList = items(mousePos);
+    QList<QGraphicsItem *> itemList = items(mousePos);
+
+//    if (itemList.isEmpty()) {
+//        movingItem = nullptr;
+//    }
+//    else {
+//        //qDebug() << "item was found" << itemList.size();
+//        //qDebug() << dynamic_cast<QGraphicsTextItem *>(itemList.takeAt(0))->toPlainText();
+//        //movingItem = itemList.first()->childItems().isEmpty() ? itemList.first() : itemList.first()->parentItem() ;
+//    }
+    //TODO: fix me pls)))))
+
     movingItem = itemList.isEmpty() ? nullptr : itemList.first();
 
     if (movingItem != nullptr && event->button() == Qt::LeftButton) {

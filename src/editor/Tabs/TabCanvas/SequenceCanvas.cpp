@@ -24,6 +24,10 @@ QPoint SequenceCanvas::generateCoords() const {
     return QPoint(QRandomGenerator::global()->bounded(600), QRandomGenerator::global()->bounded(600));
 }
 
+void SequenceCanvas::getStringRepresentation(Program &prg) {
+    return;
+}
+
 void SequenceCanvas::createSequenceContextMenu() {
     ADD_SIGNAL(asynchronousMessage, "Asynchronous Message", "+", "+", this, SLOT(asynchronousMessage_triggered()));
     ADD_SIGNAL(synchronousMessage, "Synchronous Message", "+", "+", this, SLOT(synchronousMessage_triggered()));
@@ -51,10 +55,6 @@ void SequenceCanvas::showContextMenu(const QPoint &pos) {
     } else {
         assert(!"implement sequence menu invocation");
     }
-}
-
-std::string SequenceCanvas::getStringRepresentation() const {
-    return {"hui"};
 }
 
 void SequenceCanvas::asynchronousMessage_triggered() {

@@ -8,18 +8,10 @@
 #include <fstream>
 #include "json.hpp"
 
-#include "seq_diagram.h"
-#include "class_diagram.h"
+#include "SeqDiagram.h"
+#include "ClassDiagram.h"
 
 using json = nlohmann::json;
-
-class Note {
-public:
-    std::vector<double> coords;
-    std::string msg;
-
-    void fill_note(const json el);
-};
 
 json check_null(std::string val);
 
@@ -29,6 +21,7 @@ public:
     std::vector<dgrm_seq_t> diagram_sequence;
     DiagramClass obj_cl;
     DiagramSequence obj_se;
+
 
     void parse_file(const json file);
 

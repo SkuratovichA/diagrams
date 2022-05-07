@@ -35,12 +35,29 @@ ClassConnectionItem::ClassConnectionItem(ClassDiagramItem *fromNode,
     _color = color;
     _order = order;
 
-    QFlags<Qt::TextInteractionFlag> _flags = Qt::TextInteractionFlag::TextEditable |
-             Qt::TextInteractionFlag::TextSelectableByMouse |
-             Qt::TextInteractionFlag::TextSelectableByKeyboard;
+    leftNum = new msgText(this, getFlags(), 0, 0, "0..n");
+    msg = new msgText(this, getFlags(), 0, 0, "Method");
+    rightNum = new msgText(this, getFlags(), 0, 0, "1..n");
 
     setZValue(-1.0);
     trackNodes();
+}
+
+msgText::msgText(QGraphicsItem *parent, QFlags<Qt::TextInteractionFlag> flags, qreal x, qreal y, QString str)
+ : QGraphicsTextItem(str, parent) {
+    _parent = parent;
+    setPos(x, y);
+    setFont(QFont("Courier", 10));
+    setTextInteractionFlags(flags);
+    topLevelItem();
+}
+
+void msgText::keyReleaseEvent(QKeyEvent *event) {
+    if ((event->key() == Qt::Key_Enter) || (event->key() == Qt::Key_Return)) {
+        setPlainText(toPlainText().remove('\n'));
+        clearFocus();
+        return;
+    }
 }
 
 /**
@@ -112,11 +129,11 @@ QPair<QPointF, QPointF> ClassConnectionItem::edgePoints() const {
             xTo = _nodeTo->centre().x() - toWidthHalf;
             yTo = -(c + a * xTo) / b;
             // if a point is not placed to the centre of the box
-            // compute interseptions like there was #2 octant.
+            // compute intersections like there was #2 octant.
             // Basically, the idea is the same for all the octants.
-            // If one octant cannot find the interseptions. E.g. line is found using the formula,
-            // the interseption point does not lie on the edge we want ->
-            // use the same formula for finding an interseption point for n+1 octant
+            // If one octant cannot find the intersections. E.g. line is found using the formula,
+            // the intersection point does not lie on the edge we want ->
+            // use the same formula for finding an intersection point for n+1 octant
             if (yTo > _nodeTo->bottomLeft().y()) {
                 yTo = _nodeTo->centre().y() + toHeightHalf;
                 xTo = -(c + b * yTo) / a;
@@ -464,21 +481,35 @@ void ClassConnectionItem::drawLine(QPainter *painter, const QStyleOptionGraphics
  * @param widget
  */
 void ClassConnectionItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) {
-    auto p = (_nodeTo->socket(order()) + _nodeFrom->socket(order()))/2;
-
-    QString str = "jjjjjjjjjjjjj";
-    QFontMetricsF metrics{qApp->font()};
-    QRectF rect = metrics.boundingRect(str);
 #if DEBUG
     painter->setPen(QPen(QColor(0, 0, 0, 100), 0.5, Qt::DotLine));
     painter->drawPolygon(lineShaper());
-    auto qpoly = QRectF(rect.topLeft() + p, rect.bottomRight()+p);
-    painter->drawPolygon(qpoly);
 #endif
     drawLine(painter, option);
-    painter->setPen(Qt::black);
+    QPointF pText = (_nodeTo->socket(order()) + _nodeFrom->socket(order()))/2;
+    QPair<QPointF, QPointF> ep = edgePoints();
 
-    painter->drawText(QRectF(rect.topLeft() + p, rect.bottomRight()+p), str);
+//    QPointF pLeft = QPointF(
+//            _nodeFrom->pos().x() + _nodeFrom->width() + 20,
+//            _nodeFrom->pos().y() + _nodeFrom->height()/2.0 + 20);
+//    QPointF pRight = QPointF(
+//            _nodeTo->pos().x() - 20,
+//            _nodeTo->pos().y() + _nodeTo->height()/2.0 + 20);
+
+    qreal widthText = msg->boundingRect().width();
+    qreal widthLeft = leftNum->boundingRect().width();
+    qreal widthRight = rightNum->boundingRect().width();
+
+    QPointF pLeft = QPointF(
+            ep.first.x() + _nodeFrom->width() + 20,
+            _nodeFrom->pos().y() + _nodeFrom->height()/2.0 + 20);
+    QPointF pRight = QPointF(
+            _nodeTo->pos().x() - 20,
+            _nodeTo->pos().y() + _nodeTo->height()/2.0 + 20);
+
+    msg->setPos(pText.x() - widthText/2.0, pText.y() - 30);
+    leftNum->setPos(pLeft);
+    rightNum->setPos(pRight);
 }
 
 /**

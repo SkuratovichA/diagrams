@@ -19,6 +19,28 @@ QPoint ClassCanvas::generateCoords() const {
     return QPoint(QRandomGenerator::global()->bounded(600), QRandomGenerator::global()->bounded(600));
 }
 
+void ClassCanvas::getStringRepresentation(Program &prg) {
+    std::vector<Class> objects;
+    std::vector<Conct> connects;
+    ItemsBuffer buf;
+
+    for (auto x : getItems<ClassDiagramItem>()) {
+        buf.fillClassItems(x);
+    }
+
+//    for (auto x : getItems<ClassConnectionItem>()) {
+//        buf.fillConnectsItems(x);
+//    }
+
+    for (auto x : buf.classItems()) {
+        Class tmp;
+        tmp.name = x->name().toStdString();
+        tmp.width = x->width();
+        tmp.height = x->height();
+        qDebug() << "class" << x->name() << x->color();
+    }
+}
+
 void ClassCanvas::createEntityClassContextMenu() {
     ADD_SIGNAL(addMethod, "Add &Method", "+", "+", this, SLOT(addMethod_triggered()));
     ADD_SIGNAL(rmMethod, "Delete &Method", "+", "+", this, SLOT(rmMethod_triggered()));

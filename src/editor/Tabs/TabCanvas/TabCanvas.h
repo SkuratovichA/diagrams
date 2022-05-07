@@ -14,6 +14,7 @@
 #include "../DiagramItem/DiagramItem.h"
 #include "../DiagramItem/FillItems/FillItems.h"
 #include "ItemsBuffer/Itemsbuffer.h"
+#include "../../Backend/Parse.h"
 
 class editorInterface;
 
@@ -112,6 +113,20 @@ public:
     }
 
     template<typename T>
+    QList<T *> getItems() {
+        QList<T *> items;
+        for (auto x : editorScene->items()) {
+            if (dynamic_cast<T *>(x) == nullptr) {
+                continue;
+            }
+
+            items.push_back(dynamic_cast<T *>(x));
+        }
+
+        return items;
+    }
+
+    template<typename T>
     void setZvalue(QList<QGraphicsItem *> items, int val) {
         T *ptr1;
         for (auto x: items) {
@@ -166,7 +181,7 @@ public:
     // region Virtual methods
 public:
     virtual QPoint generateCoords() const = 0;
-    virtual std::string getStringRepresentation() const = 0;
+    virtual void getStringRepresentation(Program &prg) = 0;
     // endregion
 // endregion
 
@@ -213,7 +228,7 @@ public:
     ClassCanvas(QWidget *parent = nullptr, QUndoGroup *parentGroup = nullptr);
 
 public:
-    std::string getStringRepresentation() const override {return {"hui"};}
+    void getStringRepresentation(Program &prg) override;
 
     QPoint generateCoords() const override;
 
@@ -293,7 +308,7 @@ public slots:
     void deleteMessage_triggered();
 
 public:
-    std::string getStringRepresentation() const override;
+    void getStringRepresentation(Program &prg) override;
     QPoint generateCoords() const override;
 
 private:
