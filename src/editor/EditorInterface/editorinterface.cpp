@@ -72,15 +72,16 @@ editorInterface::editorInterface(
     createUndoView();
     createDynamicToolBar();
 
-    createTabs();
-    setCentralWidget(tabWidget);
-
     if (openDiagram) {
         Program prg1;
         prg1.parse_file(filename.toStdString());
         // check if the parsing was successful
         // downloadDiagrams();
+        return;
     }
+
+    createTabs();
+    setCentralWidget(tabWidget);
 }
 
 /**
@@ -228,7 +229,7 @@ void editorInterface::createDynamicToolBar() {
 /**
  * TODO
  */
-bool editorInterface::get_text_representation() {
+bool editorInterface::getTextRepresentation(Program &prg) {
     auto size = tabWidget->count();
     for (int i = 0; i < size; i++) {
         if (! reinterpret_cast<TabCanvas *>(tabWidget->widget(i))->getStringRepresentation(prg) ) {
@@ -239,14 +240,38 @@ bool editorInterface::get_text_representation() {
     return true;
 }
 
+/**
+ * TODO
+ */
+void editorInterface::readFile() {
+    tabWidget = new QTabWidget(this);
+    connect(tabWidget, SIGNAL(currentChanged(int)), this, SLOT(newTabSelected()));
+
+    Program prg;
+//    tabWidget->addTab(new ClassCanvas(this, undoStack), "class Diagram");
+//    if (! reinterpret_cast<TabCanvas *>(tabWidget->widget(i))->getStringRepresentation(prg) ) {
+//        return false;
+//    }
+//
+//
+//    tabWidget->addTab(new SequenceCanvas(this, undoStack), "sequence Diagram");
+//
+//    setCentralWidget(tabWidget);
+}
+
+/**
+ * TODO
+ */
 void editorInterface::writeFile() {
+    Program prg;
+
     QFile file(filename);
     if (!file.open(QIODevice::WriteOnly)) {
         QMessageBox::information(this, tr("Unable to open file"), file.errorString());
         return;
     }
 
-    if ( !get_text_representation() ) {
+    if ( !getTextRepresentation(prg) ) {
         return;
     }
 

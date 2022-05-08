@@ -66,12 +66,12 @@ private:
     void createUndoView();
     void createTabs();
     void createDynamicToolBar();
-    bool get_text_representation();
+    bool getTextRepresentation(Program &prg);
+    void readFile();
     void writeFile();
 
 private:
     QTabWidget *tabWidget;
-    Program prg;
 
     QUndoGroup *undoStack = nullptr;
     QUndoView *undoView = nullptr;

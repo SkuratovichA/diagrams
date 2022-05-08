@@ -53,6 +53,15 @@ QList<QPair<ClassDiagramItem *, QString>> ClassCanvas::getClassStringPairs() {
 }
 
 /**
+ * TODO
+ * @param buf
+ * @return
+ */
+bool ClassCanvas::createFromFile(ItemsBuffer buf) {
+    return true;
+}
+
+/**
  * // TODO
  * @param prg
  */

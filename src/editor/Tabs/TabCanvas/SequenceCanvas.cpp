@@ -37,6 +37,15 @@ QPoint SequenceCanvas::generateCoords() const {
 }
 
 /**
+ * TODO
+ * @param buf
+ * @return
+ */
+bool SequenceCanvas::createFromFile(ItemsBuffer buf) {
+    return true;
+}
+
+/**
  * // TODO
  * @param prg
  */

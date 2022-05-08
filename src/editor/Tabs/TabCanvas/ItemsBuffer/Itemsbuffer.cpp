@@ -10,9 +10,7 @@ ItemsBuffer::ItemsBuffer() {
 }
 
 ItemsBuffer::~ItemsBuffer() {
-    qDebug() << "I was called, without loop!";
     for (auto x : classItems()) {
-        qDebug() << "I was called!";
         delete x;
     }
 }
