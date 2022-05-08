@@ -17,14 +17,14 @@ public:
     ~SequenceConnectionDialog();
 
 public:
-    SequenceConnectionItem::SequenceConnectionType messageType();
+    SequenceConnectionItem::ConnectionType messageType();
 
 private slots:
     void on_pushButton_clicked();
 
 private:
     Ui::SequenceConnectionDialog *ui;
-    SequenceConnectionItem::SequenceConnectionType index;
+    SequenceConnectionItem::ConnectionType index;
 };
 
 #endif // SEQUENCECONNECTIONDIALOG_H

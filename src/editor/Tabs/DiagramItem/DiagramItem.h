@@ -351,12 +351,10 @@ public:
         return {width() / 2.0, height()};
     }
 
-    [[nodiscard]] qsizetype occupiedSockets() const {
-        return _connections.count();
-    }
-
 public:
-    void addConnection(SequenceConnectionItem *connection);
+    void addConnection(SequenceConnectionItem *connection,
+                       SequenceConnectionItem::ConnectionType connectionType,
+                       SequenceConnectionItem::ActorType actorType);
     void removeConnection(SequenceConnectionItem *connection);
 
     [[nodiscard]] ClassDiagramItem *parentClassDiagramItem() const {
@@ -368,7 +366,6 @@ protected:
 
 private:
     ClassDiagramItem *_parentClassDiagramItem = nullptr;
-    QSet<SequenceConnectionItem *> _connections;
     SequenceDiagramLifeLine *_lifeLine = nullptr;
     qreal const lineDefaultLength = 500;
 };

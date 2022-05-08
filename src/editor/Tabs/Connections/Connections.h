@@ -116,38 +116,55 @@ private:
  */
 class SequenceConnectionItem : public QGraphicsLineItem {
 public:
-    enum SequenceConnectionType {
-        Synchronous, Asynchronous, Reply, Create, Delete,
+    enum ConnectionType {
+        Synchronous,
+        Asynchronous,
+        Reply,
+        Create,
+        Delete,
+    };
+    enum ActorType {
+        Caller,
+        Receiver
     };
 
 public:
     SequenceConnectionItem(
             SequenceDiagramItem *fromNode,
             SequenceDiagramItem *toNode,
-            SequenceConnectionType connectionType);
+            ConnectionType connectionType);
 
-//    ~SequenceConnectionItem();
+    ~SequenceConnectionItem();
 
 public:
     [[nodiscard]] QColor color() const;
     void trackNodes();
 
     [[nodiscard]] SequenceDiagramItem *fromNode() const {
-        return nodeFrom;
+        return _nodeFrom;
     };
 
     [[nodiscard]] SequenceDiagramItem *toNode() const {
-        return nodeTo;
+        return _nodeTo;
     };
+
+public:
+    void paintSynchronous(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
+    void paintAsynchronous(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
+    void paintReply(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
+    void paintCreate(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
+    void paintDelete(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
+
 
 public:
     QVariant itemChange(GraphicsItemChange change, const QVariant &value) override;
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
 
+
 private:
-    SequenceDiagramItem *nodeFrom;
-    SequenceDiagramItem *nodeTo;
-    QLineF connectionLine;
+    SequenceDiagramItem *_nodeFrom;
+    SequenceDiagramItem *_nodeTo;
+    ConnectionType _connectionType;
 };
 
 class msgText : public QGraphicsTextItem {

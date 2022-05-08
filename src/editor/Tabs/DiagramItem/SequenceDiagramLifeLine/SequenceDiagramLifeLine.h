@@ -43,10 +43,10 @@ public:
     [[nodiscard]] const QList<QPair<qreal, qreal>> &synchronousPoints() const {
         return _synchronousPoints;
     }
-
-    [[nodiscard]] bool isIsWaitingForResponce() const {
-        return _isWaitingForResponce;
-    }
+//
+//    [[nodiscard]] bool isIsWaitingForResponce() const {
+//        return _isWaitingForResponce;
+//    }
 
 public:
     void setYFrom(qreal yFrom) {
@@ -64,10 +64,10 @@ public:
     void addSynchronousPoint(const QPair<qreal, qreal> synchronousPoint) {
         _synchronousPoints.push_back(synchronousPoint);
     }
-
-    void setIsWaitingForResponce(bool isWaitingForResponce) {
-        _isWaitingForResponce = isWaitingForResponce;
-    }
+//
+//    void setIsWaitingForResponce(bool isWaitingForResponce) {
+//        _isWaitingForResponce = isWaitingForResponce;
+//    }
 
     void updateHeight() {
         _height = _activeRegions.last().second > _height ? _activeRegions.last().second + _heightAdjust : _height;
@@ -78,35 +78,53 @@ public:
      */
 public:
     void notifyConnectionsAboutParentPositionChange();
-    void addConnection(SequenceConnectionItem *connection);
+    void addConnection(
+            SequenceConnectionItem *connection,
+            SequenceConnectionItem::ConnectionType connectionType,
+            SequenceConnectionItem::ActorType actorType
+    );
     void removeConnection(SequenceConnectionItem *connection);
 
     /**
-     * Private
+     * Private functions.
      */
 private:
     void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
     [[nodiscard]] QPainterPath shape() const override;
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
-    QPolygonF lineShaper() const;
-    qreal maxHeight() const;
+    [[nodiscard]] QPolygonF lineShaper() const;
+    [[nodiscard]] qreal maxHeight() const;
     QList<QPair<qreal, qreal>> mergedActiveRegions();
 
+    /**
+     * Private variables
+     */
 private:
     qreal _yFrom = 0;
     qreal _height = 0;
-    QLineF _line;
     SequenceDiagramItem *_parent;
 
-    // Usually from/to, but in case to is -1, use default length.
-    QList<QPair<qreal /*from*/, qreal /*to*/>> _activeRegions;
-    QList<QPair<qreal /*from*/, qreal /*to*/>> _synchronousPoints;
+    /**
+     * Usually, from/to, but in case to is -1, use default length.
+     */
+    QList<QPair<qreal /*from*/, qreal /*to*/>> _activeRegions = QList<QPair<qreal, qreal>>();
+    QList<QPair<qreal /*from*/, qreal /*to*/>> _synchronousPoints = QList<QPair<qreal, qreal>>();
+    /**
+     *  One of the Synchronous, Asynchronous, Reply, Create, Delete.
+     *  The same functionality as  in the ClassDiagramItem
+     */
+    QSet<SequenceConnectionItem *> _connections = QSet<SequenceConnectionItem *>();
 
+    /**
+     * Constants.
+     */
+private:
     qreal const _actRegLen = 20.0;
     qreal const _adjust = 10.0;
     qreal const _heightAdjust = 20.0;
+    SequenceConnectionItem::ConnectionType _connectionType;
 
-    bool _isWaitingForResponce = false;
+//    bool _isWaitingForResponce = false;
 };
 
 #endif //DIAGRAMS_SEQUENCEDIAGRAMLIFELINE_H
