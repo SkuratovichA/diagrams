@@ -41,7 +41,7 @@ QPoint SequenceCanvas::generateCoords() const {
  * @param buf
  * @return
  */
-bool SequenceCanvas::createFromFile(ItemsBuffer buf) {
+bool SequenceCanvas::createFromFile(dgrm_seq_t seq) {
     return true;
 }
 

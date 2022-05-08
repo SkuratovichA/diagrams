@@ -181,7 +181,6 @@ public:
 public:
     virtual QPoint generateCoords() const = 0;
     virtual bool getStringRepresentation(Program &prg) = 0;
-    virtual bool createFromFile(ItemsBuffer buf) = 0;
     // endregion
 // endregion
 
@@ -229,7 +228,7 @@ public:
 
 public:
     bool getStringRepresentation(Program &prg) override;
-    bool createFromFile(ItemsBuffer buf) override;
+    bool createFromFile(dgrm_class_t cls);
     QList<QPair<ClassDiagramItem *, QString>> getClassStringPairs();
     QPoint generateCoords() const override;
 
@@ -310,7 +309,7 @@ public slots:
 
 public:
     bool getStringRepresentation(Program &prg) override;
-    bool createFromFile(ItemsBuffer buf) override;
+    bool createFromFile(dgrm_seq_t seq);
     QPoint generateCoords() const override;
 
 private:

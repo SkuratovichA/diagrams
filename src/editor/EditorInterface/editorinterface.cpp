@@ -73,10 +73,7 @@ editorInterface::editorInterface(
     createDynamicToolBar();
 
     if (openDiagram) {
-        Program prg1;
-        prg1.parse_file(filename.toStdString());
-        // check if the parsing was successful
-        // downloadDiagrams();
+        readFile();
         return;
     }
 
@@ -244,19 +241,26 @@ bool editorInterface::getTextRepresentation(Program &prg) {
  * TODO
  */
 void editorInterface::readFile() {
+    int idx;
     tabWidget = new QTabWidget(this);
     connect(tabWidget, SIGNAL(currentChanged(int)), this, SLOT(newTabSelected()));
+    setCentralWidget(tabWidget);
 
     Program prg;
-//    tabWidget->addTab(new ClassCanvas(this, undoStack), "class Diagram");
-//    if (! reinterpret_cast<TabCanvas *>(tabWidget->widget(i))->getStringRepresentation(prg) ) {
-//        return false;
-//    }
-//
-//
-//    tabWidget->addTab(new SequenceCanvas(this, undoStack), "sequence Diagram");
-//
-//    setCentralWidget(tabWidget);
+    prg.parse_file(filename.toStdString());
+    ItemsBuffer arrBufs[prg.diagram_sequence.size() + 1];
+
+    // class diagram
+    idx = tabWidget->addTab(new ClassCanvas(this, undoStack), "class Diagram");
+    reinterpret_cast<ClassCanvas *>(tabWidget->widget(idx))->createFromFile(prg.diagram_class);
+
+    // sequence diagram
+    for (int c = 0; c < prg.diagram_sequence.size(); c++) {
+        idx = tabWidget->addTab(new SequenceCanvas(this, undoStack), "sequence Diagram");
+        reinterpret_cast<SequenceCanvas *>(tabWidget->widget(idx))->createFromFile(prg.diagram_sequence[c]);
+    }
+
+    // handle parsing (can occur an error)
 }
 
 /**
