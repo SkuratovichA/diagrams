@@ -349,7 +349,7 @@ public:
     }
 
     [[nodiscard]] QPointF centre() const override {
-        return {x() + width() / 2.0, y() + height()};
+        return {width() / 2.0, height()};
     }
 
     [[nodiscard]] qsizetype occupiedSockets() const override {
@@ -372,6 +372,7 @@ private:
     QSet<SequenceConnectionItem *> _connections;
     QGraphicsLineItem *line;
     SequenceDiagramLifeLine *lifeLine = nullptr;
+    qreal const lineDefaultLength = 500;
 };
 
 #endif // Object_H

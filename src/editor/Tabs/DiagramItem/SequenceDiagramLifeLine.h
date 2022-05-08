@@ -19,7 +19,6 @@ public:
     SequenceDiagramLifeLine(SequenceDiagramItem *parent, qreal yFrom, qreal height);
     ~SequenceDiagramLifeLine() override;
 
-
 public:
     void trackNodes();
     /** Getters, setters
@@ -41,7 +40,7 @@ public:
         return _actRegLen;
     }
 
-    [[nodiscard]] const QList<qreal> &synchronousPoints() const {
+    [[nodiscard]] const QList<QPair<qreal, qreal>> &synchronousPoints() const {
         return _synchronousPoints;
     }
 
@@ -54,7 +53,7 @@ public:
         _yFrom = yFrom;
     }
 
-    void setYTo(qreal height) {
+    void setHeight(qreal height) {
         _height = height;
     }
 
@@ -62,12 +61,16 @@ public:
         _activeRegions.push_back(activeRegions);
     }
 
-    void addSynchronousPoint(const qreal synchronousPoint) {
+    void addSynchronousPoint(const QPair<qreal, qreal> synchronousPoint) {
         _synchronousPoints.push_back(synchronousPoint);
     }
 
     void setIsWaitingForResponce(bool isWaitingForResponce) {
         _isWaitingForResponce = isWaitingForResponce;
+    }
+
+    void updateHeight() {
+        _height = _activeRegions.last().second > _height ? _activeRegions.last().second + _heightAdjust : _height;
     }
 
 private:
@@ -86,11 +89,12 @@ private:
 
     // Usually from/to, but in case to is -1, use default length.
     QList<QPair<qreal /*from*/, qreal /*to*/>> _activeRegions;
-    qreal const _actRegLen = 20;
+    QList<QPair<qreal /*from*/, qreal /*to*/>> _synchronousPoints;
 
-    // the first point is an entrypoint. Each point will switch
-    // a boolean flag, and, hence, activate or diactivate a region.
-    QList<qreal> _synchronousPoints;
+    qreal const _actRegLen = 20.0;
+    qreal const _adjust = 10.0;
+    qreal const _heightAdjust = 20.0;
+
     bool _isWaitingForResponce = false;
 };
 

@@ -34,7 +34,7 @@ SequenceDiagramLifeLine::~SequenceDiagramLifeLine() {}
  * @return bounding polygon.
  */
 QPolygonF SequenceDiagramLifeLine::lineShaper() const {
-    QRectF rect(_parent->width() / 2 - 10, _parent->height(), 20, maxHeight());
+    QRectF rect(_parent->width() / 2 - _adjust, _parent->height(), 2 * _adjust, maxHeight());
     return QPolygonF(rect);
 }
 
@@ -55,31 +55,31 @@ QPainterPath SequenceDiagramLifeLine::shape() const {
  * @param widget
  */
 void SequenceDiagramLifeLine::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) {
-#if 1
+#if DEBUG
     painter->setPen(QPen(QColor(0, 0, 0, 100), 0.5, Qt::DotLine));
     painter->drawPolygon(lineShaper());
 #endif
+
     painter->setRenderHint(QPainter::Antialiasing, true);
 
-    auto topPoint = QPointF(_parent->width()/2, _yFrom + _parent->height());
+    auto topPoint = _parent->centre() + QPointF(0, _yFrom);
     QList<QLineF> lines;
 
     painter->setPen(QPen(Qt::black, 1, Qt::SolidLine));
     painter->setBrush(QBrush(_parent->color()));
     auto olapd = mergedActiveRegions();
-    auto const adjust = 10.0;
     for (auto rect: olapd) {
-        QPointF fromPoint{-adjust + _parent->width() / 2, rect.first + _parent->height()};
-        QPointF toPoint = QPointF(adjust + _parent->width() / 2,
-                                  _parent->height() + (rect.second == -1 ? rect.first + _actRegLen : rect.second));
+        QPointF fromPoint{_parent->centre() + QPointF(-_adjust, rect.first)};
+        QPointF toPoint{_parent->centre() + QPointF(_adjust, rect.second)};
         painter->drawRect(QRectF(fromPoint, toPoint));
-
-        lines.push_back(QLineF(topPoint, fromPoint + QPointF(adjust, 0)));
-        topPoint = toPoint + QPointF(-adjust, 0);
+        // add a line connecting two rectangles
+        lines.push_back(QLineF(topPoint, fromPoint + QPointF(_adjust, 0)));
+        topPoint = toPoint + QPointF(-_adjust, 0);
     }
-
+    // prepare for drawing a line
     painter->setPen(QPen(Qt::black, 1, Qt::DashLine));
-    lines.push_front(QLineF(topPoint, QPointF(_parent->width()/2, _height)));
+    // add the last point.
+    lines.push_front(QLineF(topPoint, _parent->centre() + QPointF(0.0, _height)));
     for (auto cLine: lines) {
         painter->drawLine(cLine);
     }
@@ -123,6 +123,10 @@ QList<QPair<qreal, qreal>> SequenceDiagramLifeLine::mergedActiveRegions() {
         }
     };
     QList<QPair<qreal, qreal>> a(_activeRegions);
+    a.append(_synchronousPoints);
+    if (a.isEmpty()) {
+        return a;
+    }
     std::sort(a.begin(), a.end(), sf);
     // remove overlapped intervals
     for (int i = 0; i < a.size() - 1;) {
@@ -133,6 +137,8 @@ QList<QPair<qreal, qreal>> SequenceDiagramLifeLine::mergedActiveRegions() {
             i++;
         }
     }
+    // adjust the size of a lifeline
+    updateHeight();
     return a;
 }
 

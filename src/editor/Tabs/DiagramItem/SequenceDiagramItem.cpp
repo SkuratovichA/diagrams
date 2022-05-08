@@ -43,14 +43,16 @@ SequenceDiagramItem::SequenceDiagramItem(actorParams *params, ClassDiagramItem *
     actorRect->setPen(QPen(QColor(Qt::black), 3.0));
     actorRect->setBrush(QBrush(color()));
 
-    // TOOD: add a possibility to expand a line
-    lifeLine = new SequenceDiagramLifeLine(this, 0, 500);
+    lifeLine = new SequenceDiagramLifeLine(this, 0, lineDefaultLength);
 
+#if DEBUG
     lifeLine->addActiveRegion(QPair<qreal, qreal>(280, 350));
-    lifeLine->addActiveRegion(QPair<qreal, qreal>(30, 100));
-    lifeLine->addActiveRegion(QPair<qreal, qreal>(10, 50));
+    lifeLine->addActiveRegion(QPair<qreal, qreal>(10, 20));
+    lifeLine->addActiveRegion(QPair<qreal, qreal>(30, 60));
     lifeLine->addActiveRegion(QPair<qreal, qreal>(70, 80));
-    lifeLine->addActiveRegion(QPair<qreal, qreal>(35, 40));
+
+    lifeLine->addActiveRegion(QPair<qreal, qreal>(50, 120));
+#endif
 
     setRect(boundingBox());
 }

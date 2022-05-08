@@ -164,9 +164,11 @@ public:
 
     void createScene() {
         editorScene = new EditorScene(this);
-        editorScene->setSceneRect(QRect(0, 0, _sceneWidth, _sceneHeight));
+        editorScene->setSceneRect(QRect(-50, -50, _sceneWidth, _sceneHeight));
         connect(editorScene, &EditorScene::itemMoved, this, &TabCanvas::moveEntity);
+
         view = new QGraphicsView(editorScene);
+        view->setAlignment(Qt::AlignTop | Qt::AlignLeft);
         view->setDragMode(QGraphicsView::RubberBandDrag);
         view->setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing);
         view->setContextMenuPolicy(Qt::CustomContextMenu);
@@ -213,8 +215,8 @@ protected:
 
 private:
     QGraphicsView *view;
-    const qreal _sceneWidth = 600;
-    const qreal _sceneHeight = 400;
+    const qreal _sceneWidth = 800;
+    const qreal _sceneHeight = 600;
 };
 
 class ClassCanvas : public TabCanvas {
