@@ -417,7 +417,7 @@ QPainterPath ClassConnectionItem::shape() const {
 /**
  *
  */
-void ClassConnectionItem::drawLine(QPainter *painter, const QStyleOptionGraphicsItem *option) const {
+void ClassConnectionItem::drawLine(QPainter *painter, const QStyleOptionGraphicsItem *option) const  {
     painter->setPen(QPen(_color, 2, Qt::SolidLine));
     painter->setRenderHint(QPainter::Antialiasing, true);
     auto points = edgePoints();
@@ -512,9 +512,9 @@ void ClassConnectionItem::paint(QPainter *painter, const QStyleOptionGraphicsIte
     QPointF pText = (_nodeTo->socket(order()) + _nodeFrom->socket(order())) / 2;
     QPair<QPointF, QPointF> ep = edgePoints();
 
-    qreal widthText = msg->boundingRect().width();
-    qreal widthLeft = leftNum->boundingRect().width();
-    qreal widthRight = rightNum->boundingRect().width();
+    qreal widthText = getMsg()->boundingRect().width();
+    qreal widthLeft = getLeftNum()->boundingRect().width();
+    qreal widthRight = getRightNum()->boundingRect().width();
 
     QPointF pLeft = QPointF(
             ep.first.x() + _nodeFrom->width() + 20,
@@ -523,7 +523,7 @@ void ClassConnectionItem::paint(QPainter *painter, const QStyleOptionGraphicsIte
             _nodeTo->pos().x() - 20,
             _nodeTo->pos().y() + _nodeTo->height() / 2.0 + 20);
 
-    msg->setPos(pText.x() - widthText / 2.0, pText.y() - 30);
+    msgSetPos(QPointF(pText.x() - widthText / 2.0, pText.y() - 30));
 }
 
 /**

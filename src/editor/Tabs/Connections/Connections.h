@@ -12,8 +12,21 @@ class ClassDiagramItem;
 
 class SequenceDiagramItem;
 
-class msgText;
+class msgText : public QGraphicsTextItem {
+public:
+    msgText(QGraphicsItem *parent, QFlags<Qt::TextInteractionFlag> flags, qreal x, qreal y, QString str);
+    //~msgText();
 
+    QGraphicsItem *parent() {
+        return _parent;
+    }
+
+protected:
+    void keyReleaseEvent(QKeyEvent *event);
+
+private:
+    QGraphicsItem *_parent;
+};
 
 /**
  *
@@ -67,6 +80,30 @@ public:
         trackNodes();
     }
 
+    void setPosLeft(QPointF pos) {
+        leftNum->setPos(pos);
+    }
+
+    void setPosRight(QPointF pos) {
+        rightNum->setPos(pos);
+    }
+
+    msgText* getLeftNum() const {
+        return leftNum;
+    }
+
+    msgText* getRightNum() const {
+        return rightNum;
+    }
+
+    msgText* getMsg() const {
+        return msg;
+    }
+
+    void msgSetPos(QPointF pos) {
+        msg->setPos(pos);
+    }
+
     void setColor(const QColor &color) {
         _color = color;
     }
@@ -92,7 +129,7 @@ protected:
 private:
     void drawLine(QPainter *painter, const QStyleOptionGraphicsItem *option) const;
     [[nodiscard]] QPolygonF lineShaper() const;
-    [[nodiscard]] QPair<QPointF, QPointF> edgePoints() const;
+    [[nodiscard]] QPair<QPointF, QPointF> edgePoints() const ;
     [[nodiscard]] QPainterPath shape() const override;
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
     bool _single;
@@ -148,22 +185,6 @@ private:
     SequenceDiagramItem *nodeFrom;
     SequenceDiagramItem *nodeTo;
     QLineF connectionLine;
-};
-
-class msgText : public QGraphicsTextItem {
-public:
-    msgText(QGraphicsItem *parent, QFlags<Qt::TextInteractionFlag> flags, qreal x, qreal y, QString str);
-    //~msgText();
-
-    QGraphicsItem *parent() {
-        return _parent;
-    }
-
-protected:
-    void keyReleaseEvent(QKeyEvent *event);
-
-private:
-    QGraphicsItem *_parent;
 };
 
 #endif //DIAGRAMS_CONNECTIONS_H

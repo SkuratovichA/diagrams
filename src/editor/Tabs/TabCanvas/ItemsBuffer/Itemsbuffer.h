@@ -18,13 +18,15 @@ public:
     void fillActorItems(SequenceDiagramItem *item);
     void clearBuffer();
     void addClassItems(Class cls);
+    void addRelationItems(Conct conct, QList<QGraphicsItem *> items);
+    void fillRelationItems(ClassConnectionItem *item);
 
     QList<classParams *> classItems() const {
         return _classItems;
     }
 
-    QList<ClassConnectionItem *> connectionItems() const {
-        return _connectionItems;
+    QList<relationsParams *> relationItems() const {
+        return _relationItems;
     }
 
     QList<actorParams *> sequenceItems() const {
@@ -43,6 +45,10 @@ public:
         _actorItems.push_back(item);
     }
 
+    void pushRelationItem(relationsParams *item) {
+        _relationItems.push_back(item);
+    }
+
     void deleteClassItems() {
         for (auto x : _classItems) {
             _classItems.pop_front();
@@ -59,7 +65,7 @@ public:
 
 private:
     QList<classParams *> _classItems;
-    QList<ClassConnectionItem *> _connectionItems;
+    QList<relationsParams *> _relationItems;
     QList<actorParams *> _actorItems;
     QList<SequenceConnectionItem *> _messageItems;
 };

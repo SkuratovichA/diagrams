@@ -14,10 +14,6 @@ ItemsBuffer::~ItemsBuffer() {
     }
 }
 
-//void ItemsBuffer::createClassItems() {
-//    return;
-//}
-
 void ItemsBuffer::addClassItems(Class cls) {
     classParams *prm;
     QList<QString> methods;
@@ -36,6 +32,19 @@ void ItemsBuffer::addClassItems(Class cls) {
                             cls.width, cls.height, attrs, methods);
 
     pushClassItem(prm);
+}
+
+void ItemsBuffer::addRelationItems(Conct conct, QList<QGraphicsItem *> items) {
+    return;
+}
+
+void ItemsBuffer::fillRelationItems(ClassConnectionItem *item) {
+    relationsParams *ptr =  new relationsParams(
+            item->nodeFrom()->name(), item->getLeftNum()->toPlainText(),
+            item->nodeTo()->name(), item->getRightNum()->toPlainText(),
+            item->getMsg()->toPlainText(), item->connectionType());
+
+    pushRelationItem(ptr );
 }
 
 void ItemsBuffer::fillClassItems(ClassDiagramItem *item) {

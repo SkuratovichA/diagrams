@@ -37,6 +37,8 @@ SequenceDiagramItem::SequenceDiagramItem(actorParams *params, ClassDiagramItem *
                                              Qt::TextInteractionFlag::TextSelectableByKeyboard;
     setPen(QPen(QColor(1, 0, 0, 0)));
     _head = new NameObject(this, _flags, QPointF(-3, -40), params->name());
+    qreal Pos = (params->width() - _head->boundingRect().width()) / 2;
+    _head->setPos(Pos, -40);
     _parentClassDiagramItem = parentClassDiagramItem_;
 
     auto actorRect = new QGraphicsRectItem(0, 0, params->width(), params->height(), this);

@@ -39,6 +39,8 @@ ClassDiagramItem::ClassDiagramItem(classParams *params)
     setPen(QPen(color()));
 
     _head = new NameObject(this, _flags, QPointF(20, -40), params->name()); // i do not know why coordinates 5, -40
+    qreal Pos = (params->width() - _head->boundingRect().width()) / 2;
+    _head->setPos(Pos, -40);
 
     textAttr = new ClassTextAttr(this, "ATTRIBUTES", QPointF(tabText(), tabText()), Qt::NoTextInteraction);
     textAttr->setFont(QFont("Times", 10, QFont::Bold));

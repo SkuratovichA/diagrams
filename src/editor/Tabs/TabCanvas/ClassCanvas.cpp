@@ -60,13 +60,16 @@ bool ClassCanvas::createFromFile(dgrm_class_t cls) {
         buf.addClassItems(x);
     }
 
-    // file concatinations
-
     for (auto x : buf.classItems()) {
         ClassDiagramItem *diagramItem = new ClassDiagramItem(x);
         editorScene->addItem(diagramItem);
         diagramItem->setPos(x->x(), x->y());
         editorScene->update();
+    }
+
+    QList<QGraphicsItem *> items = editorScene->items();
+    for (auto x: cls.concts) {
+        buf.addRelationItems(x, items);
     }
 
     return true;

@@ -66,6 +66,7 @@ private:
             return;
         view->scale(scaleFactor, scaleFactor);
     }
+
     // endregion
 
     // region Templates
@@ -160,6 +161,10 @@ public:
 
     QUndoStack *undoStack() const {
         return _undoStack;
+    }
+
+    void updateScene() {
+        editorScene->update();
     }
 
     void createScene() {
