@@ -222,12 +222,16 @@ void editorInterface::createDynamicToolBar() {
 /**
  * TODO
  */
-void editorInterface::get_text_representation() {
+bool editorInterface::get_text_representation() {
     auto size = tabWidget->count();
     qDebug() << size;
     for (int i = 0; i < size; i++) {
-        reinterpret_cast<TabCanvas *>(tabWidget->widget(i))->getStringRepresentation(prg);
+        if (! reinterpret_cast<TabCanvas *>(tabWidget->widget(i))->getStringRepresentation(prg) ) {
+            return false;
+        }
     }
+
+    return true;
 }
 
 /**
@@ -248,8 +252,13 @@ void editorInterface::actionSave_triggered() {
         return;
     }
 
-    QTextStream in(&file);
-    get_text_representation();
+    QTextStream out(&file);
+    // add if else and handle error
+    if ( !get_text_representation() ) {
+        return;
+    }
+
+    //out << fill_f;
     //prg.fill_file();
 
     //qDebug() << prg;
@@ -276,8 +285,12 @@ void editorInterface::actionSaveAs_triggered() {
         QMessageBox::information(this, tr("Unable to open file"), file.errorString());
         return;
     }
-    QTextStream in(&file);
-    get_text_representation();
+    //QTextStream out(&file);
+    if ( !get_text_representation() ) {
+        return;
+    }
+
+    prg.fill_file(filename.toStdString());
     //prg.fill_file();
 
     //qDebug() << prg;

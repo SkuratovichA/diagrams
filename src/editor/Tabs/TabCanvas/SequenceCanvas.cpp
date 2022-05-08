@@ -40,8 +40,8 @@ QPoint SequenceCanvas::generateCoords() const {
  * // TODO
  * @param prg
  */
-void SequenceCanvas::getStringRepresentation(Program &prg) {
-    return;
+bool SequenceCanvas::getStringRepresentation(Program &prg) {
+    return true;
 }
 
 /**

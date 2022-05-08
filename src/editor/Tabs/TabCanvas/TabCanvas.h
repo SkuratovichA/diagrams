@@ -180,7 +180,7 @@ public:
     // region Virtual methods
 public:
     virtual QPoint generateCoords() const = 0;
-    virtual void getStringRepresentation(Program &prg) = 0;
+    virtual bool getStringRepresentation(Program &prg) = 0;
     // endregion
 // endregion
 
@@ -227,7 +227,7 @@ public:
     ClassCanvas(QWidget *parent = nullptr, QUndoGroup *parentGroup = nullptr);
 
 public:
-    void getStringRepresentation(Program &prg) override;
+    bool getStringRepresentation(Program &prg) override;
     QList<QPair<ClassDiagramItem *, QString>> getClassStringPairs();
     QPoint generateCoords() const override;
 
@@ -307,7 +307,7 @@ public slots:
     void deleteMessage_triggered();
 
 public:
-    void getStringRepresentation(Program &prg) override;
+    bool getStringRepresentation(Program &prg) override;
     QPoint generateCoords() const override;
 
 private:

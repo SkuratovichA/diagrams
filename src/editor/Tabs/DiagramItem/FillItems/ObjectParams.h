@@ -8,6 +8,7 @@
 #include <QString>
 #include <QList>
 #include <QColor>
+#include "../../../Backend/Parse.h"
 
 class objectParams {
 public:
@@ -38,6 +39,19 @@ public:
     QString name() const {
         return _name;
     }
+
+    void fillColor(Color &c) {
+        c.r = color().red();
+        c.g = color().green();
+        c.b = color().blue();
+        c.a = color().alpha();
+    }
+
+    void fillCoords(std::vector<double> &v) {
+        v.push_back(x());
+        v.push_back(y());
+    }
+
 protected:
     qreal _x;
     qreal _y;
@@ -61,6 +75,8 @@ public:
     QList<QString> methods() const {
         return _methods;
     }
+
+    bool splitString(std::vector<attrs_t> &at, QList<QString> arr);
 
 private:
     QList<QString> _attrs;

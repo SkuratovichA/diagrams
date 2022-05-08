@@ -34,7 +34,7 @@ void Program::push_coords(const json el, std::vector<double>& coords) {
                { el.at("x").get<double>(), el.at("y").get<double>() } );
 }
 
-void Program::fill_file() {
+void Program::fill_file(std::string filename) {
     json j;
 
     j["class_dgrm"]["class"] = nullptr;
@@ -53,6 +53,6 @@ void Program::fill_file() {
         i++;
     }
 
-    std::ofstream o("pretty.json");
+    std::ofstream o(filename);
     o << std::setw(4) << j << std::endl;
 }

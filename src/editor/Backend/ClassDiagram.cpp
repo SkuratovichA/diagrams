@@ -20,10 +20,7 @@ void Class::push_height(const json el) {
 }
 
 void Class::push_attrs(const json el, std::vector<attrs_t>& obj) {
-    //std::string tmp;
-
     for(auto x : el) {
-        //tmp = x.at("perm").is_null() ? "" : x.at("perm").get<std::string>();
         obj.push_back( { .perm = x.at("perm").get<std::string>(),
                          .type = x.at("type").get<std::string>(),
                          .name = x.at("name").get<std::string>() } );
@@ -31,10 +28,6 @@ void Class::push_attrs(const json el, std::vector<attrs_t>& obj) {
 }
 
 void Conct::fill_connection(const json el) {
-    //std::string tmp1 = el.at("left_num" ).is_null() ? "" : el.at("left_num").get<std::string>();
-    //std::string tmp2 = el.at("right_num").is_null() ? "" : el.at("right_num").get<std::string>();
-    //std::string tmp3 = el.at("msg").is_null() ? "" : el.at("msg").get<std::string>();
-    //
     this->left_obj  = el.at("left_obj" ).get<std::string>();
     this->left_num  = el.at("left_num" ).get<std::string>();
     this->arrow     = el.at("arrow"    ).get<std::string>();

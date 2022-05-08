@@ -27,5 +27,5 @@ public:
 
     static void push_coords(const json el, std::vector<double>& coords);
 
-    void fill_file();
+    void fill_file(std::string filename);
 };

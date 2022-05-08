@@ -56,7 +56,7 @@ QList<QPair<ClassDiagramItem *, QString>> ClassCanvas::getClassStringPairs() {
  * // TODO
  * @param prg
  */
-void ClassCanvas::getStringRepresentation(Program &prg) {
+bool ClassCanvas::getStringRepresentation(Program &prg) {
     std::vector<Class> objects;
     std::vector<Conct> connects;
     ItemsBuffer buf;
@@ -70,8 +70,23 @@ void ClassCanvas::getStringRepresentation(Program &prg) {
         tmp.name = x->name().toStdString();
         tmp.width = x->width();
         tmp.height = x->height();
-        qDebug() << "class" << x->name() << x->color();
+        x->fillColor(tmp.color);
+        x->fillCoords(tmp.coords);
+
+        if ( !x->splitString(tmp.attrs, x->attrs()) ) {
+            qDebug() << "Error with attribute, color it by red color";
+            return false;
+        }
+
+        if ( !x->splitString(tmp.methods, x->methods()) ) {
+            qDebug() << "Error with method, color it by red color";
+            return false;
+        }
+
+        prg.diagram_class.classes.push_back(tmp);
     }
+
+    return true;
 }
 
 /**

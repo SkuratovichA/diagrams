@@ -66,7 +66,7 @@ private:
     void createUndoView();
     void createTabs();
     void createDynamicToolBar();
-    void get_text_representation();
+    bool get_text_representation();
 
 private:
     QTabWidget *tabWidget;
