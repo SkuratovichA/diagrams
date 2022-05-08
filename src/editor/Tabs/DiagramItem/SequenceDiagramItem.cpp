@@ -22,12 +22,13 @@
  *
  * @param params class with all necessary information to create an object.
  */
-SequenceDiagramItem::SequenceDiagramItem(actorParams *params, ClassDiagramItem *parentClassDiagramItem_)
+SequenceDiagramItem::SequenceDiagramItem(
+        actorParams *params,
+        ClassDiagramItem *parentClassDiagramItem_)
         : DiagramItem(params->width(),
                       params->height(),
                       DiagramItem::Actor,
-                      params->color()
-) {
+                      params->color()) {
     setFlag(QGraphicsItem::ItemIsSelectable);
     setFlag(QGraphicsItem::ItemIsMovable);
     setFlag(QGraphicsItem::ItemSendsGeometryChanges);
@@ -78,7 +79,9 @@ SequenceDiagramItem::SequenceDiagramItem(actorParams *params, ClassDiagramItem *
  *
  * @return new value
  */
-QVariant SequenceDiagramItem::itemChange(GraphicsItemChange change, const QVariant &value) {
+QVariant SequenceDiagramItem::itemChange(
+        GraphicsItemChange change,
+        const QVariant &value) {
     if (change == ItemPositionChange) {
         return QPointF(value.toPointF().x(), pos().y());
     }
@@ -93,8 +96,11 @@ QVariant SequenceDiagramItem::itemChange(GraphicsItemChange change, const QVaria
  *
  * @param connection message arrow between objects
  */
-void SequenceDiagramItem::addConnection(SequenceConnectionItem *connection) {
-    _lifeLine->addConnection(connection);
+void SequenceDiagramItem::addConnection(
+        SequenceConnectionItem *connection,
+        SequenceConnectionItem::ConnectionType connectionType,
+        SequenceConnectionItem::ActorType actorType) {
+    _lifeLine->addConnection(connection, connectionType, actorType);
 }
 
 /**

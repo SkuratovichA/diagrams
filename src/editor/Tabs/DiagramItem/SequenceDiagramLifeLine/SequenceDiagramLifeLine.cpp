@@ -27,7 +27,11 @@ SequenceDiagramLifeLine::SequenceDiagramLifeLine(SequenceDiagramItem *parent, qr
 /** A destructor.
  *
  */
-SequenceDiagramLifeLine::~SequenceDiagramLifeLine() {}
+SequenceDiagramLifeLine::~SequenceDiagramLifeLine() {
+            foreach (SequenceConnectionItem *connection, _connections) {
+            delete connection;
+        }
+}
 
 /** Returns a bounding polygon for a line.
  *
@@ -157,16 +161,59 @@ qreal SequenceDiagramLifeLine::maxHeight() const {
  *
  * @param connection
  */
-void SequenceDiagramLifeLine::addConnection(SequenceConnectionItem *connection) {
+void SequenceDiagramLifeLine::addConnection(
+        SequenceConnectionItem *connection,
+        SequenceConnectionItem::ConnectionType connectionType,
+        SequenceConnectionItem::ActorType actorType
+        ) {
+    qDebug() << connection->type();
+
+    switch (connectionType) {
+        case SequenceConnectionItem::Synchronous:
+            qDebug() << "synchronous";
+            break;
+
+        case SequenceConnectionItem::Asynchronous:
+            qDebug() << "asynchronous";
+            break;
+
+        case SequenceConnectionItem::Reply:
+            qDebug() << "reply";
+            break;
+
+        case SequenceConnectionItem::Create:
+            qDebug() << "create";
+            break;
+
+        case SequenceConnectionItem::Delete:
+            qDebug() << "delete";
+            break;
+    }
+
+    switch (actorType) {
+        case SequenceConnectionItem::Caller:
+            qDebug() << "caller";
+            break;
+
+        case SequenceConnectionItem::Receiver:
+            qDebug() << "receiver";
+            break;
+    }
 }
 
 /**
  *
  */
 void SequenceDiagramLifeLine::notifyConnectionsAboutParentPositionChange() {
-
+    for (auto c: _connections) {
+        c->trackNodes();
+    }
 }
 
+/**
+ *
+ * @param connection
+ */
 void SequenceDiagramLifeLine::removeConnection(SequenceConnectionItem *connection) {
-
+    _connections.remove(connection);
 }

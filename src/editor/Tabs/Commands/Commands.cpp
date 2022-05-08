@@ -261,7 +261,7 @@ void AddClassConnectionCommand::redo() {
  */
 AddSequenceConnectionCommand::AddSequenceConnectionCommand(SequenceDiagramItem *fromNode,
                                                            SequenceDiagramItem *toNode,
-                                                           SequenceConnectionItem::SequenceConnectionType connectionType,
+                                                           SequenceConnectionItem::ConnectionType connectionType,
                                                            QGraphicsScene *scene,
                                                            QUndoCommand *parent)
         : QUndoCommand(parent), graphicsScene(scene) {
