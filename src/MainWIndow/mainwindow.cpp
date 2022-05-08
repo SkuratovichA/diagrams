@@ -7,7 +7,6 @@
 #include <filesystem>
 #include <QDirIterator>
 
-
 mainWindow::mainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::mainWindow)
@@ -27,7 +26,7 @@ mainWindow::mainWindow(QWidget *parent)
         auto *item = new QListWidgetItem(it.fileName());
         ui->listWidget->addItem(item);
         it.next();
-    } while(it.hasNext());
+    } while (it.hasNext());
 
     editor_window = nullptr;
 }

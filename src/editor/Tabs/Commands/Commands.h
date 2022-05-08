@@ -8,7 +8,7 @@
 
 #include <QUndoCommand>
 #include "../Connections/Connections.h"
-#include "../DiagramItem.h"
+#include "../DiagramItem/DiagramItem.h"
 #include "../FillItems/ObjectParams.h"
 
 /**
@@ -54,12 +54,12 @@ private:
 /**
  *
  */
-class AddActorCommand : public QUndoCommand {
+class AddSequenceCommand : public QUndoCommand {
 public:
-    explicit AddActorCommand(QGraphicsScene *scene, actorParams *params, ClassDiagramItem *parentClassDiagramItem,
-                             QUndoCommand *parent = nullptr);
+    explicit AddSequenceCommand(QGraphicsScene *scene, actorParams *params, ClassDiagramItem *parentClassDiagramItem,
+                                QUndoCommand *parent = nullptr);
 
-    ~AddActorCommand();
+    ~AddSequenceCommand();
 
     void undo() override;
     void redo() override;
@@ -93,21 +93,21 @@ private:
 /**
  *
  */
-class AddActorConnectionCommand : public QUndoCommand {
+class AddSequenceConnectionCommand : public QUndoCommand {
 public:
-    explicit AddActorConnectionCommand(SequenceDiagramItem *fromNode,
-                                       SequenceDiagramItem *toNode,
-                                       ActorConnectionItem::ActorConnectionType connectionType,
-                                       QGraphicsScene *scene,
-                                       QUndoCommand *parent = nullptr);
+    explicit AddSequenceConnectionCommand(SequenceDiagramItem *fromNode,
+                                          SequenceDiagramItem *toNode,
+                                          SequenceConnectionItem::SequenceConnectionType connectionType,
+                                          QGraphicsScene *scene,
+                                          QUndoCommand *parent = nullptr);
 
-    ~AddActorConnectionCommand();
+    ~AddSequenceConnectionCommand();
 
     void undo() override;
     void redo() override;
 
 private:
-    ActorConnectionItem *actorConnection;
+    SequenceConnectionItem *actorConnection;
     QGraphicsScene *graphicsScene;
 //    QPointF initialStartPosition;
 //    QPointF initialEndPosition;

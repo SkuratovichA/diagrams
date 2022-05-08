@@ -9,10 +9,10 @@
 #include <QUndoGroup>
 #include <QGraphicsView>
 
-#include "../DiagramItem/EditorScene/EditorScene.h"
-#include "../DiagramItem/Commands/Commands.h"
+#include "../EditorScene/EditorScene.h"
+#include "../Commands/Commands.h"
 #include "../DiagramItem/DiagramItem.h"
-#include "../DiagramItem/FillItems/ObjectParams.h"
+#include "../FillItems/ObjectParams.h"
 #include "ItemsBuffer/Itemsbuffer.h"
 #include "../../Backend/Parse.h"
 
@@ -87,7 +87,6 @@ public:
             case 1:
                 rest = dynamic_cast<T *>(items.first());
                 if (first == nullptr || rest == nullptr) {
-                    qDebug() << "shit fuck";
                     return QPair<T *, T *>();
                 }
                 break;
@@ -214,10 +213,8 @@ protected:
 
 private:
     QGraphicsView *view;
-
-    qreal _sceneWidth = 600;
-    qreal _sceneHeight = 600;
-
+    const qreal _sceneWidth = 600;
+    const qreal _sceneHeight = 400;
 };
 
 class ClassCanvas : public TabCanvas {
@@ -316,16 +313,15 @@ private:
     void createSequenceContextMenu();
 
 private:
-    QList<QPair<ClassDiagramItem *, SequenceDiagramItem *>> pairClassSequence = QList<QPair<ClassDiagramItem *, SequenceDiagramItem *>>();
+    QList<QPair<ClassDiagramItem *, SequenceDiagramItem *>> pairClassSequence =
+            QList<QPair<ClassDiagramItem *, SequenceDiagramItem *>>();
     QMenu *sequenceMenu = nullptr;
-
     QAction *asynchronousMessage = nullptr;
     QAction *synchronousMessage = nullptr;
     QAction *returnMessage = nullptr;
     QAction *createMessage = nullptr;
     QAction *deleteMessage = nullptr;
     actorParams *createActor = nullptr;
-
     editorInterface *parentInterface = nullptr;
 };
 

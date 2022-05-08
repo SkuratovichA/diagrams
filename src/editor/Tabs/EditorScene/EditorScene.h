@@ -8,16 +8,19 @@
 
 #include <QObject>
 #include <QGraphicsScene>
-#include "../DiagramItem.h"
+#include "../DiagramItem/DiagramItem.h"
 
 class SequenceDiagramItem;
+
 QT_BEGIN_NAMESPACE
 class QGraphicsSceneDragDropEvent;
+
 class QGraphicsViewItem;
+
 QT_END_NAMESPACE
 
 class EditorScene : public QGraphicsScene {
-    Q_OBJECT
+Q_OBJECT
 
 public:
     explicit EditorScene(QObject *parent = nullptr);
@@ -32,13 +35,11 @@ protected:
     void keyPressEvent(QKeyEvent *event) override;
     void keyReleaseEvent(QKeyEvent *event) override;
 
-
 private:
     bool multSelect;
     QGraphicsItem *movingItem = nullptr;
     QPointF oldPos;
 
 };
-
 
 #endif //DIAGRAMS_EDITORSCENE_H

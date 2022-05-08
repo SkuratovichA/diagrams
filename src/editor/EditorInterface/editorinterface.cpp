@@ -71,7 +71,6 @@ editorInterface::editorInterface(
 
     setWindowTitle("editor");
 
-    qDebug() << "ttttttttttttt";
     createUndoView();
     createDynamicToolBar();
 
@@ -96,33 +95,22 @@ editorInterface::~editorInterface() {
  * Change the active stack in the stackGroup to display ins members (history) for the tab.
  */
 void editorInterface::newTabSelected() {
-    qDebug() << "new tab selected";
 
     //tatic QWidget *prevWidget = nullptr;
     qDebug() << "wee wee (1)";
     if (prevWidget != nullptr) {
-        qDebug() << "wee wee (1) prevWidget is not nullptr";
         // moved from the sequence canvas, hence, there is a need to update all class connecitons
-        qDebug() << "more debugs";
         auto previousSequenceCanvas = dynamic_cast<SequenceCanvas *>(prevWidget);
-        qDebug() << "more debugs";
         if (previousSequenceCanvas != nullptr) {
-            qDebug() << "wee wee (1.1) changin from SequenceCanvas!";
             for (SequenceDiagramItem *sequenceItem: previousSequenceCanvas->getItems<SequenceDiagramItem>()) {
-                qDebug() << "1.1.1 sequenceItem: " << sequenceItem;
                 auto newName = sequenceItem->name();
-                qDebug() << "1.1.2 new name: " << newName;
-                qDebug() << "1.1.3 parent class diagram" << sequenceItem->parentClassDiagramItem();
-                qDebug() << "1.1.4 prev name: " << sequenceItem->parentClassDiagramItem()->name();
                 if (newName != sequenceItem->parentClassDiagramItem()->name()) {
                     sequenceItem->parentClassDiagramItem()->setName(newName);
                 }
             }
         }
-        qDebug() << "more debugs";
         // moved from something (does not matter) to the sequence canvas. There is a need to update a sequence canvas
         auto destSequenceCanvas = dynamic_cast<SequenceCanvas *>(tabWidget->currentWidget());
-        qDebug() << "more debugs";
         if (destSequenceCanvas != nullptr) {
             for (SequenceDiagramItem *sequenceItem: destSequenceCanvas->getItems<SequenceDiagramItem>()) {
                 auto newName = sequenceItem->parentClassDiagramItem()->name();
@@ -132,9 +120,7 @@ void editorInterface::newTabSelected() {
             }
         }
     }
-    qDebug() << "more debugs";
     undoStack->setActiveStack(reinterpret_cast<TabCanvas *>(tabWidget->currentWidget())->undoStack());
-    qDebug() << "more debugs";
     prevWidget = tabWidget->currentWidget();
 }
 
@@ -176,7 +162,6 @@ void editorInterface::createDynamicToolBar() {
     ADD_SIGNAL(zoomOutAction, "Zoom &Out", "Ctrl-", "Ctrl-", this, SLOT(actionZoomOut_triggered()));
     ADD_SIGNAL(sendToBackAction, "Send to back", "b", "Ctrl+B", this, SLOT(actionBack_triggered()));
     ADD_SIGNAL(bringToFrontAction, "Send to front", "f", "Ctrl+F", this, SLOT(actionFront_triggered()));
-    qDebug() << "dynamic toolbar added";
 
     undoAction = undoStack->createUndoAction(this, tr("&Undo"));
     redoAction = undoStack->createRedoAction(this, tr("&Redo"));

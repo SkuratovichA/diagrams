@@ -8,11 +8,12 @@
 #include <QGraphicsLineItem>
 #include <QGraphicsSceneMouseEvent>
 
-
 class ClassDiagramItem;
+
 class SequenceDiagramItem;
 
 class msgText;
+
 
 /**
  *
@@ -29,8 +30,8 @@ public:
             ClassDiagramItem *toNode,
             ClassConnectionType connectionType,
             uint32_t order = 0,
-            QColor color = QColor(50,45,50,100)
-            );
+            QColor color = QColor(50, 45, 50, 100)
+    );
 
     ~ClassConnectionItem();
 
@@ -40,25 +41,32 @@ public:
     void setType(ClassConnectionType type) {
         _connectionType = type;
     }
+
     ClassConnectionType connectionType() const {
         return _connectionType;
     }
+
     ClassDiagramItem *nodeFrom() const {
         return _nodeFrom;
     }
+
     ClassDiagramItem *nodeTo() const {
         return _nodeTo;
     }
+
     QColor color() const {
         return _color;
     }
+
     uint32_t order() const {
         return _order;
     }
+
     void changeOrientation() {
         _orientation = !_orientation;
         trackNodes();
     }
+
     void setColor(const QColor &color) {
         _color = color;
     }
@@ -77,16 +85,16 @@ public:
     /** Protected methods
      */
 protected:
-    void mousePressEvent(QGraphicsSceneMouseEvent *event);
+    void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
 
     /** Private methods
      */
 private:
     void drawLine(QPainter *painter, const QStyleOptionGraphicsItem *option) const;
-    QPolygonF lineShaper() const;
-    QPair<QPointF, QPointF> edgePoints() const;
-    QPainterPath shape() const;
-    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
+    [[nodiscard]] QPolygonF lineShaper() const;
+    [[nodiscard]] QPair<QPointF, QPointF> edgePoints() const;
+    [[nodiscard]] QPainterPath shape() const override;
+    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
     bool _single;
 
     /** Private attributes
@@ -106,26 +114,32 @@ private:
 /**
  *
  */
-class ActorConnectionItem : public QGraphicsLineItem {
+class SequenceConnectionItem : public QGraphicsLineItem {
 public:
-    enum ActorConnectionType {
-        Request, Response, Delete, Create
+    enum SequenceConnectionType {
+        Synchronous, Asynchronous, Reply, Create, Delete,
     };
 
-    ActorConnectionItem(
+public:
+    SequenceConnectionItem(
             SequenceDiagramItem *fromNode,
             SequenceDiagramItem *toNode,
-            ActorConnectionType connectionType);
+            SequenceConnectionType connectionType);
 
-    ~ActorConnectionItem();
+    ~SequenceConnectionItem();
 
+public:
     QColor color() const;
-
     void trackNodes();
 
-    SequenceDiagramItem *fromNode() const;
+    SequenceDiagramItem *fromNode() const {
+        return nodeFrom;
+    };
 
-    SequenceDiagramItem *toNode() const;
+    SequenceDiagramItem *toNode() const {
+        return nodeTo;
+    };
+
 public:
     QVariant itemChange(GraphicsItemChange change, const QVariant &value);
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);

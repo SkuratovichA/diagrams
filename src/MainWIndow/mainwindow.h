@@ -7,12 +7,11 @@
 #include "../editor/EditorInterface/editorinterface.h"
 
 QT_BEGIN_NAMESPACE
-namespace Ui { class mainWindow; }
+namespace Ui {class mainWindow;}
 QT_END_NAMESPACE
 
-class mainWindow : public QMainWindow
-{
-    Q_OBJECT
+class mainWindow : public QMainWindow {
+Q_OBJECT
 
 public:
     mainWindow(QWidget *parent = nullptr);
@@ -49,4 +48,5 @@ private:
     QString curFile;
 //    QPlainTextEdit *diagramEdit;
 };
+
 #endif // MAINWINDOW_H

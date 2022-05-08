@@ -10,8 +10,8 @@
 #include <QRandomGenerator>
 #include <QGraphicsPolygonItem>
 
-#include "Connections/Connections.h"
-#include "FillItems/ObjectParams.h"
+#include "../Connections/Connections.h"
+#include "../FillItems/ObjectParams.h"
 
 QT_BEGIN_NAMESPACE
 class QGraphicsItem;
@@ -24,18 +24,20 @@ class QPointF;
 
 QT_END_NAMESPACE
 
+class SequenceDiagramLifeLine;
+
 // for attrs and table expanding
 class ClassTextAttr : public QGraphicsTextItem {
 public:
     ClassTextAttr(ClassDiagramItem *p, QString text, QPointF pos, QFlags<Qt::TextInteractionFlag> flags);
-    ~ClassTextAttr();
+    ~ClassTextAttr() override;
 
     ClassDiagramItem *parent() {
         return _parent;
     }
 
 protected:
-    void keyReleaseEvent(QKeyEvent *event);
+    void keyReleaseEvent(QKeyEvent *event) override;
 
 private:
     ClassDiagramItem *_parent;
@@ -46,11 +48,11 @@ public:
     NameObject(QGraphicsItem *parent, QFlags<Qt::TextInteractionFlag> flags, QPointF pos, QString str);
 
 public:
-    QString name() const {
+    [[nodiscard]] QString name() const {
         return toPlainText();
     }
 
-    void setName(QString name) {
+    void setName(const QString &name) {
         setPlainText(name.toStdString().c_str());
     }
 
@@ -59,7 +61,7 @@ public:
     }
 
 protected:
-    void keyReleaseEvent(QKeyEvent *event);
+    void keyReleaseEvent(QKeyEvent *event) override;
 
     QGraphicsItem *_parent;
 };
@@ -81,31 +83,33 @@ public:
         _color = color;
     }
 
-    qreal rowHeight() const {
+public:
+    [[nodiscard]] virtual QString name() const = 0;
+    [[nodiscard]] virtual QPointF centre() const = 0;
+    [[nodiscard]] virtual qsizetype occupiedSockets() const = 0;
+
+public:
+    [[nodiscard]] qreal rowHeight() const {
         return _rowHeight;
     }
 
-    QString name() const {
-        return _head->name();
-    }
-
-    void setName(QString name) {
+    void setName(const QString &name) const {
         _head->setName(name);
     }
 
-    qreal rowWidth() const {
+    [[nodiscard]] qreal rowWidth() const {
         return _rowWidth;
     }
 
-    qreal tabText() const {
+    [[nodiscard]] qreal tabText() const {
         return _tabText;
     }
 
-    DiagramType type() {
+    [[nodiscard]] DiagramType type() const {
         return _type;
     }
 
-    QRectF boundingBox() {
+    [[nodiscard]] QRectF boundingBox() const {
         return _boundingBox;
     }
 
@@ -117,15 +121,15 @@ public:
         _boundingBox = QRectF(a, b, c, d);
     }
 
-    QString typeStr() {
+    [[nodiscard]] QString typeStr() const {
         return type() == Actor ? QString("Actor") : QString("Class");
     }
 
-    qreal height() const {
+    [[nodiscard]] qreal height() const {
         return _height;
     }
 
-    qreal width() const {
+    [[nodiscard]] qreal width() const {
         return _width;
     }
 
@@ -141,11 +145,11 @@ public:
         _color = color;
     }
 
-    void setColor(qreal r, qreal g, qreal b, qreal a) {
+    void setColor(int r, int g, int b, int a) {
         _color = QColor(r, g, b, a);
     }
 
-    void setColor(qreal r, qreal g, qreal b) {
+    void setColor(int r, int g, int b) {
         _color = QColor(r, g, b);
     }
 
@@ -164,38 +168,48 @@ private:
     DiagramType _type;
     QColor _color;
 };
-
-class ActorLifetime : public QGraphicsLineItem {
-public:
-    ActorLifetime(QGraphicsItem *parent, QPointF startPoint);
-};
+//
+//class ActorLifetime : public QGraphicsLineItem {
+//public:
+//    ActorLifetime(QGraphicsItem *parent, QPointF startPoint);
+//};
 
 class ClassDiagramItem : public QGraphicsRectItem, public DiagramItem {
 public:
     explicit ClassDiagramItem(classParams *params);
-    ~ClassDiagramItem();
+    ~ClassDiagramItem() override;
 
     void addConnection(ClassConnectionItem *connection);
 
     void removeConnection(ClassConnectionItem *connection);
 
-    QString name() const {
+public:
+    [[nodiscard]] QString name() const override {
         return _head->toPlainText();
     }
 
+    QPointF centre() const override {
+        return {x() + width() / 2.0, y() + height() / 2.0};
+    }
+
+    [[nodiscard]] qsizetype occupiedSockets() const override {
+        return _connections.count();
+    }
+
+public:
     QList<ClassTextAttr *> methods() {
         return _methods;
     }
 
-    QList<QGraphicsLineItem *> methodsLines() const {
+    [[nodiscard]] QList<QGraphicsLineItem *> methodsLines() const {
         return _methodsLines;
     }
 
-    QList<ClassTextAttr *> attrs() const {
+    [[nodiscard]] QList<ClassTextAttr *> attrs() const {
         return _attrs;
     }
 
-    QList<QGraphicsLineItem *> attrsLines() const {
+    [[nodiscard]] QList<QGraphicsLineItem *> attrsLines() const {
         return _attrsLines;
     }
 
@@ -249,14 +263,14 @@ public:
 
     void moveLines(int st, long long el) {
                 foreach (QGraphicsLineItem *val, _methodsLines) {
-                val->setPos(0, (el + st) * rowHeight());
+                val->setPos(0, static_cast<double>(el + st) * rowHeight());
                 st++;
             }
     }
 
     void moveTexts(int st, long long el) {
                 foreach (ClassTextAttr *val, _methods) {
-                val->setPos(0, (el + st) * rowHeight() + tabText());
+                val->setPos(0, static_cast<double>(el + st) * rowHeight() + tabText());
                 st++;
             }
     }
@@ -267,7 +281,7 @@ public:
         return line;
     }
 
-    QGraphicsTextItem *createText(qreal x, qreal y, QString text) {
+    QGraphicsTextItem *createText(qreal x, qreal y, const QString &text) {
         auto attr = new QGraphicsTextItem(text, this);
         setTextFlags(attr);
         attr->setPos(x, y);
@@ -278,50 +292,42 @@ public:
         return _flags;
     }
 
-    qsizetype occupiedSockets() const {
-        return _connections.count();
-    }
-
-    QPointF socket(uint32_t n) const {
+    [[nodiscard]] QPointF socket(uint32_t n) const {
         const auto margin = std::min(std::min(height() / 2, width() / 2), 10.0);
         const QPointF points[3] = {QPointF(0, margin), QPointF(-margin, -margin), QPointF(-margin, margin)};
         return centre() + points[n % 3];
     }
 
-    QPointF topLeft() const {
+    [[nodiscard]] QPointF topLeft() const {
         return pos();
     }
 
-    QPointF topRight() const {
+    [[nodiscard]] QPointF topRight() const {
         return pos() + QPoint(width(), 0);
     }
 
-    QPointF bottomLeft() const {
+    [[nodiscard]] QPointF bottomLeft() const {
         return pos() + QPoint(0, height());
     }
 
-    QPointF bottomRight() const {
+    [[nodiscard]] QPointF bottomRight() const {
         return pos() + QPoint(width(), height());
     }
 
-    QPointF centre() const {
-        return {x() + width() / 2.0, y() + height() / 2.0};
-    }
-
-    void setTextFlags(QGraphicsTextItem *item) {
+    static void setTextFlags(QGraphicsTextItem *item) {
         item->setTextInteractionFlags(Qt::TextInteractionFlag::TextEditable |
                                       Qt::TextInteractionFlag::TextSelectableByMouse |
                                       Qt::TextInteractionFlag::TextSelectableByKeyboard);
     }
 
-    QSet<ClassConnectionItem *> connections() const {
+    [[nodiscard]] QSet<ClassConnectionItem *> connections() const {
         return _connections;
     }
 
-    void mousePressEvent(QGraphicsSceneMouseEvent *event);
+    void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
 
 protected:
-    QVariant itemChange(GraphicsItemChange change, const QVariant &value);
+    QVariant itemChange(GraphicsItemChange change, const QVariant &value) override;
 
 private:
     QList<ClassTextAttr *> _attrs;
@@ -337,22 +343,35 @@ class SequenceDiagramItem : public QGraphicsRectItem, public DiagramItem {
 public:
     explicit SequenceDiagramItem(actorParams *params, ClassDiagramItem *parentClassDiagramItem_ = nullptr);
 
-    void addConnection(ActorConnectionItem *connection);
+public:
+    [[nodiscard]] QString name() const override {
+        return _head->toPlainText();
+    }
 
-    void removeConnection(ActorConnectionItem *connection);
+    [[nodiscard]] QPointF centre() const override {
+        return {x() + width() / 2.0, y() + height()};
+    }
 
-    ClassDiagramItem *parentClassDiagramItem() const {
+    [[nodiscard]] qsizetype occupiedSockets() const override {
+        return _connections.count();
+    }
+
+public:
+    void addConnection(SequenceConnectionItem *connection);
+    void removeConnection(SequenceConnectionItem *connection);
+
+    [[nodiscard]] ClassDiagramItem *parentClassDiagramItem() const {
         return _parentClassDiagramItem;
     }
 
 protected:
-    QVariant itemChange(GraphicsItemChange change, const QVariant &value);
-    //void mousePressEvent(QGraphicsSceneMouseEvent *event);
+    QVariant itemChange(GraphicsItemChange change, const QVariant &value) override;
 
 private:
     ClassDiagramItem *_parentClassDiagramItem = nullptr;
-    QSet<ActorConnectionItem *> _connections;
+    QSet<SequenceConnectionItem *> _connections;
     QGraphicsLineItem *line;
+    SequenceDiagramLifeLine *lifeLine = nullptr;
 };
 
 #endif // Object_H

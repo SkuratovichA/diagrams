@@ -11,6 +11,7 @@
 
 #include "TabCanvas.h"
 #include "../../EditorInterface/editorinterface.h"
+#include "SequenceConnectionDialog/sequenceconnectiondialog.h"
 
 /**
  * A constructor.
@@ -28,12 +29,14 @@ SequenceCanvas::SequenceCanvas(QWidget *parent, QUndoGroup *parentGroup) : TabCa
 }
 
 /**
- * Generate random [x, y] coordinates ranging from 0 to 600
+ * Generate random [x, y] coordinates ranging from 0 to 1200 with a margin
  *
  * @return coordinates on the scene for new item
  */
 QPoint SequenceCanvas::generateCoords() const {
-    return QPoint(QRandomGenerator::global()->bounded(600), QRandomGenerator::global()->bounded(600));
+    auto x = QRandomGenerator::global()->bounded(600) + 20;
+    auto y = 100;
+    return QPoint(x, y);
 }
 
 /**
@@ -141,14 +144,14 @@ void SequenceCanvas::deleteMessage_triggered() {
  * @param classDiagramItemParent pointer to an object from a class diagram scene
  */
 void SequenceCanvas::addEntity(ClassDiagramItem *classDiagramItemParent) {
-    qDebug() << "got name: in constructor " << classDiagramItemParent->name();
+//    qDebug() << "got name: in constructor " << classDiagramItemParent->name();
     QPoint point = generateCoords();
 
     createActor = new actorParams(point.x(), point.y(), classDiagramItemParent->name(),
                                   classDiagramItemParent->color(), 80, 50);
 
     _undoStack->push(
-            new AddActorCommand(editorScene, createActor, classDiagramItemParent)
+            new AddSequenceCommand(editorScene, createActor, classDiagramItemParent)
     );
 
     delete createActor;
@@ -158,15 +161,18 @@ void SequenceCanvas::addEntity(ClassDiagramItem *classDiagramItemParent) {
  * // TODO
  */
 void SequenceCanvas::addConnection() {
-    assert(!"create new sequence conection command");
-//    auto nodes = getSelectedDiagramItems<SequenceDiagramItem>();
-//    auto emptySelect = nodes == QPair<SequenceDiagramItem *, SequenceDiagramItem *>();
-//    if (emptySelect) {
-//        return;
-//    }
-//    _undoStack->push(
-//            new AddActorConnectionCommand(nodes.first, nodes.second, editorScene)
-//    );
+    auto scd = SequenceConnectionDialog(this);
+    scd.exec();
+
+    auto nodes = getSelectedDiagramItems<SequenceDiagramItem>();
+    auto emptySelect = nodes == QPair<SequenceDiagramItem *, SequenceDiagramItem *>();
+    if (emptySelect) {
+        return;
+    }
+
+    _undoStack->push(
+            new AddSequenceConnectionCommand(nodes.first, nodes.second, scd.messageType(), editorScene)
+    );
 }
 
 /**

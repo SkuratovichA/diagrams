@@ -6,7 +6,7 @@
 #define DIAGRAMS_ITEMSBUFFER_H
 
 #include "../../DiagramItem/DiagramItem.h"
-#include "../../DiagramItem/FillItems/ObjectParams.h"
+#include "../../FillItems/ObjectParams.h"
 
 class ItemsBuffer {
 public:
@@ -31,7 +31,7 @@ public:
         return _actorItems;
     }
 
-    QList<ActorConnectionItem *> messageItems() const {
+    QList<SequenceConnectionItem *> messageItems() const {
         return _messageItems;
     }
 
@@ -61,7 +61,7 @@ private:
     QList<classParams *> _classItems;
     QList<ClassConnectionItem *> _connectionItems;
     QList<actorParams *> _actorItems;
-    QList<ActorConnectionItem *> _messageItems;
+    QList<SequenceConnectionItem *> _messageItems;
 };
 
 
