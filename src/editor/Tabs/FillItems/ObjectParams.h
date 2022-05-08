@@ -10,6 +10,7 @@
 #include <QColor>
 #include "../../Backend/Parse.h"
 
+
 class relationsParams {
 public:
     relationsParams(QString leftObj, QString leftNum,
@@ -22,6 +23,30 @@ public:
         _msg = msg;
         _type = type;
     };
+
+    QString leftObj() {
+        return _leftObj;
+    }
+
+    QString leftNum() {
+        return _leftNum;
+    }
+
+    QString rightObj() {
+        return _rightObj;
+    }
+
+    QString rightNum() {
+        return _rightNum;
+    }
+
+    int type() {
+        return _type;
+    }
+
+    QString msg() {
+        return _msg;
+    }
 
 private:
     QString _leftObj;

@@ -8,6 +8,11 @@
 #include "../../DiagramItem/DiagramItem.h"
 #include "../../FillItems/ObjectParams.h"
 
+class ClassConnectionItem;
+class ClassDiagramItem;
+class SequenceDiagramItem;
+class SequenceConnectionItem;
+
 class ItemsBuffer {
 public:
     ItemsBuffer();
@@ -18,22 +23,22 @@ public:
     void fillActorItems(SequenceDiagramItem *item);
     void clearBuffer();
     void addClassItems(Class cls);
-    void addRelationItems(Conct conct, QList<QGraphicsItem *> items);
+    void addRelationItems(Conct conct);
     void fillRelationItems(ClassConnectionItem *item);
 
-    QList<classParams *> classItems() const {
+    QList<classParams *> classItems() {
         return _classItems;
     }
 
-    QList<relationsParams *> relationItems() const {
+    QList<relationsParams *> relationItems() {
         return _relationItems;
     }
 
-    QList<actorParams *> sequenceItems() const {
+    QList<actorParams *> sequenceItems() {
         return _actorItems;
     }
 
-    QList<SequenceConnectionItem *> messageItems() const {
+    QList<SequenceConnectionItem *> messageItems() {
         return _messageItems;
     }
 

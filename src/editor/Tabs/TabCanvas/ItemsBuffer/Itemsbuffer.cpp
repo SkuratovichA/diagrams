@@ -34,8 +34,15 @@ void ItemsBuffer::addClassItems(Class cls) {
     pushClassItem(prm);
 }
 
-void ItemsBuffer::addRelationItems(Conct conct, QList<QGraphicsItem *> items) {
-    return;
+void ItemsBuffer::addRelationItems(Conct conct) {
+    relationsParams *prm = new relationsParams(QString::fromStdString(conct.left_obj),
+                                               QString::fromStdString(conct.left_num),
+                                               QString::fromStdString(conct.right_obj),
+                                               QString::fromStdString(conct.right_num),
+                                               QString::fromStdString(conct.msg),
+                                               conct.arrow);
+
+    pushRelationItem(prm);
 }
 
 void ItemsBuffer::fillRelationItems(ClassConnectionItem *item) {

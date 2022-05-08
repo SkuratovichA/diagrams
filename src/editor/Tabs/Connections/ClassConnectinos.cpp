@@ -18,7 +18,8 @@
  */
 ClassConnectionItem::ClassConnectionItem(ClassDiagramItem *fromNode,
                                          ClassDiagramItem *toNode,
-                                         ClassConnectionType connectionType,
+                                         relationsParams *params,
+                                         ClassConnectionType type,
                                          uint32_t order,
                                          QColor color
 ) {
@@ -29,13 +30,13 @@ ClassConnectionItem::ClassConnectionItem(ClassDiagramItem *fromNode,
 
     _nodeFrom->addConnection(this);
     _nodeTo->addConnection(this);
-    _connectionType = connectionType;
+    _connectionType = type;
     _color = color;
     _order = order;
 
-    leftNum = new msgText(this, getFlags(), 0, 0, "0..n");
-    msg = new msgText(this, getFlags(), 0, 0, "Method");
-    rightNum = new msgText(this, getFlags(), 0, 0, "1..n");
+    leftNum = new msgText(this, getFlags(), 0, 0, params->leftNum());
+    msg = new msgText(this, getFlags(), 0, 0, params->msg());
+    rightNum = new msgText(this, getFlags(), 0, 0, params->rightNum());
 
     setZValue(-1.0);
     trackNodes();

@@ -264,6 +264,7 @@ public slots:
 
 private:
     classParams *createItem;
+    relationsParams *createRelation;
     QMenu *classMenu;
     QMenu *connectionMenu;
 

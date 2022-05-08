@@ -67,9 +67,27 @@ bool ClassCanvas::createFromFile(dgrm_class_t cls) {
         editorScene->update();
     }
 
-    QList<QGraphicsItem *> items = editorScene->items();
+    QList<ClassDiagramItem *> items = getItems<ClassDiagramItem>();
     for (auto x: cls.concts) {
-        buf.addRelationItems(x, items);
+        buf.addRelationItems(x);
+    }
+
+    for (auto x : buf.relationItems()) {
+        ClassDiagramItem *from;
+        ClassDiagramItem *to;
+        for (auto y : items) {
+            if (x->leftNum() == y->name()) {
+                from = y;
+            }
+            if (x->rightNum() == y->name()) {
+                to = y;
+            }
+        }
+
+        ClassConnectionItem *item = new ClassConnectionItem(from, to, x, x->type());
+
+        editorScene->addItem(item);
+        editorScene->update();
     }
 
     return true;
@@ -86,6 +104,10 @@ bool ClassCanvas::getStringRepresentation(Program &prg) {
 
     for (auto x: getItems<ClassDiagramItem>()) {
         buf.fillClassItems(x);
+    }
+
+    for (auto x: getItems<ClassConnectionItem>()) {
+        buf.fillRelationItems(x);
     }
 
     for (auto x: buf.classItems()) {
@@ -107,6 +129,18 @@ bool ClassCanvas::getStringRepresentation(Program &prg) {
         }
 
         prg.diagram_class.classes.push_back(tmp);
+    }
+
+    for (auto x : buf.relationItems()) {
+        Conct tmp;
+        tmp.left_obj = x->leftObj().toStdString();
+        tmp.left_num = x->leftNum().toStdString();
+        tmp.right_obj = x->rightObj().toStdString();
+        tmp.right_num = x->rightNum().toStdString();
+        tmp.msg = x->msg().toStdString();
+        tmp.arrow = x->type();
+
+        prg.diagram_class.concts.push_back(tmp);
     }
 
     return true;
@@ -366,8 +400,11 @@ void ClassCanvas::addConnection() {
     if (emptySelect) {
         return;
     }
+
+    createRelation = new relationsParams("1..n", nodes.first->name(), "0..n",
+                                         nodes.second->name(), "MSG",  ClassConnectionItem::Dependency);
     _undoStack->push(
-            new AddClassConnectionCommand(nodes.first, nodes.second, ClassConnectionItem::Dependency, editorScene)
+            new AddClassConnectionCommand(nodes.first, nodes.second, createRelation, ClassConnectionItem::Dependency, editorScene)
     );
 }
 

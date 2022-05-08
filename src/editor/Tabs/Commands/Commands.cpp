@@ -215,14 +215,15 @@ void AddClassCommand::redo() {
  */
 AddClassConnectionCommand::AddClassConnectionCommand(ClassDiagramItem *fromNode,
                                                      ClassDiagramItem *toNodes,
-                                                     ClassConnectionItem::ClassConnectionType connectionType,
+                                                     relationsParams *params,
+                                                     ClassConnectionType type,
                                                      QGraphicsScene *scene,
                                                      QUndoCommand *parent)
         : QUndoCommand(parent), graphicsScene(scene) {
     auto maxConnectedElements = std::max(fromNode->occupiedSockets(), toNodes->occupiedSockets());
     qDebug() << "max number of occupied sockets: " << maxConnectedElements;
 
-    classConnection = new ClassConnectionItem(fromNode, toNodes, connectionType, maxConnectedElements);
+    classConnection = new ClassConnectionItem(fromNode, toNodes, params, type, maxConnectedElements);
     setText(QObject::tr("Connect %1")
                     .arg(createCommandString(static_cast<ClassConnectionItem *>(classConnection))));
 

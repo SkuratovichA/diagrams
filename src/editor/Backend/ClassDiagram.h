@@ -41,7 +41,7 @@ class Conct {
 public:
     std::string left_obj;
     std::string left_num;
-    std::string arrow;
+    int arrow;
     std::string right_obj;
     std::string right_num;
     std::string msg;

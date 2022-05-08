@@ -120,7 +120,8 @@ class AddClassConnectionCommand : public QUndoCommand {
 public:
     explicit AddClassConnectionCommand(ClassDiagramItem *fromNode,
                                        ClassDiagramItem *toNode,
-                                       ClassConnectionItem::ClassConnectionType connectionType,
+                                       relationsParams *params,
+                                       ClassConnectionItem::ClassConnectionType type,
                                        QGraphicsScene *scene,
                                        QUndoCommand *parent = nullptr);
 

@@ -30,7 +30,7 @@ void Class::push_attrs(const json el, std::vector<attrs_t>& obj) {
 void Conct::fill_connection(const json el) {
     this->left_obj  = el.at("left_obj" ).get<std::string>();
     this->left_num  = el.at("left_num" ).get<std::string>();
-    this->arrow     = el.at("arrow"    ).get<std::string>();
+    this->arrow     = el.at("arrow"    ).get<int>();
     this->right_obj = el.at("right_obj").get<std::string>();
     this->right_num = el.at("right_num" ).get<std::string>();
     this->msg       = el.at("msg" ).get<std::string>();
