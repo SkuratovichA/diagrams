@@ -3,7 +3,7 @@
 // Date: 07.05.2022
 
 #include "SequenceDiagramLifeLine.h"
-#include "DiagramItem.h"
+#include "../DiagramItem.h"
 
 #include <QPen>
 #include <QPainter>
@@ -164,5 +164,9 @@ void SequenceDiagramLifeLine::addConnection(SequenceConnectionItem *connection) 
  *
  */
 void SequenceDiagramLifeLine::notifyConnectionsAboutParentPositionChange() {
+
+}
+
+void SequenceDiagramLifeLine::removeConnection(SequenceConnectionItem *connection) {
 
 }

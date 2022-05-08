@@ -3,7 +3,7 @@
 // Date: 07.05.2022
 
 #include "DiagramItem.h"
-#include "SequenceDiagramLifeLine.h"
+#include "SequenceDiagramLifeLine/SequenceDiagramLifeLine.h"
 
 #include <QtGui>
 #include <QStyleOptionGraphicsItem>

@@ -8,7 +8,7 @@
 
 #include <QGraphicsLineItem>
 #include <QGraphicsSceneMouseEvent>
-#include "DiagramItem.h"
+#include "../DiagramItem.h"
 
 /** Implementation of a custom Life Line for an object (actor)
  */

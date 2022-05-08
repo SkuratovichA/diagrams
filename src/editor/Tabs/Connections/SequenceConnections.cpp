@@ -47,14 +47,14 @@ void SequenceConnectionItem::paint(QPainter *painter, const QStyleOptionGraphics
 /**
  *
  */
-SequenceConnectionItem::~SequenceConnectionItem() {
+//SequenceConnectionItem::~SequenceConnectionItem() {
 //    if (nodeFrom != nullptr) {
 //        nodeFrom->removeConnection(this);
 //    }
 //    if (nodeTo != nullptr) {
 //        nodeTo->removeConnection(this);
 //    }
-}
+//}
 
 /**
  *

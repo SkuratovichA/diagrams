@@ -126,7 +126,7 @@ public:
             SequenceDiagramItem *toNode,
             SequenceConnectionType connectionType);
 
-    ~SequenceConnectionItem();
+//    ~SequenceConnectionItem();
 
 public:
     [[nodiscard]] QColor color() const;
