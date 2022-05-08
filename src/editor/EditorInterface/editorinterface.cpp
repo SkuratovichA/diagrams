@@ -30,9 +30,9 @@
  * This constructor creates an interface for diagram editing, a toolbar with actions
  * and tabs for each type of diagram.
  *
- * @param parent // TODO
+ * @param parent
  * @param exampleName name of the file with example diagrams
- * @param new_type // TODO
+ * @param new_type
  */
 editorInterface::editorInterface(
         QWidget *parent,
@@ -84,7 +84,7 @@ editorInterface::editorInterface(
 }
 
 /**
- * A destructor. // TODO we need these comments???
+ * A destructor.
  */
 editorInterface::~editorInterface() {
     delete undoView;
