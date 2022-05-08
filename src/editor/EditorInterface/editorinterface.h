@@ -34,7 +34,7 @@ public:
     // default option for window is to create it
     // without a type - just a plain canvas
     explicit editorInterface(QWidget *parent = nullptr,
-                             const QString &exampleName = nullptr,
+                             QString exampleName = "",
                              newWindowType newType = NO_FILE);
 
     ~editorInterface();
@@ -67,6 +67,7 @@ private:
     void createTabs();
     void createDynamicToolBar();
     bool get_text_representation();
+    void writeFile();
 
 private:
     QTabWidget *tabWidget;
@@ -76,6 +77,7 @@ private:
     QUndoView *undoView = nullptr;
 
     Ui::editorInterface *ui;
+    bool openDiagram;
     QString filename = nullptr;
     QString filenameFilter = "Diagram Files (*.gae)";
 
@@ -92,6 +94,7 @@ private:
     QAction *sendToBackAction;
     QAction *newTabAction;
     QAction *saveAction;
+    QAction *saveAsAction;
     QAction *deleteTabAction;
     QAction *undoAction;
     QAction *redoAction;

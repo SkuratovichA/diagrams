@@ -37,7 +37,7 @@ HEADERS += \
 FORMS += \
     src/editor/EditorInterface/editorinterface.ui \
     src/editor/PropertiesDialog/propertiesdialog.ui \
-    src/MainWindow/mainwindow.ui
+    src/MainWIndow/mainwindow.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

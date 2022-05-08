@@ -23,7 +23,7 @@ public:
     DiagramSequence obj_se;
 
 
-    void parse_file(const json file);
+    void parse_file(std::string filename);
 
     static void push_coords(const json el, std::vector<double>& coords);
 

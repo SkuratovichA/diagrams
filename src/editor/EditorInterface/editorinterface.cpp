@@ -36,48 +36,51 @@
  */
 editorInterface::editorInterface(
         QWidget *parent,
-        const QString &exampleName,
+        QString exampleName,
         newWindowType new_type
 ) :
         QMainWindow(parent),
         ui(new Ui::editorInterface) {
     setAttribute(Qt::WA_DeleteOnClose); // automatically delete itself when window is closed
 
-    exampleName;
-#if 0
-    //    QString text = "";
-    //
-    //    switch (new_type) {
-    //        case EXAMPLE_FILE:
-    //            text = "example";
-    //            break;
-    //        case OPEN_FILE:
-    //            this->filename = QFileDialog::getOpenFileName(parent,
-    //                                                          tr("Open a file"),
-    //                                                          QDir::homePath(),
-    //                                                          this->filenameFilter);
-    //            // TODO: add implementation for reading the Diagram from the .json file
-    //            assert(!"NOT IMPLEMENTED ERROR");
-    //            break;
-    //        case NO_FILE:
-    //            text = "default text";
-    //            break;
-    //        default: {
-    //            throw "Unrecognized keyword";
-    //        }
-    //    }
-#endif
+    openDiagram = false;
+
+    switch (new_type) {
+        case EXAMPLE_FILE:
+            filename = exampleName;
+            openDiagram = true;
+            break;
+        case OPEN_FILE:
+            filename = QFileDialog::getOpenFileName(parent,
+                               tr("Open a file"),
+                                  QDir::homePath(),
+                                 filenameFilter);
+            openDiagram = true;
+            break;
+        case NO_FILE:
+            break;
+        default: {
+            throw "Unrecognized keyword";
+        }
+    }
 
     ui->setupUi(this);
     undoStack = new QUndoGroup(this);
 
-    this->setWindowTitle("editor");
+    setWindowTitle("editor");
 
     createUndoView();
     createDynamicToolBar();
 
     createTabs();
     setCentralWidget(tabWidget);
+
+    if (openDiagram) {
+        Program prg1;
+        prg1.parse_file(filename.toStdString());
+        // check if the parsing was successful
+        // downloadDiagrams();
+    }
 }
 
 /**
@@ -161,6 +164,7 @@ void editorInterface::createDynamicToolBar() {
     ADD_SIGNAL(newTabAction, "New &Tab", "+T", "Ctrl+T", this, SLOT(actionNewTab_triggered()));
     ADD_SIGNAL(deleteTabAction, "Delete &Tab", "+T", "Ctrl+W", this, SLOT(actionDeleteTab_triggered()));
     ADD_SIGNAL(saveAction, "&Save", "S", "Ctrl+S", this, SLOT(actionSave_triggered()));
+    ADD_SIGNAL(saveAsAction, "Save &As", "S", "Ctrl+S", this, SLOT(actionSaveAs_triggered()));
     ADD_SIGNAL(zoomInAction, "Zoom &In", "Ctrl+", "Ctrl+", this, SLOT(actionZoomIn_triggered()));
     ADD_SIGNAL(zoomOutAction, "Zoom &Out", "Ctrl-", "Ctrl-", this, SLOT(actionZoomOut_triggered()));
     ADD_SIGNAL(sendToBackAction, "Send to back", "b", "Ctrl+B", this, SLOT(actionBack_triggered()));
@@ -175,6 +179,7 @@ void editorInterface::createDynamicToolBar() {
     addToolBarBreak(Qt::TopToolBarArea);
     QToolBar *b = addToolBar(tr("Edit2"));
     a->addAction(saveAction);
+    a->addAction(saveAsAction);
     a->addAction(cutAction);
     a->addAction(pasteAction);
     a->addAction(copyAction);
@@ -197,6 +202,7 @@ void editorInterface::createDynamicToolBar() {
 #else
     fileMenu = menuBar()->addMenu(tr("&File"));
     fileMenu->addAction(saveAction);
+    fileMenu->addAction(saveAsAction);
 
     editMenu = menuBar()->addMenu(tr("&Edit"));
     editMenu->addAction(cutAction);
@@ -224,7 +230,6 @@ void editorInterface::createDynamicToolBar() {
  */
 bool editorInterface::get_text_representation() {
     auto size = tabWidget->count();
-    qDebug() << size;
     for (int i = 0; i < size; i++) {
         if (! reinterpret_cast<TabCanvas *>(tabWidget->widget(i))->getStringRepresentation(prg) ) {
             return false;
@@ -234,6 +239,21 @@ bool editorInterface::get_text_representation() {
     return true;
 }
 
+void editorInterface::writeFile() {
+    QFile file(filename);
+    if (!file.open(QIODevice::WriteOnly)) {
+        QMessageBox::information(this, tr("Unable to open file"), file.errorString());
+        return;
+    }
+
+    if ( !get_text_representation() ) {
+        return;
+    }
+
+    prg.fill_file(filename.toStdString());
+    file.close();
+}
+
 /**
  * A trigger for "Save" action.
  *
@@ -241,29 +261,12 @@ bool editorInterface::get_text_representation() {
  * File will be opened as a stream and the text in the required format will be written.
  */
 void editorInterface::actionSave_triggered() {
-    if (filename == nullptr || filename == "") {
+    if (filename == nullptr || filename.isEmpty()) {
         actionSaveAs_triggered();
         return;
     }
 
-    QFile file(filename);
-    if (!file.open(QFile::WriteOnly)) {
-        QMessageBox::warning(this, "Error", file.errorString());
-        return;
-    }
-
-    QTextStream out(&file);
-    // add if else and handle error
-    if ( !get_text_representation() ) {
-        return;
-    }
-
-    //out << fill_f;
-    //prg.fill_file();
-
-    //qDebug() << prg;
-    //in << prg;
-    file.close();
+    writeFile();
 }
 
 /**
@@ -275,32 +278,12 @@ void editorInterface::actionSaveAs_triggered() {
     filename = QFileDialog::getSaveFileName(this, tr("Save Address Book"), QDir::homePath(),
                                             filenameFilter);
 
-    qDebug() << filename << "save here";
     if (filename == nullptr || filename.isEmpty()) {
         return;
     }
 
-    QFile file(filename);
-    if (!file.open(QIODevice::WriteOnly)) {
-        QMessageBox::information(this, tr("Unable to open file"), file.errorString());
-        return;
-    }
-    //QTextStream out(&file);
-    if ( !get_text_representation() ) {
-        return;
-    }
-
-    prg.fill_file(filename.toStdString());
-    //prg.fill_file();
-
-    //qDebug() << prg;
-    //in << prg;
-    file.close();
+    writeFile();
 }
-
-//void editorInterface::actionQuit_triggered() {
-//    editorInterface::close();
-//}
 
 /**
  * A trigger for "New Tab" action.

@@ -9,7 +9,17 @@ json check_null(std::string val) {
     return tmp;
 }
 
-void Program::parse_file(const json file) {
+void Program::parse_file(std::string filename) {
+    std::ifstream f(filename, std::ifstream::in);
+    json file;
+
+    try {
+        f >> file;
+    } catch(nlohmann::detail::parse_error) {
+        std::cout << "EEEEE chuska, bad format of the file!![]" << std::endl;
+        return;
+    }
+
     try {
         obj_cl.fill_structure_class(file.at("class_dgrm").at("class"), this->diagram_class);
         obj_cl.fill_structure_conct(file.at("class_dgrm").at("connections"), this->diagram_class);
