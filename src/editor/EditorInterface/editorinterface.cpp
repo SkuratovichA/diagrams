@@ -257,10 +257,10 @@ void editorInterface::readFile() {
     reinterpret_cast<ClassCanvas *>(tabWidget->widget(idx))->createFromFile(prg.diagram_class);
 
     // sequence diagram
-//    for (int c = 0; c < prg.diagram_sequence.size(); c++) {
-//        idx = tabWidget->addTab(new SequenceCanvas(this, undoStack), "sequence Diagram");
-//        reinterpret_cast<SequenceCanvas *>(tabWidget->widget(idx))->createFromFile(prg.diagram_sequence[c]);
-//    }
+    for (int c = 0; c < prg.diagram_sequence.size(); c++) {
+        idx = tabWidget->addTab(new SequenceCanvas(this, undoStack), "sequence Diagram");
+        reinterpret_cast<SequenceCanvas *>(tabWidget->widget(idx))->createFromFile(prg.diagram_sequence[c]);
+    }
 
     // handle parsing (can occur an error)
 }

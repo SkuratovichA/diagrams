@@ -72,13 +72,10 @@ bool ClassCanvas::createFromFile(dgrm_class_t cls) {
         buf.addRelationItems(x);
     }
 
-    qDebug() << "aaaaaaaaaaaaaa";
-
     ClassDiagramItem *from;
     ClassDiagramItem *to;
     for (auto x : buf.relationItems()) {
         for (auto y : items) {
-            qDebug() << x->leftNum() << y->name();
             if (x->leftObj() == y->name()) {
                 from = y;
             }
@@ -88,12 +85,10 @@ bool ClassCanvas::createFromFile(dgrm_class_t cls) {
         }
 
         if (from == nullptr || to == nullptr) {
-            qDebug() << "Err ";
             return false;
         }
-        qDebug() << "bbbbb" << from << to;
+
         ClassConnectionItem *item = new ClassConnectionItem(from, to, x, static_cast<ClassConnectionItem::ClassConnectionType>(x->type()));
-        qDebug() << "ccccc";
         editorScene->addItem(item);
         editorScene->update();
     }
@@ -198,13 +193,12 @@ void ClassCanvas::createConnectionContextMenu() {
  * @param pos position on the scene where the click was handled
  */
 void ClassCanvas::showContextMenu(const QPoint &pos) {
-    auto *item = selectedObject<ClassDiagramItem>();
-
-    if (item == nullptr) {
+    QList<QGraphicsItem *> a = editorScene->selectedItems();
+    if (a.size() != 1) {
         return;
     }
 
-    if (dynamic_cast<ClassDiagramItem *>(item) != nullptr) {
+    if (dynamic_cast<ClassDiagramItem *>(a.first()) != nullptr) {
         classMenu->exec(this->mapToGlobal(pos));
     } else {
         connectionMenu->exec(this->mapToGlobal(pos));
