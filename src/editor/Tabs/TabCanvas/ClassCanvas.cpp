@@ -34,7 +34,7 @@ QPoint ClassCanvas::generateCoords() const {
 }
 
 /**
- * // TODO
+ *
  * @return list with elements as a pair pointer to the class object
  * and name of this object
  */
@@ -50,7 +50,7 @@ QList<QPair<ClassDiagramItem *, QString>> ClassCanvas::getClassStringPairs() {
 }
 
 /**
- * // TODO
+ *
  * @param prg
  */
 void ClassCanvas::getStringRepresentation(Program &prg) {

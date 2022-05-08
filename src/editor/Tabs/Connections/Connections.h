@@ -42,23 +42,23 @@ public:
         _connectionType = type;
     }
 
-    ClassConnectionType connectionType() const {
+    [[nodiscard]] ClassConnectionType connectionType() const {
         return _connectionType;
     }
 
-    ClassDiagramItem *nodeFrom() const {
+    [[nodiscard]] ClassDiagramItem *nodeFrom() const {
         return _nodeFrom;
     }
 
-    ClassDiagramItem *nodeTo() const {
+    [[nodiscard]] ClassDiagramItem *nodeTo() const {
         return _nodeTo;
     }
 
-    QColor color() const {
+    [[nodiscard]] QColor color() const {
         return _color;
     }
 
-    uint32_t order() const {
+    [[nodiscard]] uint32_t order() const {
         return _order;
     }
 
@@ -71,7 +71,7 @@ public:
         _color = color;
     }
 
-    QFlags<Qt::TextInteractionFlag> getFlags() {
+    static QFlags<Qt::TextInteractionFlag> getFlags() {
         return Qt::TextInteractionFlag::TextEditable |
                Qt::TextInteractionFlag::TextSelectableByMouse |
                Qt::TextInteractionFlag::TextSelectableByKeyboard;
@@ -129,20 +129,20 @@ public:
     ~SequenceConnectionItem();
 
 public:
-    QColor color() const;
+    [[nodiscard]] QColor color() const;
     void trackNodes();
 
-    SequenceDiagramItem *fromNode() const {
+    [[nodiscard]] SequenceDiagramItem *fromNode() const {
         return nodeFrom;
     };
 
-    SequenceDiagramItem *toNode() const {
+    [[nodiscard]] SequenceDiagramItem *toNode() const {
         return nodeTo;
     };
 
 public:
-    QVariant itemChange(GraphicsItemChange change, const QVariant &value);
-    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
+    QVariant itemChange(GraphicsItemChange change, const QVariant &value) override;
+    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
 
 private:
     SequenceDiagramItem *nodeFrom;
@@ -160,7 +160,7 @@ public:
     }
 
 protected:
-    void keyReleaseEvent(QKeyEvent *event);
+    void keyReleaseEvent(QKeyEvent *event) override;
 
 private:
     QGraphicsItem *_parent;

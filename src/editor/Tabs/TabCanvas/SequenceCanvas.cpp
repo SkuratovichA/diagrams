@@ -148,14 +148,16 @@ void SequenceCanvas::addEntity(ClassDiagramItem *classDiagramItemParent) {
 }
 
 /**
- * // TODO
+ * Add a connection between actor life lines.
  */
 void SequenceCanvas::addConnection() {
     auto scd = SequenceConnectionDialog(this);
     scd.exec();
 
     auto nodes = getSelectedDiagramItems<SequenceDiagramItem>();
-    auto emptySelect = nodes == QPair<SequenceDiagramItem *, SequenceDiagramItem *>();
+    auto emptySelect =
+            (nodes == QPair<SequenceDiagramItem *, SequenceDiagramItem *>())
+            || nodes.first == nodes.second;
     if (emptySelect) {
         return;
     }

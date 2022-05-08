@@ -152,3 +152,17 @@ qreal SequenceDiagramLifeLine::maxHeight() const {
     }
     return std::max(_activeRegions.last().second, _height);
 }
+
+/**
+ *
+ * @param connection
+ */
+void SequenceDiagramLifeLine::addConnection(SequenceConnectionItem *connection) {
+}
+
+/**
+ *
+ */
+void SequenceDiagramLifeLine::notifyConnectionsAboutParentPositionChange() {
+
+}

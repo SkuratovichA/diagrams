@@ -86,7 +86,6 @@ public:
 public:
     [[nodiscard]] virtual QString name() const = 0;
     [[nodiscard]] virtual QPointF centre() const = 0;
-    [[nodiscard]] virtual qsizetype occupiedSockets() const = 0;
 
 public:
     [[nodiscard]] qreal rowHeight() const {
