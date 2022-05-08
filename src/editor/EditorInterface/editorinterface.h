@@ -72,6 +72,7 @@ private:
 
 private:
     QTabWidget *tabWidget;
+    QWidget *prevWidget = nullptr;
 
     QUndoGroup *undoStack = nullptr;
     QUndoView *undoView = nullptr;

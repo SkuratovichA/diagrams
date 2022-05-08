@@ -51,11 +51,13 @@ editorInterface::editorInterface(
             openDiagram = true;
             break;
         case OPEN_FILE:
+            qDebug() << "file before selection";
             filename = QFileDialog::getOpenFileName(parent,
                                tr("Open a file"),
                                   QDir::homePath(),
                                  filenameFilter);
             openDiagram = true;
+            qDebug() << "file was selected";
             break;
         case NO_FILE:
             break;
@@ -69,6 +71,7 @@ editorInterface::editorInterface(
 
     setWindowTitle("editor");
 
+    qDebug() << "ttttttttttttt";
     createUndoView();
     createDynamicToolBar();
 
@@ -95,12 +98,14 @@ editorInterface::~editorInterface() {
 void editorInterface::newTabSelected() {
     qDebug() << "new tab selected";
 
-    static QWidget *prevWidget = nullptr;
+    //tatic QWidget *prevWidget = nullptr;
     qDebug() << "wee wee (1)";
     if (prevWidget != nullptr) {
         qDebug() << "wee wee (1) prevWidget is not nullptr";
         // moved from the sequence canvas, hence, there is a need to update all class connecitons
+        qDebug() << "more debugs";
         auto previousSequenceCanvas = dynamic_cast<SequenceCanvas *>(prevWidget);
+        qDebug() << "more debugs";
         if (previousSequenceCanvas != nullptr) {
             qDebug() << "wee wee (1.1) changin from SequenceCanvas!";
             for (SequenceDiagramItem *sequenceItem: previousSequenceCanvas->getItems<SequenceDiagramItem>()) {
@@ -114,8 +119,10 @@ void editorInterface::newTabSelected() {
                 }
             }
         }
+        qDebug() << "more debugs";
         // moved from something (does not matter) to the sequence canvas. There is a need to update a sequence canvas
         auto destSequenceCanvas = dynamic_cast<SequenceCanvas *>(tabWidget->currentWidget());
+        qDebug() << "more debugs";
         if (destSequenceCanvas != nullptr) {
             for (SequenceDiagramItem *sequenceItem: destSequenceCanvas->getItems<SequenceDiagramItem>()) {
                 auto newName = sequenceItem->parentClassDiagramItem()->name();
@@ -125,7 +132,9 @@ void editorInterface::newTabSelected() {
             }
         }
     }
+    qDebug() << "more debugs";
     undoStack->setActiveStack(reinterpret_cast<TabCanvas *>(tabWidget->currentWidget())->undoStack());
+    qDebug() << "more debugs";
     prevWidget = tabWidget->currentWidget();
 }
 
@@ -242,24 +251,30 @@ bool editorInterface::getTextRepresentation(Program &prg) {
  */
 void editorInterface::readFile() {
     int idx;
+    qDebug() << "inside reading dunction";
     tabWidget = new QTabWidget(this);
     connect(tabWidget, SIGNAL(currentChanged(int)), this, SLOT(newTabSelected()));
     setCentralWidget(tabWidget);
+
+    qDebug() << "inside reading dunction";
 
     Program prg;
     prg.parse_file(filename.toStdString());
     ItemsBuffer arrBufs[prg.diagram_sequence.size() + 1];
 
+    qDebug() << "inside reading dunction";
     // class diagram
     idx = tabWidget->addTab(new ClassCanvas(this, undoStack), "class Diagram");
+    qDebug() << idx;
     reinterpret_cast<ClassCanvas *>(tabWidget->widget(idx))->createFromFile(prg.diagram_class);
 
+    qDebug() << "inside reading dunction";
     // sequence diagram
     for (int c = 0; c < prg.diagram_sequence.size(); c++) {
         idx = tabWidget->addTab(new SequenceCanvas(this, undoStack), "sequence Diagram");
         reinterpret_cast<SequenceCanvas *>(tabWidget->widget(idx))->createFromFile(prg.diagram_sequence[c]);
     }
-
+    qDebug() << "inside reading dunction";
     // handle parsing (can occur an error)
 }
 
