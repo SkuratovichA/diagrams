@@ -38,7 +38,7 @@ public:
     }
 
     [[nodiscard]] qreal defaultActiveRegionLength() const {
-        return _defaultActiveRegionLength;
+        return _actRegLen;
     }
 
     [[nodiscard]] const QList<qreal> &synchronousPoints() const {
@@ -75,7 +75,10 @@ private:
     [[nodiscard]] QPainterPath shape() const override;
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
     QPolygonF lineShaper() const;
+    qreal maxHeight() const;
+    QList<QPair<qreal, qreal>> mergedActiveRegions();
 
+private:
     qreal _yFrom = 0;
     qreal _height = 0;
     QLineF _line;
@@ -83,7 +86,7 @@ private:
 
     // Usually from/to, but in case to is -1, use default length.
     QList<QPair<qreal /*from*/, qreal /*to*/>> _activeRegions;
-    qreal const _defaultActiveRegionLength = 20;
+    qreal const _actRegLen = 20;
 
     // the first point is an entrypoint. Each point will switch
     // a boolean flag, and, hence, activate or diactivate a region.
