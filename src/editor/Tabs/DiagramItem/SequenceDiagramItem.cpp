@@ -3,7 +3,7 @@
 // Date: 07.05.2022
 
 #include "DiagramItem.h"
-#include "SequenceDiagramLifeLine.h"
+#include "SequenceDiagramLifeLine/SequenceDiagramLifeLine.h"
 
 #include <QtGui>
 #include <QStyleOptionGraphicsItem>
@@ -45,7 +45,7 @@ SequenceDiagramItem::SequenceDiagramItem(actorParams *params, ClassDiagramItem *
     actorRect->setPen(QPen(QColor(Qt::black), 3.0));
     actorRect->setBrush(QBrush(color()));
 
-    lifeLine = new SequenceDiagramLifeLine(this, 0, lineDefaultLength);
+    _lifeLine = new SequenceDiagramLifeLine(this, 0, lineDefaultLength);
 
 #if DEBUG
     lifeLine->addActiveRegion(QPair<qreal, qreal>(280, 350));
@@ -58,6 +58,15 @@ SequenceDiagramItem::SequenceDiagramItem(actorParams *params, ClassDiagramItem *
 
     setRect(boundingBox());
 }
+
+///** A destructor.
+// *
+// */
+//SequenceDiagramItem::~SequenceDiagramItem() {
+//    qDebug() << "here, you can see a segfault";
+//    delete _lifeLine;
+//    qDebug() << "    naebal";
+//}
 
 /**
  * Notify custom items that some part of the item's state changes.
@@ -73,6 +82,9 @@ QVariant SequenceDiagramItem::itemChange(GraphicsItemChange change, const QVaria
     if (change == ItemPositionChange) {
         return QPointF(value.toPointF().x(), pos().y());
     }
+    if (change == ItemPositionHasChanged) {
+        _lifeLine->notifyConnectionsAboutParentPositionChange();
+    }
     return QGraphicsItem::itemChange(change, value);
 }
 
@@ -82,7 +94,7 @@ QVariant SequenceDiagramItem::itemChange(GraphicsItemChange change, const QVaria
  * @param connection message arrow between objects
  */
 void SequenceDiagramItem::addConnection(SequenceConnectionItem *connection) {
-    _connections.insert(connection);
+    _lifeLine->addConnection(connection);
 }
 
 /**
@@ -91,5 +103,5 @@ void SequenceDiagramItem::addConnection(SequenceConnectionItem *connection) {
  * @param connection message arrow between objects
  */
 void SequenceDiagramItem::removeConnection(SequenceConnectionItem *connection) {
-    _connections.remove(connection);
+    _lifeLine->removeConnection(connection);
 }

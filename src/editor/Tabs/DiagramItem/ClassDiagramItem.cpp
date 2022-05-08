@@ -8,7 +8,6 @@
 #include <QStyleOptionGraphicsItem>
 #include <QInputDialog>
 #include <QGraphicsSceneMouseEvent>
-#include <QDebug>
 #include <QPainter>
 #include <QInputEvent>
 
@@ -130,6 +129,5 @@ QVariant ClassDiagramItem::itemChange(GraphicsItemChange change, const QVariant 
 ClassDiagramItem::~ClassDiagramItem() {
             foreach (ClassConnectionItem *connection, _connections) {
             delete connection;
-            qDebug() << "Connection deleted (diagramItem.cpp)";
         }
 }

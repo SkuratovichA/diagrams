@@ -8,7 +8,7 @@
 
 #include <QGraphicsLineItem>
 #include <QGraphicsSceneMouseEvent>
-#include "DiagramItem.h"
+#include "../DiagramItem.h"
 
 /** Implementation of a custom Life Line for an object (actor)
  */
@@ -73,6 +73,17 @@ public:
         _height = _activeRegions.last().second > _height ? _activeRegions.last().second + _heightAdjust : _height;
     }
 
+    /**
+     * Usual functions.
+     */
+public:
+    void notifyConnectionsAboutParentPositionChange();
+    void addConnection(SequenceConnectionItem *connection);
+    void removeConnection(SequenceConnectionItem *connection);
+
+    /**
+     * Private
+     */
 private:
     void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
     [[nodiscard]] QPainterPath shape() const override;

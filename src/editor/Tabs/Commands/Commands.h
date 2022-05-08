@@ -28,7 +28,7 @@ public:
 
     bool mergeWith(const QUndoCommand *command) override;
 
-    int id() const override {return Id;}
+    [[nodiscard]] int id() const override {return Id;}
 
 private:
     QGraphicsItem *diagramItem;
