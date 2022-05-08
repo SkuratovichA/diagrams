@@ -58,6 +58,22 @@ QList<QPair<ClassDiagramItem *, QString>> ClassCanvas::getClassStringPairs() {
  * @return
  */
 bool ClassCanvas::createFromFile(dgrm_class_t cls) {
+    ItemsBuffer buf;
+    qDebug() << "aaaaaaaaaaaaa";
+    for (auto x : cls.classes) {
+        buf.addClassItems(x);
+    }
+
+    // file concatinations
+
+    for (auto x : buf.classItems()) {
+        qDebug() << "debug msg";
+        ClassDiagramItem *diagramItem = new ClassDiagramItem(x);
+        editorScene->addItem(diagramItem);
+        diagramItem->setPos(x->x(), x->y());
+        editorScene->update();
+    }
+
     return true;
 }
 

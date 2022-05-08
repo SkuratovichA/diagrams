@@ -168,6 +168,7 @@ AddClassCommand::AddClassCommand(QGraphicsScene *scene, classParams *params, QUn
         : QUndoCommand(parent), graphicsScene(scene) {
     static int itemCount = 0;
 
+    qDebug() << params->name();
     diagramItem = new ClassDiagramItem(params);
     initialStartPosition = QPointF(params->x(), params->y());
     itemCount++;

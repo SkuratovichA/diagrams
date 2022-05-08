@@ -19,6 +19,26 @@ ItemsBuffer::~ItemsBuffer() {
 //    return;
 //}
 
+void ItemsBuffer::addClassItems(Class cls) {
+    classParams *prm;
+    QList<QString> methods;
+    QList<QString> attrs;
+
+    for (auto x : cls.attrs) {
+        attrs.push_back(QString::fromStdString(x.perm + " " + x.type + " " + x.name));
+    }
+
+    for (auto x : cls.methods) {
+        methods.push_back(QString::fromStdString(x.perm + " " + x.type + " " + x.name));
+    }
+
+    prm = new classParams(cls.coords[0], cls.coords[1], QString::fromStdString(cls.name),
+                            QColor(cls.color.r, cls.color.g, cls.color.b, cls.color.a),
+                            cls.width, cls.height, attrs, methods);
+
+    pushClassItem(prm);
+}
+
 void ItemsBuffer::fillClassItems(ClassDiagramItem *item) {
     classParams *ptr;
     QList<QString> methods;
