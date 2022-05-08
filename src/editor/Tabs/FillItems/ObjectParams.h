@@ -59,8 +59,7 @@ private:
 
 class objectParams {
 public:
-    objectParams(qreal x, qreal y, QString name,
-                 QColor color, qreal width, qreal height);
+    objectParams(qreal x, qreal y, QString name, QColor color);
     ~objectParams() = default;
 
     qreal x() const {
@@ -132,9 +131,8 @@ private:
 
 class actorParams : public objectParams {
 public:
-    actorParams(qreal x, qreal y, QString name,
-                QColor color, qreal width, qreal height);
-    ~actorParams() = default;
+    actorParams(qreal x, qreal y, QString name, QColor color);
+    //~actorParams() = default;
 };
 
 

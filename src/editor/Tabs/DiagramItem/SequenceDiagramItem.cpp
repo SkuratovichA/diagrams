@@ -25,8 +25,8 @@
 SequenceDiagramItem::SequenceDiagramItem(
         actorParams *params,
         ClassDiagramItem *parentClassDiagramItem_)
-        : DiagramItem(params->width(),
-                      params->height(),
+        : DiagramItem(80,
+                      50,
                       DiagramItem::Actor,
                       params->color()) {
     setFlag(QGraphicsItem::ItemIsSelectable);
@@ -37,6 +37,7 @@ SequenceDiagramItem::SequenceDiagramItem(
                                              Qt::TextInteractionFlag::TextSelectableByMouse |
                                              Qt::TextInteractionFlag::TextSelectableByKeyboard;
     setPen(QPen(QColor(1, 0, 0, 0)));
+
     _head = new NameObject(this, _flags, QPointF(-3, -40), params->name());
     qreal Pos = (params->width() - _head->boundingRect().width()) / 2;
     _head->setPos(Pos, -40);

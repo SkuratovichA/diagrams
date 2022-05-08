@@ -45,6 +45,11 @@ QPoint SequenceCanvas::generateCoords() const {
  * @return
  */
 bool SequenceCanvas::createFromFile(dgrm_seq_t seq) {
+    ItemsBuffer buf;
+
+//    for (auto x : seq.actors) {
+//        buf.addClassItems(x);
+//    }
     return true;
 }
 
@@ -53,6 +58,32 @@ bool SequenceCanvas::createFromFile(dgrm_seq_t seq) {
  * @param prg
  */
 bool SequenceCanvas::getStringRepresentation(Program &prg) {
+    std::vector<Actor> actors;
+    std::vector<Action> actions;
+    std::vector<Activate> activates;
+    ItemsBuffer buf;
+
+    for (auto x : getItems<SequenceDiagramItem>()) {
+        buf.fillActorItems(x);
+    }
+
+// sequence connections
+//    for (auto x : getItems<SequenceConnectionItem>()) {
+//        buf.fillMessagesItems(x);
+//    }
+
+    for (auto x : buf.sequenceItems()) {
+        Actor *act;
+        act->name = x->name().toStdString();
+        x->fillColor(act->color);
+        act->coords[0] = x->x();
+        act->coords[1] = x->y();
+
+        prg.diagram_sequence[0].actions;
+    }
+
+    // add for sequence diagram
+
     return true;
 }
 
@@ -148,7 +179,7 @@ void SequenceCanvas::addEntity(ClassDiagramItem *classDiagramItemParent) {
     QPoint point = generateCoords();
 
     createActor = new actorParams(point.x(), point.y(), classDiagramItemParent->name(),
-                                  classDiagramItemParent->color(), 80, 50);
+                                  classDiagramItemParent->color());
 
     _undoStack->push(
             new AddSequenceCommand(editorScene, createActor, classDiagramItemParent)

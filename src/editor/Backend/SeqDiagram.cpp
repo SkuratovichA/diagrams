@@ -14,6 +14,7 @@ void Activate::fill_activate(const json el) {
 void DiagramSequence::fill_structure_actor(const json el, dgrm_seq_t& o) {
     for (auto x : el) {
         Actor act;
+        Program::push_coords(x.at("coords"), act.coords);
         act.name = x.at("name").get<std::string>();
         act.color.r = x.at("color").at("r").get<int>();
         act.color.g = x.at("color").at("g").get<int>();
@@ -54,7 +55,13 @@ void DiagramSequence::add_actor_to_file(json& j, std::vector<Actor> ac) {
                     {"b" , x.color.b},
                     {"a" , x.color.a}
                 }
-            }
+            },
+            {"coords",
+                    {
+                            {"x" , x.coords[0]},
+                            {"y" , x.coords[1]}
+                    }
+            },
         };
     }
 }

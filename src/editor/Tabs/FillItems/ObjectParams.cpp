@@ -4,21 +4,21 @@
 
 #include "ObjectParams.h"
 
-objectParams::objectParams(qreal x, qreal y, QString name,
-                           QColor color, qreal width, qreal height
-) {
+objectParams::objectParams(qreal x, qreal y, QString name, QColor color)
+{
     _x = x;
     _y = y;
     _color = color;
-    _width = width;
-    _height = height;
     _name = name;
 };
 
 classParams::classParams(qreal x, qreal y, QString name,
                          QColor color, qreal width, qreal height,
                          QList<QString> attrs, QList<QString> methods)
-        : objectParams(x, y, name, color, width, height) {
+        : objectParams(x, y, name, color) {
+    _width = width;
+    _height = height;
+
     for (auto val: attrs) {
         _attrs.push_back(val);
     }
@@ -64,9 +64,6 @@ bool classParams::splitString(std::vector<attrs_t> &at, QList<QString> arr) {
     return true;
 }
 
-actorParams::actorParams(qreal x, qreal y, QString name, QColor color,
-                         qreal width, qreal height
-)
-        : objectParams(x, y, name, color, width, height) {
-
+actorParams::actorParams(qreal x, qreal y, QString name, QColor color)
+    : objectParams(x, y, name, color) {
 };

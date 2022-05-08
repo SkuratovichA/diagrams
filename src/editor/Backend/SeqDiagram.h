@@ -8,6 +8,7 @@ class Actor {
 public:
     std::string name;
     Color color;
+    std::vector<double> coords;
 };
 
 class Action {

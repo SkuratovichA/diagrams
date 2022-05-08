@@ -17,11 +17,11 @@ public:
     ItemsBuffer();
     ~ItemsBuffer();
 
-    //void createClassItems();
-    void fillClassItems(ClassDiagramItem *item);
-    void fillActorItems(SequenceDiagramItem *item);
     void clearBuffer();
+    void addActorItems(Actor act);
+    void fillActorItems(SequenceDiagramItem *item);
     void addClassItems(Class cls);
+    void fillClassItems(ClassDiagramItem *item);
     void addRelationItems(Conct conct);
     void fillRelationItems(ClassConnectionItem *item);
 
@@ -63,6 +63,13 @@ public:
     void deleteActorItems() {
         for (auto x : _actorItems) {
             _actorItems.pop_front();
+            delete x;
+        }
+    }
+
+    void deleteRelationItems() {
+        for (auto x : _relationItems) {
+            _relationItems.pop_front();
             delete x;
         }
     }
