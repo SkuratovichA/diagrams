@@ -72,20 +72,28 @@ bool ClassCanvas::createFromFile(dgrm_class_t cls) {
         buf.addRelationItems(x);
     }
 
+    qDebug() << "aaaaaaaaaaaaaa";
+
+    ClassDiagramItem *from;
+    ClassDiagramItem *to;
     for (auto x : buf.relationItems()) {
-        ClassDiagramItem *from;
-        ClassDiagramItem *to;
         for (auto y : items) {
-            if (x->leftNum() == y->name()) {
+            qDebug() << x->leftNum() << y->name();
+            if (x->leftObj() == y->name()) {
                 from = y;
             }
-            if (x->rightNum() == y->name()) {
+            if (x->rightObj() == y->name()) {
                 to = y;
             }
         }
 
-        ClassConnectionItem *item = new ClassConnectionItem(from, to, x, x->type());
-
+        if (from == nullptr || to == nullptr) {
+            qDebug() << "Err ";
+            return false;
+        }
+        qDebug() << "bbbbb" << from << to;
+        ClassConnectionItem *item = new ClassConnectionItem(from, to, x, static_cast<ClassConnectionItem::ClassConnectionType>(x->type()));
+        qDebug() << "ccccc";
         editorScene->addItem(item);
         editorScene->update();
     }
@@ -133,6 +141,8 @@ bool ClassCanvas::getStringRepresentation(Program &prg) {
 
     for (auto x : buf.relationItems()) {
         Conct tmp;
+        qDebug() << x->rightNum();
+        qDebug() << x->leftNum();
         tmp.left_obj = x->leftObj().toStdString();
         tmp.left_num = x->leftNum().toStdString();
         tmp.right_obj = x->rightObj().toStdString();
@@ -401,8 +411,8 @@ void ClassCanvas::addConnection() {
         return;
     }
 
-    createRelation = new relationsParams("1..n", nodes.first->name(), "0..n",
-                                         nodes.second->name(), "MSG",  ClassConnectionItem::Dependency);
+    createRelation = new relationsParams(nodes.first->name(), "1..n",nodes.second->name(),
+                                         "0..n","MSG",  ClassConnectionItem::Dependency);
     _undoStack->push(
             new AddClassConnectionCommand(nodes.first, nodes.second, createRelation, ClassConnectionItem::Dependency, editorScene)
     );

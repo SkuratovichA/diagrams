@@ -68,7 +68,7 @@ private:
     void createDynamicToolBar();
     bool getTextRepresentation(Program &prg);
     void readFile();
-    void writeFile();
+    void writeToFile();
 
 private:
     QTabWidget *tabWidget;

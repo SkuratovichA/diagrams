@@ -12,7 +12,7 @@
 #include "../EditorScene/EditorScene.h"
 #include "../Commands/Commands.h"
 #include "../DiagramItem/DiagramItem.h"
-#include "../FillItems/ObjectParams.h"
+#include "../FillItems/ObjectParams.h" // can delete this maybe
 #include "ItemsBuffer/Itemsbuffer.h"
 #include "../../Backend/Parse.h"
 

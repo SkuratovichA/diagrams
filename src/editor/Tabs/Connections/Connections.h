@@ -7,12 +7,28 @@
 
 #include <QGraphicsLineItem>
 #include <QGraphicsSceneMouseEvent>
+#include "../TabCanvas/ItemsBuffer/Itemsbuffer.h"
 
 class ClassDiagramItem;
 
 class SequenceDiagramItem;
 
-class msgText;
+class msgText : public QGraphicsTextItem {
+public:
+    msgText(QGraphicsItem *parent, QFlags<Qt::TextInteractionFlag> flags, qreal x, qreal y, QString str);
+    //~msgText();
+
+    QGraphicsItem *parent() {
+        return _parent;
+    }
+
+protected:
+    void keyReleaseEvent(QKeyEvent *event) override;
+
+private:
+    QGraphicsItem *_parent;
+};
+
 
 
 /**
@@ -174,21 +190,4 @@ private:
     SequenceDiagramItem *nodeTo;
     QLineF connectionLine;
 };
-
-class msgText : public QGraphicsTextItem {
-public:
-    msgText(QGraphicsItem *parent, QFlags<Qt::TextInteractionFlag> flags, qreal x, qreal y, QString str);
-    //~msgText();
-
-    QGraphicsItem *parent() {
-        return _parent;
-    }
-
-protected:
-    void keyReleaseEvent(QKeyEvent *event) override;
-
-private:
-    QGraphicsItem *_parent;
-};
-
 #endif //DIAGRAMS_CONNECTIONS_H

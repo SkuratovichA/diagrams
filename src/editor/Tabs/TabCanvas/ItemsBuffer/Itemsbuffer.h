@@ -5,12 +5,11 @@
 #ifndef DIAGRAMS_ITEMSBUFFER_H
 #define DIAGRAMS_ITEMSBUFFER_H
 
-#include "../../DiagramItem/DiagramItem.h"
 #include "../../FillItems/ObjectParams.h"
 
-class ClassConnectionItem;
 class ClassDiagramItem;
 class SequenceDiagramItem;
+class ClassConnectionItem;
 class SequenceConnectionItem;
 
 class ItemsBuffer {

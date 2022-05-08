@@ -96,7 +96,7 @@ editorInterface::~editorInterface() {
  */
 void editorInterface::newTabSelected() {
 
-    //tatic QWidget *prevWidget = nullptr;
+    //static QWidget *prevWidget = nullptr;
     qDebug() << "wee wee (1)";
     if (prevWidget != nullptr) {
         // moved from the sequence canvas, hence, there is a need to update all class connecitons
@@ -250,17 +250,17 @@ void editorInterface::readFile() {
 
     Program prg;
     prg.parse_file(filename.toStdString());
-    ItemsBuffer arrBufs[prg.diagram_sequence.size() + 1];
+    //ItemsBuffer arrBufs[prg.diagram_sequence.size() + 1];
 
     // class diagram
     idx = tabWidget->addTab(new ClassCanvas(this, undoStack), "class Diagram");
     reinterpret_cast<ClassCanvas *>(tabWidget->widget(idx))->createFromFile(prg.diagram_class);
 
     // sequence diagram
-    for (int c = 0; c < prg.diagram_sequence.size(); c++) {
-        idx = tabWidget->addTab(new SequenceCanvas(this, undoStack), "sequence Diagram");
-        reinterpret_cast<SequenceCanvas *>(tabWidget->widget(idx))->createFromFile(prg.diagram_sequence[c]);
-    }
+//    for (int c = 0; c < prg.diagram_sequence.size(); c++) {
+//        idx = tabWidget->addTab(new SequenceCanvas(this, undoStack), "sequence Diagram");
+//        reinterpret_cast<SequenceCanvas *>(tabWidget->widget(idx))->createFromFile(prg.diagram_sequence[c]);
+//    }
 
     // handle parsing (can occur an error)
 }
@@ -268,7 +268,7 @@ void editorInterface::readFile() {
 /**
  * TODO
  */
-void editorInterface::writeFile() {
+void editorInterface::writeToFile() {
     Program prg;
 
     QFile file(filename);
@@ -297,7 +297,7 @@ void editorInterface::actionSave_triggered() {
         return;
     }
 
-    writeFile();
+    writeToFile();
 }
 
 /**
@@ -313,7 +313,7 @@ void editorInterface::actionSaveAs_triggered() {
         return;
     }
 
-    writeFile();
+    writeToFile();
 }
 
 /**

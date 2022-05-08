@@ -23,21 +23,25 @@ ClassConnectionItem::ClassConnectionItem(ClassDiagramItem *fromNode,
                                          uint32_t order,
                                          QColor color
 ) {
+    qDebug() <<"uuuuuuuuu" << fromNode;
+    qDebug() <<"uuuuuuuuu" << toNode;
     setFlag(QGraphicsItem::ItemIsSelectable);
     _nodeFrom = fromNode;
     _nodeTo = toNode;
     _single = fromNode == toNode;
-
+    qDebug() <<"uuuuuuuuu";
     _nodeFrom->addConnection(this);
     _nodeTo->addConnection(this);
+    qDebug() << "iiiiiii";
     _connectionType = type;
+    qDebug() << "oooooo";
     _color = color;
     _order = order;
-
+    qDebug() <<"uuuuuuuuu";
     leftNum = new msgText(this, getFlags(), 0, 0, params->leftNum());
     msg = new msgText(this, getFlags(), 0, 0, params->msg());
     rightNum = new msgText(this, getFlags(), 0, 0, params->rightNum());
-
+    qDebug() <<"uuuuuuuuu";
     setZValue(-1.0);
     trackNodes();
 }

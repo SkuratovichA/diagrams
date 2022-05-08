@@ -7,7 +7,7 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
 
-#set(CMAKE_PREFIX_PATH "/Users/sasha/Qt/6.2.4/macos/lib/cmake")
+set(CMAKE_PREFIX_PATH "/home/shchepa/Qt/6.2.3/gcc_64/lib/cmake/")
 
 find_package(Qt6 COMPONENTS
         Core

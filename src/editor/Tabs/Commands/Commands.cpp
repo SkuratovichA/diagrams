@@ -216,7 +216,7 @@ void AddClassCommand::redo() {
 AddClassConnectionCommand::AddClassConnectionCommand(ClassDiagramItem *fromNode,
                                                      ClassDiagramItem *toNodes,
                                                      relationsParams *params,
-                                                     ClassConnectionType type,
+                                                     ClassConnectionItem::ClassConnectionType type,
                                                      QGraphicsScene *scene,
                                                      QUndoCommand *parent)
         : QUndoCommand(parent), graphicsScene(scene) {
