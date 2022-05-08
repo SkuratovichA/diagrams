@@ -8,7 +8,7 @@
 #include <QString>
 #include <QList>
 #include <QColor>
-#include "../../../Backend/Parse.h"
+#include "../../Backend/Parse.h"
 
 class objectParams {
 public:

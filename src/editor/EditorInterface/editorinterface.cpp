@@ -157,9 +157,9 @@ void editorInterface::createDynamicToolBar() {
     ADD_SIGNAL(newTabAction, "New &Tab", "+T", "Ctrl+T", this, SLOT(actionNewTab_triggered()));
     ADD_SIGNAL(deleteTabAction, "Delete &Tab", "+T", "Ctrl+W", this, SLOT(actionDeleteTab_triggered()));
     ADD_SIGNAL(saveAction, "&Save", "S", "Ctrl+S", this, SLOT(actionSave_triggered()));
-    ADD_SIGNAL(saveAsAction, "Save &As", "S", "Ctrl+S", this, SLOT(actionSaveAs_triggered()));
-    ADD_SIGNAL(zoomInAction, "Zoom &In", "Ctrl+", "Ctrl+", this, SLOT(actionZoomIn_triggered()));
-    ADD_SIGNAL(zoomOutAction, "Zoom &Out", "Ctrl-", "Ctrl-", this, SLOT(actionZoomOut_triggered()));
+    ADD_SIGNAL(saveAsAction, "Save &As", "S", "Ctrl+Shift+S", this, SLOT(actionSaveAs_triggered()));
+    ADD_SIGNAL(zoomInAction, "Zoom &In", "Ctrl+", "Ctrl+Plus", this, SLOT(actionZoomIn_triggered()));
+    ADD_SIGNAL(zoomOutAction, "Zoom &Out", "Ctrl-", "Ctrl+Minus", this, SLOT(actionZoomOut_triggered()));
     ADD_SIGNAL(sendToBackAction, "Send to back", "b", "Ctrl+B", this, SLOT(actionBack_triggered()));
     ADD_SIGNAL(bringToFrontAction, "Send to front", "f", "Ctrl+F", this, SLOT(actionFront_triggered()));
 
@@ -236,30 +236,24 @@ bool editorInterface::getTextRepresentation(Program &prg) {
  */
 void editorInterface::readFile() {
     int idx;
-    qDebug() << "inside reading dunction";
     tabWidget = new QTabWidget(this);
     connect(tabWidget, SIGNAL(currentChanged(int)), this, SLOT(newTabSelected()));
     setCentralWidget(tabWidget);
-
-    qDebug() << "inside reading dunction";
 
     Program prg;
     prg.parse_file(filename.toStdString());
     ItemsBuffer arrBufs[prg.diagram_sequence.size() + 1];
 
-    qDebug() << "inside reading dunction";
     // class diagram
     idx = tabWidget->addTab(new ClassCanvas(this, undoStack), "class Diagram");
-    qDebug() << idx;
     reinterpret_cast<ClassCanvas *>(tabWidget->widget(idx))->createFromFile(prg.diagram_class);
 
-    qDebug() << "inside reading dunction";
     // sequence diagram
     for (int c = 0; c < prg.diagram_sequence.size(); c++) {
         idx = tabWidget->addTab(new SequenceCanvas(this, undoStack), "sequence Diagram");
         reinterpret_cast<SequenceCanvas *>(tabWidget->widget(idx))->createFromFile(prg.diagram_sequence[c]);
     }
-    qDebug() << "inside reading dunction";
+
     // handle parsing (can occur an error)
 }
 
