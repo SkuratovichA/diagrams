@@ -141,6 +141,10 @@ public:
         _width = width;
     }
 
+    void setRowWidth(qreal width) {
+        _rowWidth = width;
+    }
+
     void setHeight(qreal height) {
         _height = height;
     }

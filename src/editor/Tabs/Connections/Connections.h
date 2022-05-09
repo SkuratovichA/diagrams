@@ -104,6 +104,14 @@ public:
         return msg;
     }
 
+    void leftSetPos(QPointF pos) {
+        leftNum->setPos(pos);
+    }
+
+    void rightSetPos(QPointF pos) {
+        rightNum->setPos(pos);
+    }
+
     void msgSetPos(QPointF pos) {
         msg->setPos(pos);
     }

@@ -244,6 +244,7 @@ void ClassCanvas::addMethod_triggered() {
     for (auto x: item->connections()) {
         x->trackNodes();
     }
+    editorScene->update();
 };
 
 /**
@@ -275,6 +276,8 @@ void ClassCanvas::rmMethod_triggered() {
     for (auto x: item->connections()) {
         x->trackNodes();
     }
+
+    editorScene->update();
 };
 
 /**
@@ -305,6 +308,7 @@ void ClassCanvas::addAttr_triggered() {
     for (auto x: item->connections()) {
         x->trackNodes();
     }
+    editorScene->update();
 };
 
 /**
@@ -336,6 +340,8 @@ void ClassCanvas::rmAttr_triggered() {
     for (auto x: item->connections()) {
         x->trackNodes();
     }
+
+    editorScene->update();
 };
 
 /**

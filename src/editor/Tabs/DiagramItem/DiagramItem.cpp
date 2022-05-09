@@ -75,6 +75,7 @@ void ClassTextAttr::keyReleaseEvent(QKeyEvent *event) {
         item->setLine(0, 0, maxLen, 0);
     }
     parent()->setWidth(maxLen);
+    parent()->setRowWidth(maxLen);
 
     qreal midW = parent()->_head->boundingRect().width();
     qreal midO = parent()->width();
@@ -121,21 +122,3 @@ void NameObject::keyReleaseEvent(QKeyEvent *event) {
     qreal midW = boundingRect().width();
     setPos((midO - midW) / 2, -40);
 }
-
-///**
-// * A constructor.
-// *
-// * This constructor creates lifetime line for an entity and connects
-// * with parent item.
-// *
-// * @param parent parent item
-// * @param startPoint start position of life time
-// */
-//ActorLifetime::ActorLifetime(QGraphicsItem *parent, QPointF startPoint) : QGraphicsLineItem(parent) {
-//    auto x = startPoint.x();
-//    auto y = startPoint.y();
-//    auto endPoint = QPoint(x, y + 400);
-//    auto lline = new QGraphicsLineItem(QLineF(startPoint, endPoint), this);
-//    lline->setPen(QPen(QColor(Qt::black), 2.0, Qt::DashLine));
-//}
-
