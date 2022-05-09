@@ -10,6 +10,14 @@
 #include <QGraphicsSceneMouseEvent>
 #include "../DiagramItem.h"
 
+using namespace Connections;
+
+typedef QPair<qreal, qreal> region_t;
+typedef QList<region_t> lineRegionsPairs_t;
+typedef QPair<SequenceConnectionItem *, ActorType> connectionActorPair_t;
+typedef QList<connectionActorPair_t> connectionList_t;
+typedef QList<connectionList_t> conectionTypeConnectionPairs_t;
+
 /** Implementation of a custom Life Line for an object (actor)
  */
 class SequenceDiagramLifeLine : public QGraphicsLineItem {
@@ -79,11 +87,10 @@ public:
 public:
     void notifyConnectionsAboutParentPositionChange();
     void addConnection(
-            SequenceConnectionItem *connection,
-            SequenceConnectionItem::ConnectionType connectionType,
-            SequenceConnectionItem::ActorType actorType
+            SequenceConnection *connection,
+            ActorType actorType
     );
-    void removeConnection(SequenceConnectionItem *connection);
+    void removeConnection(SequenceConnection *connection);
 
     /**
      * Private functions.
@@ -113,7 +120,7 @@ private:
      *  One of the Synchronous, Asynchronous, Reply, Create, Delete.
      *  The same functionality as  in the ClassDiagramItem
      */
-    QSet<SequenceConnectionItem *> _connections = QSet<SequenceConnectionItem *>();
+    QSet<SequenceConnection *> _connections = QSet<SequenceConnection *>();
 
     /**
      * Constants.
@@ -122,7 +129,7 @@ private:
     qreal const _actRegLen = 20.0;
     qreal const _adjust = 10.0;
     qreal const _heightAdjust = 20.0;
-    SequenceConnectionItem::ConnectionType _connectionType;
+    ConnectionType _connectionType;
 
 //    bool _isWaitingForResponce = false;
 };

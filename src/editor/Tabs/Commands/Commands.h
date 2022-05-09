@@ -11,6 +11,8 @@
 #include "../DiagramItem/DiagramItem.h"
 #include "../FillItems/ObjectParams.h"
 
+using namespace Connections;
+
 /**
  *
 */
@@ -97,7 +99,7 @@ class AddSequenceConnectionCommand : public QUndoCommand {
 public:
     explicit AddSequenceConnectionCommand(SequenceDiagramItem *fromNode,
                                           SequenceDiagramItem *toNode,
-                                          SequenceConnectionItem::ConnectionType connectionType,
+                                          ConnectionType connectionType,
                                           QGraphicsScene *scene,
                                           QUndoCommand *parent = nullptr);
 

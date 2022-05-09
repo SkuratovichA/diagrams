@@ -9,6 +9,10 @@
 #include <QPainter>
 #include <QDebug>
 
+//#include "../../../Tabs/Connections/Connections.h"
+
+using namespace Connections;
+
 /** A constructor.
  *
  * @param yFrom the starting position of the line.
@@ -28,7 +32,7 @@ SequenceDiagramLifeLine::SequenceDiagramLifeLine(SequenceDiagramItem *parent, qr
  *
  */
 SequenceDiagramLifeLine::~SequenceDiagramLifeLine() {
-            foreach (SequenceConnectionItem *connection, _connections) {
+            foreach (SequenceConnection *connection, _connections) {
             delete connection;
         }
 }
@@ -125,6 +129,7 @@ QList<QPair<qreal, qreal>> SequenceDiagramLifeLine::mergedActiveRegions() {
         if (a.second < b.second) {
             return true;
         }
+        return false;
     };
     QList<QPair<qreal, qreal>> a(_activeRegions);
     a.append(_synchronousPoints);
@@ -162,40 +167,37 @@ qreal SequenceDiagramLifeLine::maxHeight() const {
  * @param connection
  */
 void SequenceDiagramLifeLine::addConnection(
-        SequenceConnectionItem *connection,
-        SequenceConnectionItem::ConnectionType connectionType,
-        SequenceConnectionItem::ActorType actorType
+        SequenceConnection *connection,
+        ActorType actorType
         ) {
-    qDebug() << connection->type();
-
-    switch (connectionType) {
-        case SequenceConnectionItem::Synchronous:
+    switch (connection->type()) {
+        case Synchronous:
             qDebug() << "synchronous";
             break;
 
-        case SequenceConnectionItem::Asynchronous:
+        case Asynchronous:
             qDebug() << "asynchronous";
             break;
 
-        case SequenceConnectionItem::Reply:
+        case Reply:
             qDebug() << "reply";
             break;
 
-        case SequenceConnectionItem::Create:
+        case Create:
             qDebug() << "create";
             break;
 
-        case SequenceConnectionItem::Delete:
+        case Delete:
             qDebug() << "delete";
             break;
     }
 
     switch (actorType) {
-        case SequenceConnectionItem::Caller:
+        case Caller:
             qDebug() << "caller";
             break;
 
-        case SequenceConnectionItem::Receiver:
+        case Receiver:
             qDebug() << "receiver";
             break;
     }
@@ -214,6 +216,6 @@ void SequenceDiagramLifeLine::notifyConnectionsAboutParentPositionChange() {
  *
  * @param connection
  */
-void SequenceDiagramLifeLine::removeConnection(SequenceConnectionItem *connection) {
+void SequenceDiagramLifeLine::removeConnection(SequenceConnection *connection) {
     _connections.remove(connection);
 }

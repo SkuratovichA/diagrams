@@ -9,6 +9,8 @@
 
 #include <QGraphicsScene>
 
+using namespace Connections;
+
 QString createCommandString(QGraphicsItem *item) {
     return QObject::tr("%1")
             .arg("ITEM");
@@ -208,8 +210,6 @@ void AddClassCommand::redo() {
 }
 
 
-/************************ Connections */
-// TODO: make connectios work somehow
 /**
  *
  */
@@ -261,7 +261,7 @@ void AddClassConnectionCommand::redo() {
  */
 AddSequenceConnectionCommand::AddSequenceConnectionCommand(SequenceDiagramItem *fromNode,
                                                            SequenceDiagramItem *toNode,
-                                                           SequenceConnectionItem::ConnectionType connectionType,
+                                                           ConnectionType connectionType,
                                                            QGraphicsScene *scene,
                                                            QUndoCommand *parent)
         : QUndoCommand(parent), graphicsScene(scene) {
@@ -283,15 +283,17 @@ AddSequenceConnectionCommand::~AddSequenceConnectionCommand() {
  *
  */
 void AddSequenceConnectionCommand::undo() {
-    graphicsScene->removeItem(actorConnection);
-    graphicsScene->update();
+    // TODO fix
+//    graphicsScene->removeItem(actorConnection);
+//    graphicsScene->update();
 }
 
 /**
  *
  */
 void AddSequenceConnectionCommand::redo() {
-    graphicsScene->addItem(actorConnection);
-    graphicsScene->clearSelection();
+    // TODO: fix
+//    graphicsScene->addItem(actorConnection);
+//    graphicsScene->clearSelection();
     graphicsScene->update();
 }

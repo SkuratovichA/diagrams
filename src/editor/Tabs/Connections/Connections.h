@@ -29,8 +29,6 @@ private:
     QGraphicsItem *_parent;
 };
 
-
-
 /**
  *
  */
@@ -92,15 +90,15 @@ public:
         rightNum->setPos(pos);
     }
 
-    msgText* getLeftNum() const {
+    msgText *getLeftNum() const {
         return leftNum;
     }
 
-    msgText* getRightNum() const {
+    msgText *getRightNum() const {
         return rightNum;
     }
 
-    msgText* getMsg() const {
+    msgText *getMsg() const {
         return msg;
     }
 
@@ -152,11 +150,7 @@ private:
     msgText *rightNum;
 };
 
-/**
- *
- */
-class SequenceConnectionItem : public QGraphicsLineItem {
-public:
+namespace Connections {
     enum ConnectionType {
         Synchronous,
         Asynchronous,
@@ -164,22 +158,74 @@ public:
         Create,
         Delete,
     };
+
     enum ActorType {
         Caller,
         Receiver
     };
+};
+using namespace Connections;
+
+/**
+ *
+ */
+class SequenceConnection : public QGraphicsLineItem {
 
 public:
+    SequenceConnection(
+            SequenceDiagramItem *nodeFrom,
+            SequenceDiagramItem *nodeTo,
+            ConnectionType connectionType,
+            QColor clr = QColor(0,0,0,100)
+    );
+
+    ~SequenceConnection();
+
+public:
+    void trackNodes();
+
+    /**
+     * Overrides
+     */
+public:
+    QVariant itemChange(GraphicsItemChange change, const QVariant &value) override;
+    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
+
+private:
+    void paintSynchronous(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
+    void paintAsynchronous(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
+    void paintReply(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
+    void paintCreate(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
+    void paintDelete(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
+
+private:
+    QColor _color;
+    SequenceDiagramItem *_nodeFrom;
+    SequenceDiagramItem *_nodeTo;
+    ConnectionType _connectionType;
+};
+
+
+/**
+ *
+ */
+class SequenceConnectionItem {
+public:
     SequenceConnectionItem(
-            SequenceDiagramItem *fromNode,
-            SequenceDiagramItem *toNode,
-            ConnectionType connectionType);
+            SequenceDiagramItem *nodeFrom,
+            SequenceDiagramItem *nodeTo,
+            ConnectionType connectionType
+    );
 
     ~SequenceConnectionItem();
 
 public:
-    [[nodiscard]] QColor color() const;
+
     void trackNodes();
+
+    [[nodiscard]] ConnectionType connectionType() const {
+        return _connectionType;
+    };
 
     [[nodiscard]] SequenceDiagramItem *fromNode() const {
         return _nodeFrom;
@@ -189,22 +235,31 @@ public:
         return _nodeTo;
     };
 
-public:
-    void paintSynchronous(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
-    void paintAsynchronous(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
-    void paintReply(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
-    void paintCreate(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
-    void paintDelete(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
+    ConnectionType type() {
+        return _connectionType;
+    }
 
+    QGraphicsScene* scene() const {
+        for (auto c: _connections) {
+            return c->scene(); // returns the first scene (both scenes are the same)
+        }
+        return nullptr;
+    };
 
-public:
-    QVariant itemChange(GraphicsItemChange change, const QVariant &value) override;
-    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
-
+    void trackNodes() const {
+        for (auto c: _connections) {
+            c->trackNodes();
+        }
+    }
 
 private:
-    SequenceDiagramItem *_nodeFrom;
-    SequenceDiagramItem *_nodeTo;
+    QColor _color;
     ConnectionType _connectionType;
+    SequenceDiagramItem *_nodeTo;
+    SequenceDiagramItem *_nodeFrom;
+
+private:
+    QSet<SequenceConnection *> _connections = QSet<SequenceConnection *>();
 };
+
 #endif //DIAGRAMS_CONNECTIONS_H

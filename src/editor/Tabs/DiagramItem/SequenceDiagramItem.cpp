@@ -97,10 +97,9 @@ QVariant SequenceDiagramItem::itemChange(
  * @param connection message arrow between objects
  */
 void SequenceDiagramItem::addConnection(
-        SequenceConnectionItem *connection,
-        SequenceConnectionItem::ConnectionType connectionType,
-        SequenceConnectionItem::ActorType actorType) {
-    _lifeLine->addConnection(connection, connectionType, actorType);
+        SequenceConnection *connection,
+        ActorType actorType) {
+    _lifeLine->addConnection(connection, actorType);
 }
 
 /**
@@ -108,6 +107,6 @@ void SequenceDiagramItem::addConnection(
  *
  * @param connection message arrow between objects
  */
-void SequenceDiagramItem::removeConnection(SequenceConnectionItem *connection) {
+void SequenceDiagramItem::removeConnection(SequenceConnection *connection) {
     _lifeLine->removeConnection(connection);
 }

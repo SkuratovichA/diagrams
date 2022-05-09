@@ -13,6 +13,8 @@
 #include "../Connections/Connections.h"
 #include "../FillItems/ObjectParams.h"
 
+using namespace Connections;
+
 QT_BEGIN_NAMESPACE
 class QGraphicsItem;
 
@@ -352,10 +354,9 @@ public:
     }
 
 public:
-    void addConnection(SequenceConnectionItem *connection,
-                       SequenceConnectionItem::ConnectionType connectionType,
-                       SequenceConnectionItem::ActorType actorType);
-    void removeConnection(SequenceConnectionItem *connection);
+    void addConnection(SequenceConnection *connection,
+                       ActorType actorType);
+    void removeConnection(SequenceConnection *connection);
 
     [[nodiscard]] ClassDiagramItem *parentClassDiagramItem() const {
         return _parentClassDiagramItem;

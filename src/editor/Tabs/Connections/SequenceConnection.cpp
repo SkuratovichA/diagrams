@@ -12,6 +12,7 @@
 #include "Connections.h"
 #include "../DiagramItem/DiagramItem.h"
 
+using namespace Connections;
 
 /**
  *
@@ -19,14 +20,19 @@
  * @param toNode
  * @param connectionType
  */
-SequenceConnectionItem::SequenceConnectionItem(SequenceDiagramItem *fromNode,
-                                               SequenceDiagramItem *toNode,
-                                               ConnectionType connectionType) {
-    _nodeFrom = fromNode;
-    _nodeTo = toNode;
+SequenceConnection::SequenceConnection(SequenceDiagramItem *nodeFrom,
+                                       SequenceDiagramItem *nodeTo,
+                                       ConnectionType connectionType,
+                                       QColor clr
+) {
+    _nodeFrom = nodeFrom;
+    _nodeTo = nodeTo;
     _connectionType = connectionType;
-    _nodeFrom->addConnection(this, connectionType, Caller);
-    _nodeTo->addConnection(this, connectionType, Receiver);
+
+    _nodeFrom->addConnection(this, Caller);
+    _nodeTo->addConnection(this, Receiver);
+
+    _color = clr;
 
     setFlags(QGraphicsItem::ItemIsSelectable | QGraphicsItem::ItemIsMovable | QGraphicsItem::ItemSendsGeometryChanges);
     setZValue(-1.0);
@@ -39,7 +45,7 @@ SequenceConnectionItem::SequenceConnectionItem(SequenceDiagramItem *fromNode,
  * @param value
  * @return
  */
-QVariant SequenceConnectionItem::itemChange(GraphicsItemChange change, const QVariant &value) {
+QVariant SequenceConnection::itemChange(GraphicsItemChange change, const QVariant &value) {
     if (change == ItemPositionChange)
         return QPointF(pos().x(), value.toPointF().y());
     return QGraphicsItem::itemChange(change, value);
@@ -51,7 +57,7 @@ QVariant SequenceConnectionItem::itemChange(GraphicsItemChange change, const QVa
  * @param option
  * @param widget
  */
-void SequenceConnectionItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) {
+void SequenceConnection::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) {
     switch (_connectionType) {
         case Synchronous:
             paintSynchronous(painter, option, widget);
@@ -73,34 +79,27 @@ void SequenceConnectionItem::paint(QPainter *painter, const QStyleOptionGraphics
             paintDelete(painter, option, widget);
             break;
     }
-//    painter->drawLine(_nodeFrom->centre().x(), y(), _nodeTo->centre().y(), y());
-//    qDebug() << "paint" << _nodeFrom->width() / 2.0 << y() << _nodeTo->width() / 2.0 << y();
 }
 
 /**
  *
  */
-SequenceConnectionItem::~SequenceConnectionItem() {
-    if (_nodeFrom != nullptr) {
-        _nodeFrom->removeConnection(this);
-    }
-    if (_nodeTo != nullptr) {
-        _nodeTo->removeConnection(this);
-    }
+SequenceConnection::~SequenceConnection() {
+    // There wiill be no destructor here, because this class is not communicating widh nodeFrom/To
+//    if (_nodeFrom != nullptr) {
+//        _nodeFrom->removeConnection(this);
+//    }
+//    if (_nodeTo != nullptr) {
+//        _nodeTo->removeConnection(this);
+//    }
 }
 
-/**
- *
- * @return
- */
-QColor SequenceConnectionItem::color() const {
-    return pen().color();
-}
 
 /** Changing the line according to the x-position of the two nodes it is connected to.
  *
  */
-void SequenceConnectionItem::trackNodes() {
+void SequenceConnection::trackNodes() {
+    // TODO: adjust y positions
 //    setLine(QLineF(_nodeFrom->pos(), _nodeTo->pos()));
 }
 
@@ -110,7 +109,7 @@ void SequenceConnectionItem::trackNodes() {
  * @param option
  * @param widget
  */
-void SequenceConnectionItem::paintSynchronous(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) {
+void SequenceConnection::paintSynchronous(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) {
     qDebug() << "print synchronous";
 }
 
@@ -120,7 +119,7 @@ void SequenceConnectionItem::paintSynchronous(QPainter *painter, const QStyleOpt
  * @param option
  * @param widget
  */
-void SequenceConnectionItem::paintAsynchronous(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) {
+void SequenceConnection::paintAsynchronous(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) {
     qDebug() << "print asynchronous";
 }
 
@@ -130,7 +129,7 @@ void SequenceConnectionItem::paintAsynchronous(QPainter *painter, const QStyleOp
  * @param option
  * @param widget
  */
-void SequenceConnectionItem::paintReply(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) {
+void SequenceConnection::paintReply(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) {
     qDebug() << "print reply";
 }
 
@@ -140,7 +139,7 @@ void SequenceConnectionItem::paintReply(QPainter *painter, const QStyleOptionGra
  * @param option
  * @param widget
  */
-void SequenceConnectionItem::paintCreate(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) {
+void SequenceConnection::paintCreate(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) {
     qDebug() << "print create";
 }
 
@@ -150,6 +149,6 @@ void SequenceConnectionItem::paintCreate(QPainter *painter, const QStyleOptionGr
  * @param option
  * @param widget
  */
-void SequenceConnectionItem::paintDelete(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) {
+void SequenceConnection::paintDelete(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) {
     qDebug() << "print delete";
 }
