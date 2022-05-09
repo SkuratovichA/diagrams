@@ -1,6 +1,7 @@
 // File: EditorScene.cpp
 // Author: Skuratovich Aliaksandr <xskura01@vutbr.cz>
-// Date: 01.05.2022
+// Author: Shchapaniak Andrei <xshcha00@vutbr.cz>
+// Date: 07.05.2022
 
 #include <QGraphicsSceneMouseEvent>
 

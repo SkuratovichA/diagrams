@@ -1,3 +1,9 @@
+// File: editorinterface.h
+// Author: Skuratovich Aliaksandr <xskura01@vutbr.cz>
+// Author: Shchapaniak Andrei <xshcha00@vutbr.cz>
+// Date: 1.5.2022
+
+
 #ifndef EDITORINTERFACE_H
 #define EDITORINTERFACE_H
 

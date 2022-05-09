@@ -1,5 +1,5 @@
-// File: editorinterface.cpp
-// Author: Skuratovich ALiaksandr
+// File: propertiesdialog.cpp
+// Author: Skuratovich Aliaksandr <xskura01@vutbr.cz>
 // Date: 7.5.2022
 
 #include <QListWidgetItem>

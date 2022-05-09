@@ -1,6 +1,6 @@
-//
-// Created by shchepa on 4.5.22.
-//
+// File: ObjectParams.cpp
+// Author: Shchapaniak Andrei <xshcha00@vutbr.cz>
+// Date: 07.05.2022
 
 #include "ObjectParams.h"
 #include <QDebug>

@@ -1,6 +1,6 @@
-//
-// Created by shchepa on 4.5.22.
-//
+// File: Itemsbuffer.cpp
+// Author: Shchapaniak Andrei <xshcha00@vutbr.cz>
+// Date: 07.05.2022
 
 #include "Itemsbuffer.h"
 #include "../../DiagramItem/DiagramItem.h"
@@ -20,7 +20,8 @@ ItemsBuffer::~ItemsBuffer() {
 }
 
 /**
- * Fill the structure from json to another structure for the next object created on the scene.
+ * Fill the structure relationParams from json to another structure
+ * for the next object created on the scene.
  *
  * @param conct structure with the data
  */
@@ -49,8 +50,10 @@ void ItemsBuffer::fillRelationItems(ClassConnectionItem *item) {
 }
 
 /**
+ * Fill the structure classParams from json to another structure
+ * for the next object created on the scene.
  *
- * @param cls
+ * @param cls structure with the data
  */
 void ItemsBuffer::addClassItems(Class cls) {
     classParams *prm;
@@ -72,6 +75,10 @@ void ItemsBuffer::addClassItems(Class cls) {
     pushClassItem(prm);
 }
 
+/**
+ *
+ * @param item
+ */
 void ItemsBuffer::fillClassItems(ClassDiagramItem *item) {
     classParams *ptr;
     QList<QString> methods;
@@ -96,8 +103,10 @@ void ItemsBuffer::fillClassItems(ClassDiagramItem *item) {
 }
 
 /**
+ * Fill the structure actorParams from json to another structure
+ * for the next object created on the scene.
  *
- * @param act
+ * @param act structure with the data
  */
 void ItemsBuffer::addActorItems(Actor act) {
     actorParams *a;
@@ -122,7 +131,7 @@ void ItemsBuffer::fillActorItems(SequenceDiagramItem *item) {
 }
 
 /**
- *
+ * Clear all lists with elements from the scene.
  */
 void ItemsBuffer::clearBuffer() {
     deleteClassItems();

@@ -1,3 +1,7 @@
+// File: ClassDiagram.h
+// Author: Shchapaniak Andrei <xshcha00@vutbr.cz>
+// Date: 07.05.2022
+
 #pragma once
 
 using json = nlohmann::json;

@@ -1,5 +1,6 @@
 // File: editorinterface.cpp
-// Author: Skuratovich ALiaksandr
+// Author: Skuratovich Aliaksandr <xskura01@vutbr.cz>
+// Author: Shchapaniak Andrei <xshcha00@vutbr.cz>
 // Date: 1.5.2022
 
 // FIXME: https://doc.qt.io/qt-5/qkeysequence.html

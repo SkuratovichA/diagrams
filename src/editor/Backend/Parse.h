@@ -1,3 +1,7 @@
+// File: Parse.h
+// Author: Shchapaniak Andrei <xshcha00@vutbr.cz>
+// Date: 07.05.2022
+
 #pragma once
 
 #include <iostream>
@@ -9,7 +13,6 @@
 #include "json.hpp"
 
 #include "SeqDiagram.h"
-//#include "ClassDiagram.h"
 
 using json = nlohmann::json;
 
