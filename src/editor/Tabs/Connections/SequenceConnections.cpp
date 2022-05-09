@@ -12,7 +12,6 @@
 #include "Connections.h"
 #include "../DiagramItem/DiagramItem.h"
 
-
 /**
  *
  * @param fromNode

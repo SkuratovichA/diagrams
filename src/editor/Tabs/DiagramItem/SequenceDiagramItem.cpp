@@ -36,16 +36,17 @@ SequenceDiagramItem::SequenceDiagramItem(
     QFlags<Qt::TextInteractionFlag> _flags = Qt::TextInteractionFlag::TextEditable |
                                              Qt::TextInteractionFlag::TextSelectableByMouse |
                                              Qt::TextInteractionFlag::TextSelectableByKeyboard;
-    setPen(QPen(QColor(1, 0, 0, 0)));
+    //setPen(QPen(QColor(1, 0, 0, 0)));
 
     _head = new NameObject(this, _flags, QPointF(-3, -40), params->name());
-    qreal Pos = (params->width() - _head->boundingRect().width()) / 2;
+    qreal Pos = (80 - _head->boundingRect().width()) / 2;
+    qDebug() << "position " << Pos;
     _head->setPos(Pos, -40);
     _parentClassDiagramItem = parentClassDiagramItem_;
 
-    auto actorRect = new QGraphicsRectItem(0, 0, params->width(), params->height(), this);
+    auto actorRect = new QGraphicsRectItem(0, 0, 80, 50, this);
     actorRect->setPen(QPen(QColor(Qt::black), 3.0));
-    actorRect->setBrush(QBrush(color()));
+    actorRect->setBrush(QBrush(params->color()));
 
     _lifeLine = new SequenceDiagramLifeLine(this, 0, lineDefaultLength);
 

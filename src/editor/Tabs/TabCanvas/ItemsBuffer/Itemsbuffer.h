@@ -18,12 +18,18 @@ public:
     ~ItemsBuffer();
 
     void clearBuffer();
+
     void addActorItems(Actor act);
     void fillActorItems(SequenceDiagramItem *item);
+
     void addClassItems(Class cls);
     void fillClassItems(ClassDiagramItem *item);
+
     void addRelationItems(Conct conct);
     void fillRelationItems(ClassConnectionItem *item);
+
+    //void addMessageItems(Action action);
+    //void fillMessageItems(Action action);
 
     QList<classParams *> classItems() {
         return _classItems;
@@ -37,9 +43,9 @@ public:
         return _actorItems;
     }
 
-    QList<SequenceConnectionItem *> messageItems() {
-        return _messageItems;
-    }
+    //QList<... *> messageItems() {
+    //    return _messageItems;
+    //}
 
     void pushClassItem(classParams *item) {
         _classItems.push_back(item);
@@ -52,6 +58,10 @@ public:
     void pushRelationItem(relationsParams *item) {
         _relationItems.push_back(item);
     }
+
+    //void pushMessageItem(... item) {
+    //    _messageItems.push_back(item);
+    //}
 
     void deleteClassItems() {
         for (auto x : _classItems) {
@@ -74,11 +84,18 @@ public:
         }
     }
 
+    //void deleteMessageItems() {
+    //    for (auto x : _messageItems) {
+    //        _messageItems.pop_front();
+    //        delete x;
+    //    }
+    //}
+
 private:
     QList<classParams *> _classItems;
     QList<relationsParams *> _relationItems;
     QList<actorParams *> _actorItems;
-    QList<SequenceConnectionItem *> _messageItems;
+    //QList<SequenceConnectionItem *> _messageItems;
 };
 
 

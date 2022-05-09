@@ -6,24 +6,23 @@
 #include "../../DiagramItem/DiagramItem.h"
 
 /**
- *
+ * A constructor.
  */
 ItemsBuffer::ItemsBuffer() {
 
 }
 
 /**
- *
+ * A destructor.
  */
 ItemsBuffer::~ItemsBuffer() {
-    for (auto x : classItems()) {
-        delete x;
-    }
+    clearBuffer(); // FIXME if segfault delete
 }
 
 /**
+ * Fill the structure from json to another structure for the next object created on the scene.
  *
- * @param conct
+ * @param conct structure with the data
  */
 void ItemsBuffer::addRelationItems(Conct conct) {
     relationsParams *prm = new relationsParams(QString::fromStdString(conct.left_obj),
