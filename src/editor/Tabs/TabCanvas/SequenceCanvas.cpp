@@ -44,7 +44,7 @@ QPoint SequenceCanvas::generateCoords() const {
  * @param buf
  * @return
  */
-bool SequenceCanvas::createFromFile(dgrm_seq_t seq) {
+bool SequenceCanvas::createFromFile(dgrmSeq_t seq) {
     ItemsBuffer buf;
 
     for (auto x : seq.actors) {
@@ -71,7 +71,7 @@ bool SequenceCanvas::getStringRepresentation(Program &prg) {
     std::vector<Activate> activates;
     ItemsBuffer buf;
 
-    dgrm_seq_t obj;
+    dgrmSeq_t obj;
 
     qDebug() << "i am here";
 
@@ -93,7 +93,7 @@ bool SequenceCanvas::getStringRepresentation(Program &prg) {
         obj.actors.push_back(act);
     }
 
-    prg.diagram_sequence.push_back(obj);
+    prg.diagramSequence.push_back(obj);
 
     // add for sequence diagram
 

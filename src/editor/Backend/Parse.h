@@ -13,19 +13,16 @@
 
 using json = nlohmann::json;
 
-//json check_null(std::string val);
-
 class Program {
 public:
-    dgrm_class_t diagram_class;
-    std::vector<dgrm_seq_t> diagram_sequence;
+    dgrmClass_t diagramClass;
+    std::vector<dgrmSeq_t> diagramSequence;
     DiagramClass obj_cl;
     DiagramSequence obj_se;
 
+    void parseFile(std::string filename);
 
-    void parse_file(std::string filename);
+    static void pushCoords(const json el, std::vector<double>& coords);
 
-    static void push_coords(const json el, std::vector<double>& coords);
-
-    void fill_file(std::string filename);
+    void fillFile(std::string filename);
 };

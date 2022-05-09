@@ -232,7 +232,7 @@ public:
 
 public:
     bool getStringRepresentation(Program &prg) override;
-    bool createFromFile(dgrm_class_t cls);
+    bool createFromFile(dgrmClass_t cls);
     QList<QPair<ClassDiagramItem *, QString>> getClassStringPairs();
     QPoint generateCoords() const override;
 
@@ -314,7 +314,7 @@ public slots:
 
 public:
     bool getStringRepresentation(Program &prg) override;
-    bool createFromFile(dgrm_seq_t seq);
+    bool createFromFile(dgrmSeq_t seq);
     QPoint generateCoords() const override;
 
 private:

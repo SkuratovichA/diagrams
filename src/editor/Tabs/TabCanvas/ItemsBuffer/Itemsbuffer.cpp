@@ -26,9 +26,9 @@ ItemsBuffer::~ItemsBuffer() {
  */
 void ItemsBuffer::addRelationItems(Conct conct) {
     relationsParams *prm = new relationsParams(QString::fromStdString(conct.leftObj),
-                                               QString::fromStdString(conct.left_num),
-                                               QString::fromStdString(conct.right_obj),
-                                               QString::fromStdString(conct.right_num),
+                                               QString::fromStdString(conct.leftNum),
+                                               QString::fromStdString(conct.rightObj),
+                                               QString::fromStdString(conct.rightNum),
                                                QString::fromStdString(conct.msg),
                                                conct.arrow, conct.order);
 

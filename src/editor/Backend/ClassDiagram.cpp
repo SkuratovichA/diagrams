@@ -44,6 +44,7 @@ void Class::pushHeight(const json el) {
  *
  * @param el node of a json file with attributes
  * perm, type and name
+ * @param obj vector with attributes
  */
 void Class::pushAttrs(const json el, std::vector<attrs_t>& obj) {
     for(auto x : el) {
@@ -61,15 +62,23 @@ void Class::pushAttrs(const json el, std::vector<attrs_t>& obj) {
  */
 void Conct::pushConnection(const json el) {
     this->leftObj  = el.at("left_obj" ).get<std::string>();
-    this->left_num  = el.at("left_num" ).get<std::string>();
+    this->leftNum  = el.at("left_num" ).get<std::string>();
     this->arrow     = el.at("arrow"    ).get<int>();
-    this->right_obj = el.at("right_obj").get<std::string>();
-    this->right_num = el.at("right_num" ).get<std::string>();
+    this->rightObj = el.at("right_obj").get<std::string>();
+    this->rightNum = el.at("right_num" ).get<std::string>();
     this->msg       = el.at("msg" ).get<std::string>();
     this->order     = el.at("order" ).get<int>();
 }
 
-void DiagramClass::fillStructureConct(const json el, dgrm_class_t& o) {
+/**
+ * Create elements of Conct type, fill necessary items and push to the vector
+ * of all connections for one class diagram.
+ *
+ * @param el node of a json file with all connections
+ * for a class diagram
+ * @param o structure of a class diagram
+ */
+void DiagramClass::fillStructureConct(const json el, dgrmClass_t& o) {
     for (auto x : el) {
         Conct tmp;
         tmp.pushConnection(x);
@@ -77,12 +86,20 @@ void DiagramClass::fillStructureConct(const json el, dgrm_class_t& o) {
     }
 }
 
-void DiagramClass::fillStructureClass(const json el, dgrm_class_t& o) {
+/**
+ * Create elements of Class type, fill necessary items and push to the vector
+ * of all classes for one class diagram.
+ *
+ * @param el node of a json file with all classes
+ * for a class diagram
+ * @param o structure of a class diagram
+ */
+void DiagramClass::fillStructureClass(const json el, dgrmClass_t& o) {
     json tmp_ch;
 
     for (auto x : el) {
         Class tmp;
-        Program::push_coords(x.at("coords"), tmp.coords);
+        Program::pushCoords(x.at("coords"), tmp.coords);
         tmp.pushName(x.at("name"));
         tmp.pushColor(x.at("color"));
         tmp.pushAttrs(x.at("attrs"), tmp.attrs);
@@ -93,53 +110,75 @@ void DiagramClass::fillStructureClass(const json el, dgrm_class_t& o) {
     }
 }
 
-void DiagramClass::add_connect_to_file(json& j, std::vector<Conct> cn) {
+/**
+ * Write the data about all connections from Connect structure
+ * to json file.
+ *
+ * @param j json file
+ * @param cn vector of the connections for class diagram
+ */
+void DiagramClass::addConnectToFile(json& j, std::vector<Conct> cn) {
     int i = 0;
 
     for (auto& x : cn) {
         j["connections"][i++] =
         {
             {"left_obj" , x.leftObj },
-            {"left_num" , x.left_num },
+            {"left_num" , x.leftNum },
             {"arrow" ,    x.arrow },
-            {"right_num", x.right_num },
-            {"right_obj", x.right_obj },
+            {"right_num", x.rightNum },
+            {"right_obj", x.rightObj },
             {"msg",       x.msg },
             {"order",     x.order}
         };
     }
 }
 
-void DiagramClass::add_class_to_file(json& j, std::vector<Class> cl) {
+/**
+ * Write the data about all classes from Class structure
+ * to json file.
+ *
+ * @param j json file
+ * @param cl vector of the classes for class diagram
+ */
+void DiagramClass::addClassToFile(json& j, std::vector<Class> cl) {
     int i = 0;
 
     for (auto& x : cl) {
         j["class"][i++] =
         {
             {"color" ,
-                {
+                        {
                     {"r", x.color.r},
                     {"g", x.color.g},
                     {"b", x.color.b},
                     {"a", x.color.a},
                 }
             },
-            {"name" , x.name },
+            {"name" ,   x.name },
             {"coords",
-                {
+                        {
                     {"x" , x.coords[0]},
                     {"y" , x.coords[1]}
                 }
             },
-            {"attrs" , add_attrs(x.attrs) },
-            {"methods", add_attrs(x.methods) },
-            {"width", x.width},
-            {"height", x.height}
+            {"attrs" , addAttrs(x.attrs) },
+            {"methods", addAttrs(x.methods) },
+            {"width",   x.width},
+            {"height",  x.height}
         };
     }
 }
 
-json DiagramClass::add_attrs(std::vector<attrs_t> x) {
+/**
+ * Write the data about all connections from Connect structure
+ * to json file.
+ *
+ * @param x vector of attributes
+ *
+ * @return a json node for attributes
+ */
+json DiagramClass::addAttrs(std::vector<attrs_t> x) {
     json tmp = nullptr;
     int j = 0;
 

@@ -54,7 +54,7 @@ QList<QPair<ClassDiagramItem *, QString>> ClassCanvas::getClassStringPairs() {
  * @param buf
  * @return
  */
-bool ClassCanvas::createFromFile(dgrm_class_t cls) {
+bool ClassCanvas::createFromFile(dgrmClass_t cls) {
     ItemsBuffer buf;
     for (auto x : cls.classes) {
         buf.addClassItems(x);
@@ -131,20 +131,20 @@ bool ClassCanvas::getStringRepresentation(Program &prg) {
             return false;
         }
 
-        prg.diagram_class.classes.push_back(tmp);
+        prg.diagramClass.classes.push_back(tmp);
     }
 
     for (auto x : buf.relationItems()) {
         Conct tmp;
         tmp.leftObj = x->leftObj().toStdString();
-        tmp.left_num = x->leftNum().toStdString();
-        tmp.right_obj = x->rightObj().toStdString();
-        tmp.right_num = x->rightNum().toStdString();
+        tmp.leftNum = x->leftNum().toStdString();
+        tmp.rightObj = x->rightObj().toStdString();
+        tmp.rightNum = x->rightNum().toStdString();
         tmp.msg = x->msg().toStdString();
         tmp.arrow = x->type();
         tmp.order = x->order();
 
-        prg.diagram_class.concts.push_back(tmp);
+        prg.diagramClass.concts.push_back(tmp);
     }
 
     return true;

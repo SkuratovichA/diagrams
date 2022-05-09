@@ -276,20 +276,20 @@ void editorInterface::readFile() {
     setCentralWidget(tabWidget);
 
     Program prg;
-    prg.parse_file(filename.toStdString());
-    //ItemsBuffer arrBufs[prg.diagram_sequence.size() + 1];
+    prg.parseFile(filename.toStdString());
+    //ItemsBuffer arrBufs[prg.diagramSequence.size() + 1];
 
     // class diagram
     idx = tabWidget->addTab(new ClassCanvas(this, undoStack), "class Diagram");
-    reinterpret_cast<ClassCanvas *>(tabWidget->widget(idx))->createFromFile(prg.diagram_class);
+    reinterpret_cast<ClassCanvas *>(tabWidget->widget(idx))->createFromFile(prg.diagramClass);
 
     // sequence diagram
-    for (int c = 0; c < prg.diagram_sequence.size(); c++) {
+    for (int c = 0; c < prg.diagramSequence.size(); c++) {
         qDebug() << "read from file a sequnece diagram";
         idx = tabWidget->addTab(new SequenceCanvas(this, undoStack), "sequence Diagram");
         tabWidget->setCurrentWidget(tabWidget->widget(idx));
         qDebug() << idx << "dx";
-        reinterpret_cast<SequenceCanvas *>(tabWidget->widget(idx))->createFromFile(prg.diagram_sequence[c]);
+        reinterpret_cast<SequenceCanvas *>(tabWidget->widget(idx))->createFromFile(prg.diagramSequence[c]);
         connectItemsDiagrams();
     }
 
@@ -312,7 +312,7 @@ void editorInterface::writeToFile() {
         return;
     }
 
-    prg.fill_file(filename.toStdString());
+    prg.fillFile(filename.toStdString());
     file.close();
 }
 
