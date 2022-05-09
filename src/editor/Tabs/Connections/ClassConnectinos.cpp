@@ -282,11 +282,16 @@ QPair<QPointF, QPointF> ClassConnectionItem::edgePoints() const {
  */
 void ClassConnectionItem::trackNodes() {
     auto edgePs = edgePoints();
-    if (_orientation) {
-        setLine(QLineF(edgePs.first, edgePs.second));
-    } else {
-        setLine(QLineF(edgePs.second, edgePs.first));
+    if (!_orientation) {
+        _orientation = !_orientation;
+        std::swap(_nodeFrom, _nodeTo);
     }
+//    if (_orientation) {
+    //qDebug() << edgePs
+    setLine(QLineF(edgePs.first, edgePs.second));
+//    } else {
+//        setLine(QLineF(edgePs.second, edgePs.first));
+//    }
 }
 
 /**

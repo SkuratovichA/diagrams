@@ -47,9 +47,17 @@ QPoint SequenceCanvas::generateCoords() const {
 bool SequenceCanvas::createFromFile(dgrm_seq_t seq) {
     ItemsBuffer buf;
 
-//    for (auto x : seq.actors) {
-//        buf.addClassItems(x);
-//    }
+    for (auto x : seq.actors) {
+        buf.addActorItems(x);
+    }
+
+    for (auto x : buf.sequenceItems()) {
+        SequenceDiagramItem *diagramItem = new SequenceDiagramItem(x);
+        editorScene->addItem(diagramItem);
+        diagramItem->setPos(x->x(), x->y());
+        editorScene->update();
+    }
+
     return true;
 }
 
@@ -58,12 +66,17 @@ bool SequenceCanvas::createFromFile(dgrm_seq_t seq) {
  * @param prg
  */
 bool SequenceCanvas::getStringRepresentation(Program &prg) {
-    std::vector<Actor> actors;
+    //dgrm_seq actors;
     std::vector<Action> actions;
     std::vector<Activate> activates;
     ItemsBuffer buf;
 
+    dgrm_seq_t obj;
+
+    qDebug() << "i am here";
+
     for (auto x : getItems<SequenceDiagramItem>()) {
+        qDebug() << "help num item";
         buf.fillActorItems(x);
     }
 
@@ -73,14 +86,14 @@ bool SequenceCanvas::getStringRepresentation(Program &prg) {
 //    }
 
     for (auto x : buf.sequenceItems()) {
-        Actor *act;
-        act->name = x->name().toStdString();
-        x->fillColor(act->color);
-        act->coords[0] = x->x();
-        act->coords[1] = x->y();
-
-        prg.diagram_sequence[0].actions;
+        Actor act;
+        act.name = x->name().toStdString();
+        x->fillColor(act.color);
+        x->fillCoords(act.coords);
+        obj.actors.push_back(act);
     }
+
+    prg.diagram_sequence.push_back(obj);
 
     // add for sequence diagram
 

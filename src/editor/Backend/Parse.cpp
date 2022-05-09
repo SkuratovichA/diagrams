@@ -1,14 +1,9 @@
 #include "Parse.h"
 
-json check_null(std::string val) {
-    //json tmp = val != "" ? val : nullptr;
-    json tmp = nullptr;
-    if (val != "") {
-        tmp = val;
-    }
-    return tmp;
-}
-
+/**
+ *
+ * @param filename
+ */
 void Program::parse_file(std::string filename) {
     std::ifstream f(filename, std::ifstream::in);
     json file;
@@ -38,12 +33,21 @@ void Program::parse_file(std::string filename) {
     }
 }
 
+/**
+ *
+ * @param el
+ * @param coords
+ */
 void Program::push_coords(const json el, std::vector<double>& coords) {
 
     coords.insert( coords.end(),
                { el.at("x").get<double>(), el.at("y").get<double>() } );
 }
 
+/**
+ *
+ * @param filename
+ */
 void Program::fill_file(std::string filename) {
     json j;
 
@@ -55,8 +59,12 @@ void Program::fill_file(std::string filename) {
 
     j["seq_dgrm"] = nullptr;
 
+
     int i = 0;
     for (auto& x : this->diagram_sequence) {
+        j["seq_dgrm"][i]["actors"] = nullptr;
+        j["seq_dgrm"][i]["actions"] = nullptr;
+        j["seq_dgrm"][i]["activates"] = nullptr;
         obj_se.add_actor_to_file(j["seq_dgrm"][i], x.actors);
         obj_se.add_action_to_file(j["seq_dgrm"][i], x.actions);
         obj_se.add_activate_to_file(j["seq_dgrm"][i], x.activates);

@@ -30,7 +30,7 @@ void ItemsBuffer::addRelationItems(Conct conct) {
                                                QString::fromStdString(conct.right_obj),
                                                QString::fromStdString(conct.right_num),
                                                QString::fromStdString(conct.msg),
-                                               conct.arrow);
+                                               conct.arrow, conct.order);
 
     pushRelationItem(prm);
 }
@@ -43,7 +43,7 @@ void ItemsBuffer::fillRelationItems(ClassConnectionItem *item) {
     relationsParams *ptr =  new relationsParams(
             item->nodeFrom()->name(), item->getLeftNum()->toPlainText(),
             item->nodeTo()->name(), item->getRightNum()->toPlainText(),
-            item->getMsg()->toPlainText(), item->connectionType());
+            item->getMsg()->toPlainText(), item->connectionType(), item->order());
 
     pushRelationItem(ptr );
 }

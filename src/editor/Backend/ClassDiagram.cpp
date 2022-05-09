@@ -34,6 +34,7 @@ void Conct::fill_connection(const json el) {
     this->right_obj = el.at("right_obj").get<std::string>();
     this->right_num = el.at("right_num" ).get<std::string>();
     this->msg       = el.at("msg" ).get<std::string>();
+    this->order     = el.at("order" ).get<int>();
 }
 
 void DiagramClass::fill_structure_conct(const json el, dgrm_class_t& o) {
@@ -71,7 +72,8 @@ void DiagramClass::add_connect_to_file(json& j, std::vector<Conct> cn) {
             {"arrow" ,    x.arrow },
             {"right_num", x.right_num },
             {"right_obj", x.right_obj },
-            {"msg",       x.msg }
+            {"msg",       x.msg },
+            {"order",     x.order}
         };
     }
 }

@@ -69,6 +69,7 @@ private:
     bool getTextRepresentation(Program &prg);
     void readFile();
     void writeToFile();
+    void connectItemsDiagrams();
 
 private:
     QTabWidget *tabWidget;

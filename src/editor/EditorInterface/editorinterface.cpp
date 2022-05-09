@@ -51,13 +51,11 @@ editorInterface::editorInterface(
             openDiagram = true;
             break;
         case OPEN_FILE:
-            qDebug() << "file before selection";
             filename = QFileDialog::getOpenFileName(parent,
                                tr("Open a file"),
                                   QDir::homePath(),
                                  filenameFilter);
             openDiagram = true;
-            qDebug() << "file was selected";
             break;
         case NO_FILE:
             break;
@@ -112,11 +110,16 @@ void editorInterface::newTabSelected() {
                 }
             }
         }
+        qDebug() << "co tady";
         // moved from something (does not matter) to the sequence canvas. There is a need to update a sequence canvas
         auto destSequenceCanvas = dynamic_cast<SequenceCanvas *>(tabWidget->currentWidget());
+        qDebug() << "co tady";
         if (destSequenceCanvas != nullptr) {
+            qDebug() << "co tady";
             for (SequenceDiagramItem *sequenceItem: destSequenceCanvas->getItems<SequenceDiagramItem>()) {
+                qDebug() << "co tady";
                 auto newName = sequenceItem->parentClassDiagramItem()->name();
+                qDebug() << "co tady";
                 if (newName != sequenceItem->name()) {
                     sequenceItem->setName(newName);
                     qreal Pos = (sequenceItem->parentClassDiagramItem()->boundingRect().width() - sequenceItem->parentClassDiagramItem()->width()) / 2;
@@ -125,9 +128,12 @@ void editorInterface::newTabSelected() {
             }
         }
     }
-    undoStack->setActiveStack(reinterpret_cast<TabCanvas *>(tabWidget->currentWidget())->undoStack());
-    prevWidget = tabWidget->currentWidget();
 
+    qDebug() << "oooo";
+    undoStack->setActiveStack(reinterpret_cast<TabCanvas *>(tabWidget->currentWidget())->undoStack());
+    qDebug() << "oooo";
+    prevWidget = tabWidget->currentWidget();
+    qDebug() << "oooo";
     // update of the scene does not work
     dynamic_cast<TabCanvas *>(tabWidget->currentWidget())->updateScene();
 }
@@ -240,6 +246,27 @@ bool editorInterface::getTextRepresentation(Program &prg) {
 }
 
 /**
+ *
+ */
+void editorInterface::connectItemsDiagrams() {
+    qDebug() << "uuuu";
+    auto sequenceTab = reinterpret_cast<SequenceCanvas *>(tabWidget->currentWidget());
+    QList<QPair<ClassDiagramItem *, QString>> classStringPairs = reinterpret_cast<ClassCanvas *>(tabWidget->widget(
+            0))->getClassStringPairs();
+
+    QList<SequenceDiagramItem *> sequenceItems = sequenceTab->getItems<SequenceDiagramItem>();
+    qDebug() << sequenceItems.size();
+    for (auto x: sequenceTab->getItems<SequenceDiagramItem>()) {
+        for (auto y : classStringPairs) {
+            if (x->name() == y.first->name()) {
+                qDebug() << "aaaaaaaaaaaa" << x->name();
+                x->setParent(y.first);
+            }
+        }
+    }
+}
+
+/**
  * TODO
  */
 void editorInterface::readFile() {
@@ -258,11 +285,15 @@ void editorInterface::readFile() {
 
     // sequence diagram
     for (int c = 0; c < prg.diagram_sequence.size(); c++) {
+        qDebug() << "read from file a sequnece diagram";
         idx = tabWidget->addTab(new SequenceCanvas(this, undoStack), "sequence Diagram");
+        tabWidget->setCurrentWidget(tabWidget->widget(idx));
+        qDebug() << idx << "dx";
         reinterpret_cast<SequenceCanvas *>(tabWidget->widget(idx))->createFromFile(prg.diagram_sequence[c]);
+        connectItemsDiagrams();
     }
 
-    // handle parsing (can occur an error)
+    tabWidget->setCurrentWidget(tabWidget->widget(0));
 }
 
 /**

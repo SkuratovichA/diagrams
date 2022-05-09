@@ -88,7 +88,7 @@ bool ClassCanvas::createFromFile(dgrm_class_t cls) {
             return false;
         }
 
-        ClassConnectionItem *item = new ClassConnectionItem(from, to, x, static_cast<ClassConnectionItem::ClassConnectionType>(x->type()));
+        ClassConnectionItem *item = new ClassConnectionItem(from, to, x, static_cast<ClassConnectionItem::ClassConnectionType>(x->type()), x->order());
         editorScene->addItem(item);
         editorScene->update();
     }
@@ -136,14 +136,13 @@ bool ClassCanvas::getStringRepresentation(Program &prg) {
 
     for (auto x : buf.relationItems()) {
         Conct tmp;
-        qDebug() << x->rightNum();
-        qDebug() << x->leftNum();
         tmp.left_obj = x->leftObj().toStdString();
         tmp.left_num = x->leftNum().toStdString();
         tmp.right_obj = x->rightObj().toStdString();
         tmp.right_num = x->rightNum().toStdString();
         tmp.msg = x->msg().toStdString();
         tmp.arrow = x->type();
+        tmp.order = x->order();
 
         prg.diagram_class.concts.push_back(tmp);
     }
@@ -406,7 +405,7 @@ void ClassCanvas::addConnection() {
     }
 
     createRelation = new relationsParams(nodes.first->name(), "1..n",nodes.second->name(),
-                                         "0..n","MSG",  ClassConnectionItem::Dependency);
+                                         "0..n","MSG",  ClassConnectionItem::Dependency, 0);
     _undoStack->push(
             new AddClassConnectionCommand(nodes.first, nodes.second, createRelation, ClassConnectionItem::Dependency, editorScene)
     );

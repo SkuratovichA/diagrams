@@ -45,6 +45,7 @@ public:
     std::string right_obj;
     std::string right_num;
     std::string msg;
+    int order;
 
     void fill_connection(const json el);
 };

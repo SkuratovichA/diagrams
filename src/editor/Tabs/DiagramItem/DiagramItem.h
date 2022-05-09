@@ -361,6 +361,10 @@ public:
         return _parentClassDiagramItem;
     }
 
+    void setParent(ClassDiagramItem *parent) {
+        _parentClassDiagramItem = parent;
+    }
+
 protected:
     QVariant itemChange(GraphicsItemChange change, const QVariant &value) override;
 

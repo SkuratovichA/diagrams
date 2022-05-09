@@ -15,7 +15,7 @@ void DiagramSequence::fill_structure_actor(const json el, dgrm_seq_t& o) {
     for (auto x : el) {
         Actor act;
         Program::push_coords(x.at("coords"), act.coords);
-        act.name = x.at("name").get<std::string>();
+        act.name = x.at("actor").get<std::string>();
         act.color.r = x.at("color").at("r").get<int>();
         act.color.g = x.at("color").at("g").get<int>();
         act.color.b = x.at("color").at("b").get<int>();
