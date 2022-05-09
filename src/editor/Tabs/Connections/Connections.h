@@ -118,6 +118,10 @@ public:
                Qt::TextInteractionFlag::TextSelectableByKeyboard;
     }
 
+    bool single() {
+        return _single;
+    }
+
     /** Public functions
      */
 public:

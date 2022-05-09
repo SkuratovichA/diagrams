@@ -30,6 +30,8 @@ ClassConnectionItem::ClassConnectionItem(ClassDiagramItem *fromNode,
     _single = fromNode == toNode;
     _nodeFrom->addConnection(this);
     _nodeTo->addConnection(this);
+
+    qDebug() << _nodeTo->connections().size();
     _connectionType = type;
     _color = color;
     _order = order;
@@ -525,7 +527,12 @@ void ClassConnectionItem::paint(QPainter *painter, const QStyleOptionGraphicsIte
             _nodeTo->pos().x() - 20,
             _nodeTo->pos().y() + _nodeTo->height() / 2.0 + 20);
 
-    msgSetPos(QPointF(pText.x() - widthText / 2.0, pText.y() - 30));
+    if (_single) {
+        msgSetPos(QPointF(pText.x() - widthText / 2.0 + 60, pText.y() + 75));
+    }
+    else {
+        msgSetPos(QPointF(pText.x() - widthText / 2.0, pText.y() - 30));
+    }
 }
 
 /**
