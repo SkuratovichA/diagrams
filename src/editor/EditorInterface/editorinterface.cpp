@@ -249,17 +249,13 @@ bool editorInterface::getTextRepresentation(Program &prg) {
  *
  */
 void editorInterface::connectItemsDiagrams() {
-    qDebug() << "uuuu";
     auto sequenceTab = reinterpret_cast<SequenceCanvas *>(tabWidget->currentWidget());
     QList<QPair<ClassDiagramItem *, QString>> classStringPairs = reinterpret_cast<ClassCanvas *>(tabWidget->widget(
             0))->getClassStringPairs();
 
-    QList<SequenceDiagramItem *> sequenceItems = sequenceTab->getItems<SequenceDiagramItem>();
-    qDebug() << sequenceItems.size();
     for (auto x: sequenceTab->getItems<SequenceDiagramItem>()) {
         for (auto y : classStringPairs) {
             if (x->name() == y.first->name()) {
-                qDebug() << "aaaaaaaaaaaa" << x->name();
                 x->setParent(y.first);
             }
         }
@@ -285,10 +281,8 @@ void editorInterface::readFile() {
 
     // sequence diagram
     for (int c = 0; c < prg.diagramSequence.size(); c++) {
-        qDebug() << "read from file a sequnece diagram";
         idx = tabWidget->addTab(new SequenceCanvas(this, undoStack), "sequence Diagram");
         tabWidget->setCurrentWidget(tabWidget->widget(idx));
-        qDebug() << idx << "dx";
         reinterpret_cast<SequenceCanvas *>(tabWidget->widget(idx))->createFromFile(prg.diagramSequence[c]);
         connectItemsDiagrams();
     }

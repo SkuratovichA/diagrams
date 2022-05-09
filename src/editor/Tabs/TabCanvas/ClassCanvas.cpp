@@ -113,6 +113,16 @@ bool ClassCanvas::getStringRepresentation(Program &prg) {
         buf.fillRelationItems(x);
     }
 
+    for (auto x : buf.classItems()) {
+        for (auto y : buf.classItems()) {
+            if (x->name() == y->name() && x != y) {
+                qDebug() << "You have objects with the same names, change it";
+                // TODO color red
+                return false;
+            }
+        }
+    }
+
     for (auto x: buf.classItems()) {
         Class tmp;
         tmp.name = x->name().toStdString();

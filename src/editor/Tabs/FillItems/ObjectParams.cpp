@@ -3,6 +3,7 @@
 //
 
 #include "ObjectParams.h"
+#include <QDebug>
 
 objectParams::objectParams(qreal x, qreal y, QString name, QColor color)
 {
@@ -45,6 +46,8 @@ bool classParams::splitString(std::vector<attrs_t> &at, QList<QString> arr) {
         if (token == NULL || ( perm != "#" && perm != "+"
                                && perm != "~" && perm != "-") )
         {
+            qDebug() << "you have bad permission of attribute";
+            // TODO colorize it by red color
             return false;
         }
 

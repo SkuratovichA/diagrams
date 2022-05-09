@@ -91,6 +91,13 @@ public:
     //    }
     //}
 
+//    QVector<std::string> getNames() {
+//        QVector<std::string> vector;
+//        for (auto x : _classItems) {
+//            vector.push_back(x->name().toStdString());
+//        }
+//    }
+
 private:
     QList<classParams *> _classItems;
     QList<relationsParams *> _relationItems;
