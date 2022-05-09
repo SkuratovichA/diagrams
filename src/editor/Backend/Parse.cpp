@@ -16,8 +16,8 @@ void Program::parse_file(std::string filename) {
     }
 
     try {
-        obj_cl.fill_structure_class(file.at("class_dgrm").at("class"), this->diagram_class);
-        obj_cl.fill_structure_conct(file.at("class_dgrm").at("connections"), this->diagram_class);
+        obj_cl.fillStructureClass(file.at("class_dgrm").at("class"), this->diagram_class);
+        obj_cl.fillStructureConct(file.at("class_dgrm").at("connections"), this->diagram_class);
 
         for (auto& seq : file.at("seq_dgrm")) {
             dgrm_seq_t tmp;

@@ -26,20 +26,20 @@ public:
     double width;
     double height;
 
-    void push_color(const json el);
+    void pushColor(const json el);
 
-    void push_name(const json el);
+    void pushName(const json el);
 
-    void push_attrs(const json el, std::vector<attrs_t>& obj);
+    void pushAttrs(const json el, std::vector<attrs_t>& obj);
 
-    void push_width(const json el);
+    void pushWidth(const json el);
 
-    void push_height(const json el);
+    void pushHeight(const json el);
 };
 
 class Conct {
 public:
-    std::string left_obj;
+    std::string leftObj;
     std::string left_num;
     int arrow;
     std::string right_obj;
@@ -47,7 +47,7 @@ public:
     std::string msg;
     int order;
 
-    void fill_connection(const json el);
+    void pushConnection(const json el);
 };
 
 typedef struct dgrm_class {
@@ -57,9 +57,9 @@ typedef struct dgrm_class {
 
 class DiagramClass {
 public:
-    void fill_structure_conct(const json el, dgrm_class_t& o);
+    void fillStructureConct(const json el, dgrm_class_t& o);
 
-    void fill_structure_class(const json el, dgrm_class_t& o);
+    void fillStructureClass(const json el, dgrm_class_t& o);
 
     void add_connect_to_file(json& j, std::vector<Conct> cn);
 

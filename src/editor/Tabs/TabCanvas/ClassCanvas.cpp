@@ -136,7 +136,7 @@ bool ClassCanvas::getStringRepresentation(Program &prg) {
 
     for (auto x : buf.relationItems()) {
         Conct tmp;
-        tmp.left_obj = x->leftObj().toStdString();
+        tmp.leftObj = x->leftObj().toStdString();
         tmp.left_num = x->leftNum().toStdString();
         tmp.right_obj = x->rightObj().toStdString();
         tmp.right_num = x->rightNum().toStdString();
