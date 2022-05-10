@@ -169,47 +169,6 @@ using namespace Connections;
 /**
  *
  */
-//class SequenceConnection : public QGraphicsLineItem {
-//
-//public:
-//    SequenceConnection(
-//            SequenceDiagramItem *nodeFrom,
-//            SequenceDiagramItem *nodeTo,
-//            ConnectionType connectionType,
-//            QColor clr = QColor(0,0,0,100)
-//    );
-//
-//    ~SequenceConnection();
-//
-//public:
-//    void trackNodes();
-//    ConnectionType connectionType() const {return _connectionType;};
-//
-//    /**
-//     * Overrides
-//     */
-//public:
-//    QVariant itemChange(GraphicsItemChange change, const QVariant &value) override;
-//    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
-//
-//private:
-//    void paintSynchronous(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
-//    void paintAsynchronous(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
-//    void paintReply(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
-//    void paintCreate(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
-//    void paintDelete(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
-//
-//private:
-//    QColor _color;
-//    SequenceDiagramItem *_nodeFrom;
-//    SequenceDiagramItem *_nodeTo;
-//    ConnectionType _connectionType;
-//};
-
-
-/**
- *
- */
 class SequenceConnectionItem : public QGraphicsLineItem {
 public:
     SequenceConnectionItem(

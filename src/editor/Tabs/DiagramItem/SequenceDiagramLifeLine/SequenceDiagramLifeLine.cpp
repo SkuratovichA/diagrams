@@ -64,7 +64,7 @@ void SequenceDiagramLifeLine::paint(QPainter *painter, const QStyleOptionGraphic
     painter->setPen(QPen(QColor(0, 0, 0, 100), 0.5, Qt::DotLine));
     painter->drawPolygon(lineShaper());
 #endif
-    //qDebug() << __FILE__;
+    qDebug() << __FILE__;
 
     painter->setRenderHint(QPainter::Antialiasing, true);
 
@@ -74,7 +74,7 @@ void SequenceDiagramLifeLine::paint(QPainter *painter, const QStyleOptionGraphic
     painter->setPen(QPen(Qt::black, 1, Qt::SolidLine));
     painter->setBrush(QBrush(_parent->color()));
     auto olapd = mergedActiveRegions();
-    //qDebug() << "     cretaed merged active regions";
+    qDebug() << "     cretaed merged active regions";
 
     for (auto rect: olapd) {
         QPointF fromPoint{_parent->localCentre() + QPointF(-_adjust, rect.first)};
@@ -84,7 +84,7 @@ void SequenceDiagramLifeLine::paint(QPainter *painter, const QStyleOptionGraphic
         lines.push_back(QLineF(topPoint, fromPoint + QPointF(_adjust, 0)));
         topPoint = toPoint + QPointF(-_adjust, 0);
     }
-    //qDebug() << "     fuck regions";
+    qDebug() << "     fuck regions";
     // prepare for drawing a line
     painter->setPen(QPen(Qt::black, 1, Qt::DashLine));
     // add the last point.
@@ -120,8 +120,8 @@ void SequenceDiagramLifeLine::trackNodes() {
  * @return merged intervals
  */
 QList<QPair<qreal, qreal>> SequenceDiagramLifeLine::mergedActiveRegions() {
-   // qDebug() << __FILE__;
-    //qDebug() << "   pizda";
+   qDebug() << __FILE__;
+   qDebug() << "<";
     auto sf = [](const QPair<qreal, qreal> &a, const QPair<qreal, qreal> &b) {
         if (a.first < b.first) {
             return true;
@@ -135,21 +135,21 @@ QList<QPair<qreal, qreal>> SequenceDiagramLifeLine::mergedActiveRegions() {
         return false;
     };
     auto a = QList<QPair<qreal, qreal>>();
-    //qDebug() << "   created(empty) a:"<<a;
+    qDebug() << "   created(empty) a:"<<a;
 
-    //qDebug() << "   active regions:"<<_activeRegions;
+    qDebug() << "   active regions:"<<_activeRegions;
     a.append(_activeRegions);
-    //qDebug() << "   appended _activeRegions: a:"<<a;
+    qDebug() << "   appended _activeRegions: a:"<<a;
 
-    //qDebug() << "   synchronous points:"<<_synchronousPoints;
+    qDebug() << "   synchronous points:"<<_synchronousPoints;
     a.append(_synchronousPoints);
-    //qDebug() << "   appended _synchronousPoints: a: "<<a;
+    qDebug() << "   appended _synchronousPoints: a: "<<a;
     if (a.isEmpty()) {
-        //qDebug() << "   a is empty. returning ---------: "<<a;
+        qDebug() << "   a is empty. returning ---------: "<<a;
         return a;
     }
     std::sort(a.begin(), a.end(), sf);
-    //qDebug() << "    a sorted";
+    qDebug() << "    a sorted";
     // remove overlapped intervals
     for (int i = 0; i < a.size() - 1;) {
         if (a[i].second >= a[i + 1].second || a[i].second >= a[i + 1].first) {
@@ -159,9 +159,10 @@ QList<QPair<qreal, qreal>> SequenceDiagramLifeLine::mergedActiveRegions() {
             i++;
         }
     }
-    //qDebug() << "    overlapped chunks done";
+    qDebug() << "    overlapped chunks done";
     // adjust the size of a lifeline
     updateHeight();
+    qDebug() << ">";
     return a;
 }
 
