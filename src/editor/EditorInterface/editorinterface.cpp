@@ -25,16 +25,6 @@
         connect((obj), SIGNAL(triggered()), receiver, memberslot);  \
     } while(0)
 
-/**
- * A constructor.
- *
- * This constructor creates an interface for diagram editing, a toolbar with actions
- * and tabs for each type of diagram.
- *
- * @param parent
- * @param exampleName name of the file with example diagrams
- * @param new_type
- */
 editorInterface::editorInterface(
         QWidget *parent,
         QString exampleName,
@@ -82,17 +72,11 @@ editorInterface::editorInterface(
     setCentralWidget(tabWidget);
 }
 
-/**
- * A destructor.
- */
 editorInterface::~editorInterface() {
     delete undoView;
     delete ui;
 }
 
-/**
- * Change the active stack in the stackGroup to display ins members (history) for the tab.
- */
 void editorInterface::newTabSelected() {
 
     //static QWidget *prevWidget = nullptr;
@@ -111,16 +95,11 @@ void editorInterface::newTabSelected() {
                 }
             }
         }
-        qDebug() << "co tady";
         // moved from something (does not matter) to the sequence canvas. There is a need to update a sequence canvas
         auto destSequenceCanvas = dynamic_cast<SequenceCanvas *>(tabWidget->currentWidget());
-        qDebug() << "co tady";
         if (destSequenceCanvas != nullptr) {
-            qDebug() << "co tady";
             for (SequenceDiagramItem *sequenceItem: destSequenceCanvas->getItems<SequenceDiagramItem>()) {
-                qDebug() << "co tady";
                 auto newName = sequenceItem->parentClassDiagramItem()->name();
-                qDebug() << "co tady";
                 if (newName != sequenceItem->name()) {
                     sequenceItem->setName(newName);
                     qreal Pos = (sequenceItem->parentClassDiagramItem()->boundingRect().width() - sequenceItem->parentClassDiagramItem()->width()) / 2;
@@ -130,18 +109,12 @@ void editorInterface::newTabSelected() {
         }
     }
 
-    qDebug() << "oooo";
     undoStack->setActiveStack(reinterpret_cast<TabCanvas *>(tabWidget->currentWidget())->undoStack());
-    qDebug() << "oooo";
     prevWidget = tabWidget->currentWidget();
-    qDebug() << "oooo";
     // update of the scene does not work
     dynamic_cast<TabCanvas *>(tabWidget->currentWidget())->updateScene();
 }
 
-/**
- * Create a window with a displayed undo stack.
- */
 void editorInterface::createUndoView() {
     undoView = new QUndoView(undoStack);
     undoView->setWindowTitle(tr("Command List"));
@@ -149,9 +122,6 @@ void editorInterface::createUndoView() {
     undoView->setAttribute(Qt::WA_QuitOnClose, false);
 }
 
-/**
- * Create 2 default tabs, one for the class diagram and another for the sequence diagram.
- */
 void editorInterface::createTabs() {
     tabWidget = new QTabWidget(this);
     connect(tabWidget, SIGNAL(currentChanged(int)), this, SLOT(newTabSelected()));
@@ -159,9 +129,6 @@ void editorInterface::createTabs() {
     tabWidget->addTab(new SequenceCanvas(this, undoStack), "sequence Diagram");
 }
 
-/**
- * Create and connect all signals for interaction with tabs.
- */
 void editorInterface::createDynamicToolBar() {
     ADD_SIGNAL(addEntityAction, "New &Entity", "+", "Ctrl+N", this, SLOT(actionAddEntity_triggered()));
     ADD_SIGNAL(addConnectionAction, "Connect", "->", "Ctrl+L", this, SLOT(actionAddConnection_triggered()));
@@ -232,9 +199,6 @@ void editorInterface::createDynamicToolBar() {
 #endif
 }
 
-/**
- * TODO
- */
 bool editorInterface::getTextRepresentation(Program &prg) {
     auto size = tabWidget->count();
     for (int i = 0; i < size; i++) {
@@ -246,9 +210,6 @@ bool editorInterface::getTextRepresentation(Program &prg) {
     return true;
 }
 
-/**
- *
- */
 void editorInterface::connectItemsDiagrams() {
     auto sequenceTab = reinterpret_cast<SequenceCanvas *>(tabWidget->currentWidget());
     QList<QPair<ClassDiagramItem *, QString>> classStringPairs = reinterpret_cast<ClassCanvas *>(tabWidget->widget(
@@ -263,9 +224,6 @@ void editorInterface::connectItemsDiagrams() {
     }
 }
 
-/**
- * TODO
- */
 void editorInterface::readFile() {
     int idx;
     tabWidget = new QTabWidget(this);
@@ -291,9 +249,6 @@ void editorInterface::readFile() {
     tabWidget->setCurrentWidget(tabWidget->widget(0));
 }
 
-/**
- * TODO
- */
 void editorInterface::writeToFile() {
     Program prg;
 

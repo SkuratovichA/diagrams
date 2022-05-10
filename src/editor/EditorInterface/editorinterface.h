@@ -35,18 +35,24 @@ public:
         EXAMPLE_FILE /**< load one of the provided examples to open */
     };
 
-    // name of an example
-    // Must be provided only if newType is EXAMPLE_FILE
-    // default option for window is to create it
-    // without a type - just a plain canvas
+    /**
+     * A constructor.
+     *
+     * This constructor creates an interface for diagram editing, a toolbar with actions
+     * and tabs for each type of diagram.
+     *
+     * @param parent
+     * @param exampleName name of the file with example diagrams
+     * @param new_type
+     */
     explicit editorInterface(QWidget *parent = nullptr,
                              QString exampleName = "",
                              newWindowType newType = NO_FILE);
 
+    /**
+     * A destructor.
+     */
     ~editorInterface();
-
-    //void loadFile(const QString &filename);
-
 private slots:
 
     void actionSaveAs_triggered();
@@ -64,17 +70,47 @@ private slots:
     void actionBack_triggered();
     void actionFront_triggered();
 
-    //void actionQuit_triggered();
-
+    /**
+     * Change the active stack in the stackGroup to display ins members (history) for the tab.
+     */
     void newTabSelected();
-
 private:
+
+    /**
+     * Create a window with a displayed undo stack.
+     */
     void createUndoView();
+
+    /**
+     * Create 2 default tabs, one for the class diagram and another for the sequence diagram.
+     */
     void createTabs();
+
+    /**
+     * Create and connect all signals for interaction with tabs.
+     */
     void createDynamicToolBar();
+
+    /**
+     *
+     * @param prg
+     * @return
+     */
     bool getTextRepresentation(Program &prg);
+
+    /**
+     *
+     */
     void readFile();
+
+    /**
+     *
+     */
     void writeToFile();
+
+    /**
+     *
+     */
     void connectItemsDiagrams();
 
 private:
