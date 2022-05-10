@@ -116,6 +116,7 @@ void SequenceConnectionItem::paint(QPainter *painter, const QStyleOptionGraphics
 #if DEBUG
     painter->setPen(QPen(QColor(0, 0, 0, 120), .5, Qt::DashLine));
     painter->drawPolygon(lineShaper());
+    //painter->strokePath(shape(), QPen(QColor(0, 0, 0, 120), 1.5, Qt::DashLine));
 
     auto rect = lineShaper();
     auto l = (rect.bottomLeft() + rect.topLeft()) / 2;
@@ -255,6 +256,7 @@ void SequenceConnectionItem::paintDelete(QPainter *painter, const QStyleOptionGr
     painter->drawLine(cLine);
 
     painter->setPen(QPen(Qt::black, 20));
-    painter->drawPoint(QPointF(cLine.p2().x(), cLine.p2().y()));
+    painter->drawEllipse(QPointF(cLine.p2().x(), cLine.p2().y()), 0, 5);
+    //painter->drawPoint(QPointF(cLine.p2().x(), cLine.p2().y()));
 }
 

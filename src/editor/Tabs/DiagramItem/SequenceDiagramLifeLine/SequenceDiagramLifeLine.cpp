@@ -69,7 +69,7 @@ void SequenceDiagramLifeLine::paint(QPainter *painter, const QStyleOptionGraphic
     painter->drawPolygon(lineShaper());
 #endif
 
-    qDebug() << __FILE__;
+    qDebug() << __FILE__ << " " << __LINE__;
     auto clr = _parent->color();
     clr.setAlpha(_parent->color().alpha() / 2);
     painter->setBrush(QBrush(clr));
@@ -128,9 +128,9 @@ void SequenceDiagramLifeLine::trackNodes() {
  * @return
  */
 QList<QPair<qreal, qreal>> SequenceDiagramLifeLine::getAsynchronousRegionsAsIntervals(
-        QList<const SequenceConnectionItem *> &a
+        QList<const SequenceConnectionItem *> a
 ) {
-    qDebug() << __FILE__;
+    qDebug() << __FILE__ << " " << __LINE__;
 
     if (a.isEmpty()) {
         return QList<QPair<qreal, qreal>>();
@@ -157,25 +157,40 @@ QList<QPair<qreal, qreal>> SequenceDiagramLifeLine::getAsynchronousRegionsAsInte
  * @return
  */
 QList<QPair<qreal, qreal>> SequenceDiagramLifeLine::getSynchronousRegionsAsIntervals(
-        QList<const SequenceConnectionItem *> &a
+        QList<const SequenceConnectionItem *> a
 ) {
     // sort array
-    qDebug() << __FILE__;
+    qDebug() << __FILE__ << " " << __LINE__;
 
     if (a.isEmpty()) {
         return QList<QPair<qreal, qreal>>();
     }
+
+    qDebug() << "Pizda 1";
+
     std::sort(a.begin(), a.end(),
               [](const SequenceConnectionItem *a, const SequenceConnectionItem *b) {
                   return a->y() < b->y();
               }
     );
+    qDebug() << "Pizda 2" << a.size();
     auto pairs = QList<QPair<qreal, qreal>>();
+    qDebug() << pairs << a;
     for (uint32_t i = 0; i < a.size(); i++) {
-        if (i % 2 == 0) {
+        if (i % 2 == 0 || i == 0) {
+            qDebug() << "before push back";
             pairs.push_back(QPair<qreal, qreal>(a[i]->y(), _height));
+            qDebug() << "after push back";
         } else {
-            pairs[i - 1].second = a[i]->y();
+            qDebug() << "before assigning" << pairs << i;
+           // qDebug() << "pairs : " << pairs[i - 1];
+            //qDebug() << "a1 : " << pairs.last().second;
+            auto tmp = pairs.takeLast();
+            tmp.second = a[i]->y();
+            pairs.push_back(tmp);
+            //pairs.last().second = a[i]->y();
+            //qDebug() << "a 2: " << pairs.last().second;
+            qDebug() << "after assigning";
         }
     }
     qDebug() << "   there must be an array sorted in the ascending order";
@@ -188,7 +203,7 @@ QList<QPair<qreal, qreal>> SequenceDiagramLifeLine::getSynchronousRegionsAsInter
  * @return merged intervals
  */
 QList<QPair<qreal, qreal>> SequenceDiagramLifeLine::mergedActiveRegions() {
-    qDebug() << __FILE__;
+    qDebug() << __FILE__ << " " << __LINE__;
     qDebug() << "<";
     auto sf = [](const QPair<qreal, qreal> &a, const QPair<qreal, qreal> &b) {
         if (a.first < b.first) {return true;}
@@ -228,7 +243,7 @@ void SequenceDiagramLifeLine::addConnection(
         ActorType actorType
 ) {
     qDebug() << "<";
-    qDebug() << __FILE__;
+    qDebug() << __FILE__ << " " << __LINE__;
     if (connection->connectionType() == Synchronous) {
         _activeRegions.push_back(connection);
     } else {

@@ -94,8 +94,11 @@ QVariant SequenceDiagramItem::itemChange(
 void SequenceDiagramItem::addConnection(
         SequenceConnectionItem *connection,
         ActorType actorType) {
-    qDebug() << "<adding connection";
+    qDebug() << "<adding connection gggggggggggg";
+    qDebug() << "uffff";
+    //qDebug() << _connections;
     _connections.insert(connection);
+    qDebug() << "insert connection";
     assert( _lifeLine != nullptr && "lifeLine must not be null");
     _lifeLine->addConnection(connection, actorType);
     qDebug() << "connection added>";

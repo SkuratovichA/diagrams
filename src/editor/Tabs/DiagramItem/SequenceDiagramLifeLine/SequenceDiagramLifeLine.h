@@ -81,8 +81,8 @@ private:
     QList<QPair<qreal, qreal>> mergedActiveRegions();
 
 
-    QList<QPair<qreal, qreal>> getAsynchronousRegionsAsIntervals(QList<const SequenceConnectionItem *> &a);
-    QList<QPair<qreal, qreal>> getSynchronousRegionsAsIntervals(QList<const SequenceConnectionItem *> &a);
+    QList<QPair<qreal, qreal>> getAsynchronousRegionsAsIntervals(QList<const SequenceConnectionItem *> a);
+    QList<QPair<qreal, qreal>> getSynchronousRegionsAsIntervals(QList<const SequenceConnectionItem *> a);
 
     /**
      * Private variables
