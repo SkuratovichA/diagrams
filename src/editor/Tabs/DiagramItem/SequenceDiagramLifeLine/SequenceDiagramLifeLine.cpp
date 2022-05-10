@@ -32,9 +32,6 @@ SequenceDiagramLifeLine::SequenceDiagramLifeLine(SequenceDiagramItem *parent, qr
  *
  */
 SequenceDiagramLifeLine::~SequenceDiagramLifeLine() {
-            foreach (SequenceConnection *connection, _connections) {
-            delete connection;
-        }
 }
 
 /** Returns a bounding polygon for a line.
@@ -67,6 +64,7 @@ void SequenceDiagramLifeLine::paint(QPainter *painter, const QStyleOptionGraphic
     painter->setPen(QPen(QColor(0, 0, 0, 100), 0.5, Qt::DotLine));
     painter->drawPolygon(lineShaper());
 #endif
+    qDebug() << __FILE__;
 
     painter->setRenderHint(QPainter::Antialiasing, true);
 
@@ -76,6 +74,8 @@ void SequenceDiagramLifeLine::paint(QPainter *painter, const QStyleOptionGraphic
     painter->setPen(QPen(Qt::black, 1, Qt::SolidLine));
     painter->setBrush(QBrush(_parent->color()));
     auto olapd = mergedActiveRegions();
+    qDebug() << "     cretaed merged active regions";
+
     for (auto rect: olapd) {
         QPointF fromPoint{_parent->centre() + QPointF(-_adjust, rect.first)};
         QPointF toPoint{_parent->centre() + QPointF(_adjust, rect.second)};
@@ -84,6 +84,7 @@ void SequenceDiagramLifeLine::paint(QPainter *painter, const QStyleOptionGraphic
         lines.push_back(QLineF(topPoint, fromPoint + QPointF(_adjust, 0)));
         topPoint = toPoint + QPointF(-_adjust, 0);
     }
+    qDebug() << "     fuck regions";
     // prepare for drawing a line
     painter->setPen(QPen(Qt::black, 1, Qt::DashLine));
     // add the last point.
@@ -119,6 +120,8 @@ void SequenceDiagramLifeLine::trackNodes() {
  * @return merged intervals
  */
 QList<QPair<qreal, qreal>> SequenceDiagramLifeLine::mergedActiveRegions() {
+    qDebug() << __FILE__;
+    qDebug() << "   pizda";
     auto sf = [](const QPair<qreal, qreal> &a, const QPair<qreal, qreal> &b) {
         if (a.first < b.first) {
             return true;
@@ -131,12 +134,22 @@ QList<QPair<qreal, qreal>> SequenceDiagramLifeLine::mergedActiveRegions() {
         }
         return false;
     };
-    QList<QPair<qreal, qreal>> a(_activeRegions);
+    auto a = QList<QPair<qreal, qreal>>();
+    qDebug() << "   created(empty) a:"<<a;
+
+    qDebug() << "   active regions:"<<_activeRegions;
+    a.append(_activeRegions);
+    qDebug() << "   appended _activeRegions: a:"<<a;
+
+    qDebug() << "   synchronous points:"<<_synchronousPoints;
     a.append(_synchronousPoints);
+    qDebug() << "   appended _synchronousPoints: a: "<<a;
     if (a.isEmpty()) {
+        qDebug() << "   a is empty. returning ---------: "<<a;
         return a;
     }
     std::sort(a.begin(), a.end(), sf);
+    qDebug() << "    a sorted";
     // remove overlapped intervals
     for (int i = 0; i < a.size() - 1;) {
         if (a[i].second >= a[i + 1].second || a[i].second >= a[i + 1].first) {
@@ -146,6 +159,7 @@ QList<QPair<qreal, qreal>> SequenceDiagramLifeLine::mergedActiveRegions() {
             i++;
         }
     }
+    qDebug() << "    overlapped chunks done";
     // adjust the size of a lifeline
     updateHeight();
     return a;
@@ -167,55 +181,40 @@ qreal SequenceDiagramLifeLine::maxHeight() const {
  * @param connection
  */
 void SequenceDiagramLifeLine::addConnection(
-        SequenceConnection *connection,
+        qreal y,
+        ConnectionType connectionType,
         ActorType actorType
         ) {
-    switch (connection->type()) {
-        case Synchronous:
-            qDebug() << "synchronous";
-            break;
+    // TODO: improve margin for creation/deletion
+    auto margin = 10.0;
+    auto topMargin = actorType == Receiver  ? 0 : margin;
+    auto bottomMargin = actorType == Receiver  ? 0 : margin;
 
-        case Asynchronous:
-            qDebug() << "asynchronous";
-            break;
-
-        case Reply:
-            qDebug() << "reply";
-            break;
-
-        case Create:
-            qDebug() << "create";
-            break;
-
-        case Delete:
-            qDebug() << "delete";
-            break;
+    qDebug() << "<";
+    qDebug() << __FILE__;
+    if (connectionType == Synchronous) {
+        qDebug() << "   synchronous";
+        assert(!"support synchronous shit");
+    } else {
+        _synchronousPoints.push_back(QPair<qreal, qreal>(y, y+10));
     }
 
     switch (actorType) {
         case Caller:
-            qDebug() << "caller";
+            qDebug() << "   caller";
             break;
 
         case Receiver:
-            qDebug() << "receiver";
+            qDebug() << "   receiver";
             break;
     }
-}
-
-/**
- *
- */
-void SequenceDiagramLifeLine::notifyConnectionsAboutParentPositionChange() {
-    for (auto c: _connections) {
-        c->trackNodes();
-    }
+    qDebug() << ">";
 }
 
 /**
  *
  * @param connection
  */
-void SequenceDiagramLifeLine::removeConnection(SequenceConnection *connection) {
-    _connections.remove(connection);
+void SequenceDiagramLifeLine::removeConnection(qreal y) {
+    assert(!"remove connection coordinate from thelist");
 }

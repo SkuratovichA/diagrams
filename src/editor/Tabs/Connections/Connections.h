@@ -183,6 +183,7 @@ public:
 
 public:
     void trackNodes();
+    ConnectionType connectionType() const {return _connectionType;};
 
     /**
      * Overrides
@@ -239,12 +240,12 @@ public:
         return _connectionType;
     }
 
-    QGraphicsScene* scene() const {
-        for (auto c: _connections) {
-            return c->scene(); // returns the first scene (both scenes are the same)
-        }
-        return nullptr;
-    };
+//    QGraphicsScene* scene() const {
+//        for (auto c: _connections) {
+//            return c->scene(); // returns the first scene (both scenes are the same)
+//        }
+//        return nullptr;
+//    };
 
     void trackNodes() const {
         for (auto c: _connections) {

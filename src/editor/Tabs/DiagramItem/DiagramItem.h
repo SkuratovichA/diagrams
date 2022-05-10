@@ -365,10 +365,14 @@ public:
 protected:
     QVariant itemChange(GraphicsItemChange change, const QVariant &value) override;
 
+    /**
+     * Constants
+     */
 private:
-    ClassDiagramItem *_parentClassDiagramItem = nullptr;
-    SequenceDiagramLifeLine *_lifeLine = nullptr;
-    qreal const lineDefaultLength = 500;
+    QSet<SequenceConnection *> _connections = QSet<SequenceConnection *>(); ///< connections to track
+    ClassDiagramItem *_parentClassDiagramItem = nullptr; ///< pointer to the "parent" class diagram item for synchronization.
+    SequenceDiagramLifeLine *_lifeLine = nullptr; ///< lifeLine to track active regions
+    qreal const lineDefaultLength = 500; ///< default lenght of a life line
 };
 
 #endif // Object_H

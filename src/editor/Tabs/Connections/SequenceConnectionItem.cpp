@@ -27,6 +27,8 @@ SequenceConnectionItem::SequenceConnectionItem(SequenceDiagramItem *nodeFrom,
     _nodeTo = nodeTo;
     _connectionType = connectionType;
 
+    qDebug() << __FILE__;
+    qDebug() << "   creating a connection";
     _connections.insert(new SequenceConnection(nodeFrom, nodeTo, connectionType));
     _nodeFrom->addConnection(_connections.values().at(0), Caller);
     _nodeTo->addConnection(_connections.values().at(0), Receiver);
@@ -36,6 +38,8 @@ SequenceConnectionItem::SequenceConnectionItem(SequenceDiagramItem *nodeFrom,
         _nodeFrom->addConnection(_connections.values().at(1), Caller);
         _nodeTo->addConnection(_connections.values().at(1), Receiver);
     }
+    qDebug() << "inserted at leas one connection";
+    qDebug() << __FILE__ << "   connection created>";
 
     trackNodes();
 }
@@ -44,12 +48,15 @@ SequenceConnectionItem::SequenceConnectionItem(SequenceDiagramItem *nodeFrom,
  *
  */
 SequenceConnectionItem::~SequenceConnectionItem() {
+    qDebug() << __FILE__;
+    qDebug() << "   removing connections";
     _nodeFrom->removeConnection(_connections.values().at(0));
     _nodeTo->removeConnection(_connections.values().at(0));
     if (_connectionType == Synchronous) {
         _nodeFrom->removeConnection(_connections.values().at(1));
         _nodeTo->removeConnection(_connections.values().at(1));
     }
+    qDebug() << "   connectinons removed";
 
 }
 
@@ -57,7 +64,11 @@ SequenceConnectionItem::~SequenceConnectionItem() {
  *
  */
 void SequenceConnectionItem::trackNodes() {
+    qDebug() << __FILE__;
+    qDebug() << "   track nods: SequenceConnectionItem";
+    assert("size must be > 0" && _connections.size() > 0);
     for (auto c : _connections) {
         c->trackNodes();
     }
+    qDebug() << "   nodes tracked";
 }

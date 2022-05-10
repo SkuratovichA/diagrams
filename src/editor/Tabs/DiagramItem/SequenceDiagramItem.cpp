@@ -86,7 +86,11 @@ QVariant SequenceDiagramItem::itemChange(
         return QPointF(value.toPointF().x(), pos().y());
     }
     if (change == ItemPositionHasChanged) {
-        _lifeLine->notifyConnectionsAboutParentPositionChange();
+        qDebug() << "<tracking connection nodes";
+        for (auto c : _connections) {
+            c->trackNodes();
+        }
+        qDebug() << "connections tracked>";
     }
     return QGraphicsItem::itemChange(change, value);
 }
@@ -99,7 +103,10 @@ QVariant SequenceDiagramItem::itemChange(
 void SequenceDiagramItem::addConnection(
         SequenceConnection *connection,
         ActorType actorType) {
-    _lifeLine->addConnection(connection, actorType);
+    qDebug() << "<adding connection";
+    _connections.insert(connection);
+    _lifeLine->addConnection(connection->y(), connection->connectionType(), actorType);
+    qDebug() << "connection added>";
 }
 
 /**
@@ -108,5 +115,6 @@ void SequenceDiagramItem::addConnection(
  * @param connection message arrow between objects
  */
 void SequenceDiagramItem::removeConnection(SequenceConnection *connection) {
-    _lifeLine->removeConnection(connection);
+    assert(!"remove connection");
+//    _lifeLine->removeConnection(connection);
 }

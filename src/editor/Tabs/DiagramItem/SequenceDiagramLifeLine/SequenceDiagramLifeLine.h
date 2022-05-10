@@ -13,10 +13,6 @@
 using namespace Connections;
 
 typedef QPair<qreal, qreal> region_t;
-typedef QList<region_t> lineRegionsPairs_t;
-typedef QPair<SequenceConnectionItem *, ActorType> connectionActorPair_t;
-typedef QList<connectionActorPair_t> connectionList_t;
-typedef QList<connectionList_t> conectionTypeConnectionPairs_t;
 
 /** Implementation of a custom Life Line for an object (actor)
  */
@@ -78,6 +74,9 @@ public:
 //    }
 
     void updateHeight() {
+        if (_activeRegions.isEmpty()) {
+            return;
+        }
         _height = _activeRegions.last().second > _height ? _activeRegions.last().second + _heightAdjust : _height;
     }
 
@@ -85,12 +84,12 @@ public:
      * Usual functions.
      */
 public:
-    void notifyConnectionsAboutParentPositionChange();
     void addConnection(
-            SequenceConnection *connection,
+            qreal y,
+            ConnectionType connectionType,
             ActorType actorType
     );
-    void removeConnection(SequenceConnection *connection);
+    void removeConnection(qreal y);
 
     /**
      * Private functions.
@@ -116,11 +115,6 @@ private:
      */
     QList<QPair<qreal /*from*/, qreal /*to*/>> _activeRegions = QList<QPair<qreal, qreal>>();
     QList<QPair<qreal /*from*/, qreal /*to*/>> _synchronousPoints = QList<QPair<qreal, qreal>>();
-    /**
-     *  One of the Synchronous, Asynchronous, Reply, Create, Delete.
-     *  The same functionality as  in the ClassDiagramItem
-     */
-    QSet<SequenceConnection *> _connections = QSet<SequenceConnection *>();
 
     /**
      * Constants.
@@ -129,9 +123,6 @@ private:
     qreal const _actRegLen = 20.0;
     qreal const _adjust = 10.0;
     qreal const _heightAdjust = 20.0;
-    ConnectionType _connectionType;
-
-//    bool _isWaitingForResponce = false;
 };
 
 #endif //DIAGRAMS_SEQUENCEDIAGRAMLIFELINE_H

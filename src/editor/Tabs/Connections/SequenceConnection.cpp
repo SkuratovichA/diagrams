@@ -36,6 +36,8 @@ SequenceConnection::SequenceConnection(SequenceDiagramItem *nodeFrom,
 
     setFlags(QGraphicsItem::ItemIsSelectable | QGraphicsItem::ItemIsMovable | QGraphicsItem::ItemSendsGeometryChanges);
     setZValue(-1.0);
+
+    setY(100);
     trackNodes();
 }
 
@@ -100,7 +102,7 @@ SequenceConnection::~SequenceConnection() {
  */
 void SequenceConnection::trackNodes() {
     // TODO: adjust y positions
-//    setLine(QLineF(_nodeFrom->pos(), _nodeTo->pos()));
+    setLine(QLineF(QPointF(_nodeFrom->pos().x(), y()), QPointF(_nodeTo->pos().x(), y())));
 }
 
 /**

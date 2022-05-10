@@ -193,6 +193,9 @@ public:
 public slots:
 
     void moveEntity(QGraphicsItem *movedItem, const QPointF &startPosition) {
+        qDebug() << "<" << __FILE__;
+        qDebug() << "movindg item: "<< movedItem << " from the starting position: " << startPosition;
+        qDebug(">");
         _undoStack->push(new MoveCommand(movedItem, startPosition));
     }
 
@@ -200,8 +203,7 @@ public slots:
         if (editorScene->selectedItems().isEmpty()) {
             return;
         }
-        QUndoCommand *deleteCommand = new DeleteCommand(editorScene);
-        _undoStack->push(deleteCommand);
+        _undoStack->push(new DeleteCommand(editorScene));
     }
 
     void zoomIn() {
