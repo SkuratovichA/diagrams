@@ -47,13 +47,6 @@ SequenceConnectionItem::SequenceConnectionItem(SequenceDiagramItem *nodeFrom,
  *
  */
 SequenceConnectionItem::~SequenceConnectionItem() {
-    qDebug() << __FILE__;
-    qDebug() << "   removing connections";
-    assert(_nodeFrom != nullptr && "nodeFrom must not be nullptr");
-    _nodeFrom->removeConnection(this);
-    assert(_nodeTo != nullptr && "nodeTo must not be nullptr");
-    _nodeTo->removeConnection(this);
-    qDebug() << "   connectinons removed";
 }
 
 /**
@@ -222,13 +215,10 @@ void SequenceConnectionItem::paintReply(QPainter *painter, const QStyleOptionGra
 
     QPen linepen(_color, 0.8, Qt::DashLine);
     linepen.setDashOffset(10);
-//    painter->setPen(linepen);
-    setPen(linepen);
-
+    painter->setPen(linepen);
+//    setPen(linepen);
     painter->drawLine(line());
-
     painter->drawLine(l1);
-
     painter->drawLine(l2);
 }
 
