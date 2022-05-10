@@ -56,11 +56,11 @@ QList<QPair<ClassDiagramItem *, QString>> ClassCanvas::getClassStringPairs() {
  */
 bool ClassCanvas::createFromFile(dgrm_class_t cls) {
     ItemsBuffer buf;
-    for (auto x : cls.classes) {
+    for (auto x: cls.classes) {
         buf.addClassItems(x);
     }
 
-    for (auto x : buf.classItems()) {
+    for (auto x: buf.classItems()) {
         ClassDiagramItem *diagramItem = new ClassDiagramItem(x);
         editorScene->addItem(diagramItem);
         diagramItem->setPos(x->x(), x->y());
@@ -74,8 +74,8 @@ bool ClassCanvas::createFromFile(dgrm_class_t cls) {
 
     ClassDiagramItem *from;
     ClassDiagramItem *to;
-    for (auto x : buf.relationItems()) {
-        for (auto y : items) {
+    for (auto x: buf.relationItems()) {
+        for (auto y: items) {
             if (x->leftObj() == y->name()) {
                 from = y;
             }
@@ -88,7 +88,8 @@ bool ClassCanvas::createFromFile(dgrm_class_t cls) {
             return false;
         }
 
-        ClassConnectionItem *item = new ClassConnectionItem(from, to, x, static_cast<ClassConnectionItem::ClassConnectionType>(x->type()));
+        ClassConnectionItem *item = new ClassConnectionItem(from, to, x,
+                                                            static_cast<ClassConnectionItem::ClassConnectionType>(x->type()));
         editorScene->addItem(item);
         editorScene->update();
     }
@@ -121,12 +122,12 @@ bool ClassCanvas::getStringRepresentation(Program &prg) {
         x->fillColor(tmp.color);
         x->fillCoords(tmp.coords);
 
-        if ( !x->splitString(tmp.attrs, x->attrs()) ) {
+        if (!x->splitString(tmp.attrs, x->attrs())) {
             qDebug() << "Error with attribute, color it by red color";
             return false;
         }
 
-        if ( !x->splitString(tmp.methods, x->methods()) ) {
+        if (!x->splitString(tmp.methods, x->methods())) {
             qDebug() << "Error with method, color it by red color";
             return false;
         }
@@ -134,7 +135,7 @@ bool ClassCanvas::getStringRepresentation(Program &prg) {
         prg.diagram_class.classes.push_back(tmp);
     }
 
-    for (auto x : buf.relationItems()) {
+    for (auto x: buf.relationItems()) {
         Conct tmp;
         qDebug() << x->rightNum();
         qDebug() << x->leftNum();
@@ -405,10 +406,11 @@ void ClassCanvas::addConnection() {
         return;
     }
 
-    createRelation = new relationsParams(nodes.first->name(), "1..n",nodes.second->name(),
-                                         "0..n","MSG",  ClassConnectionItem::Dependency);
+    createRelation = new relationsParams(nodes.first->name(), "1..n", nodes.second->name(),
+                                         "0..n", "MSG", ClassConnectionItem::Dependency);
     _undoStack->push(
-            new AddClassConnectionCommand(nodes.first, nodes.second, createRelation, ClassConnectionItem::Dependency, editorScene)
+            new AddClassConnectionCommand(nodes.first, nodes.second, createRelation, ClassConnectionItem::Dependency,
+                                          editorScene)
     );
 }
 

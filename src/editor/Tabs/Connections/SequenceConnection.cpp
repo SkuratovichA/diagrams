@@ -2,6 +2,9 @@
 // Author: Skuratovich Aliaksandr <xskura01@vutbr.cz>
 // Date: 07.05.2022
 
+static_assert(!"fucking depricated");
+
+
 #define DEBUG 1
 
 #include <QStyleOptionGraphicsItem>

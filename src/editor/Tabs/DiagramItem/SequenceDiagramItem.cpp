@@ -101,10 +101,11 @@ QVariant SequenceDiagramItem::itemChange(
  * @param connection message arrow between objects
  */
 void SequenceDiagramItem::addConnection(
-        SequenceConnection *connection,
+        SequenceConnectionItem *connection,
         ActorType actorType) {
     qDebug() << "<adding connection";
     _connections.insert(connection);
+    assert( _lifeLine != nullptr && "lifeLine must not be null");
     _lifeLine->addConnection(connection->y(), connection->connectionType(), actorType);
     qDebug() << "connection added>";
 }
@@ -114,7 +115,9 @@ void SequenceDiagramItem::addConnection(
  *
  * @param connection message arrow between objects
  */
-void SequenceDiagramItem::removeConnection(SequenceConnection *connection) {
-    assert(!"remove connection");
-//    _lifeLine->removeConnection(connection);
+void SequenceDiagramItem::removeConnection(SequenceConnectionItem *connection) {
+    qDebug() << __FILE__;
+    qDebug() << "   removing connection";
+    qDebug() << "removing << "<< connection <<"this from " << _connections;
+    _connections.remove(connection);
 }

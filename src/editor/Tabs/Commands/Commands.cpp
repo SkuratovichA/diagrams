@@ -236,7 +236,7 @@ AddClassConnectionCommand::~AddClassConnectionCommand() {
     if (classConnection->scene() != nullptr) {
         return;
     }
-    qDebug() << "This shit of code causes segfault";
+//    "This shit of code causes segfault";
 }
 
 /**
@@ -265,7 +265,14 @@ AddSequenceConnectionCommand::AddSequenceConnectionCommand(SequenceDiagramItem *
                                                            QGraphicsScene *scene,
                                                            QUndoCommand *parent)
         : QUndoCommand(parent), graphicsScene(scene) {
+
+    qDebug() << __FILE__;
+    qDebug() << "   from localCentre" << fromNode->localCentre();
+    qDebug() << "   to localCentre" << toNode->localCentre();
+
     actorConnection = new SequenceConnectionItem(fromNode, toNode, connectionType);
+    setText(QObject::tr("Connect %1")
+                    .arg(createCommandString(static_cast<SequenceConnectionItem *>(actorConnection))));
     scene->update();
 }
 
@@ -276,16 +283,15 @@ AddSequenceConnectionCommand::~AddSequenceConnectionCommand() {
     if (actorConnection->scene() != nullptr) {
         return;
     }
-    delete actorConnection;
+//    delete actorConnection;
 }
 
 /**
  *
  */
 void AddSequenceConnectionCommand::undo() {
-    // TODO fix
-//    graphicsScene->removeItem(actorConnection);
-//    graphicsScene->update();
+    graphicsScene->removeItem(actorConnection);
+    graphicsScene->update();
 }
 
 /**
@@ -293,7 +299,7 @@ void AddSequenceConnectionCommand::undo() {
  */
 void AddSequenceConnectionCommand::redo() {
     // TODO: fix
-//    graphicsScene->addItem(actorConnection);
-//    graphicsScene->clearSelection();
+    graphicsScene->addItem(actorConnection);
+    graphicsScene->clearSelection();
     graphicsScene->update();
 }

@@ -68,7 +68,7 @@ void SequenceDiagramLifeLine::paint(QPainter *painter, const QStyleOptionGraphic
 
     painter->setRenderHint(QPainter::Antialiasing, true);
 
-    auto topPoint = _parent->centre() + QPointF(0, _yFrom);
+    auto topPoint = _parent->localCentre() + QPointF(0, _yFrom);
     QList<QLineF> lines;
 
     painter->setPen(QPen(Qt::black, 1, Qt::SolidLine));
@@ -77,8 +77,8 @@ void SequenceDiagramLifeLine::paint(QPainter *painter, const QStyleOptionGraphic
     qDebug() << "     cretaed merged active regions";
 
     for (auto rect: olapd) {
-        QPointF fromPoint{_parent->centre() + QPointF(-_adjust, rect.first)};
-        QPointF toPoint{_parent->centre() + QPointF(_adjust, rect.second)};
+        QPointF fromPoint{_parent->localCentre() + QPointF(-_adjust, rect.first)};
+        QPointF toPoint{_parent->localCentre() + QPointF(_adjust, rect.second)};
         painter->drawRect(QRectF(fromPoint, toPoint));
         // add a line connecting two rectangles
         lines.push_back(QLineF(topPoint, fromPoint + QPointF(_adjust, 0)));
@@ -88,7 +88,7 @@ void SequenceDiagramLifeLine::paint(QPainter *painter, const QStyleOptionGraphic
     // prepare for drawing a line
     painter->setPen(QPen(Qt::black, 1, Qt::DashLine));
     // add the last point.
-    lines.push_front(QLineF(topPoint, _parent->centre() + QPointF(0.0, _height)));
+    lines.push_front(QLineF(topPoint, _parent->localCentre() + QPointF(0.0, _height)));
     for (auto cLine: lines) {
         painter->drawLine(cLine);
     }
@@ -109,8 +109,8 @@ void SequenceDiagramLifeLine::mousePressEvent(QGraphicsSceneMouseEvent *event) {
  */
 void SequenceDiagramLifeLine::trackNodes() {
     auto line = QLineF(
-            _parent->centre() + QPointF(0, _yFrom),
-            _parent->centre() + QPointF(0, maxHeight())
+            _parent->localCentre() + QPointF(0, _yFrom),
+            _parent->localCentre() + QPointF(0, maxHeight())
     );
     setLine(line);
 }

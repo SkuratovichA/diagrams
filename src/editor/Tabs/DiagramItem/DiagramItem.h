@@ -349,14 +349,20 @@ public:
         return _head->toPlainText();
     }
 
-    [[nodiscard]] QPointF centre() const override {
+    [[nodiscard]] QPointF localCentre() const {
         return {width() / 2.0, height()};
     }
 
+
+    [[nodiscard]] QPointF centre() const override {
+        return {x() + width() / 2.0, y() + height()};
+    }
+
+
 public:
-    void addConnection(SequenceConnection *connection,
+    void addConnection(SequenceConnectionItem *connection,
                        ActorType actorType);
-    void removeConnection(SequenceConnection *connection);
+    void removeConnection(SequenceConnectionItem *connection);
 
     [[nodiscard]] ClassDiagramItem *parentClassDiagramItem() const {
         return _parentClassDiagramItem;
@@ -369,7 +375,7 @@ protected:
      * Constants
      */
 private:
-    QSet<SequenceConnection *> _connections = QSet<SequenceConnection *>(); ///< connections to track
+    QSet<SequenceConnectionItem *> _connections = QSet<SequenceConnectionItem *>(); ///< connections to track
     ClassDiagramItem *_parentClassDiagramItem = nullptr; ///< pointer to the "parent" class diagram item for synchronization.
     SequenceDiagramLifeLine *_lifeLine = nullptr; ///< lifeLine to track active regions
     qreal const lineDefaultLength = 500; ///< default lenght of a life line

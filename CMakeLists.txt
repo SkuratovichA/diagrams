@@ -55,7 +55,8 @@ add_executable(proj
         src/editor/Backend/Parse.h
         src/editor/Backend/SeqDiagram.h
         src/editor/Tabs/DiagramItem/SequenceDiagramLifeLine/SequenceDiagramLifeLine.h
-        src/editor/Tabs/Connections/SequenceConnection.cpp)
+#        src/editor/Tabs/Connections/SequenceConnection.cpp
+        )
 
 target_link_libraries(proj
         Qt::Core
