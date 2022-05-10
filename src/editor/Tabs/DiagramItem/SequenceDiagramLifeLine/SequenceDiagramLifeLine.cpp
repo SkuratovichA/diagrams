@@ -115,37 +115,51 @@ void SequenceDiagramLifeLine::trackNodes() {
     setLine(line);
 }
 
+/**
+ * Create pairs in such a way, that for a <= b <= `max`
+ * they will look like<a, max> or <a, b>, if such b exists.
+ *
+ * @param a
+ * @return
+ */
+QList<QPair<qreal, qreal>> SequenceDiagramLifeLine::getActiveRegionsAsIntervals(QList<qreal> &a) {
+    // sort array
+    qDebug() << __FILE__;
+    if (a.isEmpty()) {
+        return QList<QPair<qreal, qreal>>();
+    }
+    std::sort(a.begin(), a.end(), [](qreal &a, qreal &b){return a < b;});
+    auto pairs = QList<QPair<qreal, qreal>>();
+    for (uint32_t i = 0; i < a.size(); i++) {
+        if (i % 2 == 0) {
+            pairs.push_back(QPair<qreal, qreal>(a[i], maxHeight()));
+        } else {
+            pairs[i-1].second = a[i];
+        }
+    }
+    qDebug() << "   there must be an array sorted in the ascending order";
+    qDebug() << "   " << pairs;
+    return pairs;
+}
+
 /** Merges all intervals
  *
  * @return merged intervals
  */
 QList<QPair<qreal, qreal>> SequenceDiagramLifeLine::mergedActiveRegions() {
-   qDebug() << __FILE__;
-   qDebug() << "<";
+    qDebug() << __FILE__;
+    qDebug() << "<";
     auto sf = [](const QPair<qreal, qreal> &a, const QPair<qreal, qreal> &b) {
-        if (a.first < b.first) {
-            return true;
-        }
-        if (a.first > b.first) {
-            return false;
-        }
-        if (a.second < b.second) {
-            return true;
-        }
+        if (a.first < b.first) {return true;}
+        if (a.first > b.first) {return false;}
+        if (a.second < b.second) {return true;}
         return false;
     };
     auto a = QList<QPair<qreal, qreal>>();
-    qDebug() << "   created(empty) a:"<<a;
 
-    qDebug() << "   active regions:"<<_activeRegions;
-    a.append(_activeRegions);
-    qDebug() << "   appended _activeRegions: a:"<<a;
-
-    qDebug() << "   synchronous points:"<<_synchronousPoints;
-    a.append(_synchronousPoints);
-    qDebug() << "   appended _synchronousPoints: a: "<<a;
+    a.append(getActiveRegionsAsIntervals(_activeRegions));
+//    a.append(_synchronousPoints);
     if (a.isEmpty()) {
-        qDebug() << "   a is empty. returning ---------: "<<a;
         return a;
     }
     std::sort(a.begin(), a.end(), sf);
@@ -174,7 +188,8 @@ qreal SequenceDiagramLifeLine::maxHeight() const {
     if (_activeRegions.isEmpty()) {
         return _height;
     }
-    return std::max(_activeRegions.last().second, _height);
+    // TODO: dangerous af
+    return std::max(_activeRegions.last(), _height);
 }
 
 /**
@@ -185,19 +200,18 @@ void SequenceDiagramLifeLine::addConnection(
         qreal y,
         ConnectionType connectionType,
         ActorType actorType
-        ) {
+) {
     // TODO: improve margin for creation/deletion
-    auto margin = 10.0;
-    auto topMargin = actorType == Receiver  ? 0 : margin;
-    auto bottomMargin = actorType == Receiver  ? 0 : margin;
+    auto margin = 15.0;
+    auto topMargin = actorType == Receiver ? 0 : margin;
+    auto bottomMargin = actorType == Receiver ? 0 : margin;
 
     qDebug() << "<";
     qDebug() << __FILE__;
     if (connectionType == Synchronous) {
-        qDebug() << "   synchronous";
-        assert(!"support synchronous shit");
+        _activeRegions.push_back(y);
     } else {
-        _synchronousPoints.push_back(QPair<qreal, qreal>(y, y+10));
+        _synchronousPoints.push_back(QPair<qreal, qreal>(y, y + 10));
     }
 
     switch (actorType) {

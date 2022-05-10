@@ -36,9 +36,9 @@ public:
         return _height;
     }
 
-    [[nodiscard]] const QList<QPair<qreal, qreal>> &activeRegions() const {
-        return _activeRegions;
-    }
+//    [[nodiscard]] const QList<QPair<qreal, qreal>> &activeRegions() const {
+//        return _activeRegions;
+//    }
 
     [[nodiscard]] qreal defaultActiveRegionLength() const {
         return _actRegLen;
@@ -61,7 +61,7 @@ public:
         _height = height;
     }
 
-    void addActiveRegion(const QPair<qreal, qreal> activeRegions) {
+    void addActiveRegion(const qreal activeRegions) {
         _activeRegions.push_back(activeRegions);
     }
 
@@ -77,7 +77,8 @@ public:
         if (_activeRegions.isEmpty()) {
             return;
         }
-        _height = _activeRegions.last().second > _height ? _activeRegions.last().second + _heightAdjust : _height;
+        // TODO: dangerous
+        _height = _activeRegions.last() > _height ? _activeRegions.last() + _heightAdjust : _height;
     }
 
     /**
@@ -102,6 +103,9 @@ private:
     [[nodiscard]] qreal maxHeight() const;
     QList<QPair<qreal, qreal>> mergedActiveRegions();
 
+    // TODO: change me to receiev SequenceConnection
+    QList<QPair<qreal, qreal>> getActiveRegionsAsIntervals(QList<qreal> &a);
+
     /**
      * Private variables
      */
@@ -113,8 +117,8 @@ private:
     /**
      * Usually, from/to, but in case to is -1, use default length.
      */
-    QList<QPair<qreal /*from*/, qreal /*to*/>> _activeRegions = QList<QPair<qreal, qreal>>();
     QList<QPair<qreal /*from*/, qreal /*to*/>> _synchronousPoints = QList<QPair<qreal, qreal>>();
+    QList<qreal> _activeRegions = QList<qreal>();
 
     /**
      * Constants.

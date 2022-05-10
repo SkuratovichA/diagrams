@@ -74,7 +74,7 @@ QVariant SequenceDiagramItem::itemChange(
         GraphicsItemChange change,
         const QVariant &value) {
     if (change == ItemPositionChange) {
-        return QPointF(value.toPointF().x(), pos().y());
+        return QPointF(std::max<qreal>(-10, value.toPointF().x()), std::max<qreal>(-10, pos().y()));
     }
     if (change == ItemPositionHasChanged) {
         qDebug() << "<tracking connection nodes";

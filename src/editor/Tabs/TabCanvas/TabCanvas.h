@@ -71,6 +71,11 @@ private:
 
     // region Templates
 public:
+    /**
+     * Returns two first selected elements from the scene.
+     * @tparam T typename. Must be inherit from QGraphicsItem
+     * @return Pair of two selected elements with type T.
+     */
     template<typename T>
     QPair<T *, T *> getSelectedDiagramItems() {
         qDebug() << __FILE__;
@@ -95,7 +100,7 @@ public:
 
         // take the first element of a list
         auto first = dynamic_cast<T *>(items.first());
-        T *rest = nullptr;
+        T *rest;
         switch (items.count()) {
             case 2:
                 // remove a previously taken elment
@@ -108,7 +113,7 @@ public:
             default:
                 qDebug() << "     " << items.count() << " elements to select.";
                 items.removeFirst();
-                rest = items.first();
+                rest = dynamic_cast<T *>(items.first());
         }
         return QPair<T *, T *>(first, rest);
     }
@@ -224,7 +229,6 @@ public slots:
 protected:
     EditorScene *editorScene = nullptr;
     QUndoStack *_undoStack = nullptr;
-//    EditorInterface *editorInterface = nullptr;
     ItemsBuffer *buffer = nullptr;
 
 private:
