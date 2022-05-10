@@ -97,8 +97,12 @@ void SequenceDiagramItem::addConnection(
     qDebug() << "<adding connection";
     _connections.insert(connection);
     assert( _lifeLine != nullptr && "lifeLine must not be null");
-    _lifeLine->addConnection(connection->y(), connection->connectionType(), actorType);
+    _lifeLine->addConnection(connection, actorType);
     qDebug() << "connection added>";
+}
+
+void SequenceDiagramItem::trackNodes() {
+    _lifeLine->trackNodes();
 }
 
 /**

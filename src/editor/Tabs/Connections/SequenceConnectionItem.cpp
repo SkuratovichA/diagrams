@@ -11,6 +11,7 @@
 
 #include "Connections.h"
 #include "../DiagramItem/DiagramItem.h"
+#include "../DiagramItem/SequenceDiagramLifeLine/SequenceDiagramLifeLine.h"
 
 using namespace Connections;
 
@@ -66,6 +67,8 @@ QVariant SequenceConnectionItem::itemChange(GraphicsItemChange change, const QVa
         );
     }
     if (change == ItemPositionHasChanged) {
+        _nodeFrom->trackNodes();
+        _nodeTo->trackNodes();
         trackNodes();
     }
     return QGraphicsItem::itemChange(change, value);

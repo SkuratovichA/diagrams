@@ -9,6 +9,9 @@
 #include <QGraphicsLineItem>
 #include <QGraphicsSceneMouseEvent>
 #include "../DiagramItem.h"
+//#include "../../Connections/Connections.h"
+
+class SequenceConnectionItem;
 
 using namespace Connections;
 
@@ -36,21 +39,13 @@ public:
         return _height;
     }
 
-//    [[nodiscard]] const QList<QPair<qreal, qreal>> &activeRegions() const {
-//        return _activeRegions;
-//    }
-
     [[nodiscard]] qreal defaultActiveRegionLength() const {
         return _actRegLen;
     }
 
     [[nodiscard]] const QList<QPair<qreal, qreal>> &synchronousPoints() const {
-        return _synchronousPoints;
+        return _messagesRegionsNotSynchronous;
     }
-//
-//    [[nodiscard]] bool isIsWaitingForResponce() const {
-//        return _isWaitingForResponce;
-//    }
 
 public:
     void setYFrom(qreal yFrom) {
@@ -61,24 +56,12 @@ public:
         _height = height;
     }
 
-    void addActiveRegion(const qreal activeRegions) {
+    void addActiveRegion(const SequenceConnectionItem *activeRegions) {
         _activeRegions.push_back(activeRegions);
     }
 
     void addSynchronousPoint(const QPair<qreal, qreal> synchronousPoint) {
-        _synchronousPoints.push_back(synchronousPoint);
-    }
-//
-//    void setIsWaitingForResponce(bool isWaitingForResponce) {
-//        _isWaitingForResponce = isWaitingForResponce;
-//    }
-
-    void updateHeight() {
-        if (_activeRegions.isEmpty()) {
-            return;
-        }
-        // TODO: dangerous
-        _height = _activeRegions.last() > _height ? _activeRegions.last() + _heightAdjust : _height;
+        _messagesRegionsNotSynchronous.push_back(synchronousPoint);
     }
 
     /**
@@ -86,8 +69,7 @@ public:
      */
 public:
     void addConnection(
-            qreal y,
-            ConnectionType connectionType,
+            SequenceConnectionItem *connection,
             ActorType actorType
     );
     void removeConnection(qreal y);
@@ -100,32 +82,33 @@ private:
     [[nodiscard]] QPainterPath shape() const override;
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
     [[nodiscard]] QPolygonF lineShaper() const;
-    [[nodiscard]] qreal maxHeight() const;
     QList<QPair<qreal, qreal>> mergedActiveRegions();
 
     // TODO: change me to receiev SequenceConnection
-    QList<QPair<qreal, qreal>> getActiveRegionsAsIntervals(QList<qreal> &a);
+    QList<QPair<qreal, qreal>> getActiveRegionsAsIntervals(QList<const SequenceConnectionItem *> &a);
 
     /**
      * Private variables
      */
 private:
     qreal _yFrom = 0;
-    qreal _height = 0;
+    qreal _height = 500; // TODO set height
     SequenceDiagramItem *_parent;
 
     /**
      * Usually, from/to, but in case to is -1, use default length.
      */
-    QList<QPair<qreal /*from*/, qreal /*to*/>> _synchronousPoints = QList<QPair<qreal, qreal>>();
-    QList<qreal> _activeRegions = QList<qreal>();
+    QList<QPair<qreal /*from*/, qreal /*to*/>> _messagesRegionsNotSynchronous = QList<QPair<qreal, qreal>>();
+    QList<const SequenceConnectionItem *> _activeRegions = QList<const SequenceConnectionItem *>();
 
     /**
      * Constants.
      */
 private:
     qreal const _actRegLen = 20.0;
-    qreal const _adjust = 10.0;
+    qreal _adjust = 10.0;
+
+    qreal _verticalAgjust = 0.0; ///< number representing the difference of the absolute and a relative positions(parent)
     qreal const _heightAdjust = 20.0;
 };
 

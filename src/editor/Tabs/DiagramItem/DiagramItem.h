@@ -353,13 +353,11 @@ public:
         return {width() / 2.0, height()};
     }
 
+    void trackNodes();
 
     [[nodiscard]] QPointF centre() const override {
         return {x() + width() / 2.0, y() + height()};
     }
-
-public:
-
 
 public:
     void addConnection(SequenceConnectionItem *connection,

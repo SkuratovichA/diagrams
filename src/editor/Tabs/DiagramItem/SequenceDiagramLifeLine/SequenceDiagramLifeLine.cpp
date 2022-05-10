@@ -8,8 +8,9 @@
 #include <QPen>
 #include <QPainter>
 #include <QDebug>
+#include "../../Connections/Connections.h"
 
-//#include "../../../Tabs/Connections/Connections.h"
+#define DEBUG 1
 
 using namespace Connections;
 
@@ -23,6 +24,9 @@ SequenceDiagramLifeLine::SequenceDiagramLifeLine(SequenceDiagramItem *parent, qr
     _height = height;
     _yFrom = yFrom;
     _parent = parent;
+    _verticalAgjust = parent->pos().y();
+
+
     setFlags(QGraphicsItem::ItemIsSelectable);
     // create a default line
     trackNodes();
@@ -39,7 +43,7 @@ SequenceDiagramLifeLine::~SequenceDiagramLifeLine() {
  * @return bounding polygon.
  */
 QPolygonF SequenceDiagramLifeLine::lineShaper() const {
-    QRectF rect(_parent->width() / 2 - _adjust, _parent->height(), 2 * _adjust, maxHeight());
+    QRectF rect(_parent->width() / 2 - _adjust, _parent->height(), 2 * _adjust, _height);
     return QPolygonF(rect);
 }
 
@@ -65,21 +69,23 @@ void SequenceDiagramLifeLine::paint(QPainter *painter, const QStyleOptionGraphic
     painter->drawPolygon(lineShaper());
 #endif
     qDebug() << __FILE__;
-
+    auto clr = _parent->color();
+    clr.setAlpha(_parent->color().alpha()/2);
+    painter->setBrush(QBrush(clr));
     painter->setRenderHint(QPainter::Antialiasing, true);
-
-    auto topPoint = _parent->localCentre() + QPointF(0, _yFrom);
-    QList<QLineF> lines;
-
     painter->setPen(QPen(Qt::black, 1, Qt::SolidLine));
-    painter->setBrush(QBrush(_parent->color()));
-    auto olapd = mergedActiveRegions();
-    qDebug() << "     cretaed merged active regions";
 
+    QList<QLineF> lines;
+    auto topPoint = _parent->localCentre() + QPointF(0, _yFrom);
+    auto olapd = mergedActiveRegions();
+
+    qDebug() << "     cretaed merged active regions";
     for (auto rect: olapd) {
-        QPointF fromPoint{_parent->localCentre() + QPointF(-_adjust, rect.first)};
-        QPointF toPoint{_parent->localCentre() + QPointF(_adjust, rect.second)};
+        // adjust a rectangle and draw it
+        QPointF fromPoint{_parent->localCentre() + QPointF(-_adjust, rect.first - 50)};
+        QPointF toPoint{_parent->localCentre() + QPointF(_adjust, rect.second - 50)};
         painter->drawRect(QRectF(fromPoint, toPoint));
+
         // add a line connecting two rectangles
         lines.push_back(QLineF(topPoint, fromPoint + QPointF(_adjust, 0)));
         topPoint = toPoint + QPointF(-_adjust, 0);
@@ -88,7 +94,7 @@ void SequenceDiagramLifeLine::paint(QPainter *painter, const QStyleOptionGraphic
     // prepare for drawing a line
     painter->setPen(QPen(Qt::black, 1, Qt::DashLine));
     // add the last point.
-    lines.push_front(QLineF(topPoint, _parent->localCentre() + QPointF(0.0, _height)));
+    lines.push_front(QLineF(topPoint, _parent->localCentre() + QPointF(0.0, _height + 0)));
     for (auto cLine: lines) {
         painter->drawLine(cLine);
     }
@@ -110,8 +116,9 @@ void SequenceDiagramLifeLine::mousePressEvent(QGraphicsSceneMouseEvent *event) {
 void SequenceDiagramLifeLine::trackNodes() {
     auto line = QLineF(
             _parent->localCentre() + QPointF(0, _yFrom),
-            _parent->localCentre() + QPointF(0, maxHeight())
+            _parent->localCentre() + QPointF(0, _height)
     );
+    mergedActiveRegions();
     setLine(line);
 }
 
@@ -122,19 +129,26 @@ void SequenceDiagramLifeLine::trackNodes() {
  * @param a
  * @return
  */
-QList<QPair<qreal, qreal>> SequenceDiagramLifeLine::getActiveRegionsAsIntervals(QList<qreal> &a) {
+QList<QPair<qreal, qreal>> SequenceDiagramLifeLine::getActiveRegionsAsIntervals(
+        QList<const SequenceConnectionItem *> &a
+) {
     // sort array
     qDebug() << __FILE__;
+
     if (a.isEmpty()) {
         return QList<QPair<qreal, qreal>>();
     }
-    std::sort(a.begin(), a.end(), [](qreal &a, qreal &b){return a < b;});
+    std::sort(a.begin(), a.end(),
+              [](const SequenceConnectionItem *a, const SequenceConnectionItem *b) {
+                  return a->y() < b->y();
+              }
+    );
     auto pairs = QList<QPair<qreal, qreal>>();
     for (uint32_t i = 0; i < a.size(); i++) {
         if (i % 2 == 0) {
-            pairs.push_back(QPair<qreal, qreal>(a[i], maxHeight()));
+            pairs.push_back(QPair<qreal, qreal>(a[i]->y(), _height));
         } else {
-            pairs[i-1].second = a[i];
+            pairs[i - 1].second = a[i]->y();
         }
     }
     qDebug() << "   there must be an array sorted in the ascending order";
@@ -158,7 +172,7 @@ QList<QPair<qreal, qreal>> SequenceDiagramLifeLine::mergedActiveRegions() {
     auto a = QList<QPair<qreal, qreal>>();
 
     a.append(getActiveRegionsAsIntervals(_activeRegions));
-//    a.append(_synchronousPoints);
+//    a.append(_messagesRegionsNotSynchronous); // TODO
     if (a.isEmpty()) {
         return a;
     }
@@ -175,21 +189,9 @@ QList<QPair<qreal, qreal>> SequenceDiagramLifeLine::mergedActiveRegions() {
     }
     qDebug() << "    overlapped chunks done";
     // adjust the size of a lifeline
-    updateHeight();
+//    updateHeight();
     qDebug() << ">";
     return a;
-}
-
-/** Determines the maximum possible height of the life line.
- *
- * @return maximum height for the line line.
- */
-qreal SequenceDiagramLifeLine::maxHeight() const {
-    if (_activeRegions.isEmpty()) {
-        return _height;
-    }
-    // TODO: dangerous af
-    return std::max(_activeRegions.last(), _height);
 }
 
 /**
@@ -197,21 +199,21 @@ qreal SequenceDiagramLifeLine::maxHeight() const {
  * @param connection
  */
 void SequenceDiagramLifeLine::addConnection(
-        qreal y,
-        ConnectionType connectionType,
+        SequenceConnectionItem *connection,
         ActorType actorType
 ) {
     // TODO: improve margin for creation/deletion
-    auto margin = 15.0;
-    auto topMargin = actorType == Receiver ? 0 : margin;
-    auto bottomMargin = actorType == Receiver ? 0 : margin;
+//    auto margin = 15.0;
+//    auto topMargin = actorType == Receiver ? 0 : margin;
+//    auto bottomMargin = actorType == Receiver ? 0 : margin;
 
     qDebug() << "<";
     qDebug() << __FILE__;
-    if (connectionType == Synchronous) {
-        _activeRegions.push_back(y);
+    if (connection->connectionType() == Synchronous) {
+        _activeRegions.push_back(connection);
     } else {
-        _synchronousPoints.push_back(QPair<qreal, qreal>(y, y + 10));
+        assert(!"    TODO: make everything as an array of connections");
+        _messagesRegionsNotSynchronous.push_back(QPair<qreal, qreal>(10, 10 + 10));
     }
 
     switch (actorType) {
