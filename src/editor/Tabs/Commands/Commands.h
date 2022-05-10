@@ -111,6 +111,7 @@ public:
 private:
     SequenceConnectionItem *actorConnection;
     QGraphicsScene *graphicsScene;
+    QPointF initialStartPosition;
 //    QPointF initialStartPosition;
 //    QPointF initialEndPosition;
 };

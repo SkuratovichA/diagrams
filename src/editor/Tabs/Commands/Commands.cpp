@@ -25,7 +25,7 @@ QString createCommandString(QGraphicsItem *item) {
 MoveCommand::MoveCommand(QGraphicsItem *diagramItem, const QPointF &oldPos,
                          QUndoCommand *parent)
         : QUndoCommand(parent), diagramItem(diagramItem), startPos(oldPos), newPos(diagramItem->pos()) {
-    qDebug() << "Move command";
+    qDebug() << "Move command" << diagramItem;
 }
 
 /**
@@ -36,6 +36,7 @@ MoveCommand::MoveCommand(QGraphicsItem *diagramItem, const QPointF &oldPos,
 bool MoveCommand::mergeWith(const QUndoCommand *command) {
     const auto *moveCommand = dynamic_cast<const MoveCommand *>(command);
     QGraphicsItem *item = moveCommand->diagramItem;
+    qDebug() << "mergwe with item" << item;
     if (diagramItem != item) {
         return false;
     }
@@ -171,7 +172,7 @@ AddClassCommand::AddClassCommand(QGraphicsScene *scene, classParams *params, QUn
         : QUndoCommand(parent), graphicsScene(scene) {
     static int itemCount = 0;
 
-    qDebug() << params->name();
+    //qDebug() << params->name();
     diagramItem = new ClassDiagramItem(params);
     initialStartPosition = QPointF(params->x(), params->y());
     itemCount++;
@@ -188,7 +189,7 @@ AddClassCommand::~AddClassCommand() {
         return;
     }
     delete diagramItem;
-    qDebug() << "diagramItem deleted (Commands.cpp)";
+    //qDebug() << "diagramItem deleted (Commands.cpp)";
 }
 
 /**
@@ -223,6 +224,7 @@ AddClassConnectionCommand::AddClassConnectionCommand(ClassDiagramItem *fromNode,
     auto maxConnectedElements = std::max(fromNode->occupiedSockets(), toNodes->occupiedSockets());
 
     classConnection = new ClassConnectionItem(fromNode, toNodes, params, type, maxConnectedElements);
+    //initialStartPosition = QPointF(params->x(), params->y());
     setText(QObject::tr("Connect %1")
                     .arg(createCommandString(static_cast<ClassConnectionItem *>(classConnection))));
 
@@ -266,11 +268,9 @@ AddSequenceConnectionCommand::AddSequenceConnectionCommand(SequenceDiagramItem *
                                                            QUndoCommand *parent)
         : QUndoCommand(parent), graphicsScene(scene) {
 
-    qDebug() << __FILE__;
-    qDebug() << "   from localCentre" << fromNode->localCentre();
-    qDebug() << "   to localCentre" << toNode->localCentre();
-
     actorConnection = new SequenceConnectionItem(fromNode, toNode, connectionType);
+    initialStartPosition = QPointF(100, 100);
+    qDebug() << "create a connection" << actorConnection;
     setText(QObject::tr("Connect %1")
                     .arg(createCommandString(static_cast<SequenceConnectionItem *>(actorConnection))));
     scene->update();
@@ -280,9 +280,9 @@ AddSequenceConnectionCommand::AddSequenceConnectionCommand(SequenceDiagramItem *
  *
  */
 AddSequenceConnectionCommand::~AddSequenceConnectionCommand() {
-    if (actorConnection->scene() != nullptr) {
-        return;
-    }
+//    if (actorConnection->scene() != nullptr) {
+//        return;
+//    }
 //    delete actorConnection;
 }
 
@@ -290,6 +290,7 @@ AddSequenceConnectionCommand::~AddSequenceConnectionCommand() {
  *
  */
 void AddSequenceConnectionCommand::undo() {
+    qDebug() << "undooooooooooooooooo";
     graphicsScene->removeItem(actorConnection);
     graphicsScene->update();
 }
@@ -299,6 +300,7 @@ void AddSequenceConnectionCommand::undo() {
  */
 void AddSequenceConnectionCommand::redo() {
     // TODO: fix
+    qDebug() << "redeedooooooooooooooooo";
     graphicsScene->addItem(actorConnection);
     graphicsScene->clearSelection();
     graphicsScene->update();

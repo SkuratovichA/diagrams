@@ -28,8 +28,8 @@ SequenceConnectionItem::SequenceConnectionItem(SequenceDiagramItem *nodeFrom,
     _nodeTo = nodeTo;
     _connectionType = connectionType;
 
-    qDebug() << __FILE__;
-    qDebug() << "   creating a connection";
+    //qDebug() << __FILE__;
+    //qDebug() << "   creating a connection";
     _nodeFrom->addConnection(this, Caller);
     _nodeTo->addConnection(this, Receiver);
 
@@ -39,21 +39,21 @@ SequenceConnectionItem::SequenceConnectionItem(SequenceDiagramItem *nodeFrom,
     setY(200);
 
     trackNodes();
-    qDebug() << "one connection";
-    qDebug() << __FILE__ << "   connection created>";
+    //qDebug() << "one connection";
+    //qDebug() << __FILE__ << "   connection created>";
 }
 
 /**
  *
  */
 SequenceConnectionItem::~SequenceConnectionItem() {
-    qDebug() << __FILE__;
-    qDebug() << "   removing connections";
+    //qDebug() << __FILE__;
+    //qDebug() << "   removing connections";
     assert(_nodeFrom != nullptr && "nodeFrom must not be nullptr");
-    _nodeFrom->removeConnection(this);
+    //_nodeFrom->removeConnection(this);
     assert(_nodeTo != nullptr && "nodeTo must not be nullptr");
-    _nodeTo->removeConnection(this);
-    qDebug() << "   connectinons removed";
+    //_nodeTo->removeConnection(this);
+    //qDebug() << "   connectinons removed";
 }
 
 /**

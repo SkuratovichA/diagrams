@@ -170,7 +170,7 @@ QPair<QPointF, QPointF> ClassConnectionItem::edgePoints() const {
             yTo = _nodeTo->centre().y() + toHeightHalf;
             xTo = -(c + b * yTo) / a;
             if (xTo < _nodeTo->topLeft().x()) {
-                qDebug() << "lala";
+                //qDebug() << "lala";
                 xTo = _nodeTo->centre().x() + toWidthHalf;
                 yTo = -(c + a * xTo) / b;
             }
