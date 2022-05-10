@@ -254,7 +254,12 @@ private:
     void paintDelete(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
 
 private:
-    QColor _color;
+    QPointF linend;
+    QLineF cLine;
+    qreal scale = 20;
+    qreal _arrowAngle;
+    QPolygonF _arrowHead;
+    QColor _color = QColor(0,0,0,200);
     ConnectionType _connectionType;
     SequenceDiagramItem *_nodeTo;
     SequenceDiagramItem *_nodeFrom;

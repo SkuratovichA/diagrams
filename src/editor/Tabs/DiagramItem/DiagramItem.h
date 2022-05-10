@@ -358,6 +358,8 @@ public:
         return {x() + width() / 2.0, y() + height()};
     }
 
+public:
+
 
 public:
     void addConnection(SequenceConnectionItem *connection,
@@ -367,6 +369,8 @@ public:
     [[nodiscard]] ClassDiagramItem *parentClassDiagramItem() const {
         return _parentClassDiagramItem;
     }
+
+    qreal lineLength() const  {return _lineLength;}
 
 protected:
     QVariant itemChange(GraphicsItemChange change, const QVariant &value) override;
@@ -378,7 +382,7 @@ private:
     QSet<SequenceConnectionItem *> _connections = QSet<SequenceConnectionItem *>(); ///< connections to track
     ClassDiagramItem *_parentClassDiagramItem = nullptr; ///< pointer to the "parent" class diagram item for synchronization.
     SequenceDiagramLifeLine *_lifeLine = nullptr; ///< lifeLine to track active regions
-    qreal const lineDefaultLength = 500; ///< default lenght of a life line
+    qreal const _lineLength = 500; ///< default lenght of a life line
 };
 
 #endif // Object_H

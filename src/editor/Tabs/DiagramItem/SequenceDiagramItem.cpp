@@ -46,7 +46,7 @@ SequenceDiagramItem::SequenceDiagramItem(
     actorRect->setPen(QPen(QColor(Qt::black), 3.0));
     actorRect->setBrush(QBrush(color()));
 
-    _lifeLine = new SequenceDiagramLifeLine(this, 0, lineDefaultLength);
+    _lifeLine = new SequenceDiagramLifeLine(this, 0, _lineLength);
 
 #if DEBUG
     lifeLine->addActiveRegion(QPair<qreal, qreal>(280, 350));

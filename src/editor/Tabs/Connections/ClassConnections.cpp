@@ -440,6 +440,7 @@ void ClassConnectionItem::drawLine(QPainter *painter, const QStyleOptionGraphics
         angle = std::atan2(-cLine.dy(), cLine.dx());
         linend = cLine.p1();
     } else {
+        // Single connection line
         auto margin = std::min<qreal>(_nodeTo->height(), _nodeTo->width()) / 3;
         auto yAbove = _nodeTo->bottomRight().y() - margin;
         auto xRight = _nodeTo->bottomRight().x() + margin;
