@@ -115,7 +115,7 @@ void SequenceConnection::trackNodes() {
  * @param widget
  */
 void SequenceConnection::paintSynchronous(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) {
-    qDebug() << "print synchronous";
+    //qDebug() << "print synchronous";
 }
 
 /**
@@ -125,7 +125,7 @@ void SequenceConnection::paintSynchronous(QPainter *painter, const QStyleOptionG
  * @param widget
  */
 void SequenceConnection::paintAsynchronous(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) {
-    qDebug() << "print asynchronous";
+    //qDebug() << "print asynchronous";
 }
 
 /**
@@ -135,7 +135,7 @@ void SequenceConnection::paintAsynchronous(QPainter *painter, const QStyleOption
  * @param widget
  */
 void SequenceConnection::paintReply(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) {
-    qDebug() << "print reply";
+    //qDebug() << "print reply";
 }
 
 /**
@@ -145,7 +145,7 @@ void SequenceConnection::paintReply(QPainter *painter, const QStyleOptionGraphic
  * @param widget
  */
 void SequenceConnection::paintCreate(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) {
-    qDebug() << "print create";
+    //qDebug() << "print create";
 }
 
 /**
@@ -155,5 +155,5 @@ void SequenceConnection::paintCreate(QPainter *painter, const QStyleOptionGraphi
  * @param widget
  */
 void SequenceConnection::paintDelete(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) {
-    qDebug() << "print delete";
+    //qDebug() << "print delete";
 }

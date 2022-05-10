@@ -27,7 +27,7 @@ public:
     void changeZval();
 
 signals:
-    void itemMoved(SequenceDiagramItem *movedItem, const QPointF &movedFromPosition);
+    void itemMoved(QGraphicsItem *movedItem, const QPointF &movedFromPosition);
 
 protected:
     void mousePressEvent(QGraphicsSceneMouseEvent *event) override;

@@ -43,7 +43,7 @@ void ItemsBuffer::addRelationItems(Conct conct) {
                                                QString::fromStdString(conct.msg),
                                                conct.arrow);
 
-    qDebug() << prm->leftObj() << prm->leftNum() << prm->rightNum() << prm->rightObj();
+    //qDebug() << prm->leftObj() << prm->leftNum() << prm->rightNum() << prm->rightObj();
     pushRelationItem(prm);
 }
 

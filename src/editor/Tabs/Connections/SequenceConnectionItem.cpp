@@ -28,8 +28,8 @@ SequenceConnectionItem::SequenceConnectionItem(SequenceDiagramItem *nodeFrom,
     _nodeTo = nodeTo;
     _connectionType = connectionType;
 
-    qDebug() << __FILE__;
-    qDebug() << "   creating a connection";
+    //qDebug() << __FILE__;
+    //qDebug() << "   creating a connection";
     _nodeFrom->addConnection(this, Caller);
     _nodeTo->addConnection(this, Receiver);
 
@@ -39,21 +39,21 @@ SequenceConnectionItem::SequenceConnectionItem(SequenceDiagramItem *nodeFrom,
     setY(200);
 
     trackNodes();
-    qDebug() << "one connection";
-    qDebug() << __FILE__ << "   connection created>";
+    //qDebug() << "one connection";
+    //qDebug() << __FILE__ << "   connection created>";
 }
 
 /**
  *
  */
 SequenceConnectionItem::~SequenceConnectionItem() {
-    qDebug() << __FILE__;
-    qDebug() << "   removing connections";
+    //qDebug() << __FILE__;
+    //qDebug() << "   removing connections";
     assert(_nodeFrom != nullptr && "nodeFrom must not be nullptr");
-    _nodeFrom->removeConnection(this);
+    //_nodeFrom->removeConnection(this);
     assert(_nodeTo != nullptr && "nodeTo must not be nullptr");
-    _nodeTo->removeConnection(this);
-    qDebug() << "   connectinons removed";
+    //_nodeTo->removeConnection(this);
+    //qDebug() << "   connectinons removed";
 }
 
 /**
@@ -146,7 +146,7 @@ void SequenceConnectionItem::paint(QPainter *painter, const QStyleOptionGraphics
  */
 void
 SequenceConnectionItem::paintSynchronous(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) {
-    qDebug() << "print synchronous";
+    //qDebug() << "print synchronous";
 }
 
 /**
@@ -157,7 +157,7 @@ SequenceConnectionItem::paintSynchronous(QPainter *painter, const QStyleOptionGr
  */
 void
 SequenceConnectionItem::paintAsynchronous(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) {
-    qDebug() << "print asynchronous";
+    //qDebug() << "print asynchronous";
 }
 
 /**
@@ -167,7 +167,7 @@ SequenceConnectionItem::paintAsynchronous(QPainter *painter, const QStyleOptionG
  * @param widget
  */
 void SequenceConnectionItem::paintReply(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) {
-    qDebug() << "print reply";
+    //qDebug() << "print reply";
 }
 
 /**
@@ -177,7 +177,7 @@ void SequenceConnectionItem::paintReply(QPainter *painter, const QStyleOptionGra
  * @param widget
  */
 void SequenceConnectionItem::paintCreate(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) {
-    qDebug() << "print create";
+    //qDebug() << "print create";
 }
 
 /**
@@ -187,6 +187,6 @@ void SequenceConnectionItem::paintCreate(QPainter *painter, const QStyleOptionGr
  * @param widget
  */
 void SequenceConnectionItem::paintDelete(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) {
-    qDebug() << "print delete";
+    //qDebug() << "print delete";
 }
 
