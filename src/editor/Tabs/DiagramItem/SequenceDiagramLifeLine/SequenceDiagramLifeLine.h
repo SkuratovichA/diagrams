@@ -43,10 +43,6 @@ public:
         return _actRegLen;
     }
 
-    [[nodiscard]] const QList<QPair<qreal, qreal>> &synchronousPoints() const {
-        return _messagesRegionsNotSynchronous;
-    }
-
 public:
     void setYFrom(qreal yFrom) {
         _yFrom = yFrom;
@@ -56,14 +52,14 @@ public:
         _height = height;
     }
 
-    void addActiveRegion(const SequenceConnectionItem *activeRegions) {
-        _activeRegions.push_back(activeRegions);
-    }
-
-    void addSynchronousPoint(const QPair<qreal, qreal> synchronousPoint) {
-        _messagesRegionsNotSynchronous.push_back(synchronousPoint);
-    }
-
+//    void addActiveRegion(const SequenceConnectionItem *activeRegions) {
+//        _activeRegions.push_back(activeRegions);
+//    }
+//
+//    void addSynchronousPoint(const SequenceConnectionItem *synchronousPoint) {
+//        _messagesRegionsNotSynchronous.push_back(synchronousPoint);
+//    }
+//
     /**
      * Usual functions.
      */
@@ -72,7 +68,7 @@ public:
             SequenceConnectionItem *connection,
             ActorType actorType
     );
-    void removeConnection(qreal y);
+    void removeConnection(const SequenceConnectionItem *y);
 
     /**
      * Private functions.
@@ -84,8 +80,9 @@ private:
     [[nodiscard]] QPolygonF lineShaper() const;
     QList<QPair<qreal, qreal>> mergedActiveRegions();
 
-    // TODO: change me to receiev SequenceConnection
-    QList<QPair<qreal, qreal>> getActiveRegionsAsIntervals(QList<const SequenceConnectionItem *> &a);
+
+    QList<QPair<qreal, qreal>> getAsynchronousRegionsAsIntervals(QList<const SequenceConnectionItem *> &a);
+    QList<QPair<qreal, qreal>> getSynchronousRegionsAsIntervals(QList<const SequenceConnectionItem *> &a);
 
     /**
      * Private variables
@@ -98,7 +95,7 @@ private:
     /**
      * Usually, from/to, but in case to is -1, use default length.
      */
-    QList<QPair<qreal /*from*/, qreal /*to*/>> _messagesRegionsNotSynchronous = QList<QPair<qreal, qreal>>();
+    QList<const SequenceConnectionItem *> _messagesRegionsNotSynchronous = QList<const SequenceConnectionItem *>();
     QList<const SequenceConnectionItem *> _activeRegions = QList<const SequenceConnectionItem *>();
 
     /**

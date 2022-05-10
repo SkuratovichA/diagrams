@@ -88,10 +88,9 @@ void SequenceConnectionItem::trackNodes() {
  * @return
  */
 QRectF SequenceConnectionItem::lineShaper() const {
-    // fixme: add constraints
     auto rect = QRectF(
-            QPointF(_nodeFrom->centre().x(), -10),
-            QPointF(_nodeTo->centre().x(), 10)
+            QPointF(std::min(_nodeTo->centre().x(), _nodeFrom->centre().x()), -20),
+            QPointF(std::max(_nodeTo->centre().x(), _nodeFrom->centre().x()), 20)
     );
     return rect;
 }
@@ -125,7 +124,6 @@ void SequenceConnectionItem::paint(QPainter *painter, const QStyleOptionGraphics
 
     painter->setPen(QPen(QColor(0, 255, 0, 255), .3, Qt::DashDotDotLine));
     painter->drawLine(line());
-
 #endif
 
     painter->setRenderHint(QPainter::Antialiasing, true);

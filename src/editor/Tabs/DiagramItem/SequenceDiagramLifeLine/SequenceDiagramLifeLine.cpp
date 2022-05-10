@@ -26,9 +26,9 @@ SequenceDiagramLifeLine::SequenceDiagramLifeLine(SequenceDiagramItem *parent, qr
     _parent = parent;
     _verticalAgjust = parent->pos().y();
 
-
     setFlags(QGraphicsItem::ItemIsSelectable);
     // create a default line
+    setZValue(-1.0);
     trackNodes();
 }
 
@@ -65,12 +65,13 @@ QPainterPath SequenceDiagramLifeLine::shape() const {
  */
 void SequenceDiagramLifeLine::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) {
 #if DEBUG
-    painter->setPen(QPen(QColor(0, 0, 0, 100), 0.5, Qt::DotLine));
+    painter->setPen(QPen(QColor(255, 0, 0, 100), 0.5, Qt::DotLine));
     painter->drawPolygon(lineShaper());
 #endif
+
     qDebug() << __FILE__;
     auto clr = _parent->color();
-    clr.setAlpha(_parent->color().alpha()/2);
+    clr.setAlpha(_parent->color().alpha() / 2);
     painter->setBrush(QBrush(clr));
     painter->setRenderHint(QPainter::Antialiasing, true);
     painter->setPen(QPen(Qt::black, 1, Qt::SolidLine));
@@ -123,13 +124,39 @@ void SequenceDiagramLifeLine::trackNodes() {
 }
 
 /**
+ *
+ * @return
+ */
+QList<QPair<qreal, qreal>> SequenceDiagramLifeLine::getAsynchronousRegionsAsIntervals(
+        QList<const SequenceConnectionItem *> &a
+) {
+    qDebug() << __FILE__;
+
+    if (a.isEmpty()) {
+        return QList<QPair<qreal, qreal>>();
+    }
+    std::sort(a.begin(), a.end(),
+              [](const SequenceConnectionItem *a, const SequenceConnectionItem *b) {
+                  return a->y() < b->y();
+              }
+    );
+    auto pairs = QList<QPair<qreal, qreal>>();
+    for (auto el: a) {
+        pairs.push_back(QPair<qreal, qreal>(el->y(), el->y() + 20));
+    }
+    qDebug() << "   there must be an array sorted in the ascending order";
+    qDebug() << "   " << pairs;
+    return pairs;
+}
+
+/**
  * Create pairs in such a way, that for a <= b <= `max`
  * they will look like<a, max> or <a, b>, if such b exists.
  *
  * @param a
  * @return
  */
-QList<QPair<qreal, qreal>> SequenceDiagramLifeLine::getActiveRegionsAsIntervals(
+QList<QPair<qreal, qreal>> SequenceDiagramLifeLine::getSynchronousRegionsAsIntervals(
         QList<const SequenceConnectionItem *> &a
 ) {
     // sort array
@@ -171,8 +198,8 @@ QList<QPair<qreal, qreal>> SequenceDiagramLifeLine::mergedActiveRegions() {
     };
     auto a = QList<QPair<qreal, qreal>>();
 
-    a.append(getActiveRegionsAsIntervals(_activeRegions));
-//    a.append(_messagesRegionsNotSynchronous); // TODO
+    a.append(getSynchronousRegionsAsIntervals(_activeRegions));
+    a.append(getAsynchronousRegionsAsIntervals(_messagesRegionsNotSynchronous));
     if (a.isEmpty()) {
         return a;
     }
@@ -188,8 +215,6 @@ QList<QPair<qreal, qreal>> SequenceDiagramLifeLine::mergedActiveRegions() {
         }
     }
     qDebug() << "    overlapped chunks done";
-    // adjust the size of a lifeline
-//    updateHeight();
     qDebug() << ">";
     return a;
 }
@@ -202,18 +227,12 @@ void SequenceDiagramLifeLine::addConnection(
         SequenceConnectionItem *connection,
         ActorType actorType
 ) {
-    // TODO: improve margin for creation/deletion
-//    auto margin = 15.0;
-//    auto topMargin = actorType == Receiver ? 0 : margin;
-//    auto bottomMargin = actorType == Receiver ? 0 : margin;
-
     qDebug() << "<";
     qDebug() << __FILE__;
     if (connection->connectionType() == Synchronous) {
         _activeRegions.push_back(connection);
     } else {
-        assert(!"    TODO: make everything as an array of connections");
-        _messagesRegionsNotSynchronous.push_back(QPair<qreal, qreal>(10, 10 + 10));
+        _messagesRegionsNotSynchronous.push_back(connection);
     }
 
     switch (actorType) {
@@ -232,6 +251,11 @@ void SequenceDiagramLifeLine::addConnection(
  *
  * @param connection
  */
-void SequenceDiagramLifeLine::removeConnection(qreal y) {
-    assert(!"remove connection coordinate from thelist");
+void SequenceDiagramLifeLine::removeConnection(const SequenceConnectionItem *connection) {
+    if (_activeRegions.contains(connection)) {
+        _activeRegions.removeOne(connection);
+    }
+    if (_messagesRegionsNotSynchronous.contains(connection)) {
+        _messagesRegionsNotSynchronous.removeOne(connection);
+    }
 }
