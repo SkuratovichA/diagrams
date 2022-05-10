@@ -241,6 +241,8 @@ public:
     QList<QPair<ClassDiagramItem *, QString>> getClassStringPairs();
     QPoint generateCoords() const override;
     bool checkIdenticalNames();
+    bool checkPermissions();
+    bool comparePermissions(QGraphicsTextItem *y, QString str);
 
 private:
     void createEntityClassContextMenu();

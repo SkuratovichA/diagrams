@@ -132,6 +132,58 @@ bool ClassCanvas::checkIdenticalNames() {
     return true;
 }
 
+bool ClassCanvas::comparePermissions(QGraphicsTextItem *y, QString str) {
+    QChar s;
+    QString msg = "You can not save diagrams to the file, because "
+                  "there is one of the ";
+    QString cont = " of the class has the wrong access modifier. "
+                   "Possible modifiers:\n"
+                   "+ public\n"
+                   "- private\n"
+                   "# protected\n"
+                   "~ package\n"
+                   "Change it and try to save again.";
+
+    s = y->toPlainText()[0];
+    if (s == '#' || s == '+' || s == '-' || s == '~') {
+        y->setDefaultTextColor(Qt::black);
+        return true;
+    }
+
+    y->setDefaultTextColor(Qt::red);
+    QMessageBox::warning(this, "Error", msg + str + cont);
+    return false;
+}
+
+/**
+ * TODO description
+ *
+ * @return true in success, otherwise fase
+ */
+bool ClassCanvas::checkPermissions() {
+    QList<ClassDiagramItem *> classItems = getItems<ClassDiagramItem>();
+
+    for (auto x : classItems) {
+        for (auto y : x->methods()) {
+            if (y->toPlainText() == "METHODS") {
+                continue;
+            }
+
+            if (!comparePermissions(y, "methods")) {
+                return false;
+            }
+        }
+
+        for (auto y : x->attrs()) {
+            if (!comparePermissions(y, "attributes")) {
+                return false;
+            }
+        }
+    }
+
+    return true;
+}
+
 /**
  * // TODO
  * @param prg
@@ -150,6 +202,10 @@ bool ClassCanvas::getStringRepresentation(Program &prg) {
     }
 
     if (!checkIdenticalNames()) {
+        return false;
+    }
+
+    if (!checkPermissions()) {
         return false;
     }
 

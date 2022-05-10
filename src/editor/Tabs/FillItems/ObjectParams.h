@@ -8,6 +8,7 @@
 #include <QString>
 #include <QList>
 #include <QColor>
+#include <QWidget>
 #include "../../Backend/Parse.h"
 
 class relationsParams {
