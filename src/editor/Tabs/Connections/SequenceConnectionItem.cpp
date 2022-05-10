@@ -28,8 +28,8 @@ SequenceConnectionItem::SequenceConnectionItem(SequenceDiagramItem *nodeFrom,
     _nodeTo = nodeTo;
     _connectionType = connectionType;
 
-    //qDebug() << __FILE__;
-    //qDebug() << "   creating a connection";
+    qDebug() << __FILE__;
+    qDebug() << "   creating a connection";
     _nodeFrom->addConnection(this, Caller);
     _nodeTo->addConnection(this, Receiver);
 
@@ -39,21 +39,21 @@ SequenceConnectionItem::SequenceConnectionItem(SequenceDiagramItem *nodeFrom,
     setY(200);
 
     trackNodes();
-    //qDebug() << "one connection";
-    //qDebug() << __FILE__ << "   connection created>";
+    qDebug() << "one connection";
+    qDebug() << __FILE__ << "   connection created>";
 }
 
 /**
  *
  */
 SequenceConnectionItem::~SequenceConnectionItem() {
-    //qDebug() << __FILE__;
-    //qDebug() << "   removing connections";
+    qDebug() << __FILE__;
+    qDebug() << "   removing connections";
     assert(_nodeFrom != nullptr && "nodeFrom must not be nullptr");
-    //_nodeFrom->removeConnection(this);
+    _nodeFrom->removeConnection(this);
     assert(_nodeTo != nullptr && "nodeTo must not be nullptr");
-    //_nodeTo->removeConnection(this);
-    //qDebug() << "   connectinons removed";
+    _nodeTo->removeConnection(this);
+    qDebug() << "   connectinons removed";
 }
 
 /**
@@ -133,9 +133,9 @@ void SequenceConnectionItem::paint(QPainter *painter, const QStyleOptionGraphics
 #endif
 
     painter->setRenderHint(QPainter::Antialiasing, true);
-    if (option->state & QStyle::State_Selected) {
-        painter->setPen(QPen(_color.darker(), 2.5, Qt::SolidLine));
-    }
+//    if (option->state & QStyle::State_Selected) {
+//        painter->setPen(QPen(_color.darker(), 2.5, Qt::SolidLine));
+//    }
     cLine = line();
     linend = cLine.p2();
     _arrowAngle = std::atan2(cLine.dy(), -cLine.dx());
@@ -243,7 +243,6 @@ void SequenceConnectionItem::paintCreate(QPainter *painter, const QStyleOptionGr
     QPen linepen(_color, 1.1);
     linepen.setCapStyle(Qt::RoundCap);
     setPen(linepen);
-//    painter->setPen(linepen);
     painter->drawLine(line());
 }
 
@@ -255,10 +254,10 @@ void SequenceConnectionItem::paintCreate(QPainter *painter, const QStyleOptionGr
  */
 void SequenceConnectionItem::paintDelete(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) {
     qDebug() << "print delete";
-    QPen linepen(_color, 1.1);
-    linepen.setCapStyle(Qt::SquareCap);
-    setPen(linepen);
-//    painter->setPen(linepen);
+//    QPen linepen(_color, 1.1);
+//    linepen.setCapStyle(Qt::SquareCap);
+    painter->setPen(QPen(_color, 1.1, Qt::SolidLine, Qt::RoundCap));
+//    setPen(linepen);
     painter->drawLine(line());
 }
 

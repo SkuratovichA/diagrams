@@ -77,11 +77,11 @@ QVariant SequenceDiagramItem::itemChange(
         return QPointF(value.toPointF().x(), pos().y());
     }
     if (change == ItemPositionHasChanged) {
-        //qDebug() << "<tracking connection nodes";
+        qDebug() << "<tracking connection nodes";
         for (auto c : _connections) {
             c->trackNodes();
         }
-        //qDebug() << "connections tracked>";
+        qDebug() << "connections tracked>";
     }
     return QGraphicsItem::itemChange(change, value);
 }
@@ -94,11 +94,11 @@ QVariant SequenceDiagramItem::itemChange(
 void SequenceDiagramItem::addConnection(
         SequenceConnectionItem *connection,
         ActorType actorType) {
-    //qDebug() << "<adding connection";
+    qDebug() << "<adding connection";
     _connections.insert(connection);
     assert( _lifeLine != nullptr && "lifeLine must not be null");
     _lifeLine->addConnection(connection->y(), connection->connectionType(), actorType);
-    //qDebug() << "connection added>";
+    qDebug() << "connection added>";
 }
 
 /**
@@ -107,8 +107,8 @@ void SequenceDiagramItem::addConnection(
  * @param connection message arrow between objects
  */
 void SequenceDiagramItem::removeConnection(SequenceConnectionItem *connection) {
-    //qDebug() << __FILE__;
-    //qDebug() << "   removing connection";
-    //qDebug() << "removing << "<< connection <<"this from " << _connections;
+    qDebug() << __FILE__;
+    qDebug() << "   removing connection";
+    qDebug() << "removing << "<< connection <<"this from " << _connections;
     _connections.remove(connection);
 }
