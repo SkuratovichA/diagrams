@@ -132,6 +132,12 @@ bool ClassCanvas::checkIdenticalNames() {
     return true;
 }
 
+/**
+ *
+ * @param y
+ * @param str
+ * @return
+ */
 bool ClassCanvas::comparePermissions(QGraphicsTextItem *y, QString str) {
     QChar s;
     QString msg = "You can not save diagrams to the file, because "
@@ -158,7 +164,7 @@ bool ClassCanvas::comparePermissions(QGraphicsTextItem *y, QString str) {
 /**
  * TODO description
  *
- * @return true in success, otherwise fase
+ * @return true in success, otherwise false
  */
 bool ClassCanvas::checkPermissions() {
     QList<ClassDiagramItem *> classItems = getItems<ClassDiagramItem>();
@@ -201,11 +207,7 @@ bool ClassCanvas::getStringRepresentation(Program &prg) {
         buf.fillRelationItems(x);
     }
 
-    if (!checkIdenticalNames()) {
-        return false;
-    }
-
-    if (!checkPermissions()) {
+    if (!checkIdenticalNames() || !checkPermissions()) {
         return false;
     }
 

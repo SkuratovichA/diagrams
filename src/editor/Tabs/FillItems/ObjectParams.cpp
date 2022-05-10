@@ -6,6 +6,14 @@
 #include <QDebug>
 #include <QMessageBox>
 
+/**
+ * A constructor.
+ *
+ * @param x
+ * @param y
+ * @param name
+ * @param color
+ */
 objectParams::objectParams(qreal x, qreal y, QString name, QColor color)
 {
     _x = x;
@@ -14,6 +22,17 @@ objectParams::objectParams(qreal x, qreal y, QString name, QColor color)
     _name = name;
 };
 
+/**
+ *
+ * @param x
+ * @param y
+ * @param name
+ * @param color
+ * @param width
+ * @param height
+ * @param attrs
+ * @param methods
+ */
 classParams::classParams(qreal x, qreal y, QString name,
                          QColor color, qreal width, qreal height,
                          QList<QString> attrs, QList<QString> methods)
@@ -29,6 +48,12 @@ classParams::classParams(qreal x, qreal y, QString name,
     }
 };
 
+/**
+ *
+ * @param at
+ * @param arr
+ * @return
+ */
 bool classParams::splitString(std::vector<attrs_t> &at, QList<QString> arr) {
     std::string perm;
     std::string type;
@@ -64,6 +89,14 @@ bool classParams::splitString(std::vector<attrs_t> &at, QList<QString> arr) {
     return true;
 }
 
+/**
+ * A constructor.
+ *
+ * @param x
+ * @param y
+ * @param name
+ * @param color
+ */
 actorParams::actorParams(qreal x, qreal y, QString name, QColor color)
     : objectParams(x, y, name, color) {
 };

@@ -13,6 +13,7 @@
 #include "../DiagramItem/DiagramItem.h"
 
 /**
+ * A constructor.
  *
  * @param fromNode
  * @param toNode
@@ -33,7 +34,8 @@ SequenceConnectionItem::SequenceConnectionItem(SequenceDiagramItem *fromNode,
 }
 
 /**
- * Changes the y-position of the line.
+ * Change the y-position of the line.
+ *
  * @param change
  * @param value
  * @return
@@ -95,9 +97,9 @@ SequenceConnectionItem::~SequenceConnectionItem() {
 QColor SequenceConnectionItem::color() const {
     return pen().color();
 }
-
-/** Changing the line according to the x-position of the two nodes it is connected to.
- *
+/**
+ * Changing the line according to the x-position of the two nodes
+ * it is connected to.
  */
 void SequenceConnectionItem::trackNodes() {
 //    setLine(QLineF(_nodeFrom->pos(), _nodeTo->pos()));

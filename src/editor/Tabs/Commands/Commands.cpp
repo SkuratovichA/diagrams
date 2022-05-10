@@ -9,6 +9,11 @@
 
 #include <QGraphicsScene>
 
+/**
+ *
+ * @param item
+ * @return
+ */
 QString createCommandString(QGraphicsItem *item) {
     return QObject::tr("%1")
             .arg("ITEM");

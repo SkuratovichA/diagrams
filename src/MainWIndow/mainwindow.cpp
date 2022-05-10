@@ -7,6 +7,11 @@
 #include <filesystem>
 #include <QDirIterator>
 
+/**
+ * A constructor.
+ *
+ * @param parent
+ */
 mainWindow::mainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::mainWindow)
@@ -31,6 +36,9 @@ mainWindow::mainWindow(QWidget *parent)
     editor_window = nullptr;
 }
 
+/**
+ * A destructor.
+ */
 mainWindow::~mainWindow()
 {
     delete ui;

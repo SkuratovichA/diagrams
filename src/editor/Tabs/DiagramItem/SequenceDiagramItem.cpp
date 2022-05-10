@@ -62,15 +62,6 @@ SequenceDiagramItem::SequenceDiagramItem(
     setRect(boundingBox());
 }
 
-///** A destructor.
-// *
-// */
-//SequenceDiagramItem::~SequenceDiagramItem() {
-//    qDebug() << "here, you can see a segfault";
-//    delete _lifeLine;
-//    qDebug() << "    naebal";
-//}
-
 /**
  * Notify custom items that some part of the item's state changes.
  * Reimplementation of this function provides a possibility to move

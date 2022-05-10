@@ -12,6 +12,7 @@
 #include "../DiagramItem/DiagramItem.h"
 
 /**
+ * A constructor.
  *
  * @param fromNode
  * @param toNode
@@ -42,6 +43,14 @@ ClassConnectionItem::ClassConnectionItem(ClassDiagramItem *fromNode,
     trackNodes();
 }
 
+/**
+ *
+ * @param parent
+ * @param flags
+ * @param x
+ * @param y
+ * @param str
+ */
 msgText::msgText(QGraphicsItem *parent, QFlags<Qt::TextInteractionFlag> flags, qreal x, qreal y, QString str)
         : QGraphicsTextItem(str, parent) {
     _parent = parent;
@@ -51,6 +60,10 @@ msgText::msgText(QGraphicsItem *parent, QFlags<Qt::TextInteractionFlag> flags, q
     topLevelItem();
 }
 
+/**
+ *
+ * @param event
+ */
 void msgText::keyReleaseEvent(QKeyEvent *event) {
     if ((event->key() == Qt::Key_Enter) || (event->key() == Qt::Key_Return)) {
         setPlainText(toPlainText().remove('\n'));
@@ -343,12 +356,8 @@ void ClassConnectionItem::trackNodes() {
         _orientation = !_orientation;
         std::swap(_nodeFrom, _nodeTo);
     }
-//    if (_orientation) {
-    //qDebug() << edgePs
+
     setLine(QLineF(edgePs.first, edgePs.second));
-//    } else {
-//        setLine(QLineF(edgePs.second, edgePs.first));
-//    }
 }
 
 /**
