@@ -249,8 +249,13 @@ void SequenceConnectionItem::paintDelete(QPainter *painter, const QStyleOptionGr
     qDebug() << "print delete";
 //    QPen linepen(_color, 1.1);
 //    linepen.setCapStyle(Qt::SquareCap);
-    painter->setPen(QPen(_color, 1.1, Qt::SolidLine, Qt::RoundCap));
+    painter->setPen(QPen(Qt::red, 1.1, Qt::SolidLine));
+    //painter->setBrush(Qt::red);
 //    setPen(linepen);
-    painter->drawLine(line());
+
+    painter->drawLine(cLine);
+
+    painter->setPen(QPen(Qt::black, 20));
+    painter->drawPoint(QPointF(cLine.p2().x(), cLine.p2().y()));
 }
 
