@@ -240,6 +240,7 @@ public:
     bool createFromFile(dgrmClass_t cls);
     QList<QPair<ClassDiagramItem *, QString>> getClassStringPairs();
     QPoint generateCoords() const override;
+    bool checkIdenticalNames();
 
 private:
     void createEntityClassContextMenu();

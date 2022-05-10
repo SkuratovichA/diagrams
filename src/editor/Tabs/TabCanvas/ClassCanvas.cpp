@@ -9,6 +9,7 @@
 #include <QRandomGenerator>
 #include <QWidget>
 #include <QUndoGroup>
+#include <QMessageBox>
 
 #include "TabCanvas.h"
 
@@ -102,6 +103,36 @@ bool ClassCanvas::createFromFile(dgrmClass_t cls) {
 }
 
 /**
+ * Check if there are objects with identical names on the scene.
+ *
+ * @return true in success, otherwise fase
+ */
+bool ClassCanvas::checkIdenticalNames() {
+    QString msg = "You can not save diagrams to the file, because there are objects "
+                  "with identical names on the scene. The names of these objects have "
+                  "been colored red. Change them and try to save again.";
+    QList<ClassDiagramItem *> classItems = getItems<ClassDiagramItem>();
+    for (auto x : classItems) {
+        for (auto y : classItems) {
+            if (x->name() != y->name() || x == y) {
+                continue;
+            }
+
+            x->_head->setDefaultTextColor(Qt::red);
+            y->_head->setDefaultTextColor(Qt::red);
+            QMessageBox::warning(this, "Error", msg);
+            return false;
+        }
+    }
+
+    for (auto x : classItems) {
+        x->_head->setDefaultTextColor(Qt::black);
+    }
+
+    return true;
+}
+
+/**
  * // TODO
  * @param prg
  */
@@ -118,14 +149,8 @@ bool ClassCanvas::getStringRepresentation(Program &prg) {
         buf.fillRelationItems(x);
     }
 
-    for (auto x : buf.classItems()) {
-        for (auto y : buf.classItems()) {
-            if (x->name() == y->name() && x != y) {
-                qDebug() << "You have objects with the same names, change it";
-                // TODO color red
-                return false;
-            }
-        }
+    if (!checkIdenticalNames()) {
+        return false;
     }
 
     for (auto x: buf.classItems()) {

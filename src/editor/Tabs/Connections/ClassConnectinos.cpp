@@ -585,7 +585,8 @@ void ClassConnectionItem::paint(QPainter *painter, const QStyleOptionGraphicsIte
     if (_single) {
         leftSetPos(QPointF(_nodeTo->pos().x() + _nodeTo->width() - 86,
                                     _nodeTo->pos().y() + _nodeTo->height() + 20));
-        msgSetPos(QPointF(pText.x() - widthText / 2.0 + _nodeTo->width() - 55, pText.y() + _nodeTo->height() - 40));
+        msgSetPos(QPointF(pText.x() - widthText / 2.0 + _nodeTo->width() - 55,
+                                pText.y() + _nodeTo->height() - 40));
         rightSetPos(QPointF(_nodeFrom->pos().x() + _nodeFrom->width() + 10,
                                 _nodeFrom->pos().y() + _nodeFrom->height() - 65));
     }
