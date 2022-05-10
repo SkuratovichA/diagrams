@@ -89,9 +89,10 @@ void SequenceConnectionItem::trackNodes() {
  */
 QRectF SequenceConnectionItem::lineShaper() const {
     auto rect = QRectF(
-            QPointF(std::min(_nodeTo->centre().x(), _nodeFrom->centre().x()), -20),
-            QPointF(std::max(_nodeTo->centre().x(), _nodeFrom->centre().x()), 20)
+            QPointF(std::min(_nodeTo->centre().x() + 10, _nodeFrom->centre().x() - 10), -20),
+            QPointF(std::max(_nodeTo->centre().x() + 10, _nodeFrom->centre().x() - 10), 20)
     );
+    //qDebug() << "rect = " << rect;
     return rect;
 }
 
