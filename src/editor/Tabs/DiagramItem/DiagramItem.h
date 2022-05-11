@@ -1,3 +1,8 @@
+// File: DiagramItem.h
+// Author: Skuratovich Aliaksandr <xskura01@vutbr.cz>
+// Author: Shchapaniak Andrei <xshcha00@vutbr.cz>
+// Date: 07.05.2022
+
 #ifndef Object_H
 #define Object_H
 
@@ -136,6 +141,10 @@ public:
 
     void setWidth(qreal width) {
         _width = width;
+    }
+
+    void setRowWidth(qreal width) {
+        _rowWidth = width;
     }
 
     void setHeight(qreal height) {
@@ -294,7 +303,7 @@ public:
     }
 
     [[nodiscard]] QPointF socket(uint32_t n) const {
-        const auto margin = std::min(std::min(height() / 2, width() / 2), 10.0);
+        const auto margin = std::min(std::min(height() / 2, width() / 2), 30.0);
         const QPointF points[3] = {QPointF(0, margin), QPointF(-margin, -margin), QPointF(-margin, margin)};
         return centre() + points[n % 3];
     }
@@ -376,6 +385,10 @@ public:
     }
 
     qreal lineLength() const {return _lineLength;}
+
+    void setParent(ClassDiagramItem *parent) {
+        _parentClassDiagramItem = parent;
+    }
 
 protected:
     QVariant itemChange(GraphicsItemChange change, const QVariant &value) override;

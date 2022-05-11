@@ -1,3 +1,7 @@
+// File: sequenceconnectiondialog.h
+// Author: Skuratovich Aliaksandr <xskura01@vutbr.cz>
+// Date: 07.05.2022
+
 #ifndef SEQUENCECONNECTIONDIALOG_H
 #define SEQUENCECONNECTIONDIALOG_H
 

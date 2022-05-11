@@ -102,6 +102,14 @@ public:
         return msg;
     }
 
+    void leftSetPos(QPointF pos) {
+        leftNum->setPos(pos);
+    }
+
+    void rightSetPos(QPointF pos) {
+        rightNum->setPos(pos);
+    }
+
     void msgSetPos(QPointF pos) {
         msg->setPos(pos);
     }
@@ -114,6 +122,10 @@ public:
         return Qt::TextInteractionFlag::TextEditable |
                Qt::TextInteractionFlag::TextSelectableByMouse |
                Qt::TextInteractionFlag::TextSelectableByKeyboard;
+    }
+
+    bool single() {
+        return _single;
     }
 
     /** Public functions

@@ -1,5 +1,6 @@
 // File: editorinterface.cpp
-// Author: Skuratovich ALiaksandr
+// Author: Skuratovich Aliaksandr <xskura01@vutbr.cz>
+// Author: Shchapaniak Andrei <xshcha00@vutbr.cz>
 // Date: 1.5.2022
 
 // FIXME: https://doc.qt.io/qt-5/qkeysequence.html
@@ -24,16 +25,6 @@
         connect((obj), SIGNAL(triggered()), receiver, memberslot);  \
     } while(0)
 
-/**
- * A constructor.
- *
- * This constructor creates an interface for diagram editing, a toolbar with actions
- * and tabs for each type of diagram.
- *
- * @param parent
- * @param exampleName name of the file with example diagrams
- * @param new_type
- */
 editorInterface::editorInterface(
         QWidget *parent,
         QString exampleName,
@@ -51,13 +42,11 @@ editorInterface::editorInterface(
             openDiagram = true;
             break;
         case OPEN_FILE:
-            qDebug() << "file before selection";
             filename = QFileDialog::getOpenFileName(parent,
                                tr("Open a file"),
                                   QDir::homePath(),
                                  filenameFilter);
             openDiagram = true;
-            qDebug() << "file was selected";
             break;
         case NO_FILE:
             break;
@@ -83,17 +72,11 @@ editorInterface::editorInterface(
     setCentralWidget(tabWidget);
 }
 
-/**
- * A destructor.
- */
 editorInterface::~editorInterface() {
     delete undoView;
     delete ui;
 }
 
-/**
- * Change the active stack in the stackGroup to display ins members (history) for the tab.
- */
 void editorInterface::newTabSelected() {
 
     //static QWidget *prevWidget = nullptr;
@@ -125,16 +108,13 @@ void editorInterface::newTabSelected() {
             }
         }
     }
+
     undoStack->setActiveStack(reinterpret_cast<TabCanvas *>(tabWidget->currentWidget())->undoStack());
     prevWidget = tabWidget->currentWidget();
-
     // update of the scene does not work
     dynamic_cast<TabCanvas *>(tabWidget->currentWidget())->updateScene();
 }
 
-/**
- * Create a window with a displayed undo stack.
- */
 void editorInterface::createUndoView() {
     undoView = new QUndoView(undoStack);
     undoView->setWindowTitle(tr("Command List"));
@@ -142,9 +122,6 @@ void editorInterface::createUndoView() {
     undoView->setAttribute(Qt::WA_QuitOnClose, false);
 }
 
-/**
- * Create 2 default tabs, one for the class diagram and another for the sequence diagram.
- */
 void editorInterface::createTabs() {
     tabWidget = new QTabWidget(this);
     connect(tabWidget, SIGNAL(currentChanged(int)), this, SLOT(newTabSelected()));
@@ -152,9 +129,6 @@ void editorInterface::createTabs() {
     tabWidget->addTab(new SequenceCanvas(this, undoStack), "sequence Diagram");
 }
 
-/**
- * Create and connect all signals for interaction with tabs.
- */
 void editorInterface::createDynamicToolBar() {
     ADD_SIGNAL(addEntityAction, "New &Entity", "+", "Ctrl+N", this, SLOT(actionAddEntity_triggered()));
     ADD_SIGNAL(addConnectionAction, "Connect", "->", "Ctrl+L", this, SLOT(actionAddConnection_triggered()));
@@ -225,9 +199,6 @@ void editorInterface::createDynamicToolBar() {
 #endif
 }
 
-/**
- * TODO
- */
 bool editorInterface::getTextRepresentation(Program &prg) {
     auto size = tabWidget->count();
     for (int i = 0; i < size; i++) {
@@ -239,9 +210,20 @@ bool editorInterface::getTextRepresentation(Program &prg) {
     return true;
 }
 
-/**
- * TODO
- */
+void editorInterface::connectItemsDiagrams() {
+    auto sequenceTab = reinterpret_cast<SequenceCanvas *>(tabWidget->currentWidget());
+    QList<QPair<ClassDiagramItem *, QString>> classStringPairs = reinterpret_cast<ClassCanvas *>(tabWidget->widget(
+            0))->getClassStringPairs();
+
+    for (auto x: sequenceTab->getItems<SequenceDiagramItem>()) {
+        for (auto y : classStringPairs) {
+            if (x->name() == y.first->name()) {
+                x->setParent(y.first);
+            }
+        }
+    }
+}
+
 void editorInterface::readFile() {
     int idx;
     tabWidget = new QTabWidget(this);
@@ -249,25 +231,24 @@ void editorInterface::readFile() {
     setCentralWidget(tabWidget);
 
     Program prg;
-    prg.parse_file(filename.toStdString());
-    //ItemsBuffer arrBufs[prg.diagram_sequence.size() + 1];
+    prg.parseFile(filename.toStdString());
+    //ItemsBuffer arrBufs[prg.diagramSequence.size() + 1];
 
     // class diagram
     idx = tabWidget->addTab(new ClassCanvas(this, undoStack), "class Diagram");
-    reinterpret_cast<ClassCanvas *>(tabWidget->widget(idx))->createFromFile(prg.diagram_class);
+    reinterpret_cast<ClassCanvas *>(tabWidget->widget(idx))->createFromFile(prg.diagramClass);
 
     // sequence diagram
-    for (int c = 0; c < prg.diagram_sequence.size(); c++) {
+    for (int c = 0; c < prg.diagramSequence.size(); c++) {
         idx = tabWidget->addTab(new SequenceCanvas(this, undoStack), "sequence Diagram");
-        reinterpret_cast<SequenceCanvas *>(tabWidget->widget(idx))->createFromFile(prg.diagram_sequence[c]);
+        tabWidget->setCurrentWidget(tabWidget->widget(idx));
+        reinterpret_cast<SequenceCanvas *>(tabWidget->widget(idx))->createFromFile(prg.diagramSequence[c]);
+        connectItemsDiagrams();
     }
 
-    // handle parsing (can occur an error)
+    tabWidget->setCurrentWidget(tabWidget->widget(0));
 }
 
-/**
- * TODO
- */
 void editorInterface::writeToFile() {
     Program prg;
 
@@ -281,7 +262,7 @@ void editorInterface::writeToFile() {
         return;
     }
 
-    prg.fill_file(filename.toStdString());
+    prg.fillFile(filename.toStdString());
     file.close();
 }
 

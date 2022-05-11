@@ -1,24 +1,45 @@
-//
-// Created by shchepa on 4.5.22.
-//
+// File: ObjectParams.cpp
+// Author: Shchapaniak Andrei <xshcha00@vutbr.cz>
+// Date: 07.05.2022
 
 #include "ObjectParams.h"
+#include <QDebug>
+#include <QMessageBox>
 
-objectParams::objectParams(qreal x, qreal y, QString name,
-                           QColor color, qreal width, qreal height
-) {
+/**
+ * A constructor.
+ *
+ * @param x
+ * @param y
+ * @param name
+ * @param color
+ */
+objectParams::objectParams(qreal x, qreal y, QString name, QColor color)
+{
     _x = x;
     _y = y;
     _color = color;
-    _width = width;
-    _height = height;
     _name = name;
 };
 
+/**
+ *
+ * @param x
+ * @param y
+ * @param name
+ * @param color
+ * @param width
+ * @param height
+ * @param attrs
+ * @param methods
+ */
 classParams::classParams(qreal x, qreal y, QString name,
                          QColor color, qreal width, qreal height,
                          QList<QString> attrs, QList<QString> methods)
-        : objectParams(x, y, name, color, width, height) {
+        : objectParams(x, y, name, color) {
+    _width = width;
+    _height = height;
+
     for (auto val: attrs) {
         _attrs.push_back(val);
     }
@@ -27,6 +48,12 @@ classParams::classParams(qreal x, qreal y, QString name,
     }
 };
 
+/**
+ *
+ * @param at
+ * @param arr
+ * @return
+ */
 bool classParams::splitString(std::vector<attrs_t> &at, QList<QString> arr) {
     std::string perm;
     std::string type;
@@ -42,9 +69,7 @@ bool classParams::splitString(std::vector<attrs_t> &at, QList<QString> arr) {
 
         token = strtok(const_cast<char*>(textStd.c_str()), " ");
         perm = std::string(token);
-        if (token == NULL || ( perm != "#" && perm != "+"
-                               && perm != "~" && perm != "-") )
-        {
+        if (token == NULL) {
             return false;
         }
 
@@ -64,9 +89,14 @@ bool classParams::splitString(std::vector<attrs_t> &at, QList<QString> arr) {
     return true;
 }
 
-actorParams::actorParams(qreal x, qreal y, QString name, QColor color,
-                         qreal width, qreal height
-)
-        : objectParams(x, y, name, color, width, height) {
-
+/**
+ * A constructor.
+ *
+ * @param x
+ * @param y
+ * @param name
+ * @param color
+ */
+actorParams::actorParams(qreal x, qreal y, QString name, QColor color)
+    : objectParams(x, y, name, color) {
 };

@@ -11,6 +11,11 @@
 
 using namespace Connections;
 
+/**
+ *
+ * @param item
+ * @return
+ */
 QString createCommandString(QGraphicsItem *item) {
     return QObject::tr("%1")
             .arg("ITEM");
@@ -25,7 +30,6 @@ QString createCommandString(QGraphicsItem *item) {
 MoveCommand::MoveCommand(QGraphicsItem *diagramItem, const QPointF &oldPos,
                          QUndoCommand *parent)
         : QUndoCommand(parent), diagramItem(diagramItem), startPos(oldPos), newPos(diagramItem->pos()) {
-    qDebug() << "Move command" << diagramItem;
 }
 
 /**
@@ -210,7 +214,6 @@ AddClassCommand::AddClassCommand(QGraphicsScene *scene, classParams *params, QUn
         : QUndoCommand(parent), graphicsScene(scene) {
     static int itemCount = 0;
 
-    //qDebug() << params->name();
     diagramItem = new ClassDiagramItem(params);
     initialStartPosition = QPointF(params->x(), params->y());
     itemCount++;
@@ -227,7 +230,6 @@ AddClassCommand::~AddClassCommand() {
         return;
     }
     delete diagramItem;
-    //qDebug() << "diagramItem deleted (Commands.cpp)";
 }
 
 /**
@@ -261,7 +263,6 @@ AddClassConnectionCommand::AddClassConnectionCommand(ClassDiagramItem *fromNode,
     auto maxConnectedElements = std::max(fromNode->occupiedSockets(), toNodes->occupiedSockets());
 
     classConnection = new ClassConnectionItem(fromNode, toNodes, params, type, maxConnectedElements);
-    //initialStartPosition = QPointF(params->x(), params->y());
     setText(QObject::tr("Connect %1")
                     .arg(createCommandString(static_cast<ClassConnectionItem *>(classConnection))));
 
@@ -275,6 +276,7 @@ AddClassConnectionCommand::~AddClassConnectionCommand() {
     if (classConnection->scene() != nullptr) {
         return;
     }
+    delete classConnection;
 //    "This shit of code causes segfault";
 }
 
@@ -318,10 +320,10 @@ AddSequenceConnectionCommand::AddSequenceConnectionCommand(SequenceDiagramItem *
  *
  */
 AddSequenceConnectionCommand::~AddSequenceConnectionCommand() {
-//    if (actorConnection->scene() != nullptr) {
-//        return;
-//    }
-//    delete actorConnection;
+    if (actorConnection->scene() != nullptr) {
+        return;
+    }
+    delete actorConnection;
 }
 
 /**
@@ -336,8 +338,6 @@ void AddSequenceConnectionCommand::undo() {
  *
  */
 void AddSequenceConnectionCommand::redo() {
-    // TODO: fix
-    qDebug() << "redeedooooooooooooooooo";
     graphicsScene->addItem(actorConnection);
     graphicsScene->clearSelection();
     graphicsScene->update();

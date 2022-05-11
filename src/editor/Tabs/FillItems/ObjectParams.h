@@ -1,6 +1,6 @@
-//
-// Created by shchepa on 4.5.22.
-//
+// File: ObjectParams.h
+// Author: Shchapaniak Andrei <xshcha00@vutbr.cz>
+// Date: 07.05.2022
 
 #ifndef DIAGRAMS_OBJECTPARAMS_H
 #define DIAGRAMS_OBJECTPARAMS_H
@@ -8,20 +8,21 @@
 #include <QString>
 #include <QList>
 #include <QColor>
+#include <QWidget>
 #include "../../Backend/Parse.h"
-
 
 class relationsParams {
 public:
     relationsParams(QString leftObj, QString leftNum,
                     QString rightObj, QString rightNum,
-                    QString msg, int type) {
+                    QString msg, int type, int order) {
         _leftObj = leftObj;
         _leftNum = leftNum;
         _rightObj = rightObj;
         _rightNum = rightNum;
         _msg = msg;
         _type = type;
+        _order = order;
     };
 
     QString leftObj() {
@@ -40,6 +41,10 @@ public:
         return _rightNum;
     }
 
+    int order() {
+        return _order;
+    }
+
     int type() {
         return _type;
     }
@@ -55,12 +60,12 @@ private:
     QString _rightNum;
     int _type;
     QString _msg;
+    int _order;
 };
 
 class objectParams {
 public:
-    objectParams(qreal x, qreal y, QString name,
-                 QColor color, qreal width, qreal height);
+    objectParams(qreal x, qreal y, QString name, QColor color);
     ~objectParams() = default;
 
     qreal x() const {
@@ -132,9 +137,8 @@ private:
 
 class actorParams : public objectParams {
 public:
-    actorParams(qreal x, qreal y, QString name,
-                QColor color, qreal width, qreal height);
-    ~actorParams() = default;
+    actorParams(qreal x, qreal y, QString name, QColor color);
+    //~actorParams() = default;
 };
 
 

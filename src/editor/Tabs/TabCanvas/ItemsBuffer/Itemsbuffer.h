@@ -1,6 +1,6 @@
-//
-// Created by shchepa on 4.5.22.
-//
+// File: Itemsbuffer.h
+// Author: Shchapaniak Andrei <xshcha00@vutbr.cz>
+// Date: 07.05.2022
 
 #ifndef DIAGRAMS_ITEMSBUFFER_H
 #define DIAGRAMS_ITEMSBUFFER_H
@@ -17,13 +17,19 @@ public:
     ItemsBuffer();
     ~ItemsBuffer();
 
-    //void createClassItems();
-    void fillClassItems(ClassDiagramItem *item);
-    void fillActorItems(SequenceDiagramItem *item);
     void clearBuffer();
+
+    void addActorItems(Actor act);
+    void fillActorItems(SequenceDiagramItem *item);
+
     void addClassItems(Class cls);
+    void fillClassItems(ClassDiagramItem *item);
+
     void addRelationItems(Conct conct);
     void fillRelationItems(ClassConnectionItem *item);
+
+    //void addMessageItems(Action action);
+    //void fillMessageItems(Action action);
 
     QList<classParams *> classItems() {
         return _classItems;
@@ -37,9 +43,9 @@ public:
         return _actorItems;
     }
 
-    QList<SequenceConnectionItem *> messageItems() {
-        return _messageItems;
-    }
+    //QList<... *> messageItems() {
+    //    return _messageItems;
+    //}
 
     void pushClassItem(classParams *item) {
         _classItems.push_back(item);
@@ -52,6 +58,10 @@ public:
     void pushRelationItem(relationsParams *item) {
         _relationItems.push_back(item);
     }
+
+    //void pushMessageItem(... item) {
+    //    _messageItems.push_back(item);
+    //}
 
     void deleteClassItems() {
         for (auto x : _classItems) {
@@ -67,11 +77,32 @@ public:
         }
     }
 
+    void deleteRelationItems() {
+        for (auto x : _relationItems) {
+            _relationItems.pop_front();
+            delete x;
+        }
+    }
+
+    //void deleteMessageItems() {
+    //    for (auto x : _messageItems) {
+    //        _messageItems.pop_front();
+    //        delete x;
+    //    }
+    //}
+
+//    QVector<std::string> getNames() {
+//        QVector<std::string> vector;
+//        for (auto x : _classItems) {
+//            vector.push_back(x->name().toStdString());
+//        }
+//    }
+
 private:
     QList<classParams *> _classItems;
     QList<relationsParams *> _relationItems;
     QList<actorParams *> _actorItems;
-    QList<SequenceConnectionItem *> _messageItems;
+    //QList<SequenceConnectionItem *> _messageItems;
 };
 
 

@@ -1,3 +1,8 @@
+// File: TabCanvas.h
+// Author: Skuratovich Aliaksandr <xskura01@vutbr.cz>
+// Author: Shchapaniak Andrei <xshcha00@vutbr.cz>
+// Date: 07.05.2022
+
 #ifndef TABCANVAS_H
 #define TABCANVAS_H
 
@@ -246,9 +251,12 @@ public:
 
 public:
     bool getStringRepresentation(Program &prg) override;
-    bool createFromFile(dgrm_class_t cls);
+    bool createFromFile(dgrmClass_t cls);
     QList<QPair<ClassDiagramItem *, QString>> getClassStringPairs();
     QPoint generateCoords() const override;
+    bool checkIdenticalNames();
+    bool checkPermissions();
+    bool comparePermissions(QGraphicsTextItem *y, QString str);
 
 private:
     void createEntityClassContextMenu();
@@ -328,7 +336,7 @@ public slots:
 
 public:
     bool getStringRepresentation(Program &prg) override;
-    bool createFromFile(dgrm_seq_t seq);
+    bool createFromFile(dgrmSeq_t seq);
     QPoint generateCoords() const override;
 
 private:

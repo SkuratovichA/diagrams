@@ -1,20 +1,44 @@
+// File: SeqDiagram.cpp
+// Author: Shchapaniak Andrei <xshcha00@vutbr.cz>
+// Date: 07.05.2022
+
 #include "Parse.h"
 
-void Action::fill_connection(const json el) {
+/**
+ * Set values to the structure Action from json file.
+ *
+ * @param el node of a json file with attributes
+ * for one action between 2 actors
+ */
+void Action::pushConnection(const json el) {
     this->from  = el.at("from" ).get<std::string>();
     this->arrow = el.at("arrow").get<std::string>();
     this->to    = el.at("to"   ).get<std::string>();
     this->msg   = el.at("msg"  ).get<std::string>();
 }
 
-void Activate::fill_activate(const json el) {
+/**
+ * Set values to the who item from json file.
+ *
+ * @param el node of a json file with name of person
+ */
+void Activate::pushActivate(const json el) {
     this->who = el.at("who").get<std::string>();
 }
 
-void DiagramSequence::fill_structure_actor(const json el, dgrm_seq_t& o) {
+/**
+ * Create elements of Actor type, fill necessary items and push to the vector
+ * of all actors for one sequence diagram.
+ *
+ * @param el node of a json file with all actors
+ * for a sequence diagram
+ * @param o structure of a sequence diagram
+ */
+void DiagramSequence::fillStructureActor(const json el, dgrmSeq_t& o) {
     for (auto x : el) {
         Actor act;
-        act.name = x.at("name").get<std::string>();
+        Program::pushCoords(x.at("coords"), act.coords);
+        act.name = x.at("actor").get<std::string>();
         act.color.r = x.at("color").at("r").get<int>();
         act.color.g = x.at("color").at("g").get<int>();
         act.color.b = x.at("color").at("b").get<int>();
@@ -23,24 +47,47 @@ void DiagramSequence::fill_structure_actor(const json el, dgrm_seq_t& o) {
     }
 }
 
-void DiagramSequence::fill_structure_action(const json el, dgrm_seq_t& o) {
+/**
+ * Create elements of Action type, fill necessary items and push to the vector
+ * of all actions for one sequence diagram.
+ *
+ * @param el node of a json file with all actions
+ * for a sequence diagram
+ * @param o structure of a sequence diagram
+ */
+void DiagramSequence::fillStructureAction(const json el, dgrmSeq_t& o) {
     for (auto x : el) {
         Action tmp;
-        tmp.fill_connection(x);
+        tmp.pushConnection(x);
         o.actions.push_back(tmp);
     }
 }
 
-void DiagramSequence::fill_structure_activate(const json el, dgrm_seq_t& o) {
+/**
+ * Create elements of Activate type, fill necessary items and push to the vector
+ * of all activations for one sequence diagram.
+ *
+ * @param el node of a json file with all activations
+ * for a sequence diagram
+ * @param o structure of a sequence diagram
+ */
+void DiagramSequence::fillStructureActivate(const json el, dgrmSeq_t& o) {
     for (auto x : el) {
         Activate tmp;
-        Program::push_coords(x.at("coords"), tmp.coords);
-        tmp.fill_activate(x);
+        Program::pushCoords(x.at("coords"), tmp.coords);
+        tmp.pushActivate(x);
         o.activates.push_back(tmp);
     }
 }
 
-void DiagramSequence::add_actor_to_file(json& j, std::vector<Actor> ac) {
+/**
+ * Write the data about all actors from Actor structure
+ * to json file.
+ *
+ * @param j json file
+ * @param ac vector of the actors for sequence diagram
+ */
+void DiagramSequence::addActorToFile(json& j, std::vector<Actor> ac) {
     int i = 0;
 
     for (auto& x : ac) {
@@ -54,12 +101,25 @@ void DiagramSequence::add_actor_to_file(json& j, std::vector<Actor> ac) {
                     {"b" , x.color.b},
                     {"a" , x.color.a}
                 }
-            }
+            },
+            {"coords",
+                    {
+                            {"x" , x.coords[0]},
+                            {"y" , x.coords[1]}
+                    }
+            },
         };
     }
 }
 
-void DiagramSequence::add_action_to_file(json& j, std::vector<Action> ac) {
+/**
+ * Write the data about all actions from Action structure
+ * to json file.
+ *
+ * @param j json file
+ * @param ac vector of the actions for sequence diagram
+ */
+void DiagramSequence::addActionToFile(json& j, std::vector<Action> ac) {
     int i = 0;
 
     for (auto& x : ac) {
@@ -73,7 +133,14 @@ void DiagramSequence::add_action_to_file(json& j, std::vector<Action> ac) {
     }
 }
 
-void DiagramSequence::add_activate_to_file(json& j, std::vector<Activate> ac) {
+/**
+ * Write the data about all activations from Activate structure
+ * to json file.
+ *
+ * @param j json file
+ * @param ac vector of the activations for sequence diagram
+ */
+void DiagramSequence::addActivateToFile(json& j, std::vector<Activate> ac) {
     int i = 0;
 
     for (auto& x : ac) {

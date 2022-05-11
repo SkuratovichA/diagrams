@@ -1,3 +1,7 @@
+// File: sequenceconnectiondialog.cpp
+// Author: Skuratovich Aliaksandr <xskura01@vutbr.cz>
+// Date: 07.05.2022
+
 #include "sequenceconnectiondialog.h"
 #include "ui_sequenceconnectiondialog.h"
 

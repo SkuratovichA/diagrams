@@ -1,3 +1,7 @@
+// File: DiagramItem.cpp
+// Author: Shchapaniak Andrei <xshcha00@vutbr.cz>
+// Date: 07.05.2022
+
 #include "DiagramItem.h"
 
 #include <QtGui>
@@ -71,6 +75,7 @@ void ClassTextAttr::keyReleaseEvent(QKeyEvent *event) {
         item->setLine(0, 0, maxLen, 0);
     }
     parent()->setWidth(maxLen);
+    parent()->setRowWidth(maxLen);
 
     qreal midW = parent()->_head->boundingRect().width();
     qreal midO = parent()->width();
