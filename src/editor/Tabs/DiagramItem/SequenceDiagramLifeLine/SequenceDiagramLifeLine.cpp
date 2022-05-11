@@ -69,7 +69,7 @@ void SequenceDiagramLifeLine::paint(QPainter *painter, const QStyleOptionGraphic
     painter->drawPolygon(lineShaper());
 #endif
 
-    qDebug() << __FILE__;
+    //qDebug() << __FILE__;
     auto clr = _parent->color();
     clr.setAlpha(_parent->color().alpha() / 2);
     painter->setBrush(QBrush(clr));
@@ -80,7 +80,7 @@ void SequenceDiagramLifeLine::paint(QPainter *painter, const QStyleOptionGraphic
     auto topPoint = _parent->localCentre() + QPointF(0, _yFrom);
     updateActiveRegions();
 
-    qDebug() << "     cretaed merged active regions";
+    //qDebug() << "     cretaed merged active regions";
     for (auto rect: _mergedActiveRegions) {
         // adjust a rectangle and draw it
         QPointF fromPoint{_parent->localCentre() + QPointF(-_adjust, rect.first - 50)};
@@ -129,7 +129,7 @@ void SequenceDiagramLifeLine::trackNodes() {
 QList<region_t> SequenceDiagramLifeLine::getAsynchronousRegionsAsIntervals(
         QList<actorConnectionPair_t> &a
 ) {
-    qDebug() << __FILE__;
+    //qDebug() << __FILE__;
     if (a.isEmpty()) {
         return QList<region_t>();
     }
@@ -142,15 +142,15 @@ QList<region_t> SequenceDiagramLifeLine::getAsynchronousRegionsAsIntervals(
     for (auto el: a) {
         pairs.push_back(region_t(el.second->y() - _actRegLen / 2 * (el.first == Caller), el.second->y() + _actRegLen));
     }
-    qDebug() << "   there must be an array sorted in the ascending order";
-    qDebug() << "   " << pairs;
+    //qDebug() << "   there must be an array sorted in the ascending order";
+    //qDebug() << "   " << pairs;
     return pairs;
 }
 
 QList<region_t> SequenceDiagramLifeLine::getSynchronousRegionsAsIntervals(
         QList<actorConnectionPair_t> &a
 ) {
-    qDebug() << __FILE__;
+    //qDebug() << __FILE__;
     if (a.isEmpty()) {
         return QList<region_t>();
     }
@@ -171,8 +171,8 @@ QList<region_t> SequenceDiagramLifeLine::getSynchronousRegionsAsIntervals(
             pairs.push_back(tmp);
         }
     }
-    qDebug() << "   there must be an array sorted in the ascending order";
-    qDebug() << "   " << pairs;
+    //qDebug() << "   there must be an array sorted in the ascending order";
+    //qDebug() << "   " << pairs;
     return pairs;
 }
 
@@ -203,9 +203,8 @@ QList<qreal> SequenceDiagramLifeLine::getLastDeleteRegion() const {
 }
 
 void SequenceDiagramLifeLine::updateActiveRegions() {
-    qDebug() << __FILE__;
-    _mergedActiveRegions.clear();
-    qDebug() << "<";
+    //qDebug() << __FILE__;
+    //qDebug() << "<";
     auto sf = [](const region_t &a, const region_t &b) {
         if (a.first < b.first) {return true;}
         if (a.first > b.first) {return false;}
@@ -213,13 +212,14 @@ void SequenceDiagramLifeLine::updateActiveRegions() {
         return false;
     };
 
+    _mergedActiveRegions.clear();
     _mergedActiveRegions.append(getSynchronousRegionsAsIntervals(_activeRegions));
     _mergedActiveRegions.append(getAsynchronousRegionsAsIntervals(_async_replyMessages));
     if (_mergedActiveRegions.isEmpty()) {
         return;
     }
     std::sort(_mergedActiveRegions.begin(), _mergedActiveRegions.end(), sf);
-    qDebug() << "    <_mergedActiveRegions> sorted" << _mergedActiveRegions;
+    //qDebug() << "    <_mergedActiveRegions> sorted" << _mergedActiveRegions;
 
     // if object is not cretaed, yet, dont activate the connection.
     auto createConstraintList = getFirstCreateRegion();
@@ -227,28 +227,46 @@ void SequenceDiagramLifeLine::updateActiveRegions() {
     auto startPosition = deleteCannotBeUsed ? 0 : createConstraintList.first();
     auto deleteConstraintList = getLastDeleteRegion();
     auto deletePosition = deleteConstraintList.isEmpty() ? _height : deleteConstraintList.first();
-    qDebug() << "     messages <create> added, position: " << deletePosition;
+    //qDebug() << "     messages <create> added, position: " << deletePosition;
 
     // remove overlapped intervals & check if they can be added
     for (int i = 0; i < _mergedActiveRegions.size() - 1;) {
-        if (_mergedActiveRegions[i].first < startPosition ||
-            (!deleteCannotBeUsed && _mergedActiveRegions[i].second > deletePosition)) {
-            // if region is out of range, remove it
-            _mergedActiveRegions.remove(i);
-            qDebug() << "    --* cannot add a region on a deleted part of the line";
-        } else if (_mergedActiveRegions[i].second >= _mergedActiveRegions[i + 1].second
-                   || _mergedActiveRegions[i].second >= _mergedActiveRegions[i + 1].first) {
+        auto overlappedTop = _mergedActiveRegions[i].second >= _mergedActiveRegions[i + 1].first;
+        auto overlappedBottom = _mergedActiveRegions[i].second >= _mergedActiveRegions[i + 1].second;
+        //qDebug() << "suka";
+        if (overlappedTop || overlappedBottom) {
             // if two regions overlap, merge them
             _mergedActiveRegions[i].second = std::max(_mergedActiveRegions[i + 1].second,
                                                       _mergedActiveRegions[i].second);
+            auto first = _mergedActiveRegions.size();
             _mergedActiveRegions.remove(i + 1);
+            assert (_mergedActiveRegions.size() != first);
             // dont increase the counter
             continue;
         }
         i++;
     }
-    qDebug() << "    overlapped chunks done. _mergedActiveRegions: " << _mergedActiveRegions;
-    qDebug() << ">";
+    int i = 0;
+    //qDebug() << "start position: " << startPosition;
+    //qDebug() << "end position : " << deletePosition;
+    while (true) {
+        //qDebug() << "pizda : " << _mergedActiveRegions.size();
+        if (i == _mergedActiveRegions.size()) {
+            break;
+        }
+        if (_mergedActiveRegions[i].first < startPosition || _mergedActiveRegions[i].first > deletePosition) {
+            //qDebug() << "old size" << _mergedActiveRegions.size();
+            _mergedActiveRegions.remove(i);
+            //qDebug() << "new size" << _mergedActiveRegions.size();
+        } else {
+            if (_mergedActiveRegions[i].second > deletePosition) {
+                _mergedActiveRegions[i].second = deletePosition;
+            }
+            i++;
+        }
+    }
+    //qDebug() << "    overlapped chunks done. _mergedActiveRegions: " << _mergedActiveRegions;
+    //qDebug() << ">";
 }
 
 /**
@@ -259,12 +277,12 @@ void SequenceDiagramLifeLine::addConnection(
         SequenceConnectionItem *connection,
         ActorType actorType
 ) {
-    qDebug() << "<";
-    qDebug() << __FILE__;
+    //qDebug() << "<";
+    //qDebug() << __FILE__;
     switch (connection->connectionType()) {
         case Synchronous:
             _activeRegions.push_back(actorConnectionPair_t(actorType, connection));
-            qDebug() << "   activeREgion added";
+            //qDebug() << "   activeREgion added";
             break;
         case Asynchronous:
             _async_replyMessages.push_back(actorConnectionPair_t(actorType, connection));
@@ -286,8 +304,10 @@ void SequenceDiagramLifeLine::addConnection(
                 _async_replyMessages.push_back(actorConnectionPair_t(actorType, connection));
             }
             break;
+        default:
+            assert(false);
     }
-    qDebug() << "   connection added";
+    //qDebug() << "   connection added";
 }
 
 /**

@@ -157,6 +157,8 @@ void SequenceConnectionItem::paint(QPainter *painter, const QStyleOptionGraphics
         case Delete:
             paintDelete(painter, option, widget);
             break;
+        default:
+            assert(false);
     }
 }
 

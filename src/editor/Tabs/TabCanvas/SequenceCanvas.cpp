@@ -173,16 +173,16 @@ void SequenceCanvas::addConnection() {
     if (emptySelect) {
         return;
     }
-
     if (nodes.first == nullptr || nodes.second == nullptr) {
         return;
     }
-
-    //for (int i =0; i < 100; i ++) {
-        _undoStack->push(
-                new AddSequenceConnectionCommand(nodes.first, nodes.second, scd.messageType(), editorScene)
-        );
-    //}
+    auto index = scd.messageType();
+    if (index == ConnectionType::Undefined) {
+        return;
+    }
+    _undoStack->push(
+            new AddSequenceConnectionCommand(nodes.first, nodes.second, index, editorScene)
+    );
 }
 
 /**

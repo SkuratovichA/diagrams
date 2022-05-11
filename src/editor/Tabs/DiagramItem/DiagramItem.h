@@ -354,7 +354,10 @@ public:
     }
 
     QSet<SequenceConnectionItem *> connections() const {
-        return _connections;
+        QSet<SequenceConnectionItem *> allConnections = QSet<SequenceConnectionItem *>();
+        allConnections.unite(_connections);
+        allConnections.unite(_removedConnections);
+        return allConnections;
     }
 
     void trackNodes();
@@ -372,7 +375,7 @@ public:
         return _parentClassDiagramItem;
     }
 
-    qreal lineLength() const  {return _lineLength;}
+    qreal lineLength() const {return _lineLength;}
 
 protected:
     QVariant itemChange(GraphicsItemChange change, const QVariant &value) override;
@@ -386,7 +389,7 @@ private:
     qreal const _lineLength = 500; ///< default length of a life line
 
     QSet<SequenceConnectionItem *> _connections = QSet<SequenceConnectionItem *>(); ///< connections to track
-    QSet<SequenceConnectionItem *> _removedConnections =  QSet<SequenceConnectionItem *>();
+    QSet<SequenceConnectionItem *> _removedConnections = QSet<SequenceConnectionItem *>();
 };
 
 #endif // Object_H

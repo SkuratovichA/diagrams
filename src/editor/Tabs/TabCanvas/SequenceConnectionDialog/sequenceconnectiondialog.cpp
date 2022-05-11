@@ -14,6 +14,7 @@ SequenceConnectionDialog::SequenceConnectionDialog(QWidget *parent) :
     ui->listWidget->addItem("reply message");
     ui->listWidget->addItem("create message");
     ui->listWidget->addItem("delete message");
+    index = ConnectionType::Undefined;
 }
 
 SequenceConnectionDialog::~SequenceConnectionDialog() {
@@ -26,6 +27,5 @@ ConnectionType SequenceConnectionDialog::messageType() {
 
 void SequenceConnectionDialog::on_pushButton_clicked() {
     index = static_cast<ConnectionType>(ui->listWidget->currentRow());
-    qDebug() << index << " index!!!!!!!! (current row)";
     close();
 }

@@ -157,6 +157,7 @@ namespace Connections {
         Reply,
         Create,
         Delete,
+        Undefined,
     };
 
     enum ActorType {
