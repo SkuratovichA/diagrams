@@ -190,6 +190,8 @@ void SequenceCanvas::deleteMessage_triggered() {
  */
 void SequenceCanvas::addEntity(ClassDiagramItem *classDiagramItemParent) {
     //qDebug() << "got name: in constructor " << classDiagramItemParent->name();
+//    qDebug() << "got name: in constructor " << classDiagramItemParent->name();
+
     QPoint point = generateCoords();
 
     createActor = new actorParams(point.x(), point.y(), classDiagramItemParent->name(),
@@ -211,15 +213,22 @@ void SequenceCanvas::addConnection() {
     scd.exec();
 
     auto nodes = getSelectedDiagramItems<SequenceDiagramItem>();
+
     auto emptySelect =
             (nodes == QPair<SequenceDiagramItem *, SequenceDiagramItem *>())
             || nodes.first == nodes.second;
     if (emptySelect) {
         return;
     }
-
+    if (nodes.first == nullptr || nodes.second == nullptr) {
+        return;
+    }
+    auto index = scd.messageType();
+    if (index == ConnectionType::Undefined) {
+        return;
+    }
     _undoStack->push(
-            new AddSequenceConnectionCommand(nodes.first, nodes.second, scd.messageType(), editorScene)
+            new AddSequenceConnectionCommand(nodes.first, nodes.second, index, editorScene)
     );
 }
 

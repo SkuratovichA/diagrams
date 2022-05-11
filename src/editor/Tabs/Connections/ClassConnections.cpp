@@ -165,8 +165,8 @@ QPair<QPointF, QPointF> ClassConnectionItem::edgePoints() const {
                 rightNum->setPos(xTo + 80, yTo + 10);
             }
             else {
-                leftNum->setPos(xFrom + 10, yFrom + 5);
-                rightNum->setPos(xTo - 50, yTo + 5);
+                leftNum->setPos(xFrom + 10, yFrom - 50);
+                rightNum->setPos(xTo - 50, yTo + 10);
             }
 
             break;
@@ -191,14 +191,14 @@ QPair<QPointF, QPointF> ClassConnectionItem::edgePoints() const {
             }
             else {
                 leftNum->setPos(xFrom + 10, yFrom - 50);
-                rightNum->setPos(xTo + 20, yTo + 10);
+                rightNum->setPos(xTo - 50, yTo + 10);
             }
+
             break;
         case 3:
             yTo = _nodeTo->centre().y() + toHeightHalf;
             xTo = -(c + b * yTo) / a;
             if (xTo < _nodeTo->topLeft().x()) {
-                qDebug() << "lala";
                 xTo = _nodeTo->centre().x() + toWidthHalf;
                 yTo = -(c + a * xTo) / b;
             }
@@ -215,8 +215,8 @@ QPair<QPointF, QPointF> ClassConnectionItem::edgePoints() const {
                 rightNum->setPos(xTo + 80, yTo + 10);
             }
             else {
-                leftNum->setPos(xFrom + 10, yFrom - 50);
-                rightNum->setPos(xTo + 20, yTo + 10);
+                leftNum->setPos(xFrom - 50, yFrom - 50);
+                rightNum->setPos(xTo + 10, yTo + 10);
             }
 
             break;
@@ -240,8 +240,8 @@ QPair<QPointF, QPointF> ClassConnectionItem::edgePoints() const {
                 rightNum->setPos(xTo + 80, yTo + 10);
             }
             else {
-                leftNum->setPos(xFrom + 10, yFrom + 5);
-                rightNum->setPos(xTo - 50, yTo + 5);
+                leftNum->setPos(xFrom + 10, yFrom + 15);
+                rightNum->setPos(xTo - 50, yTo - 50);
             }
 
             break;
@@ -265,8 +265,8 @@ QPair<QPointF, QPointF> ClassConnectionItem::edgePoints() const {
                 rightNum->setPos(xTo + 80, yTo + 10);
             }
             else {
-                leftNum->setPos(xFrom - 50, yFrom + 5);
-                rightNum->setPos(xTo + 10, yTo + 5);
+                leftNum->setPos(xFrom - 50, yFrom - 50);
+                rightNum->setPos(xTo + 10, yTo + 10);
             }
 
             break;
@@ -290,8 +290,8 @@ QPair<QPointF, QPointF> ClassConnectionItem::edgePoints() const {
                 rightNum->setPos(xTo + 80, yTo + 10);
             }
             else {
-                leftNum->setPos(xFrom - 50, yFrom + 5);
-                rightNum->setPos(xTo + 10, yTo + 5);
+                leftNum->setPos(xFrom - 50, yFrom + 15);
+                rightNum->setPos(xTo + 10, yTo - 50);
             }
 
             break;
@@ -314,8 +314,8 @@ QPair<QPointF, QPointF> ClassConnectionItem::edgePoints() const {
                 rightNum->setPos(xTo + 80, yTo + 10);
             }
             else {
-                leftNum->setPos(xFrom - 20, yFrom + 15);
-                rightNum->setPos(xTo - 20, yTo - 50);
+                leftNum->setPos(xFrom - 50, yFrom + 15);
+                rightNum->setPos(xTo - 10, yTo - 50);
             }
 
             break;
@@ -338,8 +338,8 @@ QPair<QPointF, QPointF> ClassConnectionItem::edgePoints() const {
                 rightNum->setPos(xTo + 80, yTo + 10);
             }
             else {
-                leftNum->setPos(xFrom - 20, yFrom + 15);
-                rightNum->setPos(xTo - 20, yTo - 50);
+                leftNum->setPos(xFrom + 10, yFrom + 15);
+                rightNum->setPos(xTo - 50, yTo -50);
             }
 
             break;
@@ -511,6 +511,7 @@ void ClassConnectionItem::drawLine(QPainter *painter, const QStyleOptionGraphics
         angle = std::atan2(-cLine.dy(), cLine.dx());
         linend = cLine.p1();
     } else {
+        // Single connection line
         auto margin = std::min<qreal>(_nodeTo->height(), _nodeTo->width()) / 3;
         auto yAbove = _nodeTo->bottomRight().y() - margin;
         auto xRight = _nodeTo->bottomRight().x() + margin;

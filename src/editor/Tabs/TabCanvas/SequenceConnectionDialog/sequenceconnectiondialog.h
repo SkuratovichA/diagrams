@@ -8,6 +8,8 @@
 #include <QDialog>
 #include "../../Connections/Connections.h"
 
+using namespace Connections;
+
 namespace Ui {
     class SequenceConnectionDialog;
 }
@@ -21,14 +23,14 @@ public:
     ~SequenceConnectionDialog();
 
 public:
-    SequenceConnectionItem::ConnectionType messageType();
+    ConnectionType messageType();
 
 private slots:
     void on_pushButton_clicked();
 
 private:
     Ui::SequenceConnectionDialog *ui;
-    SequenceConnectionItem::ConnectionType index;
+    ConnectionType index;
 };
 
 #endif // SEQUENCECONNECTIONDIALOG_H

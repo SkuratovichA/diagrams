@@ -6,6 +6,9 @@
 #include "ui_sequenceconnectiondialog.h"
 
 #include <QDebug>
+
+using namespace Connections;
+
 SequenceConnectionDialog::SequenceConnectionDialog(QWidget *parent) :
         QDialog(parent),
         ui(new Ui::SequenceConnectionDialog) {
@@ -15,19 +18,18 @@ SequenceConnectionDialog::SequenceConnectionDialog(QWidget *parent) :
     ui->listWidget->addItem("reply message");
     ui->listWidget->addItem("create message");
     ui->listWidget->addItem("delete message");
+    index = ConnectionType::Undefined;
 }
 
 SequenceConnectionDialog::~SequenceConnectionDialog() {
     delete ui;
 }
 
-SequenceConnectionItem::ConnectionType SequenceConnectionDialog::messageType() {
+ConnectionType SequenceConnectionDialog::messageType() {
     return index;
 }
 
 void SequenceConnectionDialog::on_pushButton_clicked() {
-    index = static_cast<SequenceConnectionItem::ConnectionType>(ui->listWidget->currentRow());
-    qDebug() << index << " index!!!!!!!! (current row)";
+    index = static_cast<ConnectionType>(ui->listWidget->currentRow());
     close();
 }
-

@@ -18,6 +18,8 @@
 #include "../Connections/Connections.h"
 #include "../FillItems/ObjectParams.h"
 
+using namespace Connections;
+
 QT_BEGIN_NAMESPACE
 class QGraphicsItem;
 
@@ -356,14 +358,26 @@ public:
         return _head->toPlainText();
     }
 
-    [[nodiscard]] QPointF centre() const override {
+    [[nodiscard]] QPointF localCentre() const {
         return {width() / 2.0, height()};
+    }
+
+    QSet<SequenceConnectionItem *> connections() const {
+        QSet<SequenceConnectionItem *> allConnections = QSet<SequenceConnectionItem *>();
+        allConnections.unite(_connections);
+        allConnections.unite(_removedConnections);
+        return allConnections;
+    }
+
+    void trackNodes();
+
+    [[nodiscard]] QPointF centre() const override {
+        return {x() + width() / 2.0, y() + height()};
     }
 
 public:
     void addConnection(SequenceConnectionItem *connection,
-                       SequenceConnectionItem::ConnectionType connectionType,
-                       SequenceConnectionItem::ActorType actorType);
+                       ActorType actorType);
     void removeConnection(SequenceConnectionItem *connection);
 
     [[nodiscard]] ClassDiagramItem *parentClassDiagramItem() const {
@@ -374,13 +388,21 @@ public:
         _parentClassDiagramItem = parent;
     }
 
+    qreal lineLength() const {return _lineLength;}
+
 protected:
     QVariant itemChange(GraphicsItemChange change, const QVariant &value) override;
 
+    /**
+     * Constants
+     */
 private:
-    ClassDiagramItem *_parentClassDiagramItem = nullptr;
-    SequenceDiagramLifeLine *_lifeLine = nullptr;
-    qreal const lineDefaultLength = 500;
+    ClassDiagramItem *_parentClassDiagramItem = nullptr; ///< pointer to the "parent" class diagram item for synchronization.
+    SequenceDiagramLifeLine *_lifeLine = nullptr; ///< lifeLine to track active regions
+    qreal const _lineLength = 500; ///< default length of a life line
+
+    QSet<SequenceConnectionItem *> _connections = QSet<SequenceConnectionItem *>(); ///< connections to track
+    QSet<SequenceConnectionItem *> _removedConnections = QSet<SequenceConnectionItem *>();
 };
 
 #endif // Object_H

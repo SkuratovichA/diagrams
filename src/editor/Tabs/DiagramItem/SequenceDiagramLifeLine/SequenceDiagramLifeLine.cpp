@@ -8,6 +8,11 @@
 #include <QPen>
 #include <QPainter>
 #include <QDebug>
+#include "../../Connections/Connections.h"
+
+#define DEBUG 1
+
+using namespace Connections;
 
 /** A constructor.
  *
@@ -19,8 +24,11 @@ SequenceDiagramLifeLine::SequenceDiagramLifeLine(SequenceDiagramItem *parent, qr
     _height = height;
     _yFrom = yFrom;
     _parent = parent;
+    _verticalAgjust = parent->pos().y();
+
     setFlags(QGraphicsItem::ItemIsSelectable);
     // create a default line
+    setZValue(-1.0);
     trackNodes();
 }
 
@@ -28,9 +36,6 @@ SequenceDiagramLifeLine::SequenceDiagramLifeLine(SequenceDiagramItem *parent, qr
  *
  */
 SequenceDiagramLifeLine::~SequenceDiagramLifeLine() {
-            foreach (SequenceConnectionItem *connection, _connections) {
-            delete connection;
-        }
 }
 
 /** Returns a bounding polygon for a line.
@@ -38,7 +43,7 @@ SequenceDiagramLifeLine::~SequenceDiagramLifeLine() {
  * @return bounding polygon.
  */
 QPolygonF SequenceDiagramLifeLine::lineShaper() const {
-    QRectF rect(_parent->width() / 2 - _adjust, _parent->height(), 2 * _adjust, maxHeight());
+    QRectF rect(_parent->width() / 2 - _adjust, _parent->height(), 2 * _adjust, _height);
     return QPolygonF(rect);
 }
 
@@ -60,22 +65,28 @@ QPainterPath SequenceDiagramLifeLine::shape() const {
  */
 void SequenceDiagramLifeLine::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) {
 #if DEBUG
-    painter->setPen(QPen(QColor(0, 0, 0, 100), 0.5, Qt::DotLine));
+    painter->setPen(QPen(QColor(255, 0, 0, 100), 0.5, Qt::DotLine));
     painter->drawPolygon(lineShaper());
 #endif
 
+    //qDebug() << __FILE__;
+    auto clr = _parent->color();
+    clr.setAlpha(_parent->color().alpha() / 2);
+    painter->setBrush(QBrush(clr));
     painter->setRenderHint(QPainter::Antialiasing, true);
-
-    auto topPoint = _parent->centre() + QPointF(0, _yFrom);
-    QList<QLineF> lines;
-
     painter->setPen(QPen(Qt::black, 1, Qt::SolidLine));
-    painter->setBrush(QBrush(_parent->color()));
-    auto olapd = mergedActiveRegions();
-    for (auto rect: olapd) {
-        QPointF fromPoint{_parent->centre() + QPointF(-_adjust, rect.first)};
-        QPointF toPoint{_parent->centre() + QPointF(_adjust, rect.second)};
+
+    QList<QLineF> lines;
+    auto topPoint = _parent->localCentre() + QPointF(0, _yFrom);
+    updateActiveRegions();
+
+    //qDebug() << "     cretaed merged active regions";
+    for (auto rect: _mergedActiveRegions) {
+        // adjust a rectangle and draw it
+        QPointF fromPoint{_parent->localCentre() + QPointF(-_adjust, rect.first - 50)};
+        QPointF toPoint{_parent->localCentre() + QPointF(_adjust, rect.second - 50)};
         painter->drawRect(QRectF(fromPoint, toPoint));
+
         // add a line connecting two rectangles
         lines.push_back(QLineF(topPoint, fromPoint + QPointF(_adjust, 0)));
         topPoint = toPoint + QPointF(-_adjust, 0);
@@ -83,7 +94,7 @@ void SequenceDiagramLifeLine::paint(QPainter *painter, const QStyleOptionGraphic
     // prepare for drawing a line
     painter->setPen(QPen(Qt::black, 1, Qt::DashLine));
     // add the last point.
-    lines.push_front(QLineF(topPoint, _parent->centre() + QPointF(0.0, _height)));
+    lines.push_front(QLineF(topPoint, _parent->localCentre() + QPointF(0.0, _height + 0)));
     for (auto cLine: lines) {
         painter->drawLine(cLine);
     }
@@ -104,57 +115,151 @@ void SequenceDiagramLifeLine::mousePressEvent(QGraphicsSceneMouseEvent *event) {
  */
 void SequenceDiagramLifeLine::trackNodes() {
     auto line = QLineF(
-            _parent->centre() + QPointF(0, _yFrom),
-            _parent->centre() + QPointF(0, maxHeight())
+            _parent->localCentre() + QPointF(0, _yFrom),
+            _parent->localCentre() + QPointF(0, _height)
     );
+    updateActiveRegions();
     setLine(line);
 }
 
-/** Merges all intervals
+/**
  *
- * @return merged intervals
+ * @return
  */
-QList<QPair<qreal, qreal>> SequenceDiagramLifeLine::mergedActiveRegions() {
-    auto sf = [](const QPair<qreal, qreal> &a, const QPair<qreal, qreal> &b) {
-        if (a.first < b.first) {
-            return true;
-        }
-        if (a.first > b.first) {
-            return false;
-        }
-        if (a.second < b.second) {
-            return true;
-        }
-    };
-    QList<QPair<qreal, qreal>> a(_activeRegions);
-    a.append(_synchronousPoints);
+QList<region_t> SequenceDiagramLifeLine::getAsynchronousRegionsAsIntervals(
+        QList<actorConnectionPair_t> &a
+) {
+    //qDebug() << __FILE__;
     if (a.isEmpty()) {
-        return a;
+        return QList<region_t>();
     }
-    std::sort(a.begin(), a.end(), sf);
-    // remove overlapped intervals
-    for (int i = 0; i < a.size() - 1;) {
-        if (a[i].second >= a[i + 1].second || a[i].second >= a[i + 1].first) {
-            a[i].second = std::max(a[i + 1].second, a[i].second);
-            a.remove(i + 1);
+    std::sort(a.begin(), a.end(),
+              [](actorConnectionPair_t &a, actorConnectionPair_t &b) {
+                  return a.second->y() < b.second->y();
+              }
+    );
+    auto pairs = QList<region_t>();
+    for (auto el: a) {
+        pairs.push_back(region_t(el.second->y() - _actRegLen / 2 * (el.first == Caller), el.second->y() + _actRegLen));
+    }
+    //qDebug() << "   there must be an array sorted in the ascending order";
+    //qDebug() << "   " << pairs;
+    return pairs;
+}
+
+QList<region_t> SequenceDiagramLifeLine::getSynchronousRegionsAsIntervals(
+        QList<actorConnectionPair_t> &a
+) {
+    //qDebug() << __FILE__;
+    if (a.isEmpty()) {
+        return QList<region_t>();
+    }
+    // sort an array in ascending order.
+    std::sort(a.begin(), a.end(),
+              [](actorConnectionPair_t &a, const actorConnectionPair_t &b) {
+                  return a.second->y() < b.second->y();
+              }
+    );
+    auto pairs = QList<region_t>();
+    for (uint32_t i = 0; i < a.size(); i++) {
+        if (i % 2 == 0) {
+            // add an adjustment if type is caller.
+            pairs.push_back(region_t(a[i].second->y() - _actRegLen / 2 * (a[i].first == Caller), _height));
         } else {
+            auto tmp = pairs.takeLast();
+            tmp.second = a[i].second->y();
+            pairs.push_back(tmp);
+        }
+    }
+    //qDebug() << "   there must be an array sorted in the ascending order";
+    //qDebug() << "   " << pairs;
+    return pairs;
+}
+
+QList<qreal> SequenceDiagramLifeLine::getFirstCreateRegion() const {
+    if (_createMessages.isEmpty()) {
+        return {};
+    }
+    qreal minitem = _createMessages.first()->y();
+    for (auto el: _createMessages) {
+        if (el->y() < minitem) {
+            minitem = el->y();
+        }
+    }
+    return {minitem};
+}
+
+QList<qreal> SequenceDiagramLifeLine::getLastDeleteRegion() const {
+    if (_deleteMessages.isEmpty()) {
+        return {};
+    }
+    qreal maxitem = _deleteMessages.first()->y();
+    for (auto el: _deleteMessages) {
+        if (el->y() > maxitem) {
+            maxitem = el->y();
+        }
+    }
+    return {maxitem};
+}
+
+void SequenceDiagramLifeLine::updateActiveRegions() {
+    //qDebug() << __FILE__;
+    //qDebug() << "<";
+    auto sf = [](const region_t &a, const region_t &b) {
+        if (a.first < b.first) {return true;}
+        if (a.first > b.first) {return false;}
+        if (a.second < b.second) {return true;}
+        return false;
+    };
+
+    _mergedActiveRegions.clear();
+    _mergedActiveRegions.append(getSynchronousRegionsAsIntervals(_activeRegions));
+    _mergedActiveRegions.append(getAsynchronousRegionsAsIntervals(_async_replyMessages));
+    if (_mergedActiveRegions.isEmpty()) {
+        return;
+    }
+    std::sort(_mergedActiveRegions.begin(), _mergedActiveRegions.end(), sf);
+    //qDebug() << "    <_mergedActiveRegions> sorted" << _mergedActiveRegions;
+
+    // if object is not cretaed, yet, dont activate the connection.
+    auto createConstraintList = getFirstCreateRegion();
+    bool deleteCannotBeUsed = createConstraintList.isEmpty();
+    auto startPosition = deleteCannotBeUsed ? 0 : createConstraintList.first();
+    auto deleteConstraintList = getLastDeleteRegion();
+    auto deletePosition = deleteConstraintList.isEmpty() ? _height : deleteConstraintList.first();
+    //qDebug() << "     messages <create> added, position: " << deletePosition;
+
+    // remove overlapped intervals & check if they can be added
+    for (int i = 0; i < _mergedActiveRegions.size() - 1;) {
+        auto overlappedTop = _mergedActiveRegions[i].second >= _mergedActiveRegions[i + 1].first;
+        auto overlappedBottom = _mergedActiveRegions[i].second >= _mergedActiveRegions[i + 1].second;
+        //qDebug() << "suka";
+        if (overlappedTop || overlappedBottom) {
+            // if two regions overlap, merge them
+            _mergedActiveRegions[i].second = std::max(_mergedActiveRegions[i + 1].second,
+                                                      _mergedActiveRegions[i].second);
+            auto first = _mergedActiveRegions.size();
+            _mergedActiveRegions.remove(i + 1);
+            assert (_mergedActiveRegions.size() != first);
+            // dont increase the counter
+            continue;
+        }
+        i++;
+    }
+    int i = 0;
+    while (true) {
+        if (i == _mergedActiveRegions.size()) {
+            break;
+        }
+        if (_mergedActiveRegions[i].first < startPosition || _mergedActiveRegions[i].first > deletePosition) {
+            _mergedActiveRegions.remove(i);
+        } else {
+            if (_mergedActiveRegions[i].second > deletePosition) {
+                _mergedActiveRegions[i].second = deletePosition;
+            }
             i++;
         }
     }
-    // adjust the size of a lifeline
-    updateHeight();
-    return a;
-}
-
-/** Determines the maximum possible height of the life line.
- *
- * @return maximum height for the line line.
- */
-qreal SequenceDiagramLifeLine::maxHeight() const {
-    if (_activeRegions.isEmpty()) {
-        return _height;
-    }
-    return std::max(_activeRegions.last().second, _height);
 }
 
 /**
@@ -163,50 +268,34 @@ qreal SequenceDiagramLifeLine::maxHeight() const {
  */
 void SequenceDiagramLifeLine::addConnection(
         SequenceConnectionItem *connection,
-        SequenceConnectionItem::ConnectionType connectionType,
-        SequenceConnectionItem::ActorType actorType
-        ) {
-    qDebug() << connection->type();
-
-    switch (connectionType) {
-        case SequenceConnectionItem::Synchronous:
-            qDebug() << "synchronous";
+        ActorType actorType
+) {
+    switch (connection->connectionType()) {
+        case Synchronous:
+            _activeRegions.push_back(actorConnectionPair_t(actorType, connection));
             break;
-
-        case SequenceConnectionItem::Asynchronous:
-            qDebug() << "asynchronous";
+        case Asynchronous:
+            _async_replyMessages.push_back(actorConnectionPair_t(actorType, connection));
             break;
-
-        case SequenceConnectionItem::Reply:
-            qDebug() << "reply";
+        case Reply:
+            _async_replyMessages.push_back(actorConnectionPair_t(actorType, connection));
             break;
-
-        case SequenceConnectionItem::Create:
-            qDebug() << "create";
+        case Create:
+            if (actorType == Receiver) {
+                _createMessages.push_back(connection);
+            } else { // Caller
+                _async_replyMessages.push_back(actorConnectionPair_t(actorType, connection));
+            }
             break;
-
-        case SequenceConnectionItem::Delete:
-            qDebug() << "delete";
+        case Delete:
+            if (actorType == Receiver) {
+                _deleteMessages.push_back(connection);
+            } else { // Caller
+                _async_replyMessages.push_back(actorConnectionPair_t(actorType, connection));
+            }
             break;
-    }
-
-    switch (actorType) {
-        case SequenceConnectionItem::Caller:
-            qDebug() << "caller";
-            break;
-
-        case SequenceConnectionItem::Receiver:
-            qDebug() << "receiver";
-            break;
-    }
-}
-
-/**
- *
- */
-void SequenceDiagramLifeLine::notifyConnectionsAboutParentPositionChange() {
-    for (auto c: _connections) {
-        c->trackNodes();
+        default:
+            assert(false);
     }
 }
 
@@ -214,6 +303,21 @@ void SequenceDiagramLifeLine::notifyConnectionsAboutParentPositionChange() {
  *
  * @param connection
  */
-void SequenceDiagramLifeLine::removeConnection(SequenceConnectionItem *connection) {
-    _connections.remove(connection);
+void SequenceDiagramLifeLine::removeConnection(const SequenceConnectionItem *connection) {
+    auto callerC = actorConnectionPair_t(Caller, connection);
+    auto receiverC = actorConnectionPair_t(Receiver, connection);
+    auto list = {&_activeRegions, &_async_replyMessages};
+    for (auto a: list) {
+        if (a->contains(callerC)) {
+            a->removeOne(callerC);
+        } else if (a->contains(receiverC)) {
+            a->removeOne(receiverC);
+        }
+    }
+    if (_createMessages.contains(connection)) {
+        _createMessages.removeOne(connection);
+    }
+    if (_deleteMessages.contains(connection)) {
+        _deleteMessages.removeOne(connection);
+    }
 }
