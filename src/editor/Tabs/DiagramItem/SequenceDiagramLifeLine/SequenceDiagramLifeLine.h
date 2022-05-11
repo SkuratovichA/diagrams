@@ -15,6 +15,8 @@ class SequenceConnectionItem;
 
 using namespace Connections;
 
+typedef QPair<ActorType, const SequenceConnectionItem *> actorConnectionPair_t;
+typedef QList<actorConnectionPair_t> ActorTypeConnectionList_t;
 typedef QPair<qreal, qreal> region_t;
 
 /** Implementation of a custom Life Line for an object (actor)
@@ -57,7 +59,7 @@ public:
 //    }
 //
 //    void addSynchronousPoint(const SequenceConnectionItem *synchronousPoint) {
-//        _messagesRegionsNotSynchronous.push_back(synchronousPoint);
+//        _messages.push_back(synchronousPoint);
 //    }
 //
     /**
@@ -78,11 +80,10 @@ private:
     [[nodiscard]] QPainterPath shape() const override;
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
     [[nodiscard]] QPolygonF lineShaper() const;
-    QList<QPair<qreal, qreal>> mergedActiveRegions();
+    QList<region_t> mergedActiveRegions();
 
-
-    QList<QPair<qreal, qreal>> getAsynchronousRegionsAsIntervals(QList<const SequenceConnectionItem *> &a);
-    QList<QPair<qreal, qreal>> getSynchronousRegionsAsIntervals(QList<const SequenceConnectionItem *> &a);
+    QList<region_t> getAsynchronousRegionsAsIntervals(ActorTypeConnectionList_t &a);
+    QList<region_t> getSynchronousRegionsAsIntervals(ActorTypeConnectionList_t &a);
 
     /**
      * Private variables
@@ -95,8 +96,10 @@ private:
     /**
      * Usually, from/to, but in case to is -1, use default length.
      */
-    QList<const SequenceConnectionItem *> _messagesRegionsNotSynchronous = QList<const SequenceConnectionItem *>();
-    QList<const SequenceConnectionItem *> _activeRegions = QList<const SequenceConnectionItem *>();
+    ActorTypeConnectionList_t _activeRegions = ActorTypeConnectionList_t();
+    ActorTypeConnectionList_t _async_replyMessages = ActorTypeConnectionList_t();
+    ActorTypeConnectionList_t _createMessages = ActorTypeConnectionList_t();
+    ActorTypeConnectionList_t _deleteMessages = ActorTypeConnectionList_t();
 
     /**
      * Constants.
@@ -107,6 +110,8 @@ private:
 
     qreal _verticalAgjust = 0.0; ///< number representing the difference of the absolute and a relative positions(parent)
     qreal const _heightAdjust = 20.0;
+
+    ActorType _actorType;
 };
 
 #endif //DIAGRAMS_SEQUENCEDIAGRAMLIFELINE_H

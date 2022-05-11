@@ -290,7 +290,6 @@ AddSequenceConnectionCommand::~AddSequenceConnectionCommand() {
  *
  */
 void AddSequenceConnectionCommand::undo() {
-    qDebug() << "undooooooooooooooooo";
     graphicsScene->removeItem(actorConnection);
     graphicsScene->update();
 }

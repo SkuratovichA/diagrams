@@ -91,7 +91,6 @@ void SequenceDiagramLifeLine::paint(QPainter *painter, const QStyleOptionGraphic
         lines.push_back(QLineF(topPoint, fromPoint + QPointF(_adjust, 0)));
         topPoint = toPoint + QPointF(-_adjust, 0);
     }
-    qDebug() << "     fuck regions";
     // prepare for drawing a line
     painter->setPen(QPen(Qt::black, 1, Qt::DashLine));
     // add the last point.
@@ -127,22 +126,23 @@ void SequenceDiagramLifeLine::trackNodes() {
  *
  * @return
  */
-QList<QPair<qreal, qreal>> SequenceDiagramLifeLine::getAsynchronousRegionsAsIntervals(
-        QList<const SequenceConnectionItem *> &a
+QList<region_t> SequenceDiagramLifeLine::getAsynchronousRegionsAsIntervals(
+        QList<actorConnectionPair_t> &a
 ) {
     qDebug() << __FILE__;
 
     if (a.isEmpty()) {
-        return QList<QPair<qreal, qreal>>();
+        return QList<region_t>();
     }
     std::sort(a.begin(), a.end(),
-              [](const SequenceConnectionItem *a, const SequenceConnectionItem *b) {
-                  return a->y() < b->y();
+              [](actorConnectionPair_t &a, actorConnectionPair_t  &b) {
+                  return a.second->y() < b.second->y();
               }
     );
-    auto pairs = QList<QPair<qreal, qreal>>();
+
+    auto pairs = QList<region_t>();
     for (auto el: a) {
-        pairs.push_back(QPair<qreal, qreal>(el->y(), el->y() + 20));
+        pairs.push_back(region_t(el.second->y(), el.second->y() + 20));
     }
     qDebug() << "   there must be an array sorted in the ascending order";
     qDebug() << "   " << pairs;
@@ -156,26 +156,25 @@ QList<QPair<qreal, qreal>> SequenceDiagramLifeLine::getAsynchronousRegionsAsInte
  * @param a
  * @return
  */
-QList<QPair<qreal, qreal>> SequenceDiagramLifeLine::getSynchronousRegionsAsIntervals(
-        QList<const SequenceConnectionItem *> &a
+QList<region_t> SequenceDiagramLifeLine::getSynchronousRegionsAsIntervals(
+        QList<actorConnectionPair_t> &a
 ) {
-    // sort array
     qDebug() << __FILE__;
-
     if (a.isEmpty()) {
-        return QList<QPair<qreal, qreal>>();
+        return QList<region_t>();
     }
+    // sort an array in ascending order.
     std::sort(a.begin(), a.end(),
-              [](const SequenceConnectionItem *a, const SequenceConnectionItem *b) {
-                  return a->y() < b->y();
+              [](actorConnectionPair_t &a, const actorConnectionPair_t &b) {
+                  return a.second->y() < b.second->y();
               }
     );
-    auto pairs = QList<QPair<qreal, qreal>>();
+    auto pairs = QList<region_t>();
     for (uint32_t i = 0; i < a.size(); i++) {
         if (i % 2 == 0) {
-            pairs.push_back(QPair<qreal, qreal>(a[i]->y(), _height));
+            pairs.push_back(region_t(a[i].second->y(), _height));
         } else {
-            pairs[i - 1].second = a[i]->y();
+            pairs[i - 1].second = a[i].second->y();
         }
     }
     qDebug() << "   there must be an array sorted in the ascending order";
@@ -187,19 +186,19 @@ QList<QPair<qreal, qreal>> SequenceDiagramLifeLine::getSynchronousRegionsAsInter
  *
  * @return merged intervals
  */
-QList<QPair<qreal, qreal>> SequenceDiagramLifeLine::mergedActiveRegions() {
+QList<region_t> SequenceDiagramLifeLine::mergedActiveRegions() {
     qDebug() << __FILE__;
     qDebug() << "<";
-    auto sf = [](const QPair<qreal, qreal> &a, const QPair<qreal, qreal> &b) {
+    auto sf = [](const region_t &a, const region_t &b) {
         if (a.first < b.first) {return true;}
         if (a.first > b.first) {return false;}
         if (a.second < b.second) {return true;}
         return false;
     };
-    auto a = QList<QPair<qreal, qreal>>();
+    auto a = QList<region_t>();
 
     a.append(getSynchronousRegionsAsIntervals(_activeRegions));
-    a.append(getAsynchronousRegionsAsIntervals(_messagesRegionsNotSynchronous));
+    a.append(getAsynchronousRegionsAsIntervals(_async_replyMessages));
     if (a.isEmpty()) {
         return a;
     }
@@ -214,6 +213,8 @@ QList<QPair<qreal, qreal>> SequenceDiagramLifeLine::mergedActiveRegions() {
             i++;
         }
     }
+
+    // TODO: add creatins/deletions
     qDebug() << "    overlapped chunks done";
     qDebug() << ">";
     return a;
@@ -229,19 +230,19 @@ void SequenceDiagramLifeLine::addConnection(
 ) {
     qDebug() << "<";
     qDebug() << __FILE__;
-    if (connection->connectionType() == Synchronous) {
-        _activeRegions.push_back(connection);
-    } else {
-        _messagesRegionsNotSynchronous.push_back(connection);
-    }
-
-    switch (actorType) {
-        case Caller:
-            qDebug() << "   caller";
+    switch (connection->connectionType()) {
+        case Synchronous:
+            _activeRegions.push_back(actorConnectionPair_t(actorType, connection));
             break;
-
-        case Receiver:
-            qDebug() << "   receiver";
+        case Asynchronous:
+        case Reply:
+            _async_replyMessages.push_back(actorConnectionPair_t(actorType, connection));
+            break;
+        case Create:
+            _createMessages.push_back(actorConnectionPair_t(actorType, connection));
+            break;
+        case Delete:
+            _deleteMessages.push_back(actorConnectionPair_t(actorType, connection));
             break;
     }
     qDebug() << ">";
@@ -252,10 +253,14 @@ void SequenceDiagramLifeLine::addConnection(
  * @param connection
  */
 void SequenceDiagramLifeLine::removeConnection(const SequenceConnectionItem *connection) {
-    if (_activeRegions.contains(connection)) {
-        _activeRegions.removeOne(connection);
-    }
-    if (_messagesRegionsNotSynchronous.contains(connection)) {
-        _messagesRegionsNotSynchronous.removeOne(connection);
+    auto callerC = actorConnectionPair_t(Caller, connection);
+    auto receiverC = actorConnectionPair_t(Receiver, connection);
+    auto list = {_activeRegions, _async_replyMessages, _createMessages, _deleteMessages};
+    for (auto a: list) {
+        if (a.contains(callerC)) {
+            a.removeOne(callerC);
+        } else if (a.contains(receiverC)) {
+            a.removeOne(receiverC);
+        }
     }
 }
