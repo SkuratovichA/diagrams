@@ -29,7 +29,7 @@ void EditorScene::mousePressEvent(QGraphicsSceneMouseEvent *event) {
                 itemList.first()->parentItem() ;
     }
 
-    qDebug() << movingItem << "Andrei debug movein item";
+    //qDebug() << movingItem << "Andrei debug movein item";
 
     if (movingItem != nullptr && event->button() == Qt::LeftButton) {
         oldPos = movingItem->pos();
@@ -45,7 +45,7 @@ void EditorScene::mousePressEvent(QGraphicsSceneMouseEvent *event) {
 }
 
 void EditorScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
-    qDebug() << movingItem << "Andrei debug movein item released event";
+    //qDebug() << movingItem << "Andrei debug movein item released event";
     if (movingItem != nullptr && event->button() == Qt::LeftButton) {
         if (oldPos != movingItem->pos()) {
             emit itemMoved(qgraphicsitem_cast<QGraphicsItem *>(movingItem), oldPos);

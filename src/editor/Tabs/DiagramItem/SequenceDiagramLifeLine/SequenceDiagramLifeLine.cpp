@@ -174,7 +174,9 @@ QList<region_t> SequenceDiagramLifeLine::getSynchronousRegionsAsIntervals(
         if (i % 2 == 0) {
             pairs.push_back(region_t(a[i].second->y(), _height));
         } else {
-            pairs[i - 1].second = a[i].second->y();
+            auto tmp = pairs.takeLast();
+            tmp.second = a[i].second->y();
+            pairs.push_back(tmp);
         }
     }
     qDebug() << "   there must be an array sorted in the ascending order";

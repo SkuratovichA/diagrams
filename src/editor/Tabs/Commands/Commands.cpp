@@ -268,12 +268,15 @@ AddSequenceConnectionCommand::AddSequenceConnectionCommand(SequenceDiagramItem *
                                                            QUndoCommand *parent)
         : QUndoCommand(parent), graphicsScene(scene) {
 
-    actorConnection = new SequenceConnectionItem(fromNode, toNode, connectionType);
-    initialStartPosition = QPointF(100, 100);
-    qDebug() << "create a connection" << actorConnection;
-    setText(QObject::tr("Connect %1")
-                    .arg(createCommandString(static_cast<SequenceConnectionItem *>(actorConnection))));
-    scene->update();
+    //for (int i = 0; i < 100; i++) {
+        actorConnection = new SequenceConnectionItem(fromNode, toNode, connectionType);
+        initialStartPosition = QPointF(100, 100);
+        qDebug() << "create a connection" << actorConnection;
+        setText(QObject::tr("Connect %1")
+                        .arg(createCommandString(static_cast<SequenceConnectionItem *>(actorConnection))));
+        scene->update();
+    //}
+
 }
 
 /**

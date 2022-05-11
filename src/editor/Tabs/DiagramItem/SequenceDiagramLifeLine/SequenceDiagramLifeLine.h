@@ -110,8 +110,6 @@ private:
 
     qreal _verticalAgjust = 0.0; ///< number representing the difference of the absolute and a relative positions(parent)
     qreal const _heightAdjust = 20.0;
-
-    ActorType _actorType;
 };
 
 #endif //DIAGRAMS_SEQUENCEDIAGRAMLIFELINE_H
