@@ -302,12 +302,13 @@ void AddClassConnectionCommand::redo() {
  */
 AddSequenceConnectionCommand::AddSequenceConnectionCommand(SequenceDiagramItem *fromNode,
                                                            SequenceDiagramItem *toNode,
+                                                           messageParams *params,
                                                            ConnectionType connectionType,
                                                            QGraphicsScene *scene,
                                                            QUndoCommand *parent)
         : QUndoCommand(parent), graphicsScene(scene) {
 
-    actorConnection = new SequenceConnectionItem(fromNode, toNode, connectionType);
+    actorConnection = new SequenceConnectionItem(fromNode, toNode, params, connectionType);
     initialStartPosition = QPointF(100, 100);
     qDebug() << "create a connection" << actorConnection;
     setText(QObject::tr("Connect %1")

@@ -352,6 +352,7 @@ private:
     QAction *createMessage = nullptr;
     QAction *deleteMessage = nullptr;
     actorParams *createActor = nullptr;
+    messageParams *paramsMessage = nullptr;
     editorInterface *parentInterface = nullptr;
 };
 

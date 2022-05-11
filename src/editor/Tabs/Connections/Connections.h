@@ -187,6 +187,7 @@ public:
     SequenceConnectionItem(
             SequenceDiagramItem *nodeFrom,
             SequenceDiagramItem *nodeTo,
+            messageParams *params,
             ConnectionType connectionType
     );
 

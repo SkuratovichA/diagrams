@@ -232,9 +232,14 @@ void SequenceCanvas::addConnection() {
     if (index == ConnectionType::Undefined) {
         return;
     }
+
+    paramsMessage = new messageParams(0, 0, "TEXT", nodes.first->name(), nodes.second->name());
+
     _undoStack->push(
-            new AddSequenceConnectionCommand(nodes.first, nodes.second, index, editorScene)
+            new AddSequenceConnectionCommand(nodes.first, nodes.second, paramsMessage, index, editorScene)
     );
+
+    delete paramsMessage;
 }
 
 /**

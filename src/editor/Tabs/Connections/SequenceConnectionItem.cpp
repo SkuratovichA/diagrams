@@ -23,6 +23,7 @@ using namespace Connections;
  */
 SequenceConnectionItem::SequenceConnectionItem(SequenceDiagramItem *nodeFrom,
                                                SequenceDiagramItem *nodeTo,
+                                               messageParams *params,
                                                ConnectionType connectionType
 ) {
     _nodeFrom = nodeFrom;
