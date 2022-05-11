@@ -69,7 +69,7 @@ void SequenceDiagramLifeLine::paint(QPainter *painter, const QStyleOptionGraphic
     painter->drawPolygon(lineShaper());
 #endif
 
-    qDebug() << __FILE__;
+    //qDebug() << __FILE__;
     auto clr = _parent->color();
     clr.setAlpha(_parent->color().alpha() / 2);
     painter->setBrush(QBrush(clr));
@@ -80,7 +80,7 @@ void SequenceDiagramLifeLine::paint(QPainter *painter, const QStyleOptionGraphic
     auto topPoint = _parent->localCentre() + QPointF(0, _yFrom);
     auto olapd = mergedActiveRegions();
 
-    qDebug() << "     cretaed merged active regions";
+    //qDebug() << "     cretaed merged active regions";
     for (auto rect: olapd) {
         // adjust a rectangle and draw it
         QPointF fromPoint{_parent->localCentre() + QPointF(-_adjust, rect.first - 50)};
@@ -129,7 +129,7 @@ void SequenceDiagramLifeLine::trackNodes() {
 QList<region_t> SequenceDiagramLifeLine::getAsynchronousRegionsAsIntervals(
         QList<actorConnectionPair_t> &a
 ) {
-    qDebug() << __FILE__;
+    //qDebug() << __FILE__;
 
     if (a.isEmpty()) {
         return QList<region_t>();
@@ -144,8 +144,8 @@ QList<region_t> SequenceDiagramLifeLine::getAsynchronousRegionsAsIntervals(
     for (auto el: a) {
         pairs.push_back(region_t(el.second->y(), el.second->y() + 20));
     }
-    qDebug() << "   there must be an array sorted in the ascending order";
-    qDebug() << "   " << pairs;
+    //qDebug() << "   there must be an array sorted in the ascending order";
+    //qDebug() << "   " << pairs;
     return pairs;
 }
 
@@ -159,7 +159,7 @@ QList<region_t> SequenceDiagramLifeLine::getAsynchronousRegionsAsIntervals(
 QList<region_t> SequenceDiagramLifeLine::getSynchronousRegionsAsIntervals(
         QList<actorConnectionPair_t> &a
 ) {
-    qDebug() << __FILE__;
+    //qDebug() << __FILE__;
     if (a.isEmpty()) {
         return QList<region_t>();
     }
@@ -179,8 +179,8 @@ QList<region_t> SequenceDiagramLifeLine::getSynchronousRegionsAsIntervals(
             pairs.push_back(tmp);
         }
     }
-    qDebug() << "   there must be an array sorted in the ascending order";
-    qDebug() << "   " << pairs;
+    //qDebug() << "   there must be an array sorted in the ascending order";
+    //qDebug() << "   " << pairs;
     return pairs;
 }
 
@@ -189,8 +189,8 @@ QList<region_t> SequenceDiagramLifeLine::getSynchronousRegionsAsIntervals(
  * @return merged intervals
  */
 QList<region_t> SequenceDiagramLifeLine::mergedActiveRegions() {
-    qDebug() << __FILE__;
-    qDebug() << "<";
+    //qDebug() << __FILE__;
+    //qDebug() << "<";
     auto sf = [](const region_t &a, const region_t &b) {
         if (a.first < b.first) {return true;}
         if (a.first > b.first) {return false;}
@@ -205,7 +205,7 @@ QList<region_t> SequenceDiagramLifeLine::mergedActiveRegions() {
         return a;
     }
     std::sort(a.begin(), a.end(), sf);
-    qDebug() << "    a sorted";
+    //qDebug() << "    a sorted";
     // remove overlapped intervals
     for (int i = 0; i < a.size() - 1;) {
         if (a[i].second >= a[i + 1].second || a[i].second >= a[i + 1].first) {
@@ -217,8 +217,8 @@ QList<region_t> SequenceDiagramLifeLine::mergedActiveRegions() {
     }
 
     // TODO: add creatins/deletions
-    qDebug() << "    overlapped chunks done";
-    qDebug() << ">";
+    //qDebug() << "    overlapped chunks done";
+    //qDebug() << ">";
     return a;
 }
 
@@ -230,8 +230,8 @@ void SequenceDiagramLifeLine::addConnection(
         SequenceConnectionItem *connection,
         ActorType actorType
 ) {
-    qDebug() << "<";
-    qDebug() << __FILE__;
+    //qDebug() << "<";
+    //qDebug() << __FILE__;
     switch (connection->connectionType()) {
         case Synchronous:
             _activeRegions.push_back(actorConnectionPair_t(actorType, connection));
@@ -247,7 +247,7 @@ void SequenceDiagramLifeLine::addConnection(
             _deleteMessages.push_back(actorConnectionPair_t(actorType, connection));
             break;
     }
-    qDebug() << ">";
+    //qDebug() << ">";
 }
 
 /**

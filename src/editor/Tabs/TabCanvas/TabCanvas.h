@@ -112,7 +112,7 @@ public:
                 rest = dynamic_cast<T *>(items.first());
                 break;
             default:
-                qDebug() << "     " << items.count() << " elements to select.";
+                //qDebug() << "     " << items.count() << " elements to select.";
                 items.removeFirst();
                 rest = dynamic_cast<T *>(items.first());
         }
@@ -206,9 +206,9 @@ public:
 public slots:
 
     void moveEntity(QGraphicsItem *movedItem, const QPointF &startPosition) {
-        qDebug() << "<" << __FILE__;
-        qDebug() << "movindg item: " << movedItem << " from the starting position: " << startPosition;
-        qDebug(">");
+        //qDebug() << "<" << __FILE__;
+        //qDebug() << "movindg item: " << movedItem << " from the starting position: " << startPosition;
+        //qDebug(">");
         _undoStack->push(new MoveCommand(movedItem, startPosition));
     }
 

@@ -29,7 +29,7 @@ SequenceConnectionItem::SequenceConnectionItem(SequenceDiagramItem *nodeFrom,
     _nodeTo = nodeTo;
     _connectionType = connectionType;
 
-    qDebug() << __FILE__;
+    //qDebug() << __FILE__;
     qDebug() << "   creating a connection" << _nodeFrom << _nodeTo;
     _nodeFrom->addConnection(this, Caller);
     _nodeTo->addConnection(this, Receiver);
@@ -40,8 +40,8 @@ SequenceConnectionItem::SequenceConnectionItem(SequenceDiagramItem *nodeFrom,
     setY(200);
 
     trackNodes();
-    qDebug() << "one connection";
-    qDebug() << __FILE__ << "   connection created>";
+    //qDebug() << "one connection";
+    //qDebug() << __FILE__ << "   connection created>";
 }
 
 /**
@@ -88,9 +88,10 @@ void SequenceConnectionItem::trackNodes() {
  * @return
  */
 QRectF SequenceConnectionItem::lineShaper() const {
+    //qDebug() << "line shaper";
     auto rect = QRectF(
-            QPointF(std::min(_nodeTo->centre().x() + 10, _nodeFrom->centre().x() - 10), -20),
-            QPointF(std::max(_nodeTo->centre().x() + 10, _nodeFrom->centre().x() - 10), 20)
+            QPointF(std::min(_nodeTo->centre().x() - 10, _nodeFrom->centre().x() - 10), -20),
+            QPointF(std::max(_nodeTo->centre().x() + 10, _nodeFrom->centre().x() + 10), 20)
     );
     //qDebug() << "rect = " << rect;
     return rect;
@@ -114,18 +115,19 @@ QPainterPath SequenceConnectionItem::shape() const {
  */
 void SequenceConnectionItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) {
 #if DEBUG
-    painter->setPen(QPen(QColor(0, 0, 0, 120), .5, Qt::DashLine));
     painter->drawPolygon(lineShaper());
-    //painter->strokePath(shape(), QPen(QColor(0, 0, 0, 120), 1.5, Qt::DashLine));
-
-    auto rect = lineShaper();
-    auto l = (rect.bottomLeft() + rect.topLeft()) / 2;
-    auto r = (rect.bottomRight() + rect.topRight()) / 2;
-    painter->setPen(QPen(QColor(255, 0, 0, 255), .3, Qt::SolidLine));
-    painter->drawLine(l, r);
-
-    painter->setPen(QPen(QColor(0, 255, 0, 255), .3, Qt::DashDotDotLine));
-    painter->drawLine(line());
+//    painter->setPen(QPen(QColor(0, 0, 0, 120), .5, Qt::DashLine));
+//    painter->drawPolygon(lineShaper());
+//    //painter->strokePath(shape(), QPen(QColor(0, 0, 0, 120), 1.5, Qt::DashLine));
+//
+//    auto rect = lineShaper();
+//    auto l = (rect.bottomLeft() + rect.topLeft()) / 2;
+//    auto r = (rect.bottomRight() + rect.topRight()) / 2;
+//    painter->setPen(QPen(QColor(255, 0, 0, 255), .3, Qt::SolidLine));
+//    painter->drawLine(l, r);
+//
+//    painter->setPen(QPen(QColor(0, 255, 0, 255), .3, Qt::DashDotDotLine));
+//    painter->drawLine(line());
 #endif
 
     painter->setRenderHint(QPainter::Antialiasing, true);
@@ -166,16 +168,37 @@ void SequenceConnectionItem::paint(QPainter *painter, const QStyleOptionGraphics
  */
 void
 SequenceConnectionItem::paintSynchronous(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) {
-    qDebug() << "print synchronous";
+    qDebug() << "print synchronous" << _arrowAngle;
     auto arrowP1 = linend + QPointF(sin(_arrowAngle + M_PI - M_PI / 3) * scale,
                                     cos(_arrowAngle + M_PI - M_PI / 3) * scale);
     auto arrowP2 = linend + QPointF(sin(_arrowAngle + M_PI / 3) * scale,
                                     cos(_arrowAngle + M_PI / 3) * scale);
-    _arrowHead << linend << arrowP1 << arrowP2;
-    painter->setPen(QPen(QColor(0, 0, 0, 240), 1.0, Qt::SolidLine));
-    painter->drawLine(line());
+
+    //_arrowHead << linend << arrowP1 << arrowP2;
+    QPointF a = QPointF(linend.x() - 20, linend.y() + 10);
+    qDebug() << "arrow head" << cLine.p1() << cLine.p2();
+    QPolygonF _arrowHead_p;
+
+    QPointF pUp;
+    QPointF pDown;
+    if (cLine.p2().x() <= cLine.p1().x()) {
+        pUp = QPointF(cLine.p2().x() + 10, cLine.p2().y() + 8);
+        pDown = QPointF(cLine.p2().x() + 10, cLine.p2().y() - 8);
+    }
+    else {
+        pUp = QPointF(cLine.p2().x() - 10, cLine.p2().y() + 8);
+        pDown = QPointF(cLine.p2().x() - 10, cLine.p2().y() - 8);
+    }
+
+    //_arrowHead_p << cLine.p2() << QPointF(cLine.p2().) << arrowP2 << cLine.p2() << cLine.p1();
+    _arrowHead_p << cLine.p2()  << pUp << pDown << cLine.p2() << cLine.p1();
+    painter->setPen(QPen(QColor(Qt::black), 1.0, Qt::SolidLine));
+    //painter->drawLine(line ());
+    //painter->drawLine(cLine);
     painter->setBrush(_color);
-    painter->drawPolygon(_arrowHead);
+
+    painter->drawPolygon(_arrowHead_p);
+    //painter->drawPolygon(_arrowHead);
 }
 
 /**
