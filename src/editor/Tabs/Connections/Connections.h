@@ -29,8 +29,6 @@ private:
     QGraphicsItem *_parent;
 };
 
-
-
 /**
  *
  */
@@ -92,15 +90,15 @@ public:
         rightNum->setPos(pos);
     }
 
-    msgText* getLeftNum() const {
+    msgText *getLeftNum() const {
         return leftNum;
     }
 
-    msgText* getRightNum() const {
+    msgText *getRightNum() const {
         return rightNum;
     }
 
-    msgText* getMsg() const {
+    msgText *getMsg() const {
         return msg;
     }
 
@@ -164,59 +162,99 @@ private:
     msgText *rightNum;
 };
 
-/**
- *
- */
-class SequenceConnectionItem : public QGraphicsLineItem {
-public:
+namespace Connections {
     enum ConnectionType {
         Synchronous,
         Asynchronous,
         Reply,
         Create,
         Delete,
+        Undefined,
     };
+
     enum ActorType {
         Caller,
         Receiver
     };
+};
+using namespace Connections;
 
+/**
+ *
+ */
+class SequenceConnectionItem : public QGraphicsLineItem {
 public:
     SequenceConnectionItem(
-            SequenceDiagramItem *fromNode,
-            SequenceDiagramItem *toNode,
-            ConnectionType connectionType);
+            SequenceDiagramItem *nodeFrom,
+            SequenceDiagramItem *nodeTo,
+            ConnectionType connectionType
+    );
 
     ~SequenceConnectionItem();
 
 public:
-    [[nodiscard]] QColor color() const;
+
     void trackNodes();
 
-    [[nodiscard]] SequenceDiagramItem *fromNode() const {
+    [[nodiscard]] ConnectionType connectionType() const {
+        return _connectionType;
+    };
+
+    [[nodiscard]] SequenceDiagramItem *nodeFrom() const {
         return _nodeFrom;
     };
 
-    [[nodiscard]] SequenceDiagramItem *toNode() const {
+    [[nodiscard]] SequenceDiagramItem *nodeTo() const {
         return _nodeTo;
     };
 
+    ConnectionType type() {
+        return _connectionType;
+    }
+
+    void setLinEnd() {
+        if (std::abs(cLine.p2().x() - cLine.p1().x()) <= 15) {
+            return;
+        }
+
+//        linend = cLine.p2().x() < cLine.p1().x() ? cLine.p2() + QPointF(10, 0) :
+//                 cLine.p2() - QPointF(10 ,0);
+//
+//        if (cLine.p2().x() < cLine.p1().x()) {
+//            pUp = QPointF(linend.x() + 13, linend.y() + 8);
+//            pDown = QPointF(linend.x() + 13, linend.y() - 8);
+//        }
+//        else {
+//            pUp = QPointF(linend.x() - 13, linend.y() + 8);
+//            pDown = QPointF(linend.x() - 13, linend.y() - 8);
+//        }
+    }
+
 public:
+    QRectF lineShaper() const;
+    QPainterPath shape() const override;
+    QVariant itemChange(GraphicsItemChange change, const QVariant &value) override;
+    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
+
+private:
     void paintSynchronous(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
     void paintAsynchronous(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
     void paintReply(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
     void paintCreate(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
     void paintDelete(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
 
-
-public:
-    QVariant itemChange(GraphicsItemChange change, const QVariant &value) override;
-    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
-
-
 private:
-    SequenceDiagramItem *_nodeFrom;
-    SequenceDiagramItem *_nodeTo;
+    QPointF pEnd;
+    QPointF pUp;
+    QPointF pDown;
+    QLineF cLine;
+    qreal posX;
+    qreal scale = 20;
+    QColor _color = QColor(0,0,0,200);
     ConnectionType _connectionType;
+    SequenceDiagramItem *_nodeTo;
+    SequenceDiagramItem *_nodeFrom;
+
 };
+
 #endif //DIAGRAMS_CONNECTIONS_H

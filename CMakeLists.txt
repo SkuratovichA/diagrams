@@ -27,7 +27,7 @@ add_executable(proj
         src/editor/Tabs/DiagramItem/DiagramItem.cpp
         src/editor/Tabs/EditorScene/EditorScene.cpp
         src/editor/Tabs/Commands/Commands.cpp
-        src/editor/Tabs/Connections/ClassConnectinos.cpp
+        src/editor/Tabs/Connections/ClassConnections.cpp
         src/editor/Tabs/TabCanvas/ItemsBuffer/Itemsbuffer.cpp
         src/editor/Tabs/FillItems/ObjectParams.cpp
         src/editor/Tabs/TabCanvas/SequenceCanvas.cpp
@@ -35,7 +35,7 @@ add_executable(proj
         src/editor/Backend/Parse.cpp
         src/editor/Backend/SeqDiagram.cpp
         src/editor/Backend/json.hpp
-        src/editor/Tabs/Connections/SequenceConnections.cpp
+        src/editor/Tabs/Connections/SequenceConnectionItem.cpp
         src/editor/Tabs/DiagramItem/ClassDiagramItem.cpp
         src/editor/Tabs/DiagramItem/SequenceDiagramItem.cpp
         src/editor/Tabs/DiagramItem/SequenceDiagramLifeLine/SequenceDiagramLifeLine.cpp

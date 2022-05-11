@@ -73,10 +73,7 @@ bool SequenceCanvas::getStringRepresentation(Program &prg) {
 
     dgrmSeq_t obj;
 
-    qDebug() << "i am here";
-
     for (auto x : getItems<SequenceDiagramItem>()) {
-        qDebug() << "help num item";
         buf.fillActorItems(x);
     }
 
@@ -96,7 +93,6 @@ bool SequenceCanvas::getStringRepresentation(Program &prg) {
     prg.diagramSequence.push_back(obj);
 
     // add for sequence diagram
-
     return true;
 }
 
@@ -188,13 +184,11 @@ void SequenceCanvas::deleteMessage_triggered() {
  * @param classDiagramItemParent pointer to an object from a class diagram scene
  */
 void SequenceCanvas::addEntity(ClassDiagramItem *classDiagramItemParent) {
-    //qDebug() << "got name: in constructor " << classDiagramItemParent->name();
     QPoint point = generateCoords();
 
     createActor = new actorParams(point.x(), point.y(), classDiagramItemParent->name(),
                                   classDiagramItemParent->color());
 
-    //qDebug() << point.x() << point.y() << classDiagramItemParent->name() << classDiagramItemParent->color();
     _undoStack->push(
             new AddSequenceCommand(editorScene, createActor, classDiagramItemParent)
     );
@@ -210,15 +204,22 @@ void SequenceCanvas::addConnection() {
     scd.exec();
 
     auto nodes = getSelectedDiagramItems<SequenceDiagramItem>();
+
     auto emptySelect =
             (nodes == QPair<SequenceDiagramItem *, SequenceDiagramItem *>())
             || nodes.first == nodes.second;
     if (emptySelect) {
         return;
     }
-
+    if (nodes.first == nullptr || nodes.second == nullptr) {
+        return;
+    }
+    auto index = scd.messageType();
+    if (index == ConnectionType::Undefined) {
+        return;
+    }
     _undoStack->push(
-            new AddSequenceConnectionCommand(nodes.first, nodes.second, scd.messageType(), editorScene)
+            new AddSequenceConnectionCommand(nodes.first, nodes.second, index, editorScene)
     );
 }
 
