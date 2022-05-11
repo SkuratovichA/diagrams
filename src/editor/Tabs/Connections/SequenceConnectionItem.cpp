@@ -135,6 +135,11 @@ void SequenceConnectionItem::paint(QPainter *painter, const QStyleOptionGraphics
 //        painter->setPen(QPen(_color.darker(), 2.5, Qt::SolidLine));
 //    }
     cLine = line();
+
+    if (std::abs(cLine.p2().x() - cLine.p1().x()) <= 15) {
+        return;
+    }
+
     linend = cLine.p2();
     _arrowAngle = std::atan2(cLine.dy(), -cLine.dx());
     switch (_connectionType) {
@@ -181,17 +186,21 @@ SequenceConnectionItem::paintSynchronous(QPainter *painter, const QStyleOptionGr
 
     QPointF pUp;
     QPointF pDown;
-    if (cLine.p2().x() <= cLine.p1().x()) {
-        pUp = QPointF(cLine.p2().x() + 10, cLine.p2().y() + 8);
-        pDown = QPointF(cLine.p2().x() + 10, cLine.p2().y() - 8);
+    QPointF end;
+    if (cLine.p2().x() < cLine.p1().x()) {
+        end = QPointF(cLine.p2().x() + 10, cLine.p2().y());
+        pUp = QPointF(end.x() + 13, end.y() + 8);
+        pDown = QPointF(end.x() + 13, end.y() - 8);
     }
     else {
-        pUp = QPointF(cLine.p2().x() - 10, cLine.p2().y() + 8);
-        pDown = QPointF(cLine.p2().x() - 10, cLine.p2().y() - 8);
+        end = QPointF(cLine.p2().x() - 10, cLine.p2().y());
+        pUp = QPointF(end.x() - 13, end.y() + 8);
+        pDown = QPointF(end.x() - 13, end.y() - 8);
     }
 
     //_arrowHead_p << cLine.p2() << QPointF(cLine.p2().) << arrowP2 << cLine.p2() << cLine.p1();
-    _arrowHead_p << cLine.p2()  << pUp << pDown << cLine.p2() << cLine.p1();
+//    _arrowHead_p << cLine.p2()  << pUp << pDown << cLine.p2() << cLine.p1();
+    _arrowHead_p << end  << pUp << pDown << end << cLine.p1();
     painter->setPen(QPen(QColor(Qt::black), 1.0, Qt::SolidLine));
     //painter->drawLine(line ());
     //painter->drawLine(cLine);
