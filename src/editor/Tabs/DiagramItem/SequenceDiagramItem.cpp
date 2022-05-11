@@ -77,11 +77,11 @@ QVariant SequenceDiagramItem::itemChange(
         return QPointF(std::max<qreal>(-10, value.toPointF().x()), std::max<qreal>(-10, pos().y()));
     }
     if (change == ItemPositionHasChanged) {
-        qDebug() << "<tracking connection nodes";
+        //qDebug() << "<tracking connection nodes";
         for (auto c : _connections) {
             c->trackNodes();
         }
-        qDebug() << "connections tracked>";
+        //qDebug() << "connections tracked>";
     }
     return QGraphicsItem::itemChange(change, value);
 }
@@ -94,12 +94,12 @@ QVariant SequenceDiagramItem::itemChange(
 void SequenceDiagramItem::addConnection(
         SequenceConnectionItem *connection,
         ActorType actorType) {
-    qDebug() << "<adding connection gggggggggggg";
-    qDebug() << "uffff";
-    //qDebug() << _connections;
+    qDebug() << "<adding connection " << _connections;
+    //qDebug() << connection;
     _connections.insert(connection);
-    qDebug() << "insert connection";
+    qDebug() << "after insert connection";
     assert( _lifeLine != nullptr && "lifeLine must not be null");
+    qDebug() << "after fucking assert";
     _lifeLine->addConnection(connection, actorType);
     qDebug() << "connection added>";
 }

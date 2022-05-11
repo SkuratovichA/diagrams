@@ -30,7 +30,7 @@ SequenceConnectionItem::SequenceConnectionItem(SequenceDiagramItem *nodeFrom,
     _connectionType = connectionType;
 
     qDebug() << __FILE__;
-    qDebug() << "   creating a connection";
+    qDebug() << "   creating a connection" << _nodeFrom << _nodeTo;
     _nodeFrom->addConnection(this, Caller);
     _nodeTo->addConnection(this, Receiver);
 
