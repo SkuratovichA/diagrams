@@ -69,7 +69,6 @@ bool SequenceCanvas::createFromFile(dgrmSeq_t seq) {
 bool SequenceCanvas::getStringRepresentation(Program &prg) {
     //dgrm_seq actors;
     std::vector<Action> actions;
-    std::vector<Activate> activates;
     ItemsBuffer buf;
 
     dgrmSeq_t obj;

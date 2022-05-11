@@ -141,5 +141,17 @@ public:
     //~actorParams() = default;
 };
 
+class messageParams {
+public:
+    messageParams(qreal x, qreal y, QString msg, QString nameFrom, QString nameTo);
+
+private:
+    qreal _x;
+    qreal _y;
+    QString _msg;
+    QString _nameFrom;
+    QString _nameTo;
+};
+
 
 #endif //DIAGRAMS_OBJECTPARAMS_H

@@ -21,22 +21,14 @@ public:
     std::string to;
     std::string arrow;
     std::string msg;
-
-    void pushConnection(const json el);
-};
-
-class Activate {
-public:
-    std::string who;
     std::vector<double> coords;
 
-    void pushActivate(const json el);
+    void pushConnection(const json el);
 };
 
 typedef struct dgrm_seq {
     std::vector<Actor> actors;
     std::vector<Action> actions;
-    std::vector<Activate> activates;
 } dgrmSeq_t;
 
 class DiagramSequence {
@@ -45,11 +37,7 @@ public:
 
     void fillStructureAction(const json el, dgrmSeq_t& o);
 
-    void fillStructureActivate(const json el, dgrmSeq_t& o);
-
     void addActorToFile(json& j, std::vector<Actor> ac);
 
     void addActionToFile(json& j, std::vector<Action> ac);
-
-    void addActivateToFile(json& j, std::vector<Activate> ac);
 };

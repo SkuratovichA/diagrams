@@ -18,15 +18,6 @@ void Action::pushConnection(const json el) {
 }
 
 /**
- * Set values to the who item from json file.
- *
- * @param el node of a json file with name of person
- */
-void Activate::pushActivate(const json el) {
-    this->who = el.at("who").get<std::string>();
-}
-
-/**
  * Create elements of Actor type, fill necessary items and push to the vector
  * of all actors for one sequence diagram.
  *
@@ -58,25 +49,9 @@ void DiagramSequence::fillStructureActor(const json el, dgrmSeq_t& o) {
 void DiagramSequence::fillStructureAction(const json el, dgrmSeq_t& o) {
     for (auto x : el) {
         Action tmp;
+        Program::pushCoords(x.at("coords"), tmp.coords);
         tmp.pushConnection(x);
         o.actions.push_back(tmp);
-    }
-}
-
-/**
- * Create elements of Activate type, fill necessary items and push to the vector
- * of all activations for one sequence diagram.
- *
- * @param el node of a json file with all activations
- * for a sequence diagram
- * @param o structure of a sequence diagram
- */
-void DiagramSequence::fillStructureActivate(const json el, dgrmSeq_t& o) {
-    for (auto x : el) {
-        Activate tmp;
-        Program::pushCoords(x.at("coords"), tmp.coords);
-        tmp.pushActivate(x);
-        o.activates.push_back(tmp);
     }
 }
 
@@ -107,7 +82,7 @@ void DiagramSequence::addActorToFile(json& j, std::vector<Actor> ac) {
                             {"x" , x.coords[0]},
                             {"y" , x.coords[1]}
                     }
-            },
+            }
         };
     }
 }
@@ -128,31 +103,13 @@ void DiagramSequence::addActionToFile(json& j, std::vector<Action> ac) {
             {"from" ,  x.from },
             {"to" , x.to },
             {"arrow" , x.arrow },
-            {"msg", x.msg }
-        };
-    }
-}
-
-/**
- * Write the data about all activations from Activate structure
- * to json file.
- *
- * @param j json file
- * @param ac vector of the activations for sequence diagram
- */
-void DiagramSequence::addActivateToFile(json& j, std::vector<Activate> ac) {
-    int i = 0;
-
-    for (auto& x : ac) {
-        j["activates"][i++] =
-        {
+            {"msg", x.msg },
             {"coords",
-                {
-                    {"x" , x.coords[0]},
-                    {"y" , x.coords[1]}
-                }
-            },
-            {"who" , x.who }
+                    {
+                            {"x" , x.coords[0]},
+                            {"y" , x.coords[1]}
+                    }
+            }
         };
     }
 }

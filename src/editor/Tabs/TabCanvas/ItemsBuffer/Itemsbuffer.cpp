@@ -122,6 +122,29 @@ void ItemsBuffer::addActorItems(Actor act) {
  *
  * @param item
  */
+void ItemsBuffer::fillMessageItems(SequenceConnectionItem *item) {
+    messageParams *ptr;
+
+    ptr = new messageParams(item->x(), item->y(),
+                          item->_head->toPlainText(), item->color());
+    pushMessageItem(ptr);
+}
+
+void ItemsBuffer::addMessageItems(Action action) {
+    messageParams *a;
+
+    a = new messageParams(action.coords[0], action.coords[1],
+                          QString::fromStdString(action.msg),
+                          QString::fromStdString(action.from),
+                          QString::fromStdString(action.to));
+
+    pushMessageItem(a);
+}
+
+/**
+ *
+ * @param item
+ */
 void ItemsBuffer::fillActorItems(SequenceDiagramItem *item) {
     actorParams *ptr;
 
