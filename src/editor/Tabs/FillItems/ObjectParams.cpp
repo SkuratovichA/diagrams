@@ -101,10 +101,11 @@ actorParams::actorParams(qreal x, qreal y, QString name, QColor color)
     : objectParams(x, y, name, color) {
 };
 
-messageParams::messageParams(qreal x, qreal y, QString msg, QString nameFrom, QString nameTo) {
+messageParams::messageParams(qreal x, qreal y, QString msg, QString nameFrom, QString nameTo, int type) {
     _x = x;
     _y = y;
     _msg = msg;
     _nameFrom = nameFrom;
     _nameTo = nameTo;
+    _type = type;
 }

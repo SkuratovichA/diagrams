@@ -22,6 +22,7 @@ public:
     std::string arrow;
     std::string msg;
     std::vector<double> coords;
+    int type;
 
     void pushConnection(const json el);
 };

@@ -127,7 +127,8 @@ void ItemsBuffer::fillMessageItems(SequenceConnectionItem *item) {
 
     ptr = new messageParams(item->x(), item->y(),
                           item->getText()->toPlainText(),
-                          item->nodeFrom()->name(), item->nodeTo()->name());
+                          item->nodeFrom()->name(), item->nodeTo()->name(),
+                          item->type());
     pushMessageItem(ptr);
 }
 
@@ -137,7 +138,8 @@ void ItemsBuffer::addMessageItems(Action action) {
     a = new messageParams(action.coords[0], action.coords[1],
                           QString::fromStdString(action.msg),
                           QString::fromStdString(action.from),
-                          QString::fromStdString(action.to));
+                          QString::fromStdString(action.to),
+                          action.type);
 
     pushMessageItem(a);
 }

@@ -143,7 +143,7 @@ public:
 
 class messageParams {
 public:
-    messageParams(qreal x, qreal y, QString msg, QString nameFrom, QString nameTo);
+    messageParams(qreal x, qreal y, QString msg, QString nameFrom, QString nameTo, int type);
 
     qreal x() {
         return _x;
@@ -170,12 +170,18 @@ public:
         v.push_back(y());
     }
 
+    int type() {
+        return _type;
+    }
+
+
 private:
     qreal _x;
     qreal _y;
     QString _msg;
     QString _nameFrom;
     QString _nameTo;
+    int _type;
 };
 
 

@@ -15,6 +15,7 @@ void Action::pushConnection(const json el) {
     this->arrow = el.at("arrow").get<std::string>();
     this->to    = el.at("to"   ).get<std::string>();
     this->msg   = el.at("msg"  ).get<std::string>();
+    this->type  = el.at("type" ).get<int>();
 }
 
 /**
@@ -104,6 +105,7 @@ void DiagramSequence::addActionToFile(json& j, std::vector<Action> ac) {
             {"to" , x.to },
             {"arrow" , x.arrow },
             {"msg", x.msg },
+            {"type", x.type},
             {"coords",
                     {
                             {"x" , x.coords[0]},

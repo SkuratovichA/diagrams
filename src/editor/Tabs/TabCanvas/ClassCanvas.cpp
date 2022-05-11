@@ -94,7 +94,8 @@ bool ClassCanvas::createFromFile(dgrmClass_t cls) {
             return false;
         }
 
-        ClassConnectionItem *item = new ClassConnectionItem(from, to, x, static_cast<ClassConnectionItem::ClassConnectionType>(x->type()), x->order());
+        ClassConnectionItem *item = new ClassConnectionItem(from, to, x,
+                        static_cast<ClassConnectionItem::ClassConnectionType>(x->type()), x->order());
         editorScene->addItem(item);
         editorScene->update();
     }

@@ -52,16 +52,40 @@ bool SequenceCanvas::createFromFile(dgrmSeq_t seq) {
         buf.addActorItems(x);
     }
 
-    for (auto x : seq.actions) {
-        buf.addMessageItems(x);
-    }
-
     for (auto x : buf.sequenceItems()) {
         SequenceDiagramItem *diagramItem = new SequenceDiagramItem(x);
         editorScene->addItem(diagramItem);
         diagramItem->setPos(x->x(), x->y());
         editorScene->update();
     }
+
+    QList<SequenceDiagramItem *>items = getItems<SequenceDiagramItem>();
+    for (auto x : seq.actions) {
+        buf.addMessageItems(x);
+    }
+
+    SequenceDiagramItem *from;
+    SequenceDiagramItem *to;
+    for (auto x: buf.messageItems()) {
+        for (auto y: items) {
+            if (x->nameFrom() == y->name()) {
+                from = y;
+            }
+            if (x->nameTo() == y->name()) {
+                to = y;
+            }
+        }
+
+        if (from == nullptr || to == nullptr) {
+            return false;
+        }
+
+        SequenceConnectionItem *item = new SequenceConnectionItem(from, to, x,
+                              static_cast<Connections::ConnectionType>(x->type()));
+        editorScene->addItem(item);
+        editorScene->update();
+    }
+
 
     return true;
 }
@@ -233,7 +257,7 @@ void SequenceCanvas::addConnection() {
         return;
     }
 
-    paramsMessage = new messageParams(0, 0, "TEXT", nodes.first->name(), nodes.second->name());
+    paramsMessage = new messageParams(0, 0, "TEXT", nodes.first->name(), nodes.second->name(), index);
 
     _undoStack->push(
             new AddSequenceConnectionCommand(nodes.first, nodes.second, paramsMessage, index, editorScene)
