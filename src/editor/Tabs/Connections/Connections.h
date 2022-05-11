@@ -187,11 +187,11 @@ public:
         return _connectionType;
     };
 
-    [[nodiscard]] SequenceDiagramItem *fromNode() const {
+    [[nodiscard]] SequenceDiagramItem *nodeFrom() const {
         return _nodeFrom;
     };
 
-    [[nodiscard]] SequenceDiagramItem *toNode() const {
+    [[nodiscard]] SequenceDiagramItem *nodeTo() const {
         return _nodeTo;
     };
 

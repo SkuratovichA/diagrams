@@ -73,17 +73,13 @@ SequenceDiagramItem::SequenceDiagramItem(
 QVariant SequenceDiagramItem::itemChange(
         GraphicsItemChange change,
         const QVariant &value) {
-    //qDebug() << __FILE__ << " " << __LINE__;
     if (change == ItemPositionChange) {
-        //qDebug() << "    item position change";
         return QPointF(std::max<qreal>(-10, value.toPointF().x()), std::max<qreal>(-10, pos().y()));
     }
     if (change == ItemPositionHasChanged) {
-        //qDebug() << "    tracking connection nodes";
         for (auto c : _connections) {
             c->trackNodes();
         }
-        //qDebug() << "    connections tracked>";
     }
     return QGraphicsItem::itemChange(change, value);
 }
@@ -95,14 +91,15 @@ QVariant SequenceDiagramItem::itemChange(
 void SequenceDiagramItem::addConnection(
         SequenceConnectionItem *connection,
         ActorType actorType) {
-    //qDebug() << __FILE__ << " " << __LINE__;
-    //qDebug() << "   adding connection";
-    //qDebug() << "   " << connection;
-    //qDebug() << "   " << _connections;
+    qDebug() << __FILE__ << " " << __LINE__;
+    qDebug() << "   adding connection";
+    qDebug() << "   " << connection;
+    if (_removedConnections.contains(connection)) {
+        qDebug() << "    --* get this connection from /dev/null :)";
+        _removedConnections.remove(connection);
+    }
     _connections.insert(connection);
-    assert( _lifeLine != nullptr && "lifeLine must not be null");
     _lifeLine->addConnection(connection, actorType);
-    //qDebug() << "    connection added";
 }
 
 void SequenceDiagramItem::trackNodes() {
@@ -115,9 +112,10 @@ void SequenceDiagramItem::trackNodes() {
  * @param connection message arrow between objects
  */
 void SequenceDiagramItem::removeConnection(SequenceConnectionItem *connection) {
-    //qDebug() << __FILE__ << " " << __LINE__;
-    //qDebug() << "   removing connection";
-    //qDebug() << "   removing << "<< connection <<"this from " << _connections;
-    _lifeLine->removeConnection(connection);
+    qDebug() << __FILE__ << " " << __LINE__;
+    qDebug() << "   removing connection";
+    qDebug() << "   removing << "<< connection <<"this from " << _connections;
+    _removedConnections.insert(connection);
     _connections.remove(connection);
+    _lifeLine->removeConnection(connection);
 }

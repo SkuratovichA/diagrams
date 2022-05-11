@@ -140,7 +140,7 @@ QList<region_t> SequenceDiagramLifeLine::getAsynchronousRegionsAsIntervals(
     );
     auto pairs = QList<region_t>();
     for (auto el: a) {
-        pairs.push_back(region_t(el.second->y(), el.second->y() + 20));
+        pairs.push_back(region_t(el.second->y() - _actRegLen / 2 * (el.first == Caller), el.second->y() + _actRegLen));
     }
     qDebug() << "   there must be an array sorted in the ascending order";
     qDebug() << "   " << pairs;
@@ -163,7 +163,8 @@ QList<region_t> SequenceDiagramLifeLine::getSynchronousRegionsAsIntervals(
     auto pairs = QList<region_t>();
     for (uint32_t i = 0; i < a.size(); i++) {
         if (i % 2 == 0) {
-            pairs.push_back(region_t(a[i].second->y(), _height));
+            // add an adjustment if type is caller.
+            pairs.push_back(region_t(a[i].second->y() - _actRegLen / 2 * (a[i].first == Caller), _height));
         } else {
             auto tmp = pairs.takeLast();
             tmp.second = a[i].second->y();
@@ -218,33 +219,33 @@ void SequenceDiagramLifeLine::updateActiveRegions() {
         return;
     }
     std::sort(_mergedActiveRegions.begin(), _mergedActiveRegions.end(), sf);
-    qDebug() << "    <_mergedActiveRegions> sorted";
+    qDebug() << "    <_mergedActiveRegions> sorted" << _mergedActiveRegions;
 
     // if object is not cretaed, yet, dont activate the connection.
     auto createConstraintList = getFirstCreateRegion();
     bool deleteCannotBeUsed = createConstraintList.isEmpty();
     auto startPosition = deleteCannotBeUsed ? 0 : createConstraintList.first();
-
     auto deleteConstraintList = getLastDeleteRegion();
     auto deletePosition = deleteConstraintList.isEmpty() ? _height : deleteConstraintList.first();
-    qDebug() << "     messages <create> added";
+    qDebug() << "     messages <create> added, position: " << deletePosition;
 
     // remove overlapped intervals & check if they can be added
     for (int i = 0; i < _mergedActiveRegions.size() - 1;) {
-        // dont add the region if it placed before the start of the lifetime of an object.
         if (_mergedActiveRegions[i].first < startPosition ||
             (!deleteCannotBeUsed && _mergedActiveRegions[i].second > deletePosition)) {
+            // if region is out of range, remove it
             _mergedActiveRegions.remove(i);
-            i++;
+            qDebug() << "    --* cannot add a region on a deleted part of the line";
+        } else if (_mergedActiveRegions[i].second >= _mergedActiveRegions[i + 1].second
+                   || _mergedActiveRegions[i].second >= _mergedActiveRegions[i + 1].first) {
+            // if two regions overlap, merge them
+            _mergedActiveRegions[i].second = std::max(_mergedActiveRegions[i + 1].second,
+                                                      _mergedActiveRegions[i].second);
+            _mergedActiveRegions.remove(i + 1);
+            // dont increase the counter
             continue;
         }
-        if (_mergedActiveRegions[i].second >= _mergedActiveRegions[i + 1].second
-            || _mergedActiveRegions[i].second >= _mergedActiveRegions[i + 1].first) {
-            _mergedActiveRegions[i].second = std::max(_mergedActiveRegions[i + 1].second, _mergedActiveRegions[i].second);
-            _mergedActiveRegions.remove(i + 1);
-        } else {
-            i++;
-        }
+        i++;
     }
     qDebug() << "    overlapped chunks done";
     qDebug() << ">";

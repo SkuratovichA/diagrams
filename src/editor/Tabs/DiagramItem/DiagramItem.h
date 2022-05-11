@@ -353,6 +353,10 @@ public:
         return {width() / 2.0, height()};
     }
 
+    QSet<SequenceConnectionItem *> connections() const {
+        return _connections;
+    }
+
     void trackNodes();
 
     [[nodiscard]] QPointF centre() const override {
@@ -377,10 +381,12 @@ protected:
      * Constants
      */
 private:
-    QSet<SequenceConnectionItem *> _connections;// = QSet<SequenceConnectionItem *>(); ///< connections to track
     ClassDiagramItem *_parentClassDiagramItem = nullptr; ///< pointer to the "parent" class diagram item for synchronization.
     SequenceDiagramLifeLine *_lifeLine = nullptr; ///< lifeLine to track active regions
     qreal const _lineLength = 500; ///< default length of a life line
+
+    QSet<SequenceConnectionItem *> _connections = QSet<SequenceConnectionItem *>(); ///< connections to track
+    QSet<SequenceConnectionItem *> _removedConnections =  QSet<SequenceConnectionItem *>();
 };
 
 #endif // Object_H
