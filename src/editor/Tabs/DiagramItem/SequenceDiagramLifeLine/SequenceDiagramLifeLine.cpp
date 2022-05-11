@@ -78,10 +78,10 @@ void SequenceDiagramLifeLine::paint(QPainter *painter, const QStyleOptionGraphic
 
     QList<QLineF> lines;
     auto topPoint = _parent->localCentre() + QPointF(0, _yFrom);
-    auto olapd = mergedActiveRegions();
+    updateActiveRegions();
 
     qDebug() << "     cretaed merged active regions";
-    for (auto rect: olapd) {
+    for (auto rect: _mergedActiveRegions) {
         // adjust a rectangle and draw it
         QPointF fromPoint{_parent->localCentre() + QPointF(-_adjust, rect.first - 50)};
         QPointF toPoint{_parent->localCentre() + QPointF(_adjust, rect.second - 50)};
@@ -118,7 +118,7 @@ void SequenceDiagramLifeLine::trackNodes() {
             _parent->localCentre() + QPointF(0, _yFrom),
             _parent->localCentre() + QPointF(0, _height)
     );
-    mergedActiveRegions();
+    updateActiveRegions();
     setLine(line);
 }
 
@@ -130,16 +130,14 @@ QList<region_t> SequenceDiagramLifeLine::getAsynchronousRegionsAsIntervals(
         QList<actorConnectionPair_t> &a
 ) {
     qDebug() << __FILE__;
-
     if (a.isEmpty()) {
         return QList<region_t>();
     }
     std::sort(a.begin(), a.end(),
-              [](actorConnectionPair_t &a, actorConnectionPair_t  &b) {
+              [](actorConnectionPair_t &a, actorConnectionPair_t &b) {
                   return a.second->y() < b.second->y();
               }
     );
-
     auto pairs = QList<region_t>();
     for (auto el: a) {
         pairs.push_back(region_t(el.second->y(), el.second->y() + 20));
@@ -149,13 +147,6 @@ QList<region_t> SequenceDiagramLifeLine::getAsynchronousRegionsAsIntervals(
     return pairs;
 }
 
-/**
- * Create pairs in such a way, that for a <= b <= `max`
- * they will look like<a, max> or <a, b>, if such b exists.
- *
- * @param a
- * @return
- */
 QList<region_t> SequenceDiagramLifeLine::getSynchronousRegionsAsIntervals(
         QList<actorConnectionPair_t> &a
 ) {
@@ -184,12 +175,35 @@ QList<region_t> SequenceDiagramLifeLine::getSynchronousRegionsAsIntervals(
     return pairs;
 }
 
-/** Merges all intervals
- *
- * @return merged intervals
- */
-QList<region_t> SequenceDiagramLifeLine::mergedActiveRegions() {
+QList<qreal> SequenceDiagramLifeLine::getFirstCreateRegion() const {
+    if (_createMessages.isEmpty()) {
+        return {};
+    }
+    qreal minitem = _createMessages.first()->y();
+    for (auto el: _createMessages) {
+        if (el->y() < minitem) {
+            minitem = el->y();
+        }
+    }
+    return {minitem};
+}
+
+QList<qreal> SequenceDiagramLifeLine::getLastDeleteRegion() const {
+    if (_deleteMessages.isEmpty()) {
+        return {};
+    }
+    qreal maxitem = _deleteMessages.first()->y();
+    for (auto el: _deleteMessages) {
+        if (el->y() > maxitem) {
+            maxitem = el->y();
+        }
+    }
+    return {maxitem};
+}
+
+void SequenceDiagramLifeLine::updateActiveRegions() {
     qDebug() << __FILE__;
+    _mergedActiveRegions.clear();
     qDebug() << "<";
     auto sf = [](const region_t &a, const region_t &b) {
         if (a.first < b.first) {return true;}
@@ -197,29 +211,43 @@ QList<region_t> SequenceDiagramLifeLine::mergedActiveRegions() {
         if (a.second < b.second) {return true;}
         return false;
     };
-    auto a = QList<region_t>();
 
-    a.append(getSynchronousRegionsAsIntervals(_activeRegions));
-    a.append(getAsynchronousRegionsAsIntervals(_async_replyMessages));
-    if (a.isEmpty()) {
-        return a;
+    _mergedActiveRegions.append(getSynchronousRegionsAsIntervals(_activeRegions));
+    _mergedActiveRegions.append(getAsynchronousRegionsAsIntervals(_async_replyMessages));
+    if (_mergedActiveRegions.isEmpty()) {
+        return;
     }
-    std::sort(a.begin(), a.end(), sf);
-    qDebug() << "    a sorted";
-    // remove overlapped intervals
-    for (int i = 0; i < a.size() - 1;) {
-        if (a[i].second >= a[i + 1].second || a[i].second >= a[i + 1].first) {
-            a[i].second = std::max(a[i + 1].second, a[i].second);
-            a.remove(i + 1);
+    std::sort(_mergedActiveRegions.begin(), _mergedActiveRegions.end(), sf);
+    qDebug() << "    <_mergedActiveRegions> sorted";
+
+    // if object is not cretaed, yet, dont activate the connection.
+    auto createConstraintList = getFirstCreateRegion();
+    bool deleteCannotBeUsed = createConstraintList.isEmpty();
+    auto startPosition = deleteCannotBeUsed ? 0 : createConstraintList.first();
+
+    auto deleteConstraintList = getLastDeleteRegion();
+    auto deletePosition = deleteConstraintList.isEmpty() ? _height : deleteConstraintList.first();
+    qDebug() << "     messages <create> added";
+
+    // remove overlapped intervals & check if they can be added
+    for (int i = 0; i < _mergedActiveRegions.size() - 1;) {
+        // dont add the region if it placed before the start of the lifetime of an object.
+        if (_mergedActiveRegions[i].first < startPosition ||
+            (!deleteCannotBeUsed && _mergedActiveRegions[i].second > deletePosition)) {
+            _mergedActiveRegions.remove(i);
+            i++;
+            continue;
+        }
+        if (_mergedActiveRegions[i].second >= _mergedActiveRegions[i + 1].second
+            || _mergedActiveRegions[i].second >= _mergedActiveRegions[i + 1].first) {
+            _mergedActiveRegions[i].second = std::max(_mergedActiveRegions[i + 1].second, _mergedActiveRegions[i].second);
+            _mergedActiveRegions.remove(i + 1);
         } else {
             i++;
         }
     }
-
-    // TODO: add creatins/deletions
     qDebug() << "    overlapped chunks done";
     qDebug() << ">";
-    return a;
 }
 
 /**
@@ -235,19 +263,30 @@ void SequenceDiagramLifeLine::addConnection(
     switch (connection->connectionType()) {
         case Synchronous:
             _activeRegions.push_back(actorConnectionPair_t(actorType, connection));
+            qDebug() << "   activeREgion added";
             break;
         case Asynchronous:
+            _async_replyMessages.push_back(actorConnectionPair_t(actorType, connection));
+            break;
         case Reply:
             _async_replyMessages.push_back(actorConnectionPair_t(actorType, connection));
             break;
         case Create:
-            _createMessages.push_back(actorConnectionPair_t(actorType, connection));
+            if (actorType == Receiver) {
+                _createMessages.push_back(connection);
+            } else { // Caller
+                _async_replyMessages.push_back(actorConnectionPair_t(actorType, connection));
+            }
             break;
         case Delete:
-            _deleteMessages.push_back(actorConnectionPair_t(actorType, connection));
+            if (actorType == Receiver) {
+                _deleteMessages.push_back(connection);
+            } else { // Caller
+                _async_replyMessages.push_back(actorConnectionPair_t(actorType, connection));
+            }
             break;
     }
-    qDebug() << ">";
+    qDebug() << "   connection added";
 }
 
 /**
@@ -257,12 +296,18 @@ void SequenceDiagramLifeLine::addConnection(
 void SequenceDiagramLifeLine::removeConnection(const SequenceConnectionItem *connection) {
     auto callerC = actorConnectionPair_t(Caller, connection);
     auto receiverC = actorConnectionPair_t(Receiver, connection);
-    auto list = {_activeRegions, _async_replyMessages, _createMessages, _deleteMessages};
+    auto list = {&_activeRegions, &_async_replyMessages};
     for (auto a: list) {
-        if (a.contains(callerC)) {
-            a.removeOne(callerC);
-        } else if (a.contains(receiverC)) {
-            a.removeOne(receiverC);
+        if (a->contains(callerC)) {
+            a->removeOne(callerC);
+        } else if (a->contains(receiverC)) {
+            a->removeOne(receiverC);
         }
+    }
+    if (_createMessages.contains(connection)) {
+        _createMessages.removeOne(connection);
+    }
+    if (_deleteMessages.contains(connection)) {
+        _deleteMessages.removeOne(connection);
     }
 }

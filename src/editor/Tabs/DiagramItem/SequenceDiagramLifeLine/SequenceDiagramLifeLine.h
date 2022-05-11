@@ -80,10 +80,44 @@ private:
     [[nodiscard]] QPainterPath shape() const override;
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
     [[nodiscard]] QPolygonF lineShaper() const;
-    QList<region_t> mergedActiveRegions();
 
+
+    /** Merges all intervals
+     *
+     * @return merged intervals
+     */
+    void updateActiveRegions();
+
+    /**
+     *
+     * @param a
+     * @return
+     */
     QList<region_t> getAsynchronousRegionsAsIntervals(ActorTypeConnectionList_t &a);
+
+
+    /**
+     * Create pairs in such a way, that for a <= b <= `max`
+     * they will look like<a, max> or <a, b>, if such b exists.
+     *
+     * @param a
+     * @return
+     */
     QList<region_t> getSynchronousRegionsAsIntervals(ActorTypeConnectionList_t &a);
+
+    /**
+     *
+     * @param a
+     * @return
+     */
+    QList<qreal> getFirstCreateRegion() const;
+
+    /**
+     *
+     * @param a
+     * @return
+     */
+    QList<qreal> getLastDeleteRegion() const;
 
     /**
      * Private variables
@@ -98,8 +132,11 @@ private:
      */
     ActorTypeConnectionList_t _activeRegions = ActorTypeConnectionList_t();
     ActorTypeConnectionList_t _async_replyMessages = ActorTypeConnectionList_t();
-    ActorTypeConnectionList_t _createMessages = ActorTypeConnectionList_t();
-    ActorTypeConnectionList_t _deleteMessages = ActorTypeConnectionList_t();
+
+    QList<SequenceConnectionItem *> _createMessages = QList<SequenceConnectionItem *>();
+    QList<SequenceConnectionItem *> _deleteMessages = QList<SequenceConnectionItem *>();
+
+    QList<region_t> _mergedActiveRegions;
 
     /**
      * Constants.
