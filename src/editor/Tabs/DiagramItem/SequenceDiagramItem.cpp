@@ -47,6 +47,10 @@ SequenceDiagramItem::SequenceDiagramItem(
     actorRect->setBrush(QBrush(color()));
 
     _lifeLine = new SequenceDiagramLifeLine(this, 0, _lineLength);
+
+//    for (auto c: _connections) {
+//        c->trackNodes();
+//    }
     setRect(boundingBox());
 }
 
@@ -67,7 +71,7 @@ QVariant SequenceDiagramItem::itemChange(
         return QPointF(std::max<qreal>(-10, value.toPointF().x()), std::max<qreal>(-10, pos().y()));
     }
     if (change == ItemPositionHasChanged) {
-        for (auto c : _connections) {
+        for (auto c: _connections) {
             c->trackNodes();
         }
     }
@@ -93,6 +97,9 @@ void SequenceDiagramItem::addConnection(
 }
 
 void SequenceDiagramItem::trackNodes() {
+    for (auto c: _connections) {
+        c->trackNodes();
+    }
     _lifeLine->trackNodes();
 }
 

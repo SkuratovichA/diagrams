@@ -247,17 +247,12 @@ void SequenceDiagramLifeLine::updateActiveRegions() {
         i++;
     }
     int i = 0;
-    //qDebug() << "start position: " << startPosition;
-    //qDebug() << "end position : " << deletePosition;
     while (true) {
-        //qDebug() << "pizda : " << _mergedActiveRegions.size();
         if (i == _mergedActiveRegions.size()) {
             break;
         }
         if (_mergedActiveRegions[i].first < startPosition || _mergedActiveRegions[i].first > deletePosition) {
-            //qDebug() << "old size" << _mergedActiveRegions.size();
             _mergedActiveRegions.remove(i);
-            //qDebug() << "new size" << _mergedActiveRegions.size();
         } else {
             if (_mergedActiveRegions[i].second > deletePosition) {
                 _mergedActiveRegions[i].second = deletePosition;
@@ -265,8 +260,6 @@ void SequenceDiagramLifeLine::updateActiveRegions() {
             i++;
         }
     }
-    //qDebug() << "    overlapped chunks done. _mergedActiveRegions: " << _mergedActiveRegions;
-    //qDebug() << ">";
 }
 
 /**
@@ -277,12 +270,9 @@ void SequenceDiagramLifeLine::addConnection(
         SequenceConnectionItem *connection,
         ActorType actorType
 ) {
-    //qDebug() << "<";
-    //qDebug() << __FILE__;
     switch (connection->connectionType()) {
         case Synchronous:
             _activeRegions.push_back(actorConnectionPair_t(actorType, connection));
-            //qDebug() << "   activeREgion added";
             break;
         case Asynchronous:
             _async_replyMessages.push_back(actorConnectionPair_t(actorType, connection));
@@ -307,7 +297,6 @@ void SequenceDiagramLifeLine::addConnection(
         default:
             assert(false);
     }
-    //qDebug() << "   connection added";
 }
 
 /**
