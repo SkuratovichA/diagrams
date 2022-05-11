@@ -199,6 +199,24 @@ public:
         return _connectionType;
     }
 
+    void setLinEnd() {
+        if (std::abs(cLine.p2().x() - cLine.p1().x()) <= 15) {
+            return;
+        }
+
+//        linend = cLine.p2().x() < cLine.p1().x() ? cLine.p2() + QPointF(10, 0) :
+//                 cLine.p2() - QPointF(10 ,0);
+//
+//        if (cLine.p2().x() < cLine.p1().x()) {
+//            pUp = QPointF(linend.x() + 13, linend.y() + 8);
+//            pDown = QPointF(linend.x() + 13, linend.y() - 8);
+//        }
+//        else {
+//            pUp = QPointF(linend.x() - 13, linend.y() + 8);
+//            pDown = QPointF(linend.x() - 13, linend.y() - 8);
+//        }
+    }
+
 public:
     QRectF lineShaper() const;
     QPainterPath shape() const override;
@@ -213,11 +231,12 @@ private:
     void paintDelete(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
 
 private:
-    QPointF linend;
+    QPointF pEnd;
+    QPointF pUp;
+    QPointF pDown;
     QLineF cLine;
+    qreal posX;
     qreal scale = 20;
-    qreal _arrowAngle;
-    QPolygonF _arrowHead;
     QColor _color = QColor(0,0,0,200);
     ConnectionType _connectionType;
     SequenceDiagramItem *_nodeTo;
