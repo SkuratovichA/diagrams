@@ -36,10 +36,11 @@ SequenceConnectionItem::SequenceConnectionItem(SequenceDiagramItem *nodeFrom,
     _nodeTo->addConnection(this, Receiver);
 
     setFlags(QGraphicsItem::ItemIsSelectable | QGraphicsItem::ItemIsMovable | QGraphicsItem::ItemSendsGeometryChanges);
-    text = new msgText(this, getFlags(), 0, 0, "TEXT");
+    text = new msgText(this, getFlags(), 0, 0, params->msg());
 
     setZValue(1.0);
-    setY(200);
+    setY(params->y());
+    //setP
 
     trackNodes();
     //qDebug() << "one connection";

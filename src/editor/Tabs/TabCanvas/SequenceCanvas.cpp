@@ -124,6 +124,7 @@ bool SequenceCanvas::getStringRepresentation(Program &prg) {
         x->fillCoords(action.coords);
         action.from = x->nameFrom().toStdString();
         action.to = x->nameTo().toStdString();
+        action.type = x->type();
 
         obj.actions.push_back(action);
     }
@@ -257,7 +258,7 @@ void SequenceCanvas::addConnection() {
         return;
     }
 
-    paramsMessage = new messageParams(0, 0, "TEXT", nodes.first->name(), nodes.second->name(), index);
+    paramsMessage = new messageParams(0, 200, "TEXT", nodes.first->name(), nodes.second->name(), index);
 
     _undoStack->push(
             new AddSequenceConnectionCommand(nodes.first, nodes.second, paramsMessage, index, editorScene)
