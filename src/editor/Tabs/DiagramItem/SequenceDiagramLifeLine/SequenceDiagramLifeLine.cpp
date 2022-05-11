@@ -247,7 +247,7 @@ void SequenceDiagramLifeLine::updateActiveRegions() {
         }
         i++;
     }
-    qDebug() << "    overlapped chunks done";
+    qDebug() << "    overlapped chunks done. _mergedActiveRegions: " << _mergedActiveRegions;
     qDebug() << ">";
 }
 
