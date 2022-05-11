@@ -166,6 +166,7 @@ void SequenceCanvas::addConnection() {
     scd.exec();
 
     auto nodes = getSelectedDiagramItems<SequenceDiagramItem>();
+
     auto emptySelect =
             (nodes == QPair<SequenceDiagramItem *, SequenceDiagramItem *>())
             || nodes.first == nodes.second;
@@ -177,11 +178,11 @@ void SequenceCanvas::addConnection() {
         return;
     }
 
-    for (int i =0; i < 100; i ++) {
+    //for (int i =0; i < 100; i ++) {
         _undoStack->push(
                 new AddSequenceConnectionCommand(nodes.first, nodes.second, scd.messageType(), editorScene)
         );
-    }
+    //}
 }
 
 /**

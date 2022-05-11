@@ -73,19 +73,20 @@ private:
 public:
     /**
      * Returns two first selected elements from the scene.
+     *
      * @tparam T typename. Must be inherit from QGraphicsItem
      * @return Pair of two selected elements with type T.
      */
     template<typename T>
     QPair<T *, T *> getSelectedDiagramItems() {
-        qDebug() << __FILE__;
         auto items = editorScene->selectedItems();
         // remove selected items of another type
         for (auto item: items) {
             if (dynamic_cast<T *>(item) == nullptr) {
-                items.removeAll(item);
+                items.removeOne(item);
             }
         }
+
         if (items.isEmpty()) {
             return QPair<T *, T *>();
         }
