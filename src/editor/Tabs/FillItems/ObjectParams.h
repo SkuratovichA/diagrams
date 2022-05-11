@@ -145,6 +145,31 @@ class messageParams {
 public:
     messageParams(qreal x, qreal y, QString msg, QString nameFrom, QString nameTo);
 
+    qreal x() {
+        return _x;
+    }
+
+    qreal y() {
+        return _y;
+    }
+
+    QString msg() {
+        return _msg;
+    }
+
+    QString nameFrom() {
+        return _nameFrom;
+    }
+
+    QString nameTo() {
+        return _nameTo;
+    }
+
+    void fillCoords(std::vector<double> &v) {
+        v.push_back(x());
+        v.push_back(y());
+    }
+
 private:
     qreal _x;
     qreal _y;

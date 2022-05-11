@@ -52,6 +52,10 @@ bool SequenceCanvas::createFromFile(dgrmSeq_t seq) {
         buf.addActorItems(x);
     }
 
+    for (auto x : seq.actions) {
+        buf.addMessageItems(x);
+    }
+
     for (auto x : buf.sequenceItems()) {
         SequenceDiagramItem *diagramItem = new SequenceDiagramItem(x);
         editorScene->addItem(diagramItem);
@@ -77,17 +81,27 @@ bool SequenceCanvas::getStringRepresentation(Program &prg) {
         buf.fillActorItems(x);
     }
 
-// sequence connections
-//    for (auto x : getItems<SequenceConnectionItem>()) {
-//        buf.fillMessagesItems(x);
-//    }
+    for (auto x : getItems<SequenceConnectionItem>()) {
+        buf.fillMessageItems(x);
+    }
 
     for (auto x : buf.sequenceItems()) {
         Actor act;
         act.name = x->name().toStdString();
         x->fillColor(act.color);
         x->fillCoords(act.coords);
+
         obj.actors.push_back(act);
+    }
+
+    for (auto x : buf.messageItems()) {
+        Action action;
+        action.msg = x->msg().toStdString();
+        x->fillCoords(action.coords);
+        action.from = x->nameFrom().toStdString();
+        action.to = x->nameTo().toStdString();
+
+        obj.actions.push_back(action);
     }
 
     prg.diagramSequence.push_back(obj);
