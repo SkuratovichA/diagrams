@@ -35,6 +35,7 @@ SequenceConnectionItem::SequenceConnectionItem(SequenceDiagramItem *nodeFrom,
     _nodeTo->addConnection(this, Receiver);
 
     setFlags(QGraphicsItem::ItemIsSelectable | QGraphicsItem::ItemIsMovable | QGraphicsItem::ItemSendsGeometryChanges);
+    text = new msgText(this, getFlags(), 0, 0, "TEXT");
 
     setZValue(1.0);
     setY(200);
@@ -160,6 +161,9 @@ void SequenceConnectionItem::paint(QPainter *painter, const QStyleOptionGraphics
         default:
             assert(false);
     }
+
+    qreal newPos = (cLine.p1().x() + cLine.p2().x() - widthText()) / 2.0;
+    text->setPos(newPos, -25);
 }
 
 /**

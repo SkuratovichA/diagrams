@@ -126,7 +126,8 @@ void ItemsBuffer::fillMessageItems(SequenceConnectionItem *item) {
     messageParams *ptr;
 
     ptr = new messageParams(item->x(), item->y(),
-                          item->_head->toPlainText(), item->color());
+                          item->getText()->toPlainText(),
+                          item->nodeFrom()->name(), item->nodeTo()->name());
     pushMessageItem(ptr);
 }
 

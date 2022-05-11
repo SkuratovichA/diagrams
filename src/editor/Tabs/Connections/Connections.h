@@ -212,6 +212,20 @@ public:
         return _connectionType;
     }
 
+    static QFlags<Qt::TextInteractionFlag> getFlags() {
+        return Qt::TextInteractionFlag::TextEditable |
+               Qt::TextInteractionFlag::TextSelectableByMouse |
+               Qt::TextInteractionFlag::TextSelectableByKeyboard;
+    }
+
+    qreal widthText() {
+        return text->boundingRect().width();
+    }
+
+    QGraphicsTextItem* getText() {
+        return text;
+    };
+
     void setLinEnd() {
         if (std::abs(cLine.p2().x() - cLine.p1().x()) <= 15) {
             return;
@@ -250,6 +264,7 @@ private:
     QLineF cLine;
     qreal posX;
     qreal scale = 20;
+    msgText *text;
     QColor _color = QColor(0,0,0,200);
     ConnectionType _connectionType;
     SequenceDiagramItem *_nodeTo;
