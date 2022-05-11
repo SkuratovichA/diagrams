@@ -9,6 +9,15 @@
 #include <QGraphicsLineItem>
 #include <QGraphicsSceneMouseEvent>
 #include "../DiagramItem.h"
+//#include "../../Connections/Connections.h"
+
+class SequenceConnectionItem;
+
+using namespace Connections;
+
+typedef QPair<ActorType, const SequenceConnectionItem *> actorConnectionPair_t;
+typedef QList<actorConnectionPair_t> ActorTypeConnectionList_t;
+typedef QPair<qreal, qreal> region_t;
 
 /** Implementation of a custom Life Line for an object (actor)
  */
@@ -32,21 +41,9 @@ public:
         return _height;
     }
 
-    [[nodiscard]] const QList<QPair<qreal, qreal>> &activeRegions() const {
-        return _activeRegions;
-    }
-
     [[nodiscard]] qreal defaultActiveRegionLength() const {
         return _actRegLen;
     }
-
-    [[nodiscard]] const QList<QPair<qreal, qreal>> &synchronousPoints() const {
-        return _synchronousPoints;
-    }
-//
-//    [[nodiscard]] bool isIsWaitingForResponce() const {
-//        return _isWaitingForResponce;
-//    }
 
 public:
     void setYFrom(qreal yFrom) {
@@ -57,33 +54,23 @@ public:
         _height = height;
     }
 
-    void addActiveRegion(const QPair<qreal, qreal> activeRegions) {
-        _activeRegions.push_back(activeRegions);
-    }
-
-    void addSynchronousPoint(const QPair<qreal, qreal> synchronousPoint) {
-        _synchronousPoints.push_back(synchronousPoint);
-    }
-//
-//    void setIsWaitingForResponce(bool isWaitingForResponce) {
-//        _isWaitingForResponce = isWaitingForResponce;
+//    void addActiveRegion(const SequenceConnectionItem *activeRegions) {
+//        _activeRegions.push_back(activeRegions);
 //    }
-
-    void updateHeight() {
-        _height = _activeRegions.last().second > _height ? _activeRegions.last().second + _heightAdjust : _height;
-    }
-
+//
+//    void addSynchronousPoint(const SequenceConnectionItem *synchronousPoint) {
+//        _messages.push_back(synchronousPoint);
+//    }
+//
     /**
      * Usual functions.
      */
 public:
-    void notifyConnectionsAboutParentPositionChange();
     void addConnection(
             SequenceConnectionItem *connection,
-            SequenceConnectionItem::ConnectionType connectionType,
-            SequenceConnectionItem::ActorType actorType
+            ActorType actorType
     );
-    void removeConnection(SequenceConnectionItem *connection);
+    void removeConnection(const SequenceConnectionItem *y);
 
     /**
      * Private functions.
@@ -93,38 +80,73 @@ private:
     [[nodiscard]] QPainterPath shape() const override;
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
     [[nodiscard]] QPolygonF lineShaper() const;
-    [[nodiscard]] qreal maxHeight() const;
-    QList<QPair<qreal, qreal>> mergedActiveRegions();
+
+
+    /** Merges all intervals
+     *
+     * @return merged intervals
+     */
+    void updateActiveRegions();
+
+    /**
+     *
+     * @param a
+     * @return
+     */
+    QList<region_t> getAsynchronousRegionsAsIntervals(ActorTypeConnectionList_t &a);
+
+
+    /**
+     * Create pairs in such a way, that for a <= b <= `max`
+     * they will look like<a, max> or <a, b>, if such b exists.
+     *
+     * @param a
+     * @return
+     */
+    QList<region_t> getSynchronousRegionsAsIntervals(ActorTypeConnectionList_t &a);
+
+    /**
+     *
+     * @param a
+     * @return
+     */
+    QList<qreal> getFirstCreateRegion() const;
+
+    /**
+     *
+     * @param a
+     * @return
+     */
+    QList<qreal> getLastDeleteRegion() const;
 
     /**
      * Private variables
      */
 private:
     qreal _yFrom = 0;
-    qreal _height = 0;
+    qreal _height = 500; // TODO set height
     SequenceDiagramItem *_parent;
 
     /**
      * Usually, from/to, but in case to is -1, use default length.
      */
-    QList<QPair<qreal /*from*/, qreal /*to*/>> _activeRegions = QList<QPair<qreal, qreal>>();
-    QList<QPair<qreal /*from*/, qreal /*to*/>> _synchronousPoints = QList<QPair<qreal, qreal>>();
-    /**
-     *  One of the Synchronous, Asynchronous, Reply, Create, Delete.
-     *  The same functionality as  in the ClassDiagramItem
-     */
-    QSet<SequenceConnectionItem *> _connections = QSet<SequenceConnectionItem *>();
+    ActorTypeConnectionList_t _activeRegions = ActorTypeConnectionList_t();
+    ActorTypeConnectionList_t _async_replyMessages = ActorTypeConnectionList_t();
+
+    QList<SequenceConnectionItem *> _createMessages = QList<SequenceConnectionItem *>();
+    QList<SequenceConnectionItem *> _deleteMessages = QList<SequenceConnectionItem *>();
+
+    QList<region_t> _mergedActiveRegions;
 
     /**
      * Constants.
      */
 private:
     qreal const _actRegLen = 20.0;
-    qreal const _adjust = 10.0;
-    qreal const _heightAdjust = 20.0;
-    SequenceConnectionItem::ConnectionType _connectionType;
+    qreal _adjust = 10.0;
 
-//    bool _isWaitingForResponce = false;
+    qreal _verticalAgjust = 0.0; ///< number representing the difference of the absolute and a relative positions(parent)
+    qreal const _heightAdjust = 20.0;
 };
 
 #endif //DIAGRAMS_SEQUENCEDIAGRAMLIFELINE_H

@@ -1,3 +1,8 @@
+// File: DiagramItem.h
+// Author: Skuratovich Aliaksandr <xskura01@vutbr.cz>
+// Author: Shchapaniak Andrei <xshcha00@vutbr.cz>
+// Date: 07.05.2022
+
 #ifndef Object_H
 #define Object_H
 
@@ -12,6 +17,8 @@
 
 #include "../Connections/Connections.h"
 #include "../FillItems/ObjectParams.h"
+
+using namespace Connections;
 
 QT_BEGIN_NAMESPACE
 class QGraphicsItem;
@@ -134,6 +141,10 @@ public:
 
     void setWidth(qreal width) {
         _width = width;
+    }
+
+    void setRowWidth(qreal width) {
+        _rowWidth = width;
     }
 
     void setHeight(qreal height) {
@@ -292,7 +303,7 @@ public:
     }
 
     [[nodiscard]] QPointF socket(uint32_t n) const {
-        const auto margin = std::min(std::min(height() / 2, width() / 2), 10.0);
+        const auto margin = std::min(std::min(height() / 2, width() / 2), 30.0);
         const QPointF points[3] = {QPointF(0, margin), QPointF(-margin, -margin), QPointF(-margin, margin)};
         return centre() + points[n % 3];
     }
@@ -347,27 +358,51 @@ public:
         return _head->toPlainText();
     }
 
-    [[nodiscard]] QPointF centre() const override {
+    [[nodiscard]] QPointF localCentre() const {
         return {width() / 2.0, height()};
+    }
+
+    QSet<SequenceConnectionItem *> connections() const {
+        QSet<SequenceConnectionItem *> allConnections = QSet<SequenceConnectionItem *>();
+        allConnections.unite(_connections);
+        allConnections.unite(_removedConnections);
+        return allConnections;
+    }
+
+    void trackNodes();
+
+    [[nodiscard]] QPointF centre() const override {
+        return {x() + width() / 2.0, y() + height()};
     }
 
 public:
     void addConnection(SequenceConnectionItem *connection,
-                       SequenceConnectionItem::ConnectionType connectionType,
-                       SequenceConnectionItem::ActorType actorType);
+                       ActorType actorType);
     void removeConnection(SequenceConnectionItem *connection);
 
     [[nodiscard]] ClassDiagramItem *parentClassDiagramItem() const {
         return _parentClassDiagramItem;
     }
 
+    qreal lineLength() const {return _lineLength;}
+
+    void setParent(ClassDiagramItem *parent) {
+        _parentClassDiagramItem = parent;
+    }
+
 protected:
     QVariant itemChange(GraphicsItemChange change, const QVariant &value) override;
 
+    /**
+     * Constants
+     */
 private:
-    ClassDiagramItem *_parentClassDiagramItem = nullptr;
-    SequenceDiagramLifeLine *_lifeLine = nullptr;
-    qreal const lineDefaultLength = 500;
+    ClassDiagramItem *_parentClassDiagramItem = nullptr; ///< pointer to the "parent" class diagram item for synchronization.
+    SequenceDiagramLifeLine *_lifeLine = nullptr; ///< lifeLine to track active regions
+    qreal const _lineLength = 500; ///< default length of a life line
+
+    QSet<SequenceConnectionItem *> _connections = QSet<SequenceConnectionItem *>(); ///< connections to track
+    QSet<SequenceConnectionItem *> _removedConnections = QSet<SequenceConnectionItem *>();
 };
 
 #endif // Object_H

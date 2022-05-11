@@ -1,8 +1,14 @@
+// File: sequenceconnectiondialog.h
+// Author: Skuratovich Aliaksandr <xskura01@vutbr.cz>
+// Date: 07.05.2022
+
 #ifndef SEQUENCECONNECTIONDIALOG_H
 #define SEQUENCECONNECTIONDIALOG_H
 
 #include <QDialog>
 #include "../../Connections/Connections.h"
+
+using namespace Connections;
 
 namespace Ui {
     class SequenceConnectionDialog;
@@ -17,14 +23,14 @@ public:
     ~SequenceConnectionDialog();
 
 public:
-    SequenceConnectionItem::ConnectionType messageType();
+    ConnectionType messageType();
 
 private slots:
     void on_pushButton_clicked();
 
 private:
     Ui::SequenceConnectionDialog *ui;
-    SequenceConnectionItem::ConnectionType index;
+    ConnectionType index;
 };
 
 #endif // SEQUENCECONNECTIONDIALOG_H

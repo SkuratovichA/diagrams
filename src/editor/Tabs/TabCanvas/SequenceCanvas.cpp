@@ -1,6 +1,7 @@
 // File: SequenceCanvas.cpp
 // Author: Skuratovich Aliaksandr <xskura01@vutbr.cz>
-// Date: 06.05.2022
+// Author: Shchapaniak Andrei <xshcha00@vutbr.cz>
+// Date: 07.05.2022
 
 #include <QGraphicsView>
 #include <QUndoStack>
@@ -44,7 +45,20 @@ QPoint SequenceCanvas::generateCoords() const {
  * @param buf
  * @return
  */
-bool SequenceCanvas::createFromFile(dgrm_seq_t seq) {
+bool SequenceCanvas::createFromFile(dgrmSeq_t seq) {
+    ItemsBuffer buf;
+
+    for (auto x : seq.actors) {
+        buf.addActorItems(x);
+    }
+
+    for (auto x : buf.sequenceItems()) {
+        SequenceDiagramItem *diagramItem = new SequenceDiagramItem(x);
+        editorScene->addItem(diagramItem);
+        diagramItem->setPos(x->x(), x->y());
+        editorScene->update();
+    }
+
     return true;
 }
 
@@ -53,6 +67,33 @@ bool SequenceCanvas::createFromFile(dgrm_seq_t seq) {
  * @param prg
  */
 bool SequenceCanvas::getStringRepresentation(Program &prg) {
+    //dgrm_seq actors;
+    std::vector<Action> actions;
+    std::vector<Activate> activates;
+    ItemsBuffer buf;
+
+    dgrmSeq_t obj;
+
+    for (auto x : getItems<SequenceDiagramItem>()) {
+        buf.fillActorItems(x);
+    }
+
+// sequence connections
+//    for (auto x : getItems<SequenceConnectionItem>()) {
+//        buf.fillMessagesItems(x);
+//    }
+
+    for (auto x : buf.sequenceItems()) {
+        Actor act;
+        act.name = x->name().toStdString();
+        x->fillColor(act.color);
+        x->fillCoords(act.coords);
+        obj.actors.push_back(act);
+    }
+
+    prg.diagramSequence.push_back(obj);
+
+    // add for sequence diagram
     return true;
 }
 
@@ -144,11 +185,10 @@ void SequenceCanvas::deleteMessage_triggered() {
  * @param classDiagramItemParent pointer to an object from a class diagram scene
  */
 void SequenceCanvas::addEntity(ClassDiagramItem *classDiagramItemParent) {
-//    qDebug() << "got name: in constructor " << classDiagramItemParent->name();
     QPoint point = generateCoords();
 
     createActor = new actorParams(point.x(), point.y(), classDiagramItemParent->name(),
-                                  classDiagramItemParent->color(), 80, 50);
+                                  classDiagramItemParent->color());
 
     _undoStack->push(
             new AddSequenceCommand(editorScene, createActor, classDiagramItemParent)
@@ -165,15 +205,22 @@ void SequenceCanvas::addConnection() {
     scd.exec();
 
     auto nodes = getSelectedDiagramItems<SequenceDiagramItem>();
+
     auto emptySelect =
             (nodes == QPair<SequenceDiagramItem *, SequenceDiagramItem *>())
             || nodes.first == nodes.second;
     if (emptySelect) {
         return;
     }
-
+    if (nodes.first == nullptr || nodes.second == nullptr) {
+        return;
+    }
+    auto index = scd.messageType();
+    if (index == ConnectionType::Undefined) {
+        return;
+    }
     _undoStack->push(
-            new AddSequenceConnectionCommand(nodes.first, nodes.second, scd.messageType(), editorScene)
+            new AddSequenceConnectionCommand(nodes.first, nodes.second, index, editorScene)
     );
 }
 

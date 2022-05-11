@@ -1,6 +1,7 @@
 // File: EditorScene.cpp
 // Author: Skuratovich Aliaksandr <xskura01@vutbr.cz>
-// Date: 01.05.2022
+// Author: Shchapaniak Andrei <xshcha00@vutbr.cz>
+// Date: 07.05.2022
 
 #include <QGraphicsSceneMouseEvent>
 
@@ -12,8 +13,9 @@ EditorScene::EditorScene(QObject *parent)
 }
 
 /**
+ * Handle a mouse clicking and change a Z value of the selected item.
  *
- * @param event
+ * @param event mouse event
  */
 void EditorScene::mousePressEvent(QGraphicsSceneMouseEvent *event) {
     QPointF mousePos(event->buttonDownScenePos(Qt::LeftButton).x(),
@@ -29,6 +31,8 @@ void EditorScene::mousePressEvent(QGraphicsSceneMouseEvent *event) {
                 itemList.first()->parentItem() ;
     }
 
+    //qDebug() << movingItem << "Andrei debug movein item";
+
     if (movingItem != nullptr && event->button() == Qt::LeftButton) {
         oldPos = movingItem->pos();
     }
@@ -42,10 +46,17 @@ void EditorScene::mousePressEvent(QGraphicsSceneMouseEvent *event) {
     QGraphicsScene::mousePressEvent(event);
 }
 
+/**
+ * Handle a mouse clicking and change a Z value of the selected item.
+ * Emit a signal to push move action to Undo stack.
+ *
+ * @param event mouse event
+ */
 void EditorScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
+    //qDebug() << movingItem << "Andrei debug movein item released event";
     if (movingItem != nullptr && event->button() == Qt::LeftButton) {
         if (oldPos != movingItem->pos()) {
-            emit itemMoved(qgraphicsitem_cast<SequenceDiagramItem *>(movingItem), oldPos);
+            emit itemMoved(qgraphicsitem_cast<QGraphicsItem *>(movingItem), oldPos);
         }
         movingItem = nullptr;
     }
@@ -65,6 +76,9 @@ void EditorScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
     QGraphicsScene::mouseReleaseEvent(event);
 }
 
+/**
+ * Change a Z value of items without arrows.
+ */
 void EditorScene::changeZval() {
     QList<QGraphicsItem *> selItems = selectedItems();
     ClassDiagramItem *ptr1;
@@ -88,6 +102,11 @@ void EditorScene::changeZval() {
     update();
 }
 
+/**
+ * Handle a key event and control the selection of more than 1 item.
+ *
+ * @param event key event
+ */
 void EditorScene::keyPressEvent(QKeyEvent *event) {
     if (event->key() == Qt::Key_Control) {
         multSelect = true;
@@ -95,6 +114,11 @@ void EditorScene::keyPressEvent(QKeyEvent *event) {
     QGraphicsScene::keyPressEvent(event);
 }
 
+/**
+ * Handle a key event and control the selection of more than 1 item.
+ *
+ * @param event key event
+ */
 void EditorScene::keyReleaseEvent(QKeyEvent *event) {
     if (event->key() == Qt::Key_Control) {
         multSelect = false;

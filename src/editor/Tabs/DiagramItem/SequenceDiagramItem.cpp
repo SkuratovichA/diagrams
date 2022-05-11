@@ -25,8 +25,8 @@
 SequenceDiagramItem::SequenceDiagramItem(
         actorParams *params,
         ClassDiagramItem *parentClassDiagramItem_)
-        : DiagramItem(params->width(),
-                      params->height(),
+        : DiagramItem(80,
+                      50,
                       DiagramItem::Actor,
                       params->color()) {
     setFlag(QGraphicsItem::ItemIsSelectable);
@@ -36,38 +36,25 @@ SequenceDiagramItem::SequenceDiagramItem(
     QFlags<Qt::TextInteractionFlag> _flags = Qt::TextInteractionFlag::TextEditable |
                                              Qt::TextInteractionFlag::TextSelectableByMouse |
                                              Qt::TextInteractionFlag::TextSelectableByKeyboard;
-    setPen(QPen(QColor(1, 0, 0, 0)));
+    //setPen(QPen(QColor(1, 0, 0, 0)));
+
     _head = new NameObject(this, _flags, QPointF(-3, -40), params->name());
-    qreal Pos = (params->width() - _head->boundingRect().width()) / 2;
+    qreal Pos = (80 - _head->boundingRect().width()) / 2;
+    qDebug() << "position " << Pos;
     _head->setPos(Pos, -40);
     _parentClassDiagramItem = parentClassDiagramItem_;
 
-    auto actorRect = new QGraphicsRectItem(0, 0, params->width(), params->height(), this);
+    auto actorRect = new QGraphicsRectItem(0, 0, 80, 50, this);
     actorRect->setPen(QPen(QColor(Qt::black), 3.0));
-    actorRect->setBrush(QBrush(color()));
+    actorRect->setBrush(QBrush(params->color()));
 
-    _lifeLine = new SequenceDiagramLifeLine(this, 0, lineDefaultLength);
+    _lifeLine = new SequenceDiagramLifeLine(this, 0, _lineLength);
 
-#if DEBUG
-    lifeLine->addActiveRegion(QPair<qreal, qreal>(280, 350));
-    lifeLine->addActiveRegion(QPair<qreal, qreal>(10, 20));
-    lifeLine->addActiveRegion(QPair<qreal, qreal>(30, 60));
-    lifeLine->addActiveRegion(QPair<qreal, qreal>(70, 80));
-
-    lifeLine->addActiveRegion(QPair<qreal, qreal>(50, 120));
-#endif
-
+//    for (auto c: _connections) {
+//        c->trackNodes();
+//    }
     setRect(boundingBox());
 }
-
-///** A destructor.
-// *
-// */
-//SequenceDiagramItem::~SequenceDiagramItem() {
-//    qDebug() << "here, you can see a segfault";
-//    delete _lifeLine;
-//    qDebug() << "    naebal";
-//}
 
 /**
  * Notify custom items that some part of the item's state changes.
@@ -83,24 +70,39 @@ QVariant SequenceDiagramItem::itemChange(
         GraphicsItemChange change,
         const QVariant &value) {
     if (change == ItemPositionChange) {
-        return QPointF(value.toPointF().x(), pos().y());
+        return QPointF(std::max<qreal>(-10, value.toPointF().x()), std::max<qreal>(-10, pos().y()));
     }
     if (change == ItemPositionHasChanged) {
-        _lifeLine->notifyConnectionsAboutParentPositionChange();
+        for (auto c: _connections) {
+            c->trackNodes();
+        }
     }
     return QGraphicsItem::itemChange(change, value);
 }
 
 /**
  * Add a connection to the set of connections for certain item.
- *
  * @param connection message arrow between objects
  */
 void SequenceDiagramItem::addConnection(
         SequenceConnectionItem *connection,
-        SequenceConnectionItem::ConnectionType connectionType,
-        SequenceConnectionItem::ActorType actorType) {
-    _lifeLine->addConnection(connection, connectionType, actorType);
+        ActorType actorType) {
+    qDebug() << __FILE__ << " " << __LINE__;
+    qDebug() << "   adding connection";
+    qDebug() << "   " << connection;
+    if (_removedConnections.contains(connection)) {
+        qDebug() << "    --* get this connection from /dev/null :)";
+        _removedConnections.remove(connection);
+    }
+    _connections.insert(connection);
+    _lifeLine->addConnection(connection, actorType);
+}
+
+void SequenceDiagramItem::trackNodes() {
+    for (auto c: _connections) {
+        c->trackNodes();
+    }
+    _lifeLine->trackNodes();
 }
 
 /**
@@ -109,5 +111,10 @@ void SequenceDiagramItem::addConnection(
  * @param connection message arrow between objects
  */
 void SequenceDiagramItem::removeConnection(SequenceConnectionItem *connection) {
+    qDebug() << __FILE__ << " " << __LINE__;
+    qDebug() << "   removing connection";
+    qDebug() << "   removing << "<< connection <<"this from " << _connections;
+    _removedConnections.insert(connection);
+    _connections.remove(connection);
     _lifeLine->removeConnection(connection);
 }

@@ -1,3 +1,7 @@
+// File: ClassDiagram.h
+// Author: Shchapaniak Andrei <xshcha00@vutbr.cz>
+// Date: 07.05.2022
+
 #pragma once
 
 using json = nlohmann::json;
@@ -26,43 +30,44 @@ public:
     double width;
     double height;
 
-    void push_color(const json el);
+    void pushColor(const json el);
 
-    void push_name(const json el);
+    void pushName(const json el);
 
-    void push_attrs(const json el, std::vector<attrs_t>& obj);
+    void pushAttrs(const json el, std::vector<attrs_t>& obj);
 
-    void push_width(const json el);
+    void pushWidth(const json el);
 
-    void push_height(const json el);
+    void pushHeight(const json el);
 };
 
 class Conct {
 public:
-    std::string left_obj;
-    std::string left_num;
+    std::string leftObj;
+    std::string leftNum;
     int arrow;
-    std::string right_obj;
-    std::string right_num;
+    std::string rightObj;
+    std::string rightNum;
     std::string msg;
+    int order;
 
-    void fill_connection(const json el);
+    void pushConnection(const json el);
 };
 
 typedef struct dgrm_class {
     std::vector<Class> classes;
     std::vector<Conct> concts;
-} dgrm_class_t;
+} dgrmClass_t;
 
 class DiagramClass {
 public:
-    void fill_structure_conct(const json el, dgrm_class_t& o);
+    void fillStructureConct(const json el, dgrmClass_t& o);
 
-    void fill_structure_class(const json el, dgrm_class_t& o);
+    void fillStructureClass(const json el, dgrmClass_t& o);
 
-    void add_connect_to_file(json& j, std::vector<Conct> cn);
+    void addConnectToFile(json& j, std::vector<Conct> cn);
 
-    void add_class_to_file(json& j, std::vector<Class> cl);
+    void addClassToFile(json& j, std::vector<Class> cl);
 
-    json add_attrs(std::vector<attrs_t> x);
+    json addAttrs(std::vector<attrs_t> x);
 };

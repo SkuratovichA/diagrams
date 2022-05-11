@@ -1,5 +1,6 @@
 // File: ClassDiagramItem.cpp
 // Author: Skuratovich Aliaksandr <xskura01@vutbr.cz>
+// Author: Shchapaniak Andrei <xshcha00@vutbr.cz>
 // Date: 07.05.2022
 
 #include "DiagramItem.h"

@@ -1,3 +1,8 @@
+// File: TabCanvas.h
+// Author: Skuratovich Aliaksandr <xskura01@vutbr.cz>
+// Author: Shchapaniak Andrei <xshcha00@vutbr.cz>
+// Date: 07.05.2022
+
 #ifndef TABCANVAS_H
 #define TABCANVAS_H
 
@@ -71,37 +76,50 @@ private:
 
     // region Templates
 public:
+    /**
+     * Returns two first selected elements from the scene.
+     *
+     * @tparam T typename. Must be inherit from QGraphicsItem
+     * @return Pair of two selected elements with type T.
+     */
     template<typename T>
     QPair<T *, T *> getSelectedDiagramItems() {
         auto items = editorScene->selectedItems();
+        // remove selected items of another type
+        for (auto item: items) {
+            if (dynamic_cast<T *>(item) == nullptr) {
+                items.removeOne(item);
+            }
+        }
+
         if (items.isEmpty()) {
             return QPair<T *, T *>();
         }
-        QList<T *> listl;
-        auto first = dynamic_cast<T *>(items.first());
-        T *rest = nullptr;
+        // sort by a position
+        std::sort(items.begin(), items.end(),
+                  [](QGraphicsItem *a, QGraphicsItem *b) {
+                      if (a->x() <= b->y()) {return false;}
+                      if (a->y() <= b->y()) {return false;}
+                      return true;
+                  }
+        );
 
+        // take the first element of a list
+        auto first = dynamic_cast<T *>(items.first());
+        T *rest;
         switch (items.count()) {
             case 2:
+                // remove a previously taken elment
                 items.removeFirst();
                 // fallthrough
             case 1:
+                // take the "rest of a list"
                 rest = dynamic_cast<T *>(items.first());
-                if (first == nullptr || rest == nullptr) {
-                    return QPair<T *, T *>();
-                }
                 break;
             default:
-                qDebug() << items.count() << " nodes were selected. Bad";
-                        foreach(auto item, items) {
-                        if (dynamic_cast<T *>(item) != nullptr) {
-                            listl.append(dynamic_cast<T * >(item));
-                        }
-                    }
-                qDebug() << listl.count() << " elements to select.";
-                first = listl.first();
-                listl.removeFirst();
-                rest = listl.first();
+                //qDebug() << "     " << items.count() << " elements to select.";
+                items.removeFirst();
+                rest = dynamic_cast<T *>(items.first());
         }
         return QPair<T *, T *>(first, rest);
     }
@@ -193,6 +211,9 @@ public:
 public slots:
 
     void moveEntity(QGraphicsItem *movedItem, const QPointF &startPosition) {
+        //qDebug() << "<" << __FILE__;
+        //qDebug() << "movindg item: " << movedItem << " from the starting position: " << startPosition;
+        //qDebug(">");
         _undoStack->push(new MoveCommand(movedItem, startPosition));
     }
 
@@ -200,8 +221,7 @@ public slots:
         if (editorScene->selectedItems().isEmpty()) {
             return;
         }
-        QUndoCommand *deleteCommand = new DeleteCommand(editorScene);
-        _undoStack->push(deleteCommand);
+        _undoStack->push(new DeleteCommand(editorScene));
     }
 
     void zoomIn() {
@@ -215,7 +235,6 @@ public slots:
 protected:
     EditorScene *editorScene = nullptr;
     QUndoStack *_undoStack = nullptr;
-//    EditorInterface *editorInterface = nullptr;
     ItemsBuffer *buffer = nullptr;
 
 private:
@@ -232,9 +251,12 @@ public:
 
 public:
     bool getStringRepresentation(Program &prg) override;
-    bool createFromFile(dgrm_class_t cls);
+    bool createFromFile(dgrmClass_t cls);
     QList<QPair<ClassDiagramItem *, QString>> getClassStringPairs();
     QPoint generateCoords() const override;
+    bool checkIdenticalNames();
+    bool checkPermissions();
+    bool comparePermissions(QGraphicsTextItem *y, QString str);
 
 private:
     void createEntityClassContextMenu();
@@ -314,7 +336,7 @@ public slots:
 
 public:
     bool getStringRepresentation(Program &prg) override;
-    bool createFromFile(dgrm_seq_t seq);
+    bool createFromFile(dgrmSeq_t seq);
     QPoint generateCoords() const override;
 
 private:

@@ -1,9 +1,15 @@
+// File: ClassCanvas.cpp
+// Author: Skuratovich Aliaksandr <xskura01@vutbr.cz>
+// Author: Shchapaniak Andrei <xshcha00@vutbr.cz>
+// Date: 07.05.2022
+
 #include <QGraphicsView>
 #include <QUndoStack>
 #include <QColor>
 #include <QRandomGenerator>
 #include <QWidget>
 #include <QUndoGroup>
+#include <QMessageBox>
 
 #include "TabCanvas.h"
 
@@ -54,13 +60,13 @@ QList<QPair<ClassDiagramItem *, QString>> ClassCanvas::getClassStringPairs() {
  * @param buf
  * @return
  */
-bool ClassCanvas::createFromFile(dgrm_class_t cls) {
+bool ClassCanvas::createFromFile(dgrmClass_t cls) {
     ItemsBuffer buf;
-    for (auto x : cls.classes) {
+    for (auto x: cls.classes) {
         buf.addClassItems(x);
     }
 
-    for (auto x : buf.classItems()) {
+    for (auto x: buf.classItems()) {
         ClassDiagramItem *diagramItem = new ClassDiagramItem(x);
         editorScene->addItem(diagramItem);
         diagramItem->setPos(x->x(), x->y());
@@ -74,8 +80,8 @@ bool ClassCanvas::createFromFile(dgrm_class_t cls) {
 
     ClassDiagramItem *from;
     ClassDiagramItem *to;
-    for (auto x : buf.relationItems()) {
-        for (auto y : items) {
+    for (auto x: buf.relationItems()) {
+        for (auto y: items) {
             if (x->leftObj() == y->name()) {
                 from = y;
             }
@@ -88,9 +94,97 @@ bool ClassCanvas::createFromFile(dgrm_class_t cls) {
             return false;
         }
 
-        ClassConnectionItem *item = new ClassConnectionItem(from, to, x, static_cast<ClassConnectionItem::ClassConnectionType>(x->type()));
+        ClassConnectionItem *item = new ClassConnectionItem(from, to, x, static_cast<ClassConnectionItem::ClassConnectionType>(x->type()), x->order());
         editorScene->addItem(item);
         editorScene->update();
+    }
+
+    return true;
+}
+
+/**
+ * Check if there are objects with identical names on the scene.
+ *
+ * @return true in success, otherwise fase
+ */
+bool ClassCanvas::checkIdenticalNames() {
+    QString msg = "You can not save diagrams to the file, because there are objects "
+                  "with identical names on the scene. The names of these objects have "
+                  "been colored red. Change them and try to save again.";
+    QList<ClassDiagramItem *> classItems = getItems<ClassDiagramItem>();
+    for (auto x : classItems) {
+        for (auto y : classItems) {
+            if (x->name() != y->name() || x == y) {
+                continue;
+            }
+
+            x->_head->setDefaultTextColor(Qt::red);
+            y->_head->setDefaultTextColor(Qt::red);
+            QMessageBox::warning(this, "Error", msg);
+            return false;
+        }
+    }
+
+    for (auto x : classItems) {
+        x->_head->setDefaultTextColor(Qt::black);
+    }
+
+    return true;
+}
+
+/**
+ *
+ * @param y
+ * @param str
+ * @return
+ */
+bool ClassCanvas::comparePermissions(QGraphicsTextItem *y, QString str) {
+    QChar s;
+    QString msg = "You can not save diagrams to the file, because "
+                  "there is one of the ";
+    QString cont = " of the class has the wrong access modifier. "
+                   "Possible modifiers:\n"
+                   "+ public\n"
+                   "- private\n"
+                   "# protected\n"
+                   "~ package\n"
+                   "Change it and try to save again.";
+
+    s = y->toPlainText()[0];
+    if (s == '#' || s == '+' || s == '-' || s == '~') {
+        y->setDefaultTextColor(Qt::black);
+        return true;
+    }
+
+    y->setDefaultTextColor(Qt::red);
+    QMessageBox::warning(this, "Error", msg + str + cont);
+    return false;
+}
+
+/**
+ * TODO description
+ *
+ * @return true in success, otherwise false
+ */
+bool ClassCanvas::checkPermissions() {
+    QList<ClassDiagramItem *> classItems = getItems<ClassDiagramItem>();
+
+    for (auto x : classItems) {
+        for (auto y : x->methods()) {
+            if (y->toPlainText() == "METHODS") {
+                continue;
+            }
+
+            if (!comparePermissions(y, "methods")) {
+                return false;
+            }
+        }
+
+        for (auto y : x->attrs()) {
+            if (!comparePermissions(y, "attributes")) {
+                return false;
+            }
+        }
     }
 
     return true;
@@ -113,6 +207,10 @@ bool ClassCanvas::getStringRepresentation(Program &prg) {
         buf.fillRelationItems(x);
     }
 
+    if (!checkIdenticalNames() || !checkPermissions()) {
+        return false;
+    }
+
     for (auto x: buf.classItems()) {
         Class tmp;
         tmp.name = x->name().toStdString();
@@ -121,31 +219,30 @@ bool ClassCanvas::getStringRepresentation(Program &prg) {
         x->fillColor(tmp.color);
         x->fillCoords(tmp.coords);
 
-        if ( !x->splitString(tmp.attrs, x->attrs()) ) {
+        if (!x->splitString(tmp.attrs, x->attrs())) {
             qDebug() << "Error with attribute, color it by red color";
             return false;
         }
 
-        if ( !x->splitString(tmp.methods, x->methods()) ) {
+        if (!x->splitString(tmp.methods, x->methods())) {
             qDebug() << "Error with method, color it by red color";
             return false;
         }
 
-        prg.diagram_class.classes.push_back(tmp);
+        prg.diagramClass.classes.push_back(tmp);
     }
 
-    for (auto x : buf.relationItems()) {
+    for (auto x: buf.relationItems()) {
         Conct tmp;
-        qDebug() << x->rightNum();
-        qDebug() << x->leftNum();
-        tmp.left_obj = x->leftObj().toStdString();
-        tmp.left_num = x->leftNum().toStdString();
-        tmp.right_obj = x->rightObj().toStdString();
-        tmp.right_num = x->rightNum().toStdString();
+        tmp.leftObj = x->leftObj().toStdString();
+        tmp.leftNum = x->leftNum().toStdString();
+        tmp.rightObj = x->rightObj().toStdString();
+        tmp.rightNum = x->rightNum().toStdString();
         tmp.msg = x->msg().toStdString();
         tmp.arrow = x->type();
+        tmp.order = x->order();
 
-        prg.diagram_class.concts.push_back(tmp);
+        prg.diagramClass.concts.push_back(tmp);
     }
 
     return true;
@@ -230,6 +327,7 @@ void ClassCanvas::addMethod_triggered() {
     for (auto x: item->connections()) {
         x->trackNodes();
     }
+    editorScene->update();
 };
 
 /**
@@ -261,6 +359,8 @@ void ClassCanvas::rmMethod_triggered() {
     for (auto x: item->connections()) {
         x->trackNodes();
     }
+
+    editorScene->update();
 };
 
 /**
@@ -291,6 +391,7 @@ void ClassCanvas::addAttr_triggered() {
     for (auto x: item->connections()) {
         x->trackNodes();
     }
+    editorScene->update();
 };
 
 /**
@@ -322,6 +423,8 @@ void ClassCanvas::rmAttr_triggered() {
     for (auto x: item->connections()) {
         x->trackNodes();
     }
+
+    editorScene->update();
 };
 
 /**
@@ -405,10 +508,11 @@ void ClassCanvas::addConnection() {
         return;
     }
 
-    createRelation = new relationsParams(nodes.first->name(), "1..n",nodes.second->name(),
-                                         "0..n","MSG",  ClassConnectionItem::Dependency);
+    createRelation = new relationsParams(nodes.first->name(), "1..n", nodes.second->name(),
+                                         "0..n", "MSG", ClassConnectionItem::Dependency, 0);
     _undoStack->push(
-            new AddClassConnectionCommand(nodes.first, nodes.second, createRelation, ClassConnectionItem::Dependency, editorScene)
+            new AddClassConnectionCommand(nodes.first, nodes.second, createRelation, ClassConnectionItem::Dependency,
+                                          editorScene)
     );
 }
 

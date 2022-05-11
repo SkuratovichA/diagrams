@@ -1,3 +1,8 @@
+// File: propertiesdialog.h
+// Author: Skuratovich Aliaksandr <xskura01@vutbr.cz>
+// Date: 7.5.2022
+
+
 #ifndef PROPERTIESDIALOG_H
 #define PROPERTIESDIALOG_H
 
