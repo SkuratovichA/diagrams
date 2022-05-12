@@ -74,10 +74,7 @@ bool SequenceCanvas::getStringRepresentation(Program &prg) {
 
     dgrmSeq_t obj;
 
-    qDebug() << "i am here";
-
     for (auto x : getItems<SequenceDiagramItem>()) {
-        qDebug() << "help num item";
         buf.fillActorItems(x);
     }
 
@@ -189,9 +186,6 @@ void SequenceCanvas::deleteMessage_triggered() {
  * @param classDiagramItemParent pointer to an object from a class diagram scene
  */
 void SequenceCanvas::addEntity(ClassDiagramItem *classDiagramItemParent) {
-    //qDebug() << "got name: in constructor " << classDiagramItemParent->name();
-//    qDebug() << "got name: in constructor " << classDiagramItemParent->name();
-
     QPoint point = generateCoords();
 
     createActor = new actorParams(point.x(), point.y(), classDiagramItemParent->name(),

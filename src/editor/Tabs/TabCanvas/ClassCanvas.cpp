@@ -508,6 +508,7 @@ void ClassCanvas::addConnection() {
         return;
     }
 
+
     createRelation = new relationsParams(nodes.first->name(), "1..n",nodes.second->name(),
                                          "0..n","MSG",  ClassConnectionItem::Dependency, 0);
     _undoStack->push(
