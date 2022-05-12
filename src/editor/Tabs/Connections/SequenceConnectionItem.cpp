@@ -271,41 +271,11 @@ void SequenceConnectionItem::paintDelete(QPainter *painter, const QStyleOptionGr
 
 void msgText::focusOutEvent(QFocusEvent *event) {
     SequenceConnectionItem *item = dynamic_cast<SequenceConnectionItem *>(this->parent());
-    QString msgMethod;
-    QString classMethod;
-    bool flag = false;
-    long long idx;
     if (item == nullptr) {
         return;
     }
 
-
-
-    idx = item->getText()->toPlainText().toStdString().find('(');
-    msgMethod = item->getText()->toPlainText().mid(0, idx);
-    for (auto method : item->nodeTo()->parentClassDiagramItem()->methods()) {
-        if (method->toPlainText() == "METHODS") {
-            continue;
-        }
-
-        classMethod = getMethod(method->toPlainText().toStdString());
-
-        if (classMethod == "") {
-            qDebug() << "HUINYA METHOD";
-        }
-        else if (classMethod == msgMethod) {
-            flag = true;
-            qDebug() << classMethod;
-            qDebug() << msgMethod;
-        }
-    }
-
-    if (!flag) {
-        item->getText()->setDefaultTextColor(QColor(Qt::red));
-    }
-    else {
-        item->getText()->setDefaultTextColor(QColor(Qt::black));
-    }
+    ObjectParams::checkMethod(item);
 
     this->clearFocus();
 }

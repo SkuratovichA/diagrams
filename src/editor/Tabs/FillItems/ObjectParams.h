@@ -11,6 +11,13 @@
 #include <QWidget>
 #include "../../Backend/Parse.h"
 
+class SequenceConnectionItem;
+
+namespace ObjectParams {
+    bool checkMethod(SequenceConnectionItem *item);
+    QString getMethod(std::string fullText);
+}
+
 class relationsParams {
 public:
     relationsParams(QString leftObj, QString leftNum,

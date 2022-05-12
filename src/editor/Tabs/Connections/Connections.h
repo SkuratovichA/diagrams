@@ -22,32 +22,6 @@ public:
         return _parent;
     }
 
-    QString getMethod(std::string fullText) {
-        std::string perm;
-        std::string type;
-        char *token;
-
-        if (fullText.length() < 2) {
-            return QString::fromStdString("");
-        }
-
-        token = strtok(const_cast<char*>(fullText.c_str()), " ");
-        perm = std::string(token);
-        if (token == NULL) {
-            return QString::fromStdString("");
-        }
-
-        token = strtok(nullptr, " ");
-        type = std::string(token);
-        if (token == NULL) {
-            return QString::fromStdString("");
-        }
-
-        long long pos = type.length() + perm.length() + 2;
-        long long idx = fullText.find('(');
-        return QString::fromStdString(fullText.substr(pos, idx - pos));
-    }
-
 protected:
     void keyReleaseEvent(QKeyEvent *event) override;
     void focusOutEvent(QFocusEvent *event) override;

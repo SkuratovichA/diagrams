@@ -95,19 +95,14 @@ bool SequenceCanvas::createFromFile(dgrmSeq_t seq) {
 
 bool SequenceCanvas::checkIdenticalNames() {
     QList<SequenceConnectionItem *> itemsCoonnections = getItems<SequenceConnectionItem>();
-    ClassDiagramItem *classItem;
-    std::string::size_type idx;
-    std::string strText;
-    std::vector<std::string> strsWithBr;
-    std::vector<std::string> strsNoBr;
 
     for (auto x : itemsCoonnections) {
-        if (x->getText()->defaultTextColor() == QColor(Qt::black)) {
-            continue;
+        if (!ObjectParams::checkMethod(x) && x->connectionType() != ConnectionType::Create
+                                          && x->connectionType() != ConnectionType::Delete)
+        {
+            QMessageBox::warning(this, "Error", "AHAHAHAHAH");
+            return false;
         }
-
-        QMessageBox::warning(this, "Error", "AHAHAHAHAH");
-        return false;
     }
 
     return true;
