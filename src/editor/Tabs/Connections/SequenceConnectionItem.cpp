@@ -81,6 +81,8 @@ void SequenceConnectionItem::trackNodes() {
     setLine(QLineF(
             QPointF(_nodeFrom->centre().x(), 0),
             QPointF(_nodeTo->centre().x(), 0)));
+//     _nodeFrom->trackNodes();
+//     _nodeTo->trackNodes();
 }
 
 /**

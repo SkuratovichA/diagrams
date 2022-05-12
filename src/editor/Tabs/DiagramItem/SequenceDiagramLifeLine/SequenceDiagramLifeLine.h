@@ -124,7 +124,7 @@ private:
      */
 private:
     qreal _yFrom = 0;
-    qreal _height = 500; // TODO set height
+    qreal _height = 1000; // TODO set height
     SequenceDiagramItem *_parent;
 
     /**
