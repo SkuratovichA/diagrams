@@ -30,7 +30,6 @@ QString createCommandString(QGraphicsItem *item) {
 MoveCommand::MoveCommand(QGraphicsItem *diagramItem, const QPointF &oldPos,
                          QUndoCommand *parent)
         : QUndoCommand(parent), diagramItem(diagramItem), startPos(oldPos), newPos(diagramItem->pos()) {
-    qDebug() << "Move command" << diagramItem;
 }
 
 /**
@@ -41,7 +40,6 @@ MoveCommand::MoveCommand(QGraphicsItem *diagramItem, const QPointF &oldPos,
 bool MoveCommand::mergeWith(const QUndoCommand *command) {
     const auto *moveCommand = dynamic_cast<const MoveCommand *>(command);
     QGraphicsItem *item = moveCommand->diagramItem;
-    qDebug() << "mergwe with item" << item;
     if (diagramItem != item) {
         return false;
     }
@@ -230,13 +228,7 @@ AddClassCommand::AddClassCommand(QGraphicsScene *scene, classParams *params, QUn
 /**
  *
  */
-AddClassCommand::~AddClassCommand() {
-    if (diagramItem->scene() != nullptr) {
-        return;
-    }
-//    delete diagramItem;
-    //qDebug() << "diagramItem deleted (Commands.cpp)";
-}
+AddClassCommand::~AddClassCommand() { }
 
 /**
  *
@@ -315,7 +307,6 @@ AddSequenceConnectionCommand::AddSequenceConnectionCommand(SequenceDiagramItem *
 
     actorConnection = new SequenceConnectionItem(fromNode, toNode, connectionType);
     initialStartPosition = QPointF(100, 100);
-    qDebug() << "create a connection" << actorConnection;
     setText(QObject::tr("Connect %1")
                     .arg(createCommandString(static_cast<SequenceConnectionItem *>(actorConnection))));
     scene->update();
