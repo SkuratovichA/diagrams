@@ -7,9 +7,8 @@
 
 #include "propertiesdialog.h"
 #include "ui_propertiesdialog.h"
-#include "../Tabs/DiagramItem/DiagramItem.h"
 
-PropertiesDialog::PropertiesDialog(QWidget *parent, QList<QPair<ClassDiagramItem * , QString>> &existingClasses) :
+PropertiesDialog::PropertiesDialog(QWidget *parent, QList<QPair<ClassDiagramItem *, QString>> &existingClasses) :
         QDialog(parent),
         ui(new Ui::PropertiesDialog) {
     ui->setupUi(this);
@@ -42,5 +41,3 @@ QString PropertiesDialog::selectedClassName() const {
 int PropertiesDialog::positionOfSelectedClassName() const {
     return _positionOfSelectedClassName;
 }
-
-
