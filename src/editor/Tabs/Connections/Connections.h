@@ -356,37 +356,67 @@ public:
      */
     void trackNodes();
 
-
+    /**
+     * @brief Getter. Returns a type of a connection.
+     * @return ConnectionType
+     */
     [[nodiscard]] ConnectionType connectionType() const {
         return _connectionType;
     };
 
+    /**
+     * @brief Getter. Returns a nodeFrom (initial node)
+     * @return SequenceDiagramItem nodeFrom
+     */
     [[nodiscard]] SequenceDiagramItem *nodeFrom() const {
         return _nodeFrom;
     };
 
+    /**
+     * @brief Getter. Returns a nodeTo (final node)
+     * @return SequenceDiagramItem nodeTo
+     */
     [[nodiscard]] SequenceDiagramItem *nodeTo() const {
         return _nodeTo;
     };
 
+    /**
+     * @brief Getter. Returns the type of a connection.
+     * @return ConnectionType
+     */
     ConnectionType type() {
         return _connectionType;
     }
 
+    /**
+     * Getter. Returns flags for a text above the connection line
+     * @return Qt::TextInteractionFlags
+     */
     static QFlags<Qt::TextInteractionFlag> getFlags() {
         return Qt::TextInteractionFlag::TextEditable |
                Qt::TextInteractionFlag::TextSelectableByMouse |
                Qt::TextInteractionFlag::TextSelectableByKeyboard;
     }
 
+    /**
+     * Returns width for a text above the connection line
+     * @return qreal
+     */
     qreal widthText() {
         return text->boundingRect().width();
     }
 
+    /**
+     * Getter. Returns text above a connection line
+     * @return QGraphicsTextItem*
+     */
     QGraphicsTextItem* getText() {
         return text;
     };
 
+    /**
+     * @brief If linetype is reply, set it in an appropriate way
+     */
     void setLineReplay() {
         cLine = line();
 
@@ -394,40 +424,43 @@ public:
             cLine = QLineF(QPointF(cLine.p1().x() + 10, cLine.p1().y()),
                            QPointF(cLine.p2().x() - 10, cLine.p2().y()));
 
-            pUp = QPointF(cLine.p1().x() + 15, cLine.p1().y() + 8);
-            pDown = QPointF(cLine.p1().x() + 15, cLine.p1().y() - 8);
-            pEnd = cLine.p1();
+            arrowTopPoint = QPointF(cLine.p1().x() + 15, cLine.p1().y() + 8);
+            arrowBottomPoint = QPointF(cLine.p1().x() + 15, cLine.p1().y() - 8);
+            lineEndpoint = cLine.p1();
         }
         else {
             cLine = QLineF(QPointF(cLine.p1().x() - 10, cLine.p1().y()),
                            QPointF(cLine.p2().x() + 10, cLine.p2().y()));
 
-            pUp = QPointF(cLine.p1().x() - 15, cLine.p1().y() + 8);
-            pDown = QPointF(cLine.p1().x() - 15, cLine.p1().y() - 8);
-            pEnd = cLine.p1();
+            arrowTopPoint = QPointF(cLine.p1().x() - 15, cLine.p1().y() + 8);
+            arrowBottomPoint = QPointF(cLine.p1().x() - 15, cLine.p1().y() - 8);
+            lineEndpoint = cLine.p1();
         }
     }
 
-    void setLineOther() {
+    /**
+     * @brief Configure another lines (Reply type excluded)
+     */
+    void setLineNonReply() {
         cLine = line();
 
         if (cLine.p1().x() < cLine.p2().x()) {
             cLine = QLineF(QPointF(cLine.p1().x() + 10, cLine.p1().y()),
                            QPointF(cLine.p2().x() - 10, cLine.p2().y()));
 
-            pUp = QPointF(cLine.p2().x() - 15, cLine.p2().y() + 8);
-            pDown = QPointF(cLine.p2().x() - 15, cLine.p2().y() - 8);
-            pEnd = cLine.p2();
-            posX = pEnd.x();
+            arrowTopPoint = QPointF(cLine.p2().x() - 15, cLine.p2().y() + 8);
+            arrowBottomPoint = QPointF(cLine.p2().x() - 15, cLine.p2().y() - 8);
+            lineEndpoint = cLine.p2();
+            lineEndPointX = lineEndpoint.x();
         }
         else {
             cLine = QLineF(QPointF(cLine.p1().x() - 10, cLine.p1().y()),
                            QPointF(cLine.p2().x() + 10, cLine.p2().y()));
 
-            pUp = QPointF(cLine.p2().x() + 15, cLine.p2().y() + 8);
-            pDown = QPointF(cLine.p2().x() + 15, cLine.p2().y() - 8);
-            pEnd = cLine.p2();
-            posX = pEnd.x() - 20;
+            arrowTopPoint = QPointF(cLine.p2().x() + 15, cLine.p2().y() + 8);
+            arrowBottomPoint = QPointF(cLine.p2().x() + 15, cLine.p2().y() - 8);
+            lineEndpoint = cLine.p2();
+            lineEndPointX = lineEndpoint.x() - 20;
         }
     }
 
@@ -445,18 +478,17 @@ private:
     void paintDelete(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
 
 private:
-    QPointF pEnd;
-    QPointF pUp;
-    QPointF pDown;
-    QLineF cLine;
-    qreal posX;
-    qreal scale = 20;
-    msgText *text;
-    QColor _color = QColor(0,0,0,200);
-    ConnectionType _connectionType;
-    SequenceDiagramItem *_nodeTo;
-    SequenceDiagramItem *_nodeFrom;
-
+    QPointF lineEndpoint; ///< line endpoint (p2)
+    QPointF arrowTopPoint; ///< top point of the line arrow
+    QPointF arrowBottomPoint; ///< bottom point of the line arrow
+    QLineF cLine; ///< a line to draw
+    qreal lineEndPointX; ///< x axis of an endpoint of the line
+    qreal arrowSizeScale = 20; ///< size of an arrow
+    msgText *text; ///< text above the line
+    QColor _color = QColor(0, 0, 0, 200); ///< default color
+    ConnectionType _connectionType; ///< connection Type
+    SequenceDiagramItem *_nodeTo; ///< start node
+    SequenceDiagramItem *_nodeFrom; ///< end node
 };
 
 #endif //DIAGRAMS_CONNECTIONS_H

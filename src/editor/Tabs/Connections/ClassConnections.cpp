@@ -50,8 +50,6 @@ msgText::msgText(QGraphicsItem *parent, QFlags<Qt::TextInteractionFlag> flags, q
 void msgText::keyReleaseEvent(QKeyEvent *event) {
     if ((event->key() == Qt::Key_Enter) || (event->key() == Qt::Key_Return)) {
         setPlainText(toPlainText().remove('\n'));
-        //clearFocus();
-        //setTextCursor(QTextCursor());
         return;
     }
 }
@@ -479,15 +477,6 @@ void ClassConnectionItem::drawLine(QPainter *painter, const QStyleOptionGraphics
                                cos(angle + M_PI / 3) * scale);
     arrowP3 = linend + QPointF(sin(angle + M_PI / 2) * scale * 1.7,
                                cos(angle + M_PI / 2) * scale * 1.7);
-
-#if 0
-    // set method color to a default one
-    for (auto methodFrom: _nodeFrom->methods()) {
-        if (methodFrom->toPlainText() != QString("METHODS")) {
-            methodFrom->setDefaultTextColor(Qt::black);
-        }
-    }
-#endif
 
     switch (_connectionType) {
         case Association:

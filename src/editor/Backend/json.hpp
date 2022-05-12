@@ -16054,7 +16054,7 @@ inline void grisu2(char* buf, int& len, int& decimal_exponent,
     //  --------------------(-----------+-----------------------)--------    (B)
     //                      m-          v                       m+
     //
-    // First scale v (and m- and m+) such that the exponent is in the range
+    // First arrowSizeScale v (and m- and m+) such that the exponent is in the range
     // [alpha, gamma].
 
     const cached_power cached = get_cached_power_for_binary_exponent(m_plus.e);
