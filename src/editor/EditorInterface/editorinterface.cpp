@@ -86,9 +86,8 @@ void editorInterface::newTabSelected() {
                 auto newName = sequenceItem->name();
                 if (newName != sequenceItem->parentClassDiagramItem()->name()) {
                     sequenceItem->parentClassDiagramItem()->setName(newName);
-                    //qreal Pos = (sequenceItem->parentClassDiagramItem()->boundingRect().width() - sequenceItem->parentClassDiagramItem()->width()) / 2;
-                    //sequenceItem->parentClassDiagramItem()->_head->setPos(Pos, -40);
-                    //dynamic_cast<TabCanvas *>(tabWidget->currentWidget())->updateScene();
+                    qreal Pos = (sequenceItem->parentClassDiagramItem()->width() - sequenceItem->parentClassDiagramItem()->_head->boundingRect().width()) / 2.0;
+                    sequenceItem->parentClassDiagramItem()->_head->setPos(Pos, -40);
                 }
             }
         }
@@ -99,9 +98,8 @@ void editorInterface::newTabSelected() {
                 auto newName = sequenceItem->parentClassDiagramItem()->name();
                 if (newName != sequenceItem->name()) {
                     sequenceItem->setName(newName);
-                    //qreal Pos = (sequenceItem->parentClassDiagramItem()->boundingRect().width() - sequenceItem->parentClassDiagramItem()->width()) / 2;
-                    //sequenceItem->parentClassDiagramItem()->_head->setPos(Pos, -40);
-                    //dynamic_cast<TabCanvas *>(tabWidget->currentWidget())->updateScene();
+                    qreal Pos = (sequenceItem->width() - sequenceItem->_head->boundingRect().width()) / 2.0;
+                    sequenceItem->_head->setPos(Pos, -40);
                 }
             }
         }
@@ -109,12 +107,7 @@ void editorInterface::newTabSelected() {
 
     undoStack->setActiveStack(reinterpret_cast<TabCanvas *>(tabWidget->currentWidget())->undoStack());
     prevWidget = tabWidget->currentWidget();
-
-    for (auto x : reinterpret_cast<TabCanvas *>(tabWidget->currentWidget())->getItems<ClassDiagramItem>()) {
-        qDebug() << "item" << x->x() << x->y();
-    }
-    // update of the scene does not work
-    //rdynamic_cast<TabCanvas *>(tabWidget->currentWidget())->updateScene();
+    dynamic_cast<TabCanvas *>(tabWidget->currentWidget())->updateScene();
 }
 
 void editorInterface::createUndoView() {
