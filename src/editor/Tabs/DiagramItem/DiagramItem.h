@@ -178,11 +178,6 @@ private:
     DiagramType _type;
     QColor _color;
 };
-//
-//class ActorLifetime : public QGraphicsLineItem {
-//public:
-//    ActorLifetime(QGraphicsItem *parent, QPointF startPoint);
-//};
 
 class ClassDiagramItem : public QGraphicsRectItem, public DiagramItem {
 public:

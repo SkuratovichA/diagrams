@@ -8,6 +8,7 @@
 #include <QPen>
 #include <QStyle>
 #include <QPainter>
+#include <QTextCursor>
 
 #include "Connections.h"
 #include "../DiagramItem/DiagramItem.h"
@@ -276,7 +277,16 @@ void msgText::focusOutEvent(QFocusEvent *event) {
     }
 
     ObjectParams::checkMethod(item);
+    hide();
 
-    this->clearFocus();
+    //this->clearFocus();
+//    setTextInteractionFlags(Qt::NoTextInteraction);
+//
+//    QTextCursor _cursor = textCursor();
+//    _cursor.clearSelection();
+//    setTextCursor(_cursor);
+//
+//    QGraphicsItem::focusOutEvent(event);
+    return QGraphicsTextItem::focusOutEvent(event);
 }
 

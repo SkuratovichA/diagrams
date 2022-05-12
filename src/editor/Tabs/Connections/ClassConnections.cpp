@@ -10,6 +10,7 @@
 
 #include "Connections.h"
 #include "../DiagramItem/DiagramItem.h"
+#include <QTextCursor>
 
 /**
  * A constructor.
@@ -67,7 +68,8 @@ msgText::msgText(QGraphicsItem *parent, QFlags<Qt::TextInteractionFlag> flags, q
 void msgText::keyReleaseEvent(QKeyEvent *event) {
     if ((event->key() == Qt::Key_Enter) || (event->key() == Qt::Key_Return)) {
         setPlainText(toPlainText().remove('\n'));
-        clearFocus();
+        //clearFocus();
+        //setTextCursor(QTextCursor());
         return;
     }
 }
