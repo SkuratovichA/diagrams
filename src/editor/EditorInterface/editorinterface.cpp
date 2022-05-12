@@ -202,10 +202,13 @@ void editorInterface::createDynamicToolBar() {
 bool editorInterface::getTextRepresentation(Program &prg) {
     auto size = tabWidget->count();
     for (int i = 0; i < size; i++) {
+        tabWidget->setCurrentWidget(tabWidget->widget(i));
         if (! reinterpret_cast<TabCanvas *>(tabWidget->widget(i))->getStringRepresentation(prg) ) {
             return false;
         }
     }
+
+    tabWidget->setCurrentWidget(tabWidget->widget(0));
 
     return true;
 }
