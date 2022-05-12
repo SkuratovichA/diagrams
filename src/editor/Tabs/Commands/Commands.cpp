@@ -202,9 +202,6 @@ void AddClassConnectionCommand::redo() {
     graphicsScene->update();
 }
 
-/**
- *
- */
 AddSequenceConnectionCommand::AddSequenceConnectionCommand(SequenceDiagramItem *nodeFrom,
                                                            SequenceDiagramItem *nodeTo,
                                                            messageParams *params,
@@ -214,7 +211,6 @@ AddSequenceConnectionCommand::AddSequenceConnectionCommand(SequenceDiagramItem *
         : QUndoCommand(parent), graphicsScene(scene) {
 
     actorConnection = new SequenceConnectionItem(nodeFrom, nodeTo, params, connectionType);
-    initialStartPosition = QPointF(100, 100);
     scene->update();
 }
 
