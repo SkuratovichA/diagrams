@@ -26,7 +26,7 @@ public:
     void addClassItems(Class cls);
     void fillClassItems(ClassDiagramItem *item);
 
-    void addRelationItems(Conct conct);
+    void addRelationItems(ClassDiagramConnectionRepresentation conct);
     void fillRelationItems(ClassConnectionItem *item);
 
     void addMessageItems(Action action);

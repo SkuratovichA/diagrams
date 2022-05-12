@@ -25,7 +25,7 @@ ItemsBuffer::~ItemsBuffer() {
  *
  * @param conct structure with the data
  */
-void ItemsBuffer::addRelationItems(Conct conct) {
+void ItemsBuffer::addRelationItems(ClassDiagramConnectionRepresentation conct) {
     relationsParams *prm = new relationsParams(QString::fromStdString(conct.leftObj),
                                                QString::fromStdString(conct.leftNum),
                                                QString::fromStdString(conct.rightObj),

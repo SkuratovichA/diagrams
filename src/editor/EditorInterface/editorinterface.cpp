@@ -3,7 +3,6 @@
 // Author: Shchapaniak Andrei <xshcha00@vutbr.cz>
 // Date: 1.5.2022
 
-// FIXME: https://doc.qt.io/qt-5/qkeysequence.html
 
 #include "editorinterface.h"
 #include "ui_editorinterface.h"
@@ -14,9 +13,10 @@
 #include <QDir>
 #include <QUndoView>
 
-#include "../Tabs/TabCanvas/TabCanvas.h"
-#include "../PropertiesDialog/propertiesdialog.h"
 
+/**
+ * Macro for adding a signal
+ */
 #define ADD_SIGNAL(obj, name, icon, shortcut, receiver, memberslot) \
     do {                                                            \
         obj = new QAction(tr((name)), this);                        \
@@ -86,7 +86,8 @@ void editorInterface::newTabSelected() {
                 auto newName = sequenceItem->name();
                 if (newName != sequenceItem->parentClassDiagramItem()->name()) {
                     sequenceItem->parentClassDiagramItem()->setName(newName);
-                    qreal Pos = (sequenceItem->parentClassDiagramItem()->width() - sequenceItem->parentClassDiagramItem()->_head->boundingRect().width()) / 2.0;
+                    qreal Pos = (sequenceItem->parentClassDiagramItem()->width() -
+                                 sequenceItem->parentClassDiagramItem()->_head->boundingRect().width()) / 2.0;
                     sequenceItem->parentClassDiagramItem()->_head->setPos(Pos, -40);
                 }
             }
@@ -144,6 +145,7 @@ void editorInterface::createDynamicToolBar() {
     redoAction = undoStack->createRedoAction(this, tr("&Redo"));
 
 #ifdef __APPLE__
+    // a version for macos
     QToolBar *a = addToolBar(tr("Edit1"));
     addToolBarBreak(Qt::TopToolBarArea);
     QToolBar *b = addToolBar(tr("Edit2"));
@@ -169,6 +171,7 @@ void editorInterface::createDynamicToolBar() {
     a->setOrientation(Qt::Horizontal);
     b->setOrientation(Qt::Horizontal);
 #else
+    // a version for linux or windows
     fileMenu = menuBar()->addMenu(tr("&File"));
     fileMenu->addAction(saveAction);
     fileMenu->addAction(saveAsAction);
@@ -203,15 +206,14 @@ bool editorInterface::getTextRepresentation(Program &prg) {
             return false;
         }
     }
-
     tabWidget->setCurrentWidget(tabWidget->widget(0));
     return true;
 }
 
 void editorInterface::connectItemsDiagrams() {
     auto sequenceTab = reinterpret_cast<SequenceCanvas *>(tabWidget->currentWidget());
-    QList<QPair<ClassDiagramItem *, QString>> classStringPairs = reinterpret_cast<ClassCanvas *>(tabWidget->widget(
-            0))->getClassStringPairs();
+    QList<QPair<ClassDiagramItem *, QString>> classStringPairs =
+            reinterpret_cast<ClassCanvas *>(tabWidget->widget(0))->getClassStringPairs();
 
     for (auto x: sequenceTab->getItems<SequenceDiagramItem>()) {
         for (auto y: classStringPairs) {
@@ -243,73 +245,43 @@ void editorInterface::readFile() {
         reinterpret_cast<SequenceCanvas *>(tabWidget->widget(idx))->createFromFile(prg.diagramSequence[c]);
         connectItemsDiagrams();
     }
-
     tabWidget->setCurrentWidget(tabWidget->widget(0));
 }
 
 void editorInterface::writeToFile() {
     Program prg;
-
     QFile file(filename);
     if (!file.open(QIODevice::WriteOnly)) {
         QMessageBox::information(this, tr("Unable to open file"), file.errorString());
         return;
     }
-
     if (!getTextRepresentation(prg)) {
         return;
     }
-
     prg.fillFile(filename.toStdString());
     file.close();
 }
 
-/**
- * A trigger for "Save" action.
- *
- * If the file is not specified, the action "Save As" will be triggered.
- * File will be opened as a stream and the text in the required format will be written.
- */
 void editorInterface::actionSave_triggered() {
     if (filename == nullptr || filename.isEmpty()) {
         actionSaveAs_triggered();
         return;
     }
-
     writeToFile();
 }
 
-/**
- * A trigger for "Save As" action.
- *
- * File will be opened as a stream and the text in the required format will be written.
- */
 void editorInterface::actionSaveAs_triggered() {
-    filename = QFileDialog::getSaveFileName(this, tr("Save Address Book"), QDir::homePath(),
-                                            filenameFilter);
-
+    filename = QFileDialog::getSaveFileName(this, tr("Save Address Book"), QDir::homePath(), filenameFilter);
     if (filename == nullptr || filename.isEmpty()) {
         return;
     }
-
     writeToFile();
 }
 
-/**
- * A trigger for "New Tab" action.
- *
- * Create a new tab for sequence diagram.
- */
 void editorInterface::actionNewTab_triggered() {
     tabWidget->addTab(new SequenceCanvas(this, undoStack), "sequence Diagram editor");
 }
 
-/**
- * A trigger for "Delete Tab" action.
- *
- * Delete the currently active diagram.
- * @note You can not delete a class diagram.
- */
 void editorInterface::actionDeleteTab_triggered() {
     auto ci = tabWidget->currentIndex();
     if (ci == 0) {
@@ -319,15 +291,6 @@ void editorInterface::actionDeleteTab_triggered() {
     tabWidget->removeTab(ci);
 }
 
-/**
- * A trigger for "Add Entity" action.
- *
- * @details Create a new entity on the active tab.
- * If an active tab contains diagram class, will be created a default class.
- * Otherwise all entities from class diagram will be read to QList.
- * Then the user will be offered the option to create an object
- * from the list in the sequence diagram.
- */
 void editorInterface::actionAddEntity_triggered() {
     if (tabWidget->currentIndex() == 0) {
         reinterpret_cast<ClassCanvas *>(tabWidget->currentWidget())->addEntity();
@@ -365,12 +328,6 @@ void editorInterface::actionAddEntity_triggered() {
     }
 }
 
-/**
- * A trigger for "Add Connection" action.
- *
- * Depending on the active diagram will be created connection
- * between the selected objects.
- */
 void editorInterface::actionAddConnection_triggered() {
     if (tabWidget->currentIndex() == 0) {
         reinterpret_cast<ClassCanvas *>(tabWidget->currentWidget())->addConnection();
@@ -379,87 +336,74 @@ void editorInterface::actionAddConnection_triggered() {
     }
 }
 
-/**
- * A trigger for "Remove" action.
- *
- * Depending on the active diagram will be removed all selected entities.
- */
 void editorInterface::actionRemove_triggered() {
-    if (tabWidget->currentIndex() == 0) {
-        // set selected elements as they are deleted
-        for (auto classDiagram: reinterpret_cast<SequenceCanvas *>(tabWidget->currentWidget())->getItems<ClassDiagramItem>()) {
-            if (classDiagram->isSelected()) {
-                classDiagram->setDeleted(true);
+    // just delete class/classes without any questions
+    if (tabWidget->currentIndex() != 0) {
+        reinterpret_cast<SequenceCanvas *>(tabWidget->currentWidget())->removeEntity();
+        return;
+    }
+    // set selected elements as they are deleted
+    for (auto classDiagram: reinterpret_cast<SequenceCanvas *>(tabWidget->currentWidget())->getItems<ClassDiagramItem>()) {
+        if (classDiagram->isSelected()) {
+            classDiagram->setDeleted(true);
+        }
+    }
+    // get count of dependent elements
+    int elementsToDeleteCount = 0;
+    for (int i = 1; i < tabWidget->count(); i++) {
+        auto sequenceTab = reinterpret_cast<SequenceCanvas *>(tabWidget->widget(i));
+        auto sequenceObjects = sequenceTab->getItems<SequenceDiagramItem>();
+        for (auto sequenceObject: sequenceObjects) {
+            auto parentClass = sequenceObject->parentClassDiagramItem();
+            if (parentClass != nullptr && parentClass->isDeleted()) {
+                elementsToDeleteCount++;
             }
         }
-        // get count of dependent elements
-        int elementsToDeleteCount = 0;
-        for (int i = 1; i < tabWidget->count(); i++) {
-            auto sequenceTab = reinterpret_cast<SequenceCanvas *>(tabWidget->widget(i));
-            auto sequenceObjects = sequenceTab->getItems<SequenceDiagramItem>();
-            for (auto sequenceObject: sequenceObjects) {
-                auto parentClass = sequenceObject->parentClassDiagramItem();
-                if (parentClass != nullptr && parentClass->isDeleted()) {
-                    elementsToDeleteCount++;
-                }
-            }
-        }
-        // if there are children
-        if (elementsToDeleteCount > 0) {
-            auto text = QString("There are ") + QString::number(elementsToDeleteCount)
+    }
+    // if there are children
+    if (elementsToDeleteCount > 0) {
+        auto text = QString("There are ") + QString::number(elementsToDeleteCount)
                     + QString(" objects in sequence diagrams\n")
                     + QString("with the selected class") + QString(elementsToDeleteCount > 1 ? "es" : "")
                     + QString(".\n\n")
                     + QString("If you continue, they will automatically be removed.\n\n")
                     + QString("Proceed?");
-            QMessageBox msgBox;
-            msgBox.setWindowTitle("Class references");
-            msgBox.setText(text);
-            msgBox.setStandardButtons(QMessageBox::Cancel);
-            msgBox.addButton(QMessageBox::Yes);
-            msgBox.setDefaultButton(QMessageBox::Cancel);
+        QMessageBox msgBox;
+        msgBox.setWindowTitle("Class references");
+        msgBox.setText(text);
+        msgBox.setStandardButtons(QMessageBox::Cancel);
+        msgBox.addButton(QMessageBox::Yes);
+        msgBox.setDefaultButton(QMessageBox::Cancel);
 
-            auto decision = msgBox.exec() == QMessageBox::Yes;
+        auto decision = msgBox.exec() == QMessageBox::Yes;
 
-            if (decision) {
-                for (int i = 1; i < tabWidget->count(); i++) {
-                    auto sequenceTab = reinterpret_cast<SequenceCanvas *>(tabWidget->widget(i));
-                    auto sequenceObjects = sequenceTab->getItems<SequenceDiagramItem>();
-                    for (auto sequenceObject: sequenceObjects) {
-                        auto parentClass = sequenceObject->parentClassDiagramItem();
-                        if (parentClass != nullptr && parentClass->isDeleted()) {
-                            sequenceObject->setSelected(true);
-                            sequenceTab->removeEntity();
-                        }
-                    }
-                }
-                reinterpret_cast<ClassCanvas *>(tabWidget->currentWidget())->removeEntity();
-            } else {
-                for (auto classDiagram: reinterpret_cast<SequenceCanvas *>(tabWidget->currentWidget())->getItems<ClassDiagramItem>()) {
-                    if (classDiagram->isSelected()) {
-                        classDiagram->setDeleted(false);
+        if (decision) {
+            for (int i = 1; i < tabWidget->count(); i++) {
+                auto sequenceTab = reinterpret_cast<SequenceCanvas *>(tabWidget->widget(i));
+                auto sequenceObjects = sequenceTab->getItems<SequenceDiagramItem>();
+                for (auto sequenceObject: sequenceObjects) {
+                    auto parentClass = sequenceObject->parentClassDiagramItem();
+                    if (parentClass != nullptr && parentClass->isDeleted()) {
+                        sequenceObject->setSelected(true);
+                        sequenceTab->removeEntity();
                     }
                 }
             }
-        }
-            // if there are no children, delete just delete it
-        else {
             reinterpret_cast<ClassCanvas *>(tabWidget->currentWidget())->removeEntity();
+        } else {
+            for (auto classDiagram: reinterpret_cast<SequenceCanvas *>(tabWidget->currentWidget())->getItems<ClassDiagramItem>()) {
+                if (classDiagram->isSelected()) {
+                    classDiagram->setDeleted(false);
+                }
+            }
         }
     }
-    // just delete class/classes without any questions
+        // if there are no children, delete just delete it
     else {
-        reinterpret_cast<SequenceCanvas *>(tabWidget->currentWidget())->removeEntity();
+        reinterpret_cast<ClassCanvas *>(tabWidget->currentWidget())->removeEntity();
     }
 }
 
-/**
- * A trigger for "Cut" action.
- *
- * Depending on the active diagram will be cut all selected
- * entities to the local buffer.
- * @note Cutting can not be applied to connections.
- */
 void editorInterface::actionCut_triggered() {
     if (tabWidget->currentIndex() == 0) {
         reinterpret_cast<ClassCanvas *>(tabWidget->currentWidget())->cut();
@@ -468,13 +412,6 @@ void editorInterface::actionCut_triggered() {
     }
 }
 
-/**
- * A trigger for "Copy" action.
- *
- * Depending on the active diagram will be copied all selected
- * entities to the local buffer.
- * @note Copying can not be applied to connections.
- */
 void editorInterface::actionCopy_triggered() {
     if (tabWidget->currentIndex() == 0) {
         reinterpret_cast<ClassCanvas *>(tabWidget->currentWidget())->copy();
@@ -483,12 +420,6 @@ void editorInterface::actionCopy_triggered() {
     }
 }
 
-/**
- * A trigger for "Paste" action.
- *
- * Depending on the active diagram will be pasted all selected
- * entities from the local buffer.
- */
 void editorInterface::actionPaste_triggered() {
     if (tabWidget->currentIndex() == 0) {
         reinterpret_cast<ClassCanvas *>(tabWidget->currentWidget())->paste();
@@ -497,29 +428,14 @@ void editorInterface::actionPaste_triggered() {
     }
 }
 
-/**
- * A trigger for "Zoom In" action.
- *
- * Zoom in the current tab 1.2 times.
- */
 void editorInterface::actionZoomIn_triggered() {
     reinterpret_cast<TabCanvas *>(tabWidget->currentWidget())->zoomIn();
 }
 
-/**
- * A trigger for "Zoom out" action.
- *
- * Zoom out the current tab 1.2 times.
- */
 void editorInterface::actionZoomOut_triggered() {
     reinterpret_cast<TabCanvas *>(tabWidget->currentWidget())->zoomOut();
 }
 
-/**
- * A trigger for "Send to back" action.
- *
- * Decrease Z value of the selected items and send them to back.
- */
 void editorInterface::actionBack_triggered() {
     if (tabWidget->currentIndex() == 0) {
         reinterpret_cast<ClassCanvas *>(tabWidget->currentWidget())->toBack();
@@ -528,11 +444,6 @@ void editorInterface::actionBack_triggered() {
     }
 }
 
-/**
- * A trigger for "Send to front" action.
- *
- * Increase Z value of the selected items and send them to front.
- */
 void editorInterface::actionFront_triggered() {
     if (tabWidget->currentIndex() == 0) {
         reinterpret_cast<ClassCanvas *>(tabWidget->currentWidget())->toFront();
