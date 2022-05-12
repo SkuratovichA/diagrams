@@ -207,7 +207,7 @@ public:
     }
 
 public:
-    QList<ClassTextAttr *> methods() {
+    QList<ClassTextAttr *> &methods() {
         return _methods;
     }
 
