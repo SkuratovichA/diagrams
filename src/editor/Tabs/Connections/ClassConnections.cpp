@@ -168,7 +168,6 @@ QPair<QPointF, QPointF> ClassConnectionItem::edgePoints() const {
                 leftNum->setPos(xFrom + 10, yFrom - 50);
                 rightNum->setPos(xTo - 50, yTo + 10);
             }
-
             break;
         case 2:
             yTo = _nodeTo->centre().y() + toHeightHalf;
@@ -193,7 +192,6 @@ QPair<QPointF, QPointF> ClassConnectionItem::edgePoints() const {
                 leftNum->setPos(xFrom + 10, yFrom - 50);
                 rightNum->setPos(xTo - 50, yTo + 10);
             }
-
             break;
         case 3:
             yTo = _nodeTo->centre().y() + toHeightHalf;
