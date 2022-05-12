@@ -155,7 +155,7 @@ public:
      * @param params parameters of a class
      * @param parent parent undo command
      */
-    explicit AddClassCommand(QGraphicsScene *scene, classParams *params, QUndoCommand *parent = nullptr);
+    explicit AddClassCommand(QGraphicsScene *scene, ClassDiagramItemParameters *params, QUndoCommand *parent = nullptr);
 
     /**
      * A destructor.
@@ -235,7 +235,7 @@ public:
      */
     explicit AddClassConnectionCommand(ClassDiagramItem *fromNode,
                                        ClassDiagramItem *toNode,
-                                       relationsParams *params,
+                                       ClassDiagramConnectionParams *params,
                                        ClassConnectionItem::ClassConnectionType type,
                                        QGraphicsScene *scene,
                                        QUndoCommand *parent = nullptr);

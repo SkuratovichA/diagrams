@@ -88,7 +88,7 @@ public:
     ClassConnectionItem(
             ClassDiagramItem *fromNode,
             ClassDiagramItem *toNode,
-            relationsParams *params,
+            ClassDiagramConnectionParams *params,
             ClassConnectionType type,
             uint32_t order = 0,
             QColor color = QColor(50, 45, 50, 100)

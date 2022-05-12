@@ -31,11 +31,11 @@ public:
     void addMessageItems(Action action);
     void fillMessageItems(SequenceConnectionItem *item);
 
-    QList<classParams *> classItems() {
+    QList<ClassDiagramItemParameters *> classItems() {
         return _classItems;
     }
 
-    QList<relationsParams *> relationItems() {
+    QList<ClassDiagramConnectionParams *> relationItems() {
         return _relationItems;
     }
 
@@ -47,7 +47,7 @@ public:
         return _messageItems;
     }
 
-    void pushClassItem(classParams *item) {
+    void pushClassItem(ClassDiagramItemParameters *item) {
         _classItems.push_back(item);
     }
 
@@ -55,7 +55,7 @@ public:
         _actorItems.push_back(item);
     }
 
-    void pushRelationItem(relationsParams *item) {
+    void pushRelationItem(ClassDiagramConnectionParams *item) {
         _relationItems.push_back(item);
     }
 
@@ -99,8 +99,8 @@ public:
 //    }
 
 private:
-    QList<classParams *> _classItems;
-    QList<relationsParams *> _relationItems;
+    QList<ClassDiagramItemParameters *> _classItems;
+    QList<ClassDiagramConnectionParams *> _relationItems;
     QList<SequenceDiagramItemParameters *> _actorItems;
     //QList<SequenceConnectionItem *> _messageItems;
     QList<messageParams *> _messageItems;

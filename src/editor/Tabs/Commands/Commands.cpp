@@ -154,7 +154,7 @@ void AddSequenceCommand::redo() {
     graphicsScene->update();
 }
 
-AddClassCommand::AddClassCommand(QGraphicsScene *scene, classParams *params, QUndoCommand *parent)
+AddClassCommand::AddClassCommand(QGraphicsScene *scene, ClassDiagramItemParameters *params, QUndoCommand *parent)
         : QUndoCommand(parent), graphicsScene(scene) {
     diagramItem = new ClassDiagramItem(params);
     initialStartPosition = QPointF(params->x(), params->y());
@@ -179,7 +179,7 @@ void AddClassCommand::redo() {
 
 AddClassConnectionCommand::AddClassConnectionCommand(ClassDiagramItem *fromNode,
                                                      ClassDiagramItem *toNode,
-                                                     relationsParams *params,
+                                                     ClassDiagramConnectionParams *params,
                                                      ClassConnectionItem::ClassConnectionType type,
                                                      QGraphicsScene *scene,
                                                      QUndoCommand *parent)

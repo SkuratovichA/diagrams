@@ -13,7 +13,7 @@
 #include <QInputEvent>
 
 
-ClassDiagramItem::ClassDiagramItem(classParams *params)
+ClassDiagramItem::ClassDiagramItem(ClassDiagramItemParameters *params)
         : DiagramItem(params->width(),
                       params->height(),
                       DiagramItem::Class,

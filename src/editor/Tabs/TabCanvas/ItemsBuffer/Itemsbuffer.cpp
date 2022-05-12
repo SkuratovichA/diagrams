@@ -26,12 +26,12 @@ ItemsBuffer::~ItemsBuffer() {
  * @param conct structure with the data
  */
 void ItemsBuffer::addRelationItems(ClassDiagramConnectionRepresentation conct) {
-    relationsParams *prm = new relationsParams(QString::fromStdString(conct.leftObj),
-                                               QString::fromStdString(conct.leftNum),
-                                               QString::fromStdString(conct.rightObj),
-                                               QString::fromStdString(conct.rightNum),
-                                               QString::fromStdString(conct.msg),
-                                               conct.arrow, conct.order);
+    ClassDiagramConnectionParams *prm = new ClassDiagramConnectionParams(QString::fromStdString(conct.leftObj),
+                                                                         QString::fromStdString(conct.leftNum),
+                                                                         QString::fromStdString(conct.rightObj),
+                                                                         QString::fromStdString(conct.rightNum),
+                                                                         QString::fromStdString(conct.msg),
+                                                                         conct.arrow, conct.order);
 
     pushRelationItem(prm);
 }
@@ -41,7 +41,7 @@ void ItemsBuffer::addRelationItems(ClassDiagramConnectionRepresentation conct) {
  * @param item
  */
 void ItemsBuffer::fillRelationItems(ClassConnectionItem *item) {
-    relationsParams *ptr = new relationsParams(
+    ClassDiagramConnectionParams *ptr = new ClassDiagramConnectionParams(
             item->nodeFrom()->name(), item->getLeftNum()->toPlainText(),
             item->nodeTo()->name(), item->getRightNum()->toPlainText(),
             item->getMsg()->toPlainText(), item->connectionType(), item->order());
@@ -50,13 +50,13 @@ void ItemsBuffer::fillRelationItems(ClassConnectionItem *item) {
 }
 
 /**
- * Fill the structure classParams from json to another structure
+ * Fill the structure ClassDiagramItemParameters from json to another structure
  * for the next object created on the scene.
  *
  * @param cls structure with the data
  */
 void ItemsBuffer::addClassItems(Class cls) {
-    classParams *prm;
+    ClassDiagramItemParameters *prm;
     QList<QString> methods;
     QList<QString> attrs;
 
@@ -68,9 +68,9 @@ void ItemsBuffer::addClassItems(Class cls) {
         methods.push_back(QString::fromStdString(x.perm + " " + x.type + " " + x.name));
     }
 
-    prm = new classParams(cls.coords[0], cls.coords[1], QString::fromStdString(cls.name),
-                          QColor(cls.color.r, cls.color.g, cls.color.b, cls.color.a),
-                          cls.width, cls.height, attrs, methods);
+    prm = new ClassDiagramItemParameters(cls.coords[0], cls.coords[1], QString::fromStdString(cls.name),
+                                         QColor(cls.color.r, cls.color.g, cls.color.b, cls.color.a),
+                                         cls.width, cls.height, attrs, methods);
 
     pushClassItem(prm);
 }
@@ -80,7 +80,7 @@ void ItemsBuffer::addClassItems(Class cls) {
  * @param item
  */
 void ItemsBuffer::fillClassItems(ClassDiagramItem *item) {
-    classParams *ptr;
+    ClassDiagramItemParameters *ptr;
     QList<QString> methods;
     QList<QString> attrs;
 
@@ -96,10 +96,10 @@ void ItemsBuffer::fillClassItems(ClassDiagramItem *item) {
         attrs.push_back(x->toPlainText());
     }
 
-    ptr = new classParams(item->x() + 40, item->y() + 40,
-                          item->_head->toPlainText(), item->color(),
-                          item->width(), item->height(), attrs,
-                          methods);
+    ptr = new ClassDiagramItemParameters(item->x() + 40, item->y() + 40,
+                                         item->_head->toPlainText(), item->color(),
+                                         item->width(), item->height(), attrs,
+                                         methods);
     pushClassItem(ptr);
 }
 

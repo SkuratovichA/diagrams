@@ -310,7 +310,7 @@ public:
      * This constructor creates an entity for the class diagram.
      * @param params class with all necessary information to create an object.
      */
-    explicit ClassDiagramItem(classParams *params);
+    explicit ClassDiagramItem(ClassDiagramItemParameters *params);
 
     /**
      * @brief A destructor.

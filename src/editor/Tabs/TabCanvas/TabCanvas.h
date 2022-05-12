@@ -53,6 +53,7 @@ public:
         _undoStack = new QUndoStack(parentGroup);
         buffer = new ItemsBuffer();
     }
+
     /**
      * Destructor
      */
@@ -168,6 +169,7 @@ public:
         }
         return QPair<T *, T *>(first, rest);
     }
+
     /**CHUJ
      *
      * @tparam T
@@ -178,6 +180,7 @@ public:
         auto selectedPair = getSelectedDiagramItems<T>();
         return selectedPair == QPair<T *, T *>() ? nullptr : selectedPair.first;
     }
+
     /**CHUJ
      *
      * @tparam T
@@ -194,6 +197,7 @@ public:
         }
         return items;
     }
+
     /** CHUJ
      * @brief Sets Z value
      *
@@ -213,6 +217,7 @@ public:
         }
         editorScene->update();
     }
+
     /**
      * CHUJ
      */
@@ -240,18 +245,21 @@ public:
                 QRandomGenerator::global()->bounded(256),
                 180};
     }
+
     /**
      * CHUJ
      */
     QUndoStack *undoStack() const {
         return _undoStack;
     }
+
     /**
      * CHUJ
      */
     void updateScene() {
         editorScene->update();
     }
+
     /**
      * CHUJ
      */
@@ -300,6 +308,7 @@ public slots:
     void moveEntity(QGraphicsItem *movedItem, const QPointF &startPosition) {
         _undoStack->push(new MoveCommand(movedItem, startPosition));
     }
+
     /**
      * @brief Removes entity from scene, pushes into undo stack
      */
@@ -309,12 +318,14 @@ public slots:
         }
         _undoStack->push(new DeleteCommand(editorScene));
     }
+
     /**
      * @brief Zooms in with with scale factor of 1.2
      */
     void zoomIn() {
         scaleView(qreal(1.2));
     }
+
     /**
      * @brief Zooms out with with scale factor of 1.2
      */
@@ -479,7 +490,7 @@ public slots:
     void orientation_triggered();
 
 private:
-    classParams *createItem; ///< CHUJ
+    ClassDiagramItemParameters *createItem; ///< CHUJ
     relationsParams *createRelation; ///< CHUJ
     QMenu *classMenu; ///< Class menu
     QMenu *connectionMenu; ///< Connection menu
@@ -526,6 +537,7 @@ public slots:
      * @brief Implements virtual method copy() from TabCanvas superclass
      */
     void copy() override;
+
     /**
      * @brief Implements virtual method addEntity() from TabCanvas superclass
      */
