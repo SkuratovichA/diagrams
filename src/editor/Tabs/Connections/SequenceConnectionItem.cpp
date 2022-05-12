@@ -61,8 +61,8 @@ QVariant SequenceConnectionItem::itemChange(GraphicsItemChange change, const QVa
         return QPointF(
                 pos().x(),
                 std::min(
-                        std::max<qreal>(value.toPointF().y(), _nodeFrom->centre().y()),
-                        _nodeFrom->lineLength() + _nodeFrom->centre().y()
+                        std::max<qreal>(value.toPointF().y(), _nodeFrom->centre().y()) + 10, // upper bound
+                        _nodeFrom->lineLength() - 20 // lower bound
                 )
         );
     }
@@ -81,8 +81,6 @@ void SequenceConnectionItem::trackNodes() {
     setLine(QLineF(
             QPointF(_nodeFrom->centre().x(), 0),
             QPointF(_nodeTo->centre().x(), 0)));
-//     _nodeFrom->trackNodes();
-//     _nodeTo->trackNodes();
 }
 
 /**
