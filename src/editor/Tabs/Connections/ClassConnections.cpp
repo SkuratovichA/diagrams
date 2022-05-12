@@ -354,7 +354,6 @@ void ClassConnectionItem::trackNodes() {
         _orientation = !_orientation;
         std::swap(_nodeFrom, _nodeTo);
     }
-
     setLine(QLineF(edgePs.first, edgePs.second));
 }
 
@@ -464,7 +463,6 @@ QPolygonF ClassConnectionItem::lineShaper() const {
 
             poly << farLeft + topAdjuster << farLeft + bottomAdjuster << farRight - topAdjuster
                  << farRight - bottomAdjuster;
-            // **************
     }
     return poly;
 #undef ovlp
@@ -536,18 +534,53 @@ void ClassConnectionItem::drawLine(QPainter *painter, const QStyleOptionGraphics
     arrowP3 = linend + QPointF(sin(angle + M_PI / 2) * scale * 1.7,
                                cos(angle + M_PI / 2) * scale * 1.7);
 
+#if 0
+    // set method color to a default one
+    for (auto methodFrom: _nodeFrom->methods()) {
+        if (methodFrom->toPlainText() != QString("METHODS")) {
+            methodFrom->setDefaultTextColor(Qt::black);
+        }
+    }
+#endif
+
     switch (_connectionType) {
         case Association:
             break;
         case Aggregation:
             clr = QColor(Qt::white);
+            poly << linend << arrowP1 << arrowP3 << arrowP2;
+            break;
         case Composition:
             poly << linend << arrowP1 << arrowP3 << arrowP2;
             break;
         case Dependency:
             painter->setPen(QPen(_color, 2, Qt::DashLine));
             clr = QColor(Qt::white);
+            poly << linend << arrowP1 << arrowP2;
+            break;
         case Generalization:
+#if 0
+            auto commonMethods = QList<QString>();
+            auto methodsFromStrings = QList<QString>();
+
+            for (auto methodFrom: _nodeFrom->methods()) {
+                methodsFromStrings.append(methodFrom->toPlainText());
+            }
+
+            for (auto item: _nodeTo->methods()) {
+                if (methodsFromStrings.contains(item->toPlainText())) {
+                    commonMethods.append(item->toPlainText());
+                }
+            }
+
+            // this fix is so hot that i am horny...
+            for (auto methodFrom: _nodeFrom->methods()) {
+                if (methodFrom->toPlainText() != "METHODS" && commonMethods.contains(methodFrom->toPlainText())) {
+                    methodFrom->setDefaultTextColor(Qt::cyan);
+                }
+            }
+
+#endif
             poly << linend << arrowP1 << arrowP2;
             break;
     }
