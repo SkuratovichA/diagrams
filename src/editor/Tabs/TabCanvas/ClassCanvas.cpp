@@ -15,35 +15,16 @@
 
 class editorInterface;
 
-/**
- * A constructor.
- *
- * This constructor creates a tab with a class diagram.
- *
- * @param p parent widget
- * @param parentGroup pointer to the main undo stack
- * to create a local undo stask
- */
 ClassCanvas::ClassCanvas(QWidget *parent, QUndoGroup *parentGroup) : TabCanvas(parent, parentGroup) {
     createScene();
     createEntityClassContextMenu();
     createConnectionContextMenu();
 }
 
-/**
- * Generate random [x, y] coordinates ranging from 0 to 600
- *
- * @return coordinates on the scene for new item
- */
 QPoint ClassCanvas::generateCoords() const {
     return QPoint(QRandomGenerator::global()->bounded(600), QRandomGenerator::global()->bounded(600));
 }
 
-/**
- * // TODO
- * @return list with elements as a pair pointer to the class object
- * and name of this object
- */
 QList<QPair<ClassDiagramItem *, QString>> ClassCanvas::getClassStringPairs() {
     QList<QPair<ClassDiagramItem *, QString>> listPairs;
     for (auto x: getItems<ClassDiagramItem>()) {
@@ -55,11 +36,6 @@ QList<QPair<ClassDiagramItem *, QString>> ClassCanvas::getClassStringPairs() {
     return listPairs;
 }
 
-/**
- * TODO
- * @param buf
- * @return
- */
 bool ClassCanvas::createFromFile(dgrmClass_t cls) {
     ItemsBuffer buf;
     for (auto x: cls.classes) {
@@ -103,11 +79,6 @@ bool ClassCanvas::createFromFile(dgrmClass_t cls) {
     return true;
 }
 
-/**
- * Check if there are objects with identical names on the scene.
- *
- * @return true in success, otherwise fase
- */
 bool ClassCanvas::checkIdenticalNames() {
     QString msg = "You can not save diagrams to the file, because there are objects "
                   "with identical names on the scene. The names of these objects have "
@@ -133,12 +104,6 @@ bool ClassCanvas::checkIdenticalNames() {
     return true;
 }
 
-/**
- *
- * @param y
- * @param str
- * @return
- */
 bool ClassCanvas::comparePermissions(QGraphicsTextItem *y, QString str) {
     QChar s;
     QString msg = "You can not save diagrams to the file, because "
@@ -162,11 +127,6 @@ bool ClassCanvas::comparePermissions(QGraphicsTextItem *y, QString str) {
     return false;
 }
 
-/**
- * TODO description
- *
- * @return true in success, otherwise false
- */
 bool ClassCanvas::checkPermissions() {
     QList<ClassDiagramItem *> classItems = getItems<ClassDiagramItem>();
 
@@ -252,9 +212,6 @@ bool ClassCanvas::getStringRepresentation(Program &prg) {
     return true;
 }
 
-/**
- * Create and connect all signals for interaction with clasees.
- */
 void ClassCanvas::createEntityClassContextMenu() {
     ADD_SIGNAL(addMethod, "Add &Method", "+", "+", this, SLOT(addMethod_triggered()));
     ADD_SIGNAL(rmMethod, "Delete &Method", "+", "+", this, SLOT(rmMethod_triggered()));
@@ -268,9 +225,6 @@ void ClassCanvas::createEntityClassContextMenu() {
     classMenu->addAction(rmAttr);
 }
 
-/**
- * Create and connect all signals for interaction with relation arrows.
- */
 void ClassCanvas::createConnectionContextMenu() {
     ADD_SIGNAL(aggregation, "Aggregation &Relation", "+", "+", this, SLOT(aggregation_triggered()));
     ADD_SIGNAL(composition, "Composition &Relation", "+", "+", this, SLOT(composition_triggered()));
@@ -288,11 +242,6 @@ void ClassCanvas::createConnectionContextMenu() {
     connectionMenu->addAction(orientation);
 }
 
-/**
- * Show a context menu with actions for objects.
- *
- * @param pos position on the scene where the click was handled
- */
 void ClassCanvas::showContextMenu(const QPoint &pos) {
     QList<QGraphicsItem *> a = editorScene->selectedItems();
     if (a.size() != 1) {
@@ -306,9 +255,6 @@ void ClassCanvas::showContextMenu(const QPoint &pos) {
     }
 }
 
-/**
- * Add a new method to the selected class at the end.
- */
 void ClassCanvas::addMethod_triggered() {
     auto *item = selectedObject<ClassDiagramItem>();
 
@@ -334,9 +280,6 @@ void ClassCanvas::addMethod_triggered() {
     editorScene->update();
 };
 
-/**
- * Delete the last method from the selected class.
- */
 void ClassCanvas::rmMethod_triggered() {
     auto *item = selectedObject<ClassDiagramItem>();
 
@@ -367,9 +310,6 @@ void ClassCanvas::rmMethod_triggered() {
     editorScene->update();
 };
 
-/**
- * Add a new attribute to the selected class at the end.
- */
 void ClassCanvas::addAttr_triggered() {
     auto *item = selectedObject<ClassDiagramItem>();
     if (item == nullptr) {
@@ -398,9 +338,6 @@ void ClassCanvas::addAttr_triggered() {
     editorScene->update();
 };
 
-/**
- * Delete the last method from the selected class.
- */
 void ClassCanvas::rmAttr_triggered() {
     ClassDiagramItem *item = selectedObject<ClassDiagramItem>();
     if (item == nullptr) {
@@ -431,27 +368,18 @@ void ClassCanvas::rmAttr_triggered() {
     editorScene->update();
 };
 
-/**
- * Create an aggregation relation between two selected classes.
- */
 void ClassCanvas::aggregation_triggered() {
     auto line = (selectedObject<ClassConnectionItem>());
     line->setType(ClassConnectionItem::Aggregation);
     editorScene->update();
 }
 
-/**
- * Create a composition relation between two selected classes.
- */
 void ClassCanvas::composition_triggered() {
     auto line = (selectedObject<ClassConnectionItem>());
     line->setType(ClassConnectionItem::Composition);
     editorScene->update();
 }
 
-/**
- * Create a generalization relation between two selected classes.
- */
 void ClassCanvas::generalization_triggered() {
     auto line = selectedObject<ClassConnectionItem>();
     line->setType(ClassConnectionItem::Generalization);
@@ -464,27 +392,18 @@ void ClassCanvas::association_triggered() {
     editorScene->update();
 }
 
-/**
- * Create an dependency relation between two selected classes.
- */
 void ClassCanvas::dependency_triggered() {
     auto line = selectedObject<ClassConnectionItem>();
     line->setType(ClassConnectionItem::Dependency);
     editorScene->update();
 }
 
-/**
- * Change the orientation of the arrow.
- */
 void ClassCanvas::orientation_triggered() {
     auto line = selectedObject<ClassConnectionItem>();
     line->changeOrientation();
     editorScene->update();
 }
 
-/**
- * Add a new entity to the class diagram.
- */
 void ClassCanvas::addEntity() {
     QList<QString> attrs;
     QList<QString> methods;

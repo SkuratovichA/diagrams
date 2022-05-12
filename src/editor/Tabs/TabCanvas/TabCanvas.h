@@ -39,6 +39,12 @@ Q_OBJECT
 
 // region Constructor, Destructor
 public:
+    /**
+     * @brief Constructor
+     *
+     * @param parent
+     * @param parentGroup
+     */
     explicit TabCanvas(
             QWidget *parent = nullptr,
             QUndoGroup *parentGroup = nullptr
@@ -47,7 +53,9 @@ public:
         _undoStack = new QUndoStack(parentGroup);
         buffer = new ItemsBuffer();
     }
-
+    /**
+     * Destructor
+     */
     ~TabCanvas() {
         delete buffer;
         delete editorScene;
@@ -57,40 +65,40 @@ public:
 public /*slots*/:
 
     /**
-     * Pastes all items from "copy" buffer.
+     * @brief Pastes all items from "copy" buffer.
      */
     virtual void paste() = 0;
     /**
-     * Copy all selected items to the local "copy" buffer from the scene.
+     * @brief Copy all selected items to the local "copy" buffer from the scene.
      */
     virtual void copy() = 0;
     /**
-     * Copy all selected items to the local "copy" buffer from the scene
+     * @brief Copy all selected items to the local "copy" buffer from the scene
      * and the delete them.
      */
     virtual void cut() = 0;
     /**
-     * Show a context menu with actions for objects.
+     * @brief Show a context menu with actions for objects.
      *
      * @param pos position on the scene where the click was handled
      */
     virtual void showContextMenu(const QPoint &pos) = 0;
     /**
-     * Add a new entity to the sequence diagram with the same name as the parent item.
+     * @brief Add a new entity to the sequence diagram with the same name as the parent item.
      *
      * @param classDiagramItemParent pointer to an object from a class diagram scene
      */
     virtual void addEntity() = 0;
     /**
-     * Add a connection between actor life lines.
+     * @brief Add a connection between actor life lines.
      */
     virtual void addConnection() = 0;
     /**
-     * Decrease Z value of the selected items and send them to back.
+     * @brief Decrease Z value of the selected items and send them to back.
      */
     virtual void toBack() = 0;
     /**
-     * Increase Z value of the selected items and send them to front.
+     * @brief Increase Z value of the selected items and send them to front.
      */
     virtual void toFront() = 0;
 
@@ -160,13 +168,21 @@ public:
         }
         return QPair<T *, T *>(first, rest);
     }
-
+    /**CHUJ
+     *
+     * @tparam T
+     * @return
+     */
     template<typename T>
     T *selectedObject() {
         auto selectedPair = getSelectedDiagramItems<T>();
         return selectedPair == QPair<T *, T *>() ? nullptr : selectedPair.first;
     }
-
+    /**CHUJ
+     *
+     * @tparam T
+     * @return
+     */
     template<typename T>
     QList<T *> getItems() {
         QList<T *> items;
@@ -178,7 +194,13 @@ public:
         }
         return items;
     }
-
+    /** CHUJ
+     * @brief Sets Z value
+     *
+     * @tparam T
+     * @param items list
+     * @param val
+     */
     template<typename T>
     void setZvalue(QList<QGraphicsItem *> items, int val) {
         T *ptr1;
@@ -191,7 +213,9 @@ public:
         }
         editorScene->update();
     }
-
+    /**
+     * CHUJ
+     */
     template<typename T>
     void _toZchange(bool toFront) {
         QList<QGraphicsItem *> selItems = editorScene->selectedItems();
@@ -205,23 +229,32 @@ public:
     }
     // endregion
 
-    // region Geters, Setters
+    // region Getters, Setters
 public:
+    /**
+     * CHUJ
+     */
     QColor color() const {
         return {QRandomGenerator::global()->bounded(256),
                 QRandomGenerator::global()->bounded(256),
                 QRandomGenerator::global()->bounded(256),
                 180};
     }
-
+    /**
+     * CHUJ
+     */
     QUndoStack *undoStack() const {
         return _undoStack;
     }
-
+    /**
+     * CHUJ
+     */
     void updateScene() {
         editorScene->update();
     }
-
+    /**
+     * CHUJ
+     */
     void createScene() {
         editorScene = new EditorScene(this);
         editorScene->setSceneRect(QRect(-50, -50, _sceneWidth, _sceneHeight));
@@ -258,40 +291,64 @@ public:
 
 public slots:
 
+    /**
+     * @brief Moves entity to the given position.
+     *
+     * @param movedItem item to be moved
+     * @param startPosition starting position
+     */
     void moveEntity(QGraphicsItem *movedItem, const QPointF &startPosition) {
         _undoStack->push(new MoveCommand(movedItem, startPosition));
     }
-
+    /**
+     * @brief Removes entity from scene, pushes into undo stack
+     */
     void removeEntity() {
         if (editorScene->selectedItems().isEmpty()) {
             return;
         }
         _undoStack->push(new DeleteCommand(editorScene));
     }
-
+    /**
+     * @brief Zooms in with with scale factor of 1.2
+     */
     void zoomIn() {
         scaleView(qreal(1.2));
     }
-
+    /**
+     * @brief Zooms out with with scale factor of 1.2
+     */
     void zoomOut() {
         scaleView(1 / qreal(1.2));
     }
 
 protected:
-    EditorScene *editorScene = nullptr;
-    QUndoStack *_undoStack = nullptr;
-    ItemsBuffer *buffer = nullptr;
+    EditorScene *editorScene = nullptr; ///< Editor scene
+    QUndoStack *_undoStack = nullptr; ///< UNDO stack
+    ItemsBuffer *buffer = nullptr; ///< Item buffer
 
 private:
-    QGraphicsView *view;
-    const qreal _sceneWidth = 800;
-    const qreal _sceneHeight = 600;
+    QGraphicsView *view; ///< Graphics view
+    const qreal _sceneWidth = 800; ///< Constant scene width
+    const qreal _sceneHeight = 600; ///< Constant scene height
 };
 
+/**
+ * CHUJ
+ */
 class ClassCanvas : public TabCanvas {
 Q_OBJECT
 
 public:
+    /**
+     * A constructor.
+     *
+     * This constructor creates a tab with a class diagram.
+     *
+     * @param p parent widget
+     * @param parentGroup pointer to the main undo stack
+     * to create a local undo stask
+     */
     ClassCanvas(QWidget *parent = nullptr, QUndoGroup *parentGroup = nullptr);
 
 public:
@@ -300,76 +357,137 @@ public:
      * Implements virtual method getStringRepresentation() from TabCanvas superclass
      */
     bool getStringRepresentation(Program &prg) override;
+    /**
+     * Implements virtual method createFromFile(dgrmClass_t) from TabCanvas superclass
+     */
     bool createFromFile(dgrmClass_t cls);
+    /**
+     * CHUJ
+     * @return
+     */
     QList<QPair<ClassDiagramItem *, QString>> getClassStringPairs();
     /**
      * Implements virtual method generateCoords() from TabCanvas superclass
      */
     QPoint generateCoords() const override;
+    /**
+     * @brief Checks if item names from sequence diagram are corresponding to class ones.
+     *
+     * @return true in case of correspondence, false otherwise
+     */
     bool checkIdenticalNames();
+    /** CHUJ
+     * TODO description
+     * @brief
+     *
+     * @return true in case of success, otherwise false
+     */
     bool checkPermissions();
+    /** CHUJ
+     * @brief
+     *
+     * @param y
+     * @param str
+     * @return
+     */
     bool comparePermissions(QGraphicsTextItem *y, QString str);
 
 private:
+
+    /**
+     * @brief Create and connect all signals for interaction with classes.
+     */
     void createEntityClassContextMenu();
+    /**
+     * @brief Create and connect all signals for interaction with relation arrows.
+     */
     void createConnectionContextMenu();
 
 public slots:
+
     /**
-     * Implements virtual method paste() from TabCanvas superclass
+     * @brief Implements virtual method paste() from TabCanvas superclass
      */
     void paste() override;
     /**
-     * Implements virtual method cut() from TabCanvas superclass
+     * @brief Implements virtual method cut() from TabCanvas superclass
      */
     void cut() override;
     /**
-     * Implements virtual method copy() from TabCanvas superclass
+     * @brief Implements virtual method copy() from TabCanvas superclass
      */
     void copy() override;
     /**
-     * Implements virtual method addEntity() from TabCanvas superclass
+     * @brief Implements virtual method addEntity() from TabCanvas superclass
      */
     void addEntity() override;
     /**
-     * Implements virtual method addConnection() from TabCanvas superclass
+     * @brief Implements virtual method addConnection() from TabCanvas superclass
      */
     void addConnection() override;
     /**
-     * Implements virtual method showContextMenu() from TabCanvas superclass
+     * @brief Implements virtual method showContextMenu() from TabCanvas superclass
      */
     void showContextMenu(const QPoint &pos) override;
     /**
-     * Implements virtual method toBack() from TabCanvas superclass
+     * @brief Implements virtual method toBack() from TabCanvas superclass
      */
     void toBack() override;
     /**
-     * Implements virtual method toFront() from TabCanvas superclass
+     * @brief Implements virtual method toFront() from TabCanvas superclass
      */
     void toFront() override;
-
+    /**
+     * @brief Add a new method to the selected class at the end.
+     */
     void addMethod_triggered();
+    /**
+     * @brief Add a new attribute to the selected class at the end.
+     */
     void addAttr_triggered();
+    /**
+     * @brief Delete the last method from the selected class.
+     */
     void rmAttr_triggered();
+    /**
+     * @brief Delete the last method from the selected class.
+     */
     void rmMethod_triggered();
-
+    /**
+     * @brief Create an aggregation relation between two selected classes.
+     */
     void aggregation_triggered();
+    /**
+     * @brief Create a composition relation between two selected classes.
+     */
     void composition_triggered();
+    /**
+     * @brief Create a generalization relation between two selected classes.
+     */
     void generalization_triggered();
+    /**
+     * @brief Create an association relation between two selected classes.
+     */
     void association_triggered();
+    /**
+     * @brief Create a dependency relation between two selected classes.
+     */
     void dependency_triggered();
+    /**
+     * @brief Change the orientation of the arrow.
+     */
     void orientation_triggered();
 
 private:
-    classParams *createItem;
-    relationsParams *createRelation;
-    QMenu *classMenu;
-    QMenu *connectionMenu;
+    classParams *createItem; ///< CHUJ
+    relationsParams *createRelation; ///< CHUJ
+    QMenu *classMenu; ///< Class menu
+    QMenu *connectionMenu; ///< Connection menu
 
-    QAction *addMethod;
-    QAction *rmMethod;
-    QAction *addAttr;
-    QAction *rmAttr;
+    QAction *addMethod; ///< Action for method addition
+    QAction *rmMethod; ///< Action for method removal
+    QAction *addAttr; ///< Action for attribute addition
+    QAction *rmAttr; ///< Action for attribute removal
 
     QAction *aggregation;
     QAction *composition;
@@ -383,7 +501,6 @@ class SequenceCanvas : public TabCanvas {
 Q_OBJECT
 
 public:
-
     /**
      * A constructor.
      *
@@ -398,59 +515,59 @@ public:
 public slots:
 
     /**
-     * Implements virtual method paste() from TabCanvas superclass
+     * @brief Implements virtual method paste() from TabCanvas superclass
      */
     void paste() override;
     /**
-     * Implements virtual method cut() from TabCanvas superclass
+     * @brief Implements virtual method cut() from TabCanvas superclass
      */
     void cut() override;
     /**
-     * Implements virtual method copy() from TabCanvas superclass
+     * @brief Implements virtual method copy() from TabCanvas superclass
      */
     void copy() override;
     /**
-     * Implements virtual method addEntity() from TabCanvas superclass
+     * @brief Implements virtual method addEntity() from TabCanvas superclass
      */
     void addEntity() override {};
     /**
-     * Implements virtual method addEntity() from TabCanvas superclass
+     * @brief Implements virtual method addEntity() from TabCanvas superclass
      */
     void addEntity(ClassDiagramItem *classDiagramItemParent);
     /**
-     * Implements virtual method addConnection() from TabCanvas superclass
+     * @brief Implements virtual method addConnection() from TabCanvas superclass
      */
     void addConnection() override;
     /**
-     * Implements virtual method showContextMenu() from TabCanvas superclass
+     * @brief Implements virtual method showContextMenu() from TabCanvas superclass
      */
     void showContextMenu(const QPoint &pos) override;
     /**
-     * Implements virtual method toBack() from TabCanvas superclass
+     * @brief Implements virtual method toBack() from TabCanvas superclass
      */
     void toBack() override;
     /**
-     * Implements virtual method toFront() from TabCanvas superclass
+     * @brief Implements virtual method toFront() from TabCanvas superclass
      */
     void toFront() override;
     /**
-     * Create an asynchronous message between two objects.
+     * @brief Create an asynchronous message between two objects.
      */
     void asynchronousMessage_triggered();
     /**
-     * Create a synchronous message between two objects.
+     * @brief Create a synchronous message between two objects.
      */
     void synchronousMessage_triggered();
     /**
-     * Create a return message between two objects.
+     * @brief Create a return message between two objects.
      */
     void returnMessage_triggered();
     /**
-     * Create a message for creating a new object.
+     * @brief Create a message for creating a new object.
      */
     void createMessage_triggered();
     /**
-     * Create a message for deleting an object.
+     * @brief Create a message for deleting an object.
      */
     void deleteMessage_triggered();
 
@@ -460,24 +577,32 @@ public:
      * Implements virtual method getStringRepresentation() from TabCanvas superclass
      */
     bool getStringRepresentation(Program &prg) override;
-
     /** CHUJ
      * @brief Creates sequence tab from given file
      * @param seq
-     * @return bool error?
+     * @return true in case of success, false otherwise
      */
     bool createFromFile(dgrmSeq_t seq);
     /**
      * Implements virtual method generateCoords() from TabCanvas superclass
      */
     QPoint generateCoords() const override;
+    /**
+     * @brief Checks if item names from sequence diagram are corresponding to class ones.
+     *
+     * @return true in case of correspondence, false otherwise
+     */
     bool checkIdenticalNames();
 
 private:
+
+    /**
+     * @brief Creates sequence's context menu
+     */
     void createSequenceContextMenu();
 
 private:
-
+    // TODO:
     QList<QPair<ClassDiagramItem *, SequenceDiagramItem *>> pairClassSequence =
             QList<QPair<ClassDiagramItem *, SequenceDiagramItem *>>();
     QMenu *sequenceMenu = nullptr;
