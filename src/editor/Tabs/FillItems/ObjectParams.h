@@ -135,10 +135,10 @@ private:
     QList<QString> _methods;
 };
 
-class actorParams : public objectParams {
+class SequenceDiagramItemParameters : public objectParams {
 public:
-    actorParams(qreal x, qreal y, QString name, QColor color);
-    //~actorParams() = default;
+    SequenceDiagramItemParameters(qreal x, qreal y, QString name, QColor color);
+    //~SequenceDiagramItemParameters() = default;
 };
 
 

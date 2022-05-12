@@ -188,8 +188,8 @@ void SequenceCanvas::deleteMessage_triggered() {
 void SequenceCanvas::addEntity(ClassDiagramItem *classDiagramItemParent) {
     QPoint point = generateCoords();
 
-    createActor = new actorParams(point.x(), point.y(), classDiagramItemParent->name(),
-                                  classDiagramItemParent->color());
+    createActor = new SequenceDiagramItemParameters(point.x(), point.y(), classDiagramItemParent->name(),
+                                                    classDiagramItemParent->color());
 
     //qDebug() << point.x() << point.y() << classDiagramItemParent->name() << classDiagramItemParent->color();
     _undoStack->push(

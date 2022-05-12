@@ -97,6 +97,6 @@ bool classParams::splitString(std::vector<attrs_t> &at, QList<QString> arr) {
  * @param name
  * @param color
  */
-actorParams::actorParams(qreal x, qreal y, QString name, QColor color)
+SequenceDiagramItemParameters::SequenceDiagramItemParameters(qreal x, qreal y, QString name, QColor color)
     : objectParams(x, y, name, color) {
 };

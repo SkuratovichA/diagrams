@@ -58,7 +58,7 @@ private:
  */
 class AddSequenceCommand : public QUndoCommand {
 public:
-    explicit AddSequenceCommand(QGraphicsScene *scene, actorParams *params, ClassDiagramItem *parentClassDiagramItem,
+    explicit AddSequenceCommand(QGraphicsScene *scene, SequenceDiagramItemParameters *params, ClassDiagramItem *parentClassDiagramItem,
                                 QUndoCommand *parent = nullptr);
 
     ~AddSequenceCommand();

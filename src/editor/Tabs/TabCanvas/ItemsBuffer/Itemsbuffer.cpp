@@ -103,17 +103,17 @@ void ItemsBuffer::fillClassItems(ClassDiagramItem *item) {
 }
 
 /**
- * Fill the structure actorParams from json to another structure
+ * Fill the structure SequenceDiagramItemParameters from json to another structure
  * for the next object created on the scene.
  *
  * @param act structure with the data
  */
 void ItemsBuffer::addActorItems(Actor act) {
-    actorParams *a;
+    SequenceDiagramItemParameters *a;
 
-    a = new actorParams(act.coords[0], act.coords[1],
-                        QString::fromStdString(act.name),
-                        QColor(act.color.r, act.color.g, act.color.b, act.color.a));
+    a = new SequenceDiagramItemParameters(act.coords[0], act.coords[1],
+                                          QString::fromStdString(act.name),
+                                          QColor(act.color.r, act.color.g, act.color.b, act.color.a));
 
     pushActorItem(a);
 }
@@ -123,10 +123,10 @@ void ItemsBuffer::addActorItems(Actor act) {
  * @param item
  */
 void ItemsBuffer::fillActorItems(SequenceDiagramItem *item) {
-    actorParams *ptr;
+    SequenceDiagramItemParameters *ptr;
 
-    ptr = new actorParams(item->x(), item->y(),
-                          item->_head->toPlainText(), item->color());
+    ptr = new SequenceDiagramItemParameters(item->x(), item->y(),
+                                            item->_head->toPlainText(), item->color());
     pushActorItem(ptr);
 }
 

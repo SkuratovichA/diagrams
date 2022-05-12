@@ -12,6 +12,7 @@
 #include "Connections.h"
 #include "../DiagramItem/DiagramItem.h"
 #include "../DiagramItem/SequenceDiagramLifeLine/SequenceDiagramLifeLine.h"
+#include "../Commands/Commands.h"
 
 using namespace Connections;
 
@@ -28,11 +29,8 @@ SequenceConnectionItem::SequenceConnectionItem(SequenceDiagramItem *nodeFrom,
     _nodeFrom = nodeFrom;
     _nodeTo = nodeTo;
     _connectionType = connectionType;
-
-    //qDebug() << __FILE__;
-    qDebug() << "   creating a connection" << _nodeFrom << _nodeTo;
-    _nodeFrom->addConnection(this, Caller);
-    _nodeTo->addConnection(this, Receiver);
+    _nodeFrom->addConnection(this, Caller, CommandType::Add, CommandType::Connection);
+    _nodeTo->addConnection(this, Receiver, CommandType::Add, CommandType::Connection);
 
     setFlags(QGraphicsItem::ItemIsSelectable | QGraphicsItem::ItemIsMovable | QGraphicsItem::ItemSendsGeometryChanges);
 
@@ -40,22 +38,11 @@ SequenceConnectionItem::SequenceConnectionItem(SequenceDiagramItem *nodeFrom,
     setY(200);
 
     trackNodes();
-    //qDebug() << "one connection";
-    //qDebug() << __FILE__ << "   connection created>";
 }
 
-/**
- *
- */
 SequenceConnectionItem::~SequenceConnectionItem() {
 }
 
-/**
- * Changes the y-position of the line.
- * @param change
- * @param value
- * @return
- */
 QVariant SequenceConnectionItem::itemChange(GraphicsItemChange change, const QVariant &value) {
     if (change == ItemPositionChange) {
         return QPointF(

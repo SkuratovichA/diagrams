@@ -33,12 +33,45 @@ QT_END_NAMESPACE
 
 class SequenceDiagramLifeLine;
 
-// for attrs and table expanding
+namespace CommandType {
+    /**
+     * @brief Type of a command. The enum is used for undo/redo commands.
+     */
+    enum CommandType {
+        Add, Delete
+    };
+
+    /**
+     * @brief Type of a request. Used in destruction commands. Can either be destruction by a connection or a self-destruction.
+     */
+    enum RequestType {
+        Connection, Self
+    };
+};
+
+/**
+ * Self-expanding text class.
+ */
 class ClassTextAttr : public QGraphicsTextItem {
 public:
+    /**
+     *
+     * @param p
+     * @param text
+     * @param pos
+     * @param flags
+     */
     ClassTextAttr(ClassDiagramItem *p, QString text, QPointF pos, QFlags<Qt::TextInteractionFlag> flags);
+
+    /**
+     *
+     */
     ~ClassTextAttr() override;
 
+    /**
+     *
+     * @return
+     */
     ClassDiagramItem *parent() {
         return _parent;
     }
@@ -178,11 +211,6 @@ private:
     DiagramType _type;
     QColor _color;
 };
-//
-//class ActorLifetime : public QGraphicsLineItem {
-//public:
-//    ActorLifetime(QGraphicsItem *parent, QPointF startPoint);
-//};
 
 class ClassDiagramItem : public QGraphicsRectItem, public DiagramItem {
 public:
@@ -349,51 +377,140 @@ private:
     QSet<ClassConnectionItem *> _connections;
 };
 
+/**
+ *
+ */
 class SequenceDiagramItem : public QGraphicsRectItem, public DiagramItem {
 public:
-    explicit SequenceDiagramItem(actorParams *params, ClassDiagramItem *parentClassDiagramItem_ = nullptr);
+    /**
+     * @brief A constructor.
+     * @param params parameters needed to create an object.
+     * @param parentClassDiagramItem_ parent class from class diagram item.
+     */
+    explicit SequenceDiagramItem(SequenceDiagramItemParameters *params,
+                                 ClassDiagramItem *parentClassDiagramItem_ = nullptr);
 
+    /**
+     * Getterrs, setters
+     */
 public:
+    /**
+     * @brief Name of an object.
+     * @return Name of a head of an object.
+     */
     [[nodiscard]] QString name() const override {
         return _head->toPlainText();
     }
 
+    const QSet<SequenceConnectionItem *> &getRemovedConnectionsOnDeleteSelf() const {
+        return _removedConnectionsOnDeleteSelf;
+    }
+
+    const QSet<SequenceConnectionItem *> &getRemovedConnectionsOnDeleteConnection() const {
+        return _removedConnectionsOnDeleteConnection;
+    }
+
+    const QSet<SequenceConnectionItem *> &getRemovedConnectionsOnAddSelf() const {
+        return _removedConnectionsOnAddSelf;
+    }
+
+    const QSet<SequenceConnectionItem *> &getRemovedConnectionsOnAddConnection() const {
+        return _removedConnectionsOnAddConnection;
+    }
+
+    /**
+     * @brief Local centre.
+     * @return local centre of an object.
+     */
     [[nodiscard]] QPointF localCentre() const {
         return {width() / 2.0, height()};
     }
 
+    /**
+     * @brief Getter.
+     * @return set with connections
+     */
     QSet<SequenceConnectionItem *> connections() const {
+        return _connections;
+    };
+
+    /**
+     * @brief Get all connection, both deleted and existent.
+     * @return Set with all connections.
+     */
+    QSet<SequenceConnectionItem *> allConnections() const {
         QSet<SequenceConnectionItem *> allConnections = QSet<SequenceConnectionItem *>();
         allConnections.unite(_connections);
-        allConnections.unite(_removedConnections);
+        allConnections.unite(_removedConnectionsOnAddConnection);
+        allConnections.unite(_removedConnectionsOnAddSelf);
+        allConnections.unite(_removedConnectionsOnDeleteConnection);
+        allConnections.unite(_removedConnectionsOnDeleteSelf);
         return allConnections;
     }
 
+    /**
+     * @brief Functions tracks all changes and notifies children.
+     */
     void trackNodes();
 
+    /**
+     * @brief The centre of an object. (the middle point on the bottoom edge of the box).
+     * @return centre point for this type of object.
+     */
     [[nodiscard]] QPointF centre() const override {
         return {x() + width() / 2.0, y() + height()};
     }
 
 public:
+    /**
+     * @brief Add a connection to the set of connections for a certain item.
+     * @param connection Connection object.
+     * @param actorType Type of an actor. Can either be receiver or a sender.
+     * @param commandType Connection can be added on undo delete, create (redo) commands. There is a need to differ this.
+     * @param requestType Type of a request. Request can either be from a Connection object or from a self. (self-destruction).
+     */
     void addConnection(SequenceConnectionItem *connection,
-                       ActorType actorType);
-    void removeConnection(SequenceConnectionItem *connection);
+                       ActorType actorType,
+                       CommandType::CommandType commandType,
+                       CommandType::RequestType requestType);
 
+    /**
+     * @brief Remove a connection to the set of connections for certain item.
+     * @param connection connection to remove.
+     * @param commandType Connection can be deleted on delete (+redo), undo create commands. There is a need to differ this.
+     * @param requestType  Type of a request. Request can either be from a Connection object or from a self. (self-creation).
+     */
+    void removeConnection(SequenceConnectionItem *connection,
+                          CommandType::CommandType commandType,
+                          CommandType::RequestType requestType);
+
+    /**
+     * @brief Parent getter.
+     * @return parent from class diagram.
+     */
     [[nodiscard]] ClassDiagramItem *parentClassDiagramItem() const {
         return _parentClassDiagramItem;
     }
 
+    /**
+     * @brief Parent setter.
+     * @param parent from class diagram to connect with the instance of a sequence diagram.
+     */
     void setParent(ClassDiagramItem *parent) {
         _parentClassDiagramItem = parent;
     }
 
-    qreal lineLength() const {return _lineLength;}
-
-    void setParent(ClassDiagramItem *parent) {
-        _parentClassDiagramItem = parent;
+    /**
+     * @brief _lineLength getter.
+     * @return
+     */
+    qreal lineLength() const {
+        return _lineLength;
     }
 
+    /**
+     * Overriden functions.
+     */
 protected:
     QVariant itemChange(GraphicsItemChange change, const QVariant &value) override;
 
@@ -406,7 +523,10 @@ private:
     qreal const _lineLength = 1000; ///< default length of a life line
 
     QSet<SequenceConnectionItem *> _connections = QSet<SequenceConnectionItem *>(); ///< connections to track
-    QSet<SequenceConnectionItem *> _removedConnections = QSet<SequenceConnectionItem *>();
+    QSet<SequenceConnectionItem *> _removedConnectionsOnDeleteSelf = QSet<SequenceConnectionItem *>(); ///< see the name
+    QSet<SequenceConnectionItem *> _removedConnectionsOnDeleteConnection = QSet<SequenceConnectionItem *>(); ///< see the name
+    QSet<SequenceConnectionItem *> _removedConnectionsOnAddSelf = QSet<SequenceConnectionItem *>(); ///< see the name
+    QSet<SequenceConnectionItem *> _removedConnectionsOnAddConnection = QSet<SequenceConnectionItem *>(); ///< see the name
 };
 
 #endif // Object_H

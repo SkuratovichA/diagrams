@@ -39,7 +39,7 @@ public:
         return _relationItems;
     }
 
-    QList<actorParams *> sequenceItems() {
+    QList<SequenceDiagramItemParameters *> sequenceItems() {
         return _actorItems;
     }
 
@@ -51,7 +51,7 @@ public:
         _classItems.push_back(item);
     }
 
-    void pushActorItem(actorParams *item) {
+    void pushActorItem(SequenceDiagramItemParameters *item) {
         _actorItems.push_back(item);
     }
 
@@ -101,7 +101,7 @@ public:
 private:
     QList<classParams *> _classItems;
     QList<relationsParams *> _relationItems;
-    QList<actorParams *> _actorItems;
+    QList<SequenceDiagramItemParameters *> _actorItems;
     //QList<SequenceConnectionItem *> _messageItems;
 };
 

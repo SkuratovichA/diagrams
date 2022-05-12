@@ -351,7 +351,7 @@ private:
     QAction *returnMessage = nullptr;
     QAction *createMessage = nullptr;
     QAction *deleteMessage = nullptr;
-    actorParams *createActor = nullptr;
+    SequenceDiagramItemParameters *createActor = nullptr;
     editorInterface *parentInterface = nullptr;
 };
 
