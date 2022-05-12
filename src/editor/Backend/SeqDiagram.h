@@ -10,38 +10,68 @@ using json = nlohmann::json;
 
 class Actor {
 public:
-    //int id;
-    std::string name;
-    Color color;
-    std::vector<double> coords;
+    std::string name; ///< name of an actor (classname)
+    Color color; ///< color of a class
+    std::vector<double> coords; ///< coordinates where the box with the actor is placed
 };
 
 class Action {
 public:
-    //int fromId;
-    //int toId;
-    std::string from;
-    std::string to;
-    std::string arrow;
-    std::string msg;
-    std::vector<double> coords;
+    std::string from; ///< classname from
+    std::string to; ///< classname to
+    std::string arrow; ///< arrow type
+    std::string msg; ///< message above the arrow
+    std::vector<double> coords; ///< coordinates of a line
     int type;
 
+    /**
+     * @brief Set values to the structure Action from json file.
+     * @param el node of a json file with attributes
+     * for one action between 2 actors
+     */
     void pushConnection(const json el);
 };
 
+/**
+ * Sequence diagram representation.
+ */
 typedef struct dgrm_seq {
-    std::vector<Actor> actors;
-    std::vector<Action> actions;
+    std::vector<Actor> actors; ///< all actors
+    std::vector<Action> actions; ///< all actions
 } dgrmSeq_t;
 
 class DiagramSequence {
 public:
-    void fillStructureActor(const json el, dgrmSeq_t& o);
+    /**
+     * @brief Create elements of Actor type, fill necessary items and push to the vector
+     * of all actors for one sequence diagram.
+     * @param el node of a json file with all actors
+     * for a sequence diagram
+     * @param o structure of a sequence diagram
+     */
+    void fillStructureActor(const json el, dgrmSeq_t &o);
 
-    void fillStructureAction(const json el, dgrmSeq_t& o);
+    /**
+     * @brief Create elements of Action type, fill necessary items and push to the vector
+     * of all actions for one sequence diagram.
+     * @param el node of a json file with all actions
+     * for a sequence diagram
+     * @param o structure of a sequence diagram
+     */
+    void fillStructureAction(const json el, dgrmSeq_t &o);
+    /**
+     * @brief Write the data about all actors from Actor structure
+     * to json file.
+     * @param j json file
+     * @param ac vector of the actors for sequence diagram
+     */
+    void addActorToFile(json &j, std::vector<Actor> ac);
 
-    void addActorToFile(json& j, std::vector<Actor> ac);
-
-    void addActionToFile(json& j, std::vector<Action> ac);
+    /**
+     * @brief Write the data about all actions from Action structure
+     * to json file.
+     * @param j json file
+     * @param ac vector of the actions for sequence diagram
+     */
+    void addActionToFile(json &j, std::vector<Action> ac);
 };

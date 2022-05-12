@@ -2,7 +2,8 @@
 // Author: Skuratovich Aliaksandr <xskura01@vutbr.cz>
 // Date: 02.05.2022
 
-#define DEBUG 1
+#define DEBUG 0
+
 #include <QStyleOptionGraphicsItem>
 #include <QPen>
 #include <QStyle>
@@ -12,13 +13,6 @@
 #include "../DiagramItem/DiagramItem.h"
 #include <QTextCursor>
 
-/**
- * A constructor.
- *
- * @param fromNode
- * @param toNode
- * @param connectionType
- */
 ClassConnectionItem::ClassConnectionItem(ClassDiagramItem *fromNode,
                                          ClassDiagramItem *toNode,
                                          relationsParams *params,
@@ -44,14 +38,6 @@ ClassConnectionItem::ClassConnectionItem(ClassDiagramItem *fromNode,
     trackNodes();
 }
 
-/**
- *
- * @param parent
- * @param flags
- * @param x
- * @param y
- * @param str
- */
 msgText::msgText(QGraphicsItem *parent, QFlags<Qt::TextInteractionFlag> flags, qreal x, qreal y, QString str)
         : QGraphicsTextItem(str, parent) {
     _parent = parent;
@@ -61,26 +47,13 @@ msgText::msgText(QGraphicsItem *parent, QFlags<Qt::TextInteractionFlag> flags, q
     topLevelItem();
 }
 
-/**
- *
- * @param event
- */
 void msgText::keyReleaseEvent(QKeyEvent *event) {
     if ((event->key() == Qt::Key_Enter) || (event->key() == Qt::Key_Return)) {
         setPlainText(toPlainText().remove('\n'));
-        //clearFocus();
-        //setTextCursor(QTextCursor());
         return;
     }
 }
 
-/**
- *
- * @param x1y1
- * @param x2y2
- * @param collision
- * @return
- */
 inline int getOctant(QPointF const &x1y1, QPointF const &x2y2, bool *collision = nullptr) {
     auto x2 = x2y2.x() - x1y1.x(); // x2
     auto y2 = x2y2.y() - x1y1.y(); // y2
@@ -115,10 +88,6 @@ inline int getOctant(QPointF const &x1y1, QPointF const &x2y2, bool *collision =
     }
 }
 
-/**
- *
- * @return
- */
 QPair<QPointF, QPointF> ClassConnectionItem::edgePoints() const {
     auto xyFrom = _nodeFrom->socket(_order);
     auto xyTo = _nodeTo->socket(_order);
@@ -142,12 +111,7 @@ QPair<QPointF, QPointF> ClassConnectionItem::edgePoints() const {
             // try to compute interseptions with boxes edges.
             xTo = _nodeTo->centre().x() - toWidthHalf;
             yTo = -(c + a * xTo) / b;
-            // if a point is not placed to the centre of the box
-            // compute intersections like there was #2 octant.
-            // Basically, the idea is the same for all the octants.
-            // If one octant cannot find the intersections. E.g. line is found using the formula,
-            // the intersection point does not lie on the edge we want ->
-            // use the same formula for finding an intersection point for n+1 octant
+
             if (yTo > _nodeTo->bottomLeft().y()) {
                 yTo = _nodeTo->centre().y() + toHeightHalf;
                 xTo = -(c + b * yTo) / a;
@@ -165,8 +129,7 @@ QPair<QPointF, QPointF> ClassConnectionItem::edgePoints() const {
             if (_single) {
                 leftNum->setPos(xFrom + 40, yFrom + 60);
                 rightNum->setPos(xTo + 80, yTo + 10);
-            }
-            else {
+            } else {
                 leftNum->setPos(xFrom + 10, yFrom - 50);
                 rightNum->setPos(xTo - 50, yTo + 10);
             }
@@ -189,8 +152,7 @@ QPair<QPointF, QPointF> ClassConnectionItem::edgePoints() const {
             if (_single) {
                 leftNum->setPos(xFrom + 40, yFrom + 60);
                 rightNum->setPos(xTo + 80, yTo + 10);
-            }
-            else {
+            } else {
                 leftNum->setPos(xFrom + 10, yFrom - 50);
                 rightNum->setPos(xTo - 50, yTo + 10);
             }
@@ -213,8 +175,7 @@ QPair<QPointF, QPointF> ClassConnectionItem::edgePoints() const {
             if (_single) {
                 leftNum->setPos(xFrom + 40, yFrom + 60);
                 rightNum->setPos(xTo + 80, yTo + 10);
-            }
-            else {
+            } else {
                 leftNum->setPos(xFrom - 50, yFrom - 50);
                 rightNum->setPos(xTo + 10, yTo + 10);
             }
@@ -238,8 +199,7 @@ QPair<QPointF, QPointF> ClassConnectionItem::edgePoints() const {
             if (_single) {
                 leftNum->setPos(xFrom + 40, yFrom + 60);
                 rightNum->setPos(xTo + 80, yTo + 10);
-            }
-            else {
+            } else {
                 leftNum->setPos(xFrom + 10, yFrom + 15);
                 rightNum->setPos(xTo - 50, yTo - 50);
             }
@@ -263,8 +223,7 @@ QPair<QPointF, QPointF> ClassConnectionItem::edgePoints() const {
             if (_single) {
                 leftNum->setPos(xFrom + 40, yFrom + 60);
                 rightNum->setPos(xTo + 80, yTo + 10);
-            }
-            else {
+            } else {
                 leftNum->setPos(xFrom - 50, yFrom - 50);
                 rightNum->setPos(xTo + 10, yTo + 10);
             }
@@ -288,8 +247,7 @@ QPair<QPointF, QPointF> ClassConnectionItem::edgePoints() const {
             if (_single) {
                 leftNum->setPos(xFrom + 40, yFrom + 60);
                 rightNum->setPos(xTo + 80, yTo + 10);
-            }
-            else {
+            } else {
                 leftNum->setPos(xFrom - 50, yFrom + 15);
                 rightNum->setPos(xTo + 10, yTo - 50);
             }
@@ -312,8 +270,7 @@ QPair<QPointF, QPointF> ClassConnectionItem::edgePoints() const {
             if (_single) {
                 leftNum->setPos(xFrom + 40, yFrom + 60);
                 rightNum->setPos(xTo + 80, yTo + 10);
-            }
-            else {
+            } else {
                 leftNum->setPos(xFrom - 50, yFrom + 15);
                 rightNum->setPos(xTo - 10, yTo - 50);
             }
@@ -336,10 +293,9 @@ QPair<QPointF, QPointF> ClassConnectionItem::edgePoints() const {
             if (_single) {
                 leftNum->setPos(xFrom + 40, yFrom + 60);
                 rightNum->setPos(xTo + 80, yTo + 10);
-            }
-            else {
+            } else {
                 leftNum->setPos(xFrom + 10, yFrom + 15);
-                rightNum->setPos(xTo - 50, yTo -50);
+                rightNum->setPos(xTo - 50, yTo - 50);
             }
 
             break;
@@ -347,9 +303,6 @@ QPair<QPointF, QPointF> ClassConnectionItem::edgePoints() const {
     return {QPointF(xFrom, yFrom), QPointF(xTo, yTo)};
 }
 
-/**
- *
- */
 void ClassConnectionItem::trackNodes() {
     auto edgePs = edgePoints();
     if (!_orientation) {
@@ -359,10 +312,6 @@ void ClassConnectionItem::trackNodes() {
     setLine(QLineF(edgePs.first, edgePs.second));
 }
 
-/**
- *
- * @return
- */
 QPolygonF ClassConnectionItem::lineShaper() const {
     QPolygonF poly;
     if (_single) {
@@ -470,20 +419,13 @@ QPolygonF ClassConnectionItem::lineShaper() const {
 #undef ovlp
 }
 
-/**
- *
- * @return
- */
 QPainterPath ClassConnectionItem::shape() const {
     QPainterPath path;
     path.addPolygon(lineShaper());
     return path;
 }
 
-/**
- *
- */
-void ClassConnectionItem::drawLine(QPainter *painter, const QStyleOptionGraphicsItem *option) const  {
+void ClassConnectionItem::drawLine(QPainter *painter, const QStyleOptionGraphicsItem *option) const {
     painter->setPen(QPen(_color, 2, Qt::SolidLine));
     painter->setRenderHint(QPainter::Antialiasing, true);
     auto points = edgePoints();
@@ -536,15 +478,6 @@ void ClassConnectionItem::drawLine(QPainter *painter, const QStyleOptionGraphics
     arrowP3 = linend + QPointF(sin(angle + M_PI / 2) * scale * 1.7,
                                cos(angle + M_PI / 2) * scale * 1.7);
 
-#if 0
-    // set method color to a default one
-    for (auto methodFrom: _nodeFrom->methods()) {
-        if (methodFrom->toPlainText() != QString("METHODS")) {
-            methodFrom->setDefaultTextColor(Qt::black);
-        }
-    }
-#endif
-
     switch (_connectionType) {
         case Association:
             break;
@@ -577,13 +510,9 @@ void ClassConnectionItem::drawLine(QPainter *painter, const QStyleOptionGraphics
     painter->drawPolygon(poly);
 }
 
-/**
- *
- * @param painter
- * @param option
- * @param widget
- */
-void ClassConnectionItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) {
+void ClassConnectionItem::paint(QPainter *painter,
+                                const QStyleOptionGraphicsItem *option,
+                                QWidget *widget) {
 #if DEBUG
     painter->setPen(QPen(QColor(0, 0, 0, 100), 0.5, Qt::DotLine));
     painter->drawPolygon(lineShaper());
@@ -605,20 +534,16 @@ void ClassConnectionItem::paint(QPainter *painter, const QStyleOptionGraphicsIte
 
     if (_single) {
         leftSetPos(QPointF(_nodeTo->pos().x() + _nodeTo->width() - 86,
-                                    _nodeTo->pos().y() + _nodeTo->height() + 20));
+                           _nodeTo->pos().y() + _nodeTo->height() + 20));
         msgSetPos(QPointF(pText.x() - widthText / 2.0 + _nodeTo->width() - 55,
-                                pText.y() + _nodeTo->height() - 40));
+                          pText.y() + _nodeTo->height() - 40));
         rightSetPos(QPointF(_nodeFrom->pos().x() + _nodeFrom->width() + 10,
-                                _nodeFrom->pos().y() + _nodeFrom->height() - 65));
-    }
-    else {
+                            _nodeFrom->pos().y() + _nodeFrom->height() - 65));
+    } else {
         msgSetPos(QPointF(pText.x() - widthText / 2.0, pText.y() - 30));
     }
 }
 
-/**
- *
- */
 ClassConnectionItem::~ClassConnectionItem() {
     if (_nodeFrom != nullptr) {
         _nodeFrom->removeConnection(this);
@@ -628,10 +553,6 @@ ClassConnectionItem::~ClassConnectionItem() {
     }
 }
 
-/**
- *
- * @param event
- */
 void ClassConnectionItem::mousePressEvent(QGraphicsSceneMouseEvent *event) {
     if (event->button() == Qt::RightButton) {
         setSelected(true);

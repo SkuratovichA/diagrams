@@ -2,7 +2,7 @@
 // Author: Skuratovich Aliaksandr <xskura01@vutbr.cz>
 // Date: 07.05.2022
 
-#define DEBUG 1
+#define DEBUG 0
 
 #include <QStyleOptionGraphicsItem>
 #include <QPen>
@@ -17,12 +17,6 @@
 
 using namespace Connections;
 
-/**
- *
- * @param fromNode
- * @param toNode
- * @param connectionType
- */
 SequenceConnectionItem::SequenceConnectionItem(SequenceDiagramItem *nodeFrom,
                                                SequenceDiagramItem *nodeTo,
                                                messageParams *params,
@@ -34,7 +28,9 @@ SequenceConnectionItem::SequenceConnectionItem(SequenceDiagramItem *nodeFrom,
     _nodeFrom->addConnection(this, Caller, CommandType::Add, CommandType::Connection);
     _nodeTo->addConnection(this, Receiver, CommandType::Add, CommandType::Connection);
 
-    setFlags(QGraphicsItem::ItemIsSelectable | QGraphicsItem::ItemIsMovable | QGraphicsItem::ItemSendsGeometryChanges);
+    setFlags(QGraphicsItem::ItemIsSelectable
+             | QGraphicsItem::ItemIsMovable
+             | QGraphicsItem::ItemSendsGeometryChanges);
 
     switch (_connectionType) {
         case Create:
@@ -51,15 +47,9 @@ SequenceConnectionItem::SequenceConnectionItem(SequenceDiagramItem *nodeFrom,
     setY(params->y());
 
     trackNodes();
-    //qDebug() << "one connection";
-    //qDebug() << __FILE__ << "   connection created>";
 }
 
-/**
- *
- */
-SequenceConnectionItem::~SequenceConnectionItem() {
-}
+SequenceConnectionItem::~SequenceConnectionItem() {}
 
 QVariant SequenceConnectionItem::itemChange(GraphicsItemChange change, const QVariant &value) {
     if (change == ItemPositionChange) {
@@ -79,19 +69,12 @@ QVariant SequenceConnectionItem::itemChange(GraphicsItemChange change, const QVa
     return QGraphicsItem::itemChange(change, value);
 }
 
-/** Changing the line according to the x-position of the two nodes it is connected to.
- *
- */
 void SequenceConnectionItem::trackNodes() {
     setLine(QLineF(
             QPointF(_nodeFrom->centre().x(), 0),
             QPointF(_nodeTo->centre().x(), 0)));
 }
 
-/**
- *
- * @return
- */
 QRectF SequenceConnectionItem::lineShaper() const {
     auto rect = QRectF(
             QPointF(std::min(_nodeTo->centre().x() - 30, _nodeFrom->centre().x() - 30), -20),
@@ -100,37 +83,29 @@ QRectF SequenceConnectionItem::lineShaper() const {
     return rect;
 }
 
-/**
- *
- * @return
- */
 QPainterPath SequenceConnectionItem::shape() const {
     QPainterPath path;
     path.addPolygon(lineShaper());
     return path;
 }
 
-/**
- *
- * @param painter
- * @param option
- * @param widget
- */
-void SequenceConnectionItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) {
-#if DEBUG
-//    painter->drawPolygon(lineShaper());
-//    painter->setPen(QPen(QColor(0, 0, 0, 120), .5, Qt::DashLine));
-//    painter->drawPolygon(lineShaper());
-//    //painter->strokePath(shape(), QPen(QColor(0, 0, 0, 120), 1.5, Qt::DashLine));
-//
-//    auto rect = lineShaper();
-//    auto l = (rect.bottomLeft() + rect.topLeft()) / 2;
-//    auto r = (rect.bottomRight() + rect.topRight()) / 2;
-//    painter->setPen(QPen(QColor(255, 0, 0, 255), .3, Qt::SolidLine));
-//    painter->drawLine(l, r);
-//
-//    painter->setPen(QPen(QColor(0, 255, 0, 255), .3, Qt::DashDotDotLine));
-//    painter->drawLine(line());
+void SequenceConnectionItem::paint(QPainter *painter,
+                                   const QStyleOptionGraphicsItem *option,
+                                   QWidget *widget) {
+#if 0
+    painter->drawPolygon(lineShaper());
+    painter->setPen(QPen(QColor(0, 0, 0, 120), .5, Qt::DashLine));
+    painter->drawPolygon(lineShaper());
+    //painter->strokePath(shape(), QPen(QColor(0, 0, 0, 120), 1.5, Qt::DashLine));
+
+    auto rect = lineShaper();
+    auto l = (rect.bottomLeft() + rect.topLeft()) / 2;
+    auto r = (rect.bottomRight() + rect.topRight()) / 2;
+    painter->setPen(QPen(QColor(255, 0, 0, 255), .3, Qt::SolidLine));
+    painter->drawLine(l, r);
+
+    painter->setPen(QPen(QColor(0, 255, 0, 255), .3, Qt::DashDotDotLine));
+    painter->drawLine(line());
 #endif
 
     painter->setRenderHint(QPainter::Antialiasing, true);
@@ -162,15 +137,11 @@ void SequenceConnectionItem::paint(QPainter *painter, const QStyleOptionGraphics
     text->setPos(newPos, -25);
 }
 
-/**
- *
- * @param painter
- * @param option
- * @param widget
- */
-void SequenceConnectionItem::paintSynchronous(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) {
+void SequenceConnectionItem::paintSynchronous(QPainter *painter,
+                                              const QStyleOptionGraphicsItem *option,
+                                              QWidget *widget) {
     QPolygonF arrowHead;
-    setLineOther();
+    setLineNonReply();
 
     if (std::abs(cLine.p1().x() - cLine.p2().x()) < 15) {
         return;
@@ -179,20 +150,16 @@ void SequenceConnectionItem::paintSynchronous(QPainter *painter, const QStyleOpt
     painter->setPen(QPen(QColor(Qt::black), 1.0, Qt::SolidLine));
     painter->drawLine(cLine);
 
-    arrowHead << pUp << pEnd << pDown;
+    arrowHead << arrowTopPoint << lineEndpoint << arrowBottomPoint;
     painter->setBrush(QBrush(Qt::black));
     painter->drawPolygon(arrowHead);
 }
 
-/**
- *
- * @param painter
- * @param option
- * @param widget
- */
-void SequenceConnectionItem::paintAsynchronous(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) {
+void SequenceConnectionItem::paintAsynchronous(QPainter *painter,
+                                               const QStyleOptionGraphicsItem *option,
+                                               QWidget *widget) {
     QPolygonF arrowHead;
-    setLineOther();
+    setLineNonReply();
 
     if (std::abs(cLine.p1().x() - cLine.p2().x()) < 15) {
         return;
@@ -201,17 +168,13 @@ void SequenceConnectionItem::paintAsynchronous(QPainter *painter, const QStyleOp
     painter->setPen(QPen(QColor(Qt::black), 1.0, Qt::SolidLine));
     painter->drawLine(cLine);
 
-    arrowHead << pUp << pEnd << pDown << pEnd;
+    arrowHead << arrowTopPoint << lineEndpoint << arrowBottomPoint << lineEndpoint;
     painter->drawPolygon(arrowHead);
 }
 
-/**
- *
- * @param painter
- * @param option
- * @param widget
- */
-void SequenceConnectionItem::paintReply(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) {
+void SequenceConnectionItem::paintReply(QPainter *painter,
+                                        const QStyleOptionGraphicsItem *option,
+                                        QWidget *widget) {
     QPolygonF arrowHead;
     setLineReplay();
 
@@ -223,18 +186,14 @@ void SequenceConnectionItem::paintReply(QPainter *painter, const QStyleOptionGra
     painter->drawLine(cLine);
 
     painter->setPen(QPen(QColor(Qt::black), 1.0, Qt::SolidLine));
-    arrowHead << pUp << pEnd << pDown << pEnd;
+    arrowHead << arrowTopPoint << lineEndpoint << arrowBottomPoint << lineEndpoint;
     painter->drawPolygon(arrowHead);
 }
 
-/**
- *
- * @param painter
- * @param option
- * @param widget
- */
-void SequenceConnectionItem::paintCreate(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) {
-    setLineOther();
+void SequenceConnectionItem::paintCreate(QPainter *painter,
+                                         const QStyleOptionGraphicsItem *option,
+                                         QWidget *widget) {
+    setLineNonReply();
 
     if (std::abs(cLine.p1().x() - cLine.p2().x()) < 15) {
         return;
@@ -243,17 +202,13 @@ void SequenceConnectionItem::paintCreate(QPainter *painter, const QStyleOptionGr
     painter->setPen(QPen(QColor(Qt::black), 1.0, Qt::SolidLine));
     painter->drawLine(cLine);
     painter->setBrush(QBrush(Qt::green));
-    painter->drawEllipse(posX, pEnd.y() - 10, 20, 20);
+    painter->drawEllipse(lineEndPointX, lineEndpoint.y() - 10, 20, 20);
 }
 
-/**
- *
- * @param painter
- * @param option
- * @param widget
- */
-void SequenceConnectionItem::paintDelete(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) {
-    setLineOther();
+void SequenceConnectionItem::paintDelete(QPainter *painter,
+                                         const QStyleOptionGraphicsItem *option,
+                                         QWidget *widget) {
+    setLineNonReply();
 
     if (std::abs(cLine.p1().x() - cLine.p2().x()) < 15) {
         return;
@@ -263,7 +218,7 @@ void SequenceConnectionItem::paintDelete(QPainter *painter, const QStyleOptionGr
     painter->drawLine(cLine);
     painter->setPen(QPen(QColor(Qt::black), 1.0, Qt::SolidLine));
     painter->setBrush(QBrush(Qt::black));
-    painter->drawRect(posX, pEnd.y() - 7, 20, 14);
+    painter->drawRect(lineEndPointX, lineEndpoint.y() - 7, 20, 14);
 }
 
 void msgText::focusOutEvent(QFocusEvent *event) {
@@ -275,4 +230,3 @@ void msgText::focusOutEvent(QFocusEvent *event) {
     ObjectParams::checkMethod(item);
     QGraphicsTextItem::focusOutEvent(event);
 }
-

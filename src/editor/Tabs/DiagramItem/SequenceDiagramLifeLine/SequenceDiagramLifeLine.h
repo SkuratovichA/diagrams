@@ -9,7 +9,6 @@
 #include <QGraphicsLineItem>
 #include <QGraphicsSceneMouseEvent>
 #include "../DiagramItem.h"
-//#include "../../Connections/Connections.h"
 
 class SequenceConnectionItem;
 
@@ -22,16 +21,18 @@ typedef QPair<qreal, qreal> region_t;
 /** Implementation of a custom Life Line for an object (actor)
  */
 class SequenceDiagramLifeLine : public QGraphicsLineItem {
-    /** Constructor, Destructor
-     */
 public:
+    /**
+     * @brief A constructor.
+     * @param yFrom the starting position of the line.
+     * @param height the height of the line.
+     */
     SequenceDiagramLifeLine(SequenceDiagramItem *parent, qreal yFrom, qreal height);
+
     ~SequenceDiagramLifeLine() override;
 
 public:
     void trackNodes();
-    /** Getters, setters
-     */
 public:
     [[nodiscard]] qreal yFrom() const {
         return _yFrom;
@@ -54,90 +55,94 @@ public:
         _height = height;
     }
 
-    /**
-     * Usual functions.
-     */
 public:
+
+    /**
+     * @brief Add a connection to a list with connections
+     * @param connection
+     * @param actorType
+     */
     void addConnection(
             SequenceConnectionItem *connection,
             ActorType actorType
     );
-    void removeConnection(const SequenceConnectionItem *y);
 
     /**
-     * Private functions.
+     * @brief Remove connectiono from a list with with connections
+     * @param connection connection of class SequenceConnectionItem to remove
      */
+    void removeConnection(const SequenceConnectionItem *connection);
+
 private:
+    /**
+     * @brief Overriden function, that sets a bounding polygon for a line with all its modifications.
+     * @return path.
+     */
     [[nodiscard]] QPainterPath shape() const override;
+
+    /**
+     * @brief Paints a with all additional attributes and modifications.
+     * @param painter painters
+     * @param option option
+     * @param widget widget
+     */
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
+
+    /**
+     * @brief Creates a bounding box
+     * @return QPolygonF bounding box
+     */
     [[nodiscard]] QPolygonF lineShaper() const;
 
-
-    /** Merges all intervals
-     *
-     * @return merged intervals
+    /**
+     * @brief Updates a _mergedActiveRegions list.
      */
     void updateActiveRegions();
 
     /**
-     *
-     * @param a
-     * @return
+     * @brief Creates intervals from asynchronous messages form a list
+     * @param a A list ofo Pairs <ActoryType, SequenceConnectionItem>
+     * @return List of merged regions
      */
     QList<region_t> getAsynchronousRegionsAsIntervals(ActorTypeConnectionList_t &a);
 
-
     /**
+     * @brief Creates intervals for synchronous messages from a list
+     * @details
      * Create pairs in such a way, that for a <= b <= `max`
      * they will look like<a, max> or <a, b>, if such b exists.
-     *
-     * @param a
-     * @return
+     * @param a A list ofo Pairs <ActoryType, SequenceConnectionItem>
+     * @return List of merged regions
      */
     QList<region_t> getSynchronousRegionsAsIntervals(ActorTypeConnectionList_t &a);
 
     /**
-     *
-     * @param a
+     * @brief Returns the list with one number or an empty list if there are no creation points.
      * @return
      */
     QList<qreal> getFirstCreateRegion() const;
 
     /**
-     *
-     * @param a
-     * @return
+     * @brief Returns the list with one number or an empty list if there are no deletion points.
+     * @return QList<qreal>
      */
-    QList<qreal> getLastDeleteRegion() const;
+    QList<qreal> getLastDeletePoint() const;
 
-    /**
-     * Private variables
-     */
 private:
-    qreal _yFrom = 0;
-    qreal _height = 1000;
+    qreal _yFrom = 0; ///< starting point of the line (positition is a relative to the parent's position)
+    qreal _height = 1000; ///< ending point of the line (positition is a relative to the parent's position)
     SequenceDiagramItem *_parent;
 
-    /**
-     * Usually, from/to, but in case to is -1, use default length.
-     */
-    ActorTypeConnectionList_t _activeRegions = ActorTypeConnectionList_t();
-    ActorTypeConnectionList_t _async_replyMessages = ActorTypeConnectionList_t();
+    ActorTypeConnectionList_t _activeRegions = ActorTypeConnectionList_t(); ///< regions for synchronous connections
+    ActorTypeConnectionList_t _async_replyMessages = ActorTypeConnectionList_t(); ///< regions for all other connections
 
-    QList<SequenceConnectionItem *> _createMessages = QList<SequenceConnectionItem *>();
-    QList<SequenceConnectionItem *> _deleteMessages = QList<SequenceConnectionItem *>();
+    QList<SequenceConnectionItem *> _createMessages = QList<SequenceConnectionItem *>(); ///< create messages. The minimum will be used
+    QList<SequenceConnectionItem *> _deleteMessages = QList<SequenceConnectionItem *>(); ///< delete message. The maximum will be used
+    QList<region_t> _mergedActiveRegions; ///< merged regions whech will marked as active
 
-    QList<region_t> _mergedActiveRegions;
-
-    /**
-     * Constants.
-     */
 private:
-    qreal const _actRegLen = 20.0;
-    qreal _adjust = 10.0;
-
-    qreal _verticalAgjust = 0.0; ///< number representing the difference of the absolute and a relative positions(parent)
-    qreal const _heightAdjust = 20.0;
+    qreal const _actRegLen = 20.0; ///< lenght of an active region
+    qreal _adjust = 10.0; ///< horisontal adjust for an active region
 };
 
 #endif //DIAGRAMS_SEQUENCEDIAGRAMLIFELINE_H

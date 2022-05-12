@@ -7,15 +7,8 @@
 
 #include "propertiesdialog.h"
 #include "ui_propertiesdialog.h"
-#include "../Tabs/DiagramItem/DiagramItem.h"
 
-/**
- * A constructor.
- *
- * @param parent
- * @param existingClasses
- */
-PropertiesDialog::PropertiesDialog(QWidget *parent, QList<QPair<ClassDiagramItem * , QString>> &existingClasses) :
+PropertiesDialog::PropertiesDialog(QWidget *parent, QList<QPair<ClassDiagramItem *, QString>> &existingClasses) :
         QDialog(parent),
         ui(new Ui::PropertiesDialog) {
     ui->setupUi(this);
@@ -26,16 +19,10 @@ PropertiesDialog::PropertiesDialog(QWidget *parent, QList<QPair<ClassDiagramItem
     }
 }
 
-/**
- * A destructor.
- */
 PropertiesDialog::~PropertiesDialog() {
     delete ui;
 }
 
-/**
- *
- */
 void PropertiesDialog::on_pushButton_clicked() {
     if (ui->listWidget->count() == 0) {
         QMessageBox::warning(this, "", "No classes in the class diagram tab. Create at least one.");
@@ -47,20 +34,10 @@ void PropertiesDialog::on_pushButton_clicked() {
     this->close();
 }
 
-/**
- *
- * @return
- */
 QString PropertiesDialog::selectedClassName() const {
     return _selectedClassName;
 }
 
-/**
- *
- * @return
- */
 int PropertiesDialog::positionOfSelectedClassName() const {
     return _positionOfSelectedClassName;
 }
-
-

@@ -4,18 +4,13 @@
 
 #include "Parse.h"
 
-/**
- * Read a json file and fill in all structures related to the node of json file.
- *
- * @param filename name of the file for reading
- */
 void Program::parseFile(std::string filename) {
     std::ifstream f(filename, std::ifstream::in);
     json file;
 
     try {
         f >> file;
-    } catch(nlohmann::detail::parse_error) {
+    } catch (nlohmann::detail::parse_error) {
         std::cout << "EEEEE chuska, bad format of the file!![]" << std::endl;
         return;
     }
@@ -24,36 +19,25 @@ void Program::parseFile(std::string filename) {
         obj_cl.fillStructureClass(file.at("class_dgrm").at("class"), this->diagramClass);
         obj_cl.fillStructureConct(file.at("class_dgrm").at("connections"), this->diagramClass);
 
-        for (auto& seq : file.at("seq_dgrm")) {
+        for (auto &seq: file.at("seq_dgrm")) {
             dgrmSeq_t tmp;
             obj_se.fillStructureActor(seq.at("actors"), tmp);
             obj_se.fillStructureAction(seq.at("actions"), tmp);
             this->diagramSequence.push_back(tmp);
         }
-    } catch(nlohmann::detail::out_of_range) {
+    } catch (nlohmann::detail::out_of_range) {
         std::cout << "The user is dolbaeb, menya ne ebet!" << std::endl;
-    } catch(nlohmann::detail::type_error) {
+    } catch (nlohmann::detail::type_error) {
         std::cout << "Omg, Maks, eto ty? Shto za hyinu in the file ty napisal..." << std::endl;
     }
 }
 
-/**
- * Set values to the structure coords from json file.
- *
- * @param el node of a json file with coordinates [x, y] for object
- * @param coords vector with coordinates
- */
-void Program::pushCoords(const json el, std::vector<double>& coords) {
+void Program::pushCoords(const json el, std::vector<double> &coords) {
 
-    coords.insert( coords.end(),
-               { el.at("x").get<double>(), el.at("y").get<double>() } );
+    coords.insert(coords.end(),
+                  {el.at("x").get<double>(), el.at("y").get<double>()});
 }
 
-/**
- * Fill an array of class_dgrm and seq_dgrm nodes in json file.
- *
- * @param filename name of the file for writing
- */
 void Program::fillFile(std::string filename) {
     json j;
 
@@ -65,9 +49,8 @@ void Program::fillFile(std::string filename) {
 
     j["seq_dgrm"] = nullptr;
 
-
     int i = 0;
-    for (auto& x : this->diagramSequence) {
+    for (auto &x: this->diagramSequence) {
         j["seq_dgrm"][i]["actors"] = nullptr;
         j["seq_dgrm"][i]["actions"] = nullptr;
         obj_se.addActorToFile(j["seq_dgrm"][i], x.actors);

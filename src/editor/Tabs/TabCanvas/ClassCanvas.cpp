@@ -197,7 +197,7 @@ bool ClassCanvas::checkPermissions() {
  */
 bool ClassCanvas::getStringRepresentation(Program &prg) {
     std::vector<Class> objects;
-    std::vector<Conct> connects;
+    std::vector<ClassDiagramConnectionRepresentation> connects;
     ItemsBuffer buf;
 
     for (auto x: getItems<ClassDiagramItem>()) {
@@ -235,7 +235,7 @@ bool ClassCanvas::getStringRepresentation(Program &prg) {
     }
 
     for (auto x: buf.relationItems()) {
-        Conct tmp;
+        ClassDiagramConnectionRepresentation tmp;
         tmp.leftObj = x->leftObj().toStdString();
         tmp.leftNum = x->leftNum().toStdString();
         tmp.rightObj = x->rightObj().toStdString();
