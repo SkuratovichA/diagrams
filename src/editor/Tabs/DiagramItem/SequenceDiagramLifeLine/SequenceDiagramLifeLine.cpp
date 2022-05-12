@@ -43,7 +43,7 @@ SequenceDiagramLifeLine::~SequenceDiagramLifeLine() {
  * @return bounding polygon.
  */
 QPolygonF SequenceDiagramLifeLine::lineShaper() const {
-    QRectF rect(_parent->width() / 2 - _adjust, _parent->height(), 2 * _adjust, _height);
+    QRectF rect(_parent->width() / 2 - _adjust, _parent->height(), 2 * _adjust, _height - _parent->pos().y());
     return QPolygonF(rect);
 }
 
@@ -64,10 +64,10 @@ QPainterPath SequenceDiagramLifeLine::shape() const {
  * @param widget
  */
 void SequenceDiagramLifeLine::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) {
-#if DEBUG
-    painter->setPen(QPen(QColor(255, 0, 0, 100), 0.5, Qt::DotLine));
-    painter->drawPolygon(lineShaper());
-#endif
+//#if DEBUG
+//    painter->setPen(QPen(QColor(255, 0, 0, 100), 0.5, Qt::DotLine));
+//    painter->drawPolygon(lineShaper());
+//#endif
 
     //qDebug() << __FILE__;
     auto clr = _parent->color();
@@ -94,8 +94,24 @@ void SequenceDiagramLifeLine::paint(QPainter *painter, const QStyleOptionGraphic
     // prepare for drawing a line
     painter->setPen(QPen(Qt::black, 1, Qt::DashLine));
     // add the last point.
-    lines.push_front(QLineF(topPoint, _parent->localCentre() + QPointF(0.0, _height + 0)));
+    lines.push_front(QLineF(topPoint, _parent->localCentre() + QPointF(0.0, _height)));
+
+
+    auto createConstraintList = getFirstCreateRegion();
+    bool deleteCannotBeUsed = createConstraintList.isEmpty();
+    auto startPosition = deleteCannotBeUsed ? 0 : createConstraintList.first();
+    auto deleteConstraintList = getLastDeleteRegion();
+    auto deletePosition = deleteConstraintList.isEmpty() ? _height : deleteConstraintList.first();
     for (auto cLine: lines) {
+        if (cLine.p1().y() < startPosition) {
+            cLine = QLineF(QPointF(cLine.p1().x(), startPosition), cLine.p2());
+        }
+        if (cLine.p2().y() > deletePosition) {
+            cLine = QLineF(cLine.p1(), QPointF(cLine.p2().x(), deletePosition));
+        }
+        if (cLine.p2().y() < startPosition || cLine.p1().y() > deletePosition) {
+            continue;
+        }
         painter->drawLine(cLine);
     }
 }
@@ -272,26 +288,40 @@ void SequenceDiagramLifeLine::addConnection(
 ) {
     switch (connection->connectionType()) {
         case Synchronous:
-            _activeRegions.push_back(actorConnectionPair_t(actorType, connection));
+            if (!_activeRegions.contains(actorConnectionPair_t(actorType, connection))) {
+                _activeRegions.push_back(actorConnectionPair_t(actorType, connection));
+            }
             break;
         case Asynchronous:
-            _async_replyMessages.push_back(actorConnectionPair_t(actorType, connection));
+            if (!_async_replyMessages.contains(actorConnectionPair_t(actorType, connection))) {
+                _async_replyMessages.push_back(actorConnectionPair_t(actorType, connection));
+            }
             break;
         case Reply:
-            _async_replyMessages.push_back(actorConnectionPair_t(actorType, connection));
+            if (!_async_replyMessages.contains(actorConnectionPair_t(actorType, connection))) {
+                _async_replyMessages.push_back(actorConnectionPair_t(actorType, connection));
+            }
             break;
         case Create:
             if (actorType == Receiver) {
-                _createMessages.push_back(connection);
+                if (!_createMessages.contains(connection)) {
+                    _createMessages.push_back(connection);
+                }
             } else { // Caller
-                _async_replyMessages.push_back(actorConnectionPair_t(actorType, connection));
+                if (!_async_replyMessages.contains(actorConnectionPair_t(actorType, connection))) {
+                    _async_replyMessages.push_back(actorConnectionPair_t(actorType, connection));
+                }
             }
             break;
         case Delete:
             if (actorType == Receiver) {
-                _deleteMessages.push_back(connection);
+                if (!_deleteMessages.contains(connection)) {
+                    _deleteMessages.push_back(connection);
+                }
             } else { // Caller
-                _async_replyMessages.push_back(actorConnectionPair_t(actorType, connection));
+                if (!_async_replyMessages.contains(actorConnectionPair_t(actorType, connection))) {
+                    _async_replyMessages.push_back(actorConnectionPair_t(actorType, connection));
+                }
             }
             break;
         default:

@@ -31,6 +31,8 @@ ClassConnectionItem::ClassConnectionItem(ClassDiagramItem *fromNode,
     _single = fromNode == toNode;
     _nodeFrom->addConnection(this);
     _nodeTo->addConnection(this);
+
+    qDebug() << _nodeTo->connections().size();
     _connectionType = type;
     _color = color;
     _order = order;
@@ -352,7 +354,6 @@ void ClassConnectionItem::trackNodes() {
         _orientation = !_orientation;
         std::swap(_nodeFrom, _nodeTo);
     }
-
     setLine(QLineF(edgePs.first, edgePs.second));
 }
 
@@ -462,7 +463,6 @@ QPolygonF ClassConnectionItem::lineShaper() const {
 
             poly << farLeft + topAdjuster << farLeft + bottomAdjuster << farRight - topAdjuster
                  << farRight - bottomAdjuster;
-            // **************
     }
     return poly;
 #undef ovlp
@@ -534,17 +534,30 @@ void ClassConnectionItem::drawLine(QPainter *painter, const QStyleOptionGraphics
     arrowP3 = linend + QPointF(sin(angle + M_PI / 2) * scale * 1.7,
                                cos(angle + M_PI / 2) * scale * 1.7);
 
+#if 0
+    // set method color to a default one
+    for (auto methodFrom: _nodeFrom->methods()) {
+        if (methodFrom->toPlainText() != QString("METHODS")) {
+            methodFrom->setDefaultTextColor(Qt::black);
+        }
+    }
+#endif
+
     switch (_connectionType) {
         case Association:
             break;
         case Aggregation:
             clr = QColor(Qt::white);
+            poly << linend << arrowP1 << arrowP3 << arrowP2;
+            break;
         case Composition:
             poly << linend << arrowP1 << arrowP3 << arrowP2;
             break;
         case Dependency:
             painter->setPen(QPen(_color, 2, Qt::DashLine));
             clr = QColor(Qt::white);
+            poly << linend << arrowP1 << arrowP2;
+            break;
         case Generalization:
             poly << linend << arrowP1 << arrowP2;
             break;

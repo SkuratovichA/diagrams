@@ -54,14 +54,6 @@ public:
         _height = height;
     }
 
-//    void addActiveRegion(const SequenceConnectionItem *activeRegions) {
-//        _activeRegions.push_back(activeRegions);
-//    }
-//
-//    void addSynchronousPoint(const SequenceConnectionItem *synchronousPoint) {
-//        _messages.push_back(synchronousPoint);
-//    }
-//
     /**
      * Usual functions.
      */
@@ -124,7 +116,7 @@ private:
      */
 private:
     qreal _yFrom = 0;
-    qreal _height = 500; // TODO set height
+    qreal _height = 1000;
     SequenceDiagramItem *_parent;
 
     /**

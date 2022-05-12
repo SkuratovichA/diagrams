@@ -36,7 +36,6 @@ SequenceDiagramItem::SequenceDiagramItem(
     QFlags<Qt::TextInteractionFlag> _flags = Qt::TextInteractionFlag::TextEditable |
                                              Qt::TextInteractionFlag::TextSelectableByMouse |
                                              Qt::TextInteractionFlag::TextSelectableByKeyboard;
-    //setPen(QPen(QColor(1, 0, 0, 0)));
 
     _head = new NameObject(this, _flags, QPointF(-3, -40), params->name());
     qreal Pos = (80 - _head->boundingRect().width()) / 2;
@@ -53,6 +52,7 @@ SequenceDiagramItem::SequenceDiagramItem(
 //    for (auto c: _connections) {
 //        c->trackNodes();
 //    }
+    trackNodes();
     setRect(boundingBox());
 }
 
@@ -94,8 +94,11 @@ void SequenceDiagramItem::addConnection(
         qDebug() << "    --* get this connection from /dev/null :)";
         _removedConnections.remove(connection);
     }
-    _connections.insert(connection);
+    if (!_connections.contains(connection)) {
+        _connections.insert(connection);
+    }
     _lifeLine->addConnection(connection, actorType);
+    trackNodes();
 }
 
 void SequenceDiagramItem::trackNodes() {
@@ -117,4 +120,5 @@ void SequenceDiagramItem::removeConnection(SequenceConnectionItem *connection) {
     _removedConnections.insert(connection);
     _connections.remove(connection);
     _lifeLine->removeConnection(connection);
+    trackNodes();
 }

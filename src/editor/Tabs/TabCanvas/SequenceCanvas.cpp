@@ -191,6 +191,7 @@ bool SequenceCanvas::getStringRepresentation(Program &prg) {
     prg.diagramSequence.push_back(obj);
 
     // add for sequence diagram
+
     return true;
 }
 
@@ -287,6 +288,7 @@ void SequenceCanvas::addEntity(ClassDiagramItem *classDiagramItemParent) {
     createActor = new actorParams(point.x(), point.y(), classDiagramItemParent->name(),
                                   classDiagramItemParent->color());
 
+    //qDebug() << point.x() << point.y() << classDiagramItemParent->name() << classDiagramItemParent->color();
     _undoStack->push(
             new AddSequenceCommand(editorScene, createActor, classDiagramItemParent)
     );

@@ -11,6 +11,7 @@
 #include <QGraphicsSceneMouseEvent>
 #include <QPainter>
 #include <QInputEvent>
+#include "../Connections/Connections.h"
 
 /**
  * A constructor.
@@ -118,6 +119,30 @@ void ClassDiagramItem::mousePressEvent(QGraphicsSceneMouseEvent *event) {
 QVariant ClassDiagramItem::itemChange(GraphicsItemChange change, const QVariant &value) {
     if (change == ItemPositionHasChanged) {
         for (auto *connection: _connections) {
+            if (connection->connectionType() == ClassConnectionItem::Generalization
+                && static_cast<void *>(connection->nodeFrom()) == static_cast<void *>(this)) {
+                auto commonMethods = QList<QString>();
+                auto methodsFromStrings = QList<QString>();
+                for (auto methodFrom: connection->nodeTo()->methods()) {
+                    methodsFromStrings.append(methodFrom->toPlainText());
+                }
+                for (auto item: methods()) {
+                    if (methodsFromStrings.contains(item->toPlainText())) {
+                        commonMethods.append(item->toPlainText());
+                    }
+                }
+                // this fix is so hot that i am horny...
+                for (auto methodFrom: methods()) {
+                    if (methodFrom->toPlainText() != "METHODS" && commonMethods.contains(methodFrom->toPlainText())) {
+                        methodFrom->setDefaultTextColor(Qt::cyan);
+                    }
+                }
+            } else {
+                // reset color
+                for (auto methodFrom: methods()) {
+                    methodFrom->setDefaultTextColor(Qt::black);
+                }
+            }
             connection->trackNodes();
         }
     }
