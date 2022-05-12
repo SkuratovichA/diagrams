@@ -26,7 +26,7 @@ public:
     };
 
     /**
-     *
+     * @brief A Constructor.
      * @param diagramItem Object on the diagram scene to perfom a move operation on.
      * @param startPos Initial position of an object
      * @param parent Parent undo stack
