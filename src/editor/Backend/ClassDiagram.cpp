@@ -4,26 +4,26 @@
 
 #include "Parse.h"
 
-void Class::pushColor(const json el) {
+void Table::pushColor(const json el) {
     this->color.r = el.at("r").get<int>();
     this->color.g = el.at("g").get<int>();
     this->color.b = el.at("b").get<int>();
     this->color.a = el.at("a").get<int>();
 }
 
-void Class::pushName(const json el) {
+void Table::pushName(const json el) {
     this->name = el.get<std::string>();
 }
 
-void Class::pushWidth(const json el) {
+void Table::pushWidth(const json el) {
     this->width = el.get<double>();
 }
 
-void Class::pushHeight(const json el) {
+void Table::pushHeight(const json el) {
     this->height = el.get<double>();
 }
 
-void Class::pushAttrs(const json el, std::vector<attrs_t> &obj) {
+void Table::pushAttrs(const json el, std::vector<attrs_t> &obj) {
     for (auto x: el) {
         obj.push_back({.perm = x.at("perm").get<std::string>(),
                               .type = x.at("type").get<std::string>(),

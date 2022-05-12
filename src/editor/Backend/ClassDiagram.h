@@ -21,21 +21,10 @@ typedef struct attrs {
 } attrs_t;
 
 class Table {
-/**
- * Text (json representation of a class)
- */
-class Class {
 public:
-    std::vector<double> coords;
-    std::string name;
-    Color color;
-    double width;
-    double height;
     std::vector<double> coords; ///< coordinates
     std::string name; ///< name of a class
     Color color; ///< color of class's borders
-    std::vector<attrs_t> attrs; ///< class attributes
-    std::vector<attrs_t> methods; ///< class methods
     double width; ///< class width
     double height; ///< class height
 
@@ -63,7 +52,6 @@ public:
      * @bief Set value to the width variable from json file.
      * @param el node of a json file with width
      */
-    void pushAttrs(const json el, std::vector<attrs_t>& obj);
     void pushWidth(const json el);
 
     /**
@@ -74,10 +62,13 @@ public:
     void pushHeight(const json el);
 };
 
+/**
+ * Text (json representation of a class)
+ */
 class Class : public Table {
 public:
-    std::vector<attrs_t> attrs;
-    std::vector<attrs_t> methods;
+    std::vector<attrs_t> attrs; ///< class attributes
+    std::vector<attrs_t> methods; ///< class methods
 };
 
 class Interface : public Table {
@@ -85,19 +76,11 @@ public:
     std::vector<attrs_t> methods;
 };
 
-class Conct {
 /**
  * Connection representation.
  */
 class ClassDiagramConnectionRepresentation {
 public:
-    std::string leftObj;
-    std::string leftNum;
-    int arrow;
-    std::string rightObj;
-    std::string rightNum;
-    std::string msg;
-    int order;
     std::string leftObj; ///< name of a left (from) object
     std::string leftNum; ///< coordinality on the top of the left part of the arrow
     int arrow; ///< type of an arrow
@@ -146,7 +129,6 @@ public:
 
     void fillStructureInterface(const json el, dgrmClass_t& o);
 
-    void addConnectToFile(json& j, std::vector<Conct> cn);
     /**
      * @brief Write the data about all connections from Connect structure
      * to json file.

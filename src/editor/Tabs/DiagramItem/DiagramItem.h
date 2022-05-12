@@ -207,7 +207,7 @@ public:
         return _color;
     }
 
-    QFlags<Qt::TextInteractionFlag> flags() const {
+    QFlags<Qt::TextInteractionFlag> myFlags() const {
         return _flags;
     }
 
@@ -225,7 +225,58 @@ public:
                                       Qt::TextInteractionFlag::TextSelectableByKeyboard);
     }
 
+    QList<ClassTextAttr *> &methods() {
+        return _methods;
+    }
+
+    [[nodiscard]] QList<QGraphicsLineItem *> methodsLines() const {
+        return _methodsLines;
+    }
+
+    void popMethod() {
+        if (_methods.isEmpty()) {
+            return;
+        }
+        ClassTextAttr *tmp = _methods.takeLast();
+        delete tmp;
+    }
+
+    void popMethodsLine() {
+        if (_methodsLines.isEmpty()) {
+            return;
+        }
+        QGraphicsLineItem *tmp = _methodsLines.takeLast();
+        delete tmp;
+    }
+
+    void moveLines(int st, long long el) {
+        for (QGraphicsLineItem *val : _methodsLines) {
+            val->setPos(0, static_cast<double>(el + st) * rowHeight());
+            st++;
+        }
+    }
+
+    void moveTexts(int st, long long el) {
+        for (ClassTextAttr *val : _methods) {
+            val->setPos(0, static_cast<double>(el + st) * rowHeight() + tabText());
+            st++;
+        }
+    }
+
+    void pushMethod(ClassTextAttr *item) {
+        _methods.push_back(item);
+    }
+
+    void pushMethodLine(QGraphicsLineItem *item) {
+        _methodsLines.push_back(item);
+    }
+
+
     NameObject *_head;
+    QList<QGraphicsLineItem *> _methodsLines;
+    QList<ClassTextAttr *> _methods;
+    QFlags<Qt::TextInteractionFlag> _flags;
+    QSet<ClassConnectionItem *> _connections;
 private:
     qreal _rowHeight;
     qreal _rowWidth;
@@ -235,14 +286,11 @@ private:
     QRectF _boundingBox;
     DiagramType _type;
     QColor _color;
-
-    QFlags<Qt::TextInteractionFlag> _flags;
-    QSet<ClassConnectionItem *> _connections;
 };
 
-class InterfaceItem : public QGraphicsRectItem, public DiagramItem {
+class ClassInterfaceItem : public QGraphicsRectItem, public DiagramItem {
 public:
-    explicit InterfaceItem();
+    explicit ClassInterfaceItem();
 };
 
 class ClassDiagramItem : public QGraphicsRectItem, public DiagramItem {
@@ -272,36 +320,12 @@ public:
     }
 
 public:
-    QList<ClassTextAttr *> &methods() {
-        return _methods;
-    }
-
-    [[nodiscard]] QList<QGraphicsLineItem *> methodsLines() const {
-        return _methodsLines;
-    }
-
     [[nodiscard]] QList<ClassTextAttr *> attrs() const {
         return _attrs;
     }
 
     [[nodiscard]] QList<QGraphicsLineItem *> attrsLines() const {
         return _attrsLines;
-    }
-
-    void popMethod() {
-        if (_methods.isEmpty()) {
-            return;
-        }
-        ClassTextAttr *tmp = _methods.takeLast();
-        delete tmp;
-    }
-
-    void popMethodsLine() {
-        if (_methodsLines.isEmpty()) {
-            return;
-        }
-        QGraphicsLineItem *tmp = _methodsLines.takeLast();
-        delete tmp;
     }
 
     void popAttr() {
@@ -324,30 +348,8 @@ public:
         _attrs.push_back(item);
     }
 
-    void pushMethod(ClassTextAttr *item) {
-        _methods.push_back(item);
-    }
-
-    void pushMethodLine(QGraphicsLineItem *item) {
-        _methodsLines.push_back(item);
-    }
-
     void pushAttrLine(QGraphicsLineItem *item) {
         _attrsLines.push_back(item);
-    }
-
-    void moveLines(int st, long long el) {
-        for (QGraphicsLineItem *val : _methodsLines) {
-            val->setPos(0, static_cast<double>(el + st) * rowHeight());
-            st++;
-        }
-    }
-
-    void moveTexts(int st, long long el) {
-        for (ClassTextAttr *val : _methods) {
-            val->setPos(0, static_cast<double>(el + st) * rowHeight() + tabText());
-            st++;
-        }
     }
 
     QGraphicsLineItem *createLine(qreal x, qreal y) {
@@ -392,9 +394,7 @@ protected:
 
 private:
     QList<ClassTextAttr *> _attrs;
-    QList<ClassTextAttr *> _methods;
     QList<QGraphicsLineItem *> _attrsLines;
-    QList<QGraphicsLineItem *> _methodsLines;
 
     bool _isDeleted = false; ///< if deleted. Affects SequenceDiagramItem.
 };
