@@ -43,8 +43,8 @@ bool MoveCommand::mergeWith(const QUndoCommand *command) {
     if (diagramItem != item) {
         return false;
     }
-    setText(QObject::tr("Move %1")
-                    .arg(createCommandString(diagramItem)));
+//    setText(QObject::tr("Move %1")
+//                    .arg(createCommandString(diagramItem)));
     return true;
 }
 
@@ -54,8 +54,8 @@ bool MoveCommand::mergeWith(const QUndoCommand *command) {
 void MoveCommand::undo() {
     diagramItem->setPos(startPos.x(), startPos.y());
     diagramItem->scene()->update();
-    setText(QObject::tr("Move %1")
-                    .arg(createCommandString(diagramItem)));
+//    setText(QObject::tr("Move %1")
+//                    .arg(createCommandString(diagramItem)));
 }
 
 /**
@@ -63,8 +63,8 @@ void MoveCommand::undo() {
  */
 void MoveCommand::redo() {
     diagramItem->setPos(newPos);
-    setText(QObject::tr("Move %1")
-                    .arg(createCommandString(diagramItem)));
+//    setText(QObject::tr("Move %1")
+//                    .arg(createCommandString(diagramItem)));
 }
 
 /**
@@ -76,8 +76,8 @@ DeleteCommand::DeleteCommand(QGraphicsScene *scene, QUndoCommand *parent)
         : QUndoCommand(parent), graphicsScene(scene) {
     listItems = graphicsScene->selectedItems();
     for (auto x: listItems) {
-        setText(QObject::tr("Delete %1")
-                        .arg(createCommandString(x)));
+//        setText(QObject::tr("Delete %1")
+//                        .arg(createCommandString(x)));
 
         if (dynamic_cast<ClassDiagramItem *>(x) != nullptr) {
             auto connections = dynamic_cast<ClassDiagramItem *>(x)->connections();
@@ -103,6 +103,7 @@ DeleteCommand::DeleteCommand(QGraphicsScene *scene, QUndoCommand *parent)
             scene->removeItem(connection);
         }
     }
+    scene->update();
 }
 
 void DeleteCommand::undo() {
@@ -164,6 +165,7 @@ void DeleteCommand::redo() {
         }
         graphicsScene->removeItem(x);
     }
+    graphicsScene->update();
 }
 
 /**
@@ -177,19 +179,19 @@ AddSequenceCommand::AddSequenceCommand(QGraphicsScene *scene, actorParams *param
     diagramItem = new SequenceDiagramItem(params, parentClassDiagramItem);
     initialStartPosition = QPointF(params->x(), params->y());
     itemCount++;
+//    setText(QObject::tr("Add %1")
+//                    .arg(createCommandString(static_cast<QGraphicsItem *>(diagramItem))));
     scene->update();
-    setText(QObject::tr("Add %1")
-                    .arg(createCommandString(static_cast<QGraphicsItem *>(diagramItem))));
 }
 
 /**
  *
  */
 AddSequenceCommand::~AddSequenceCommand() {
-    if (diagramItem->scene() == nullptr) {
-        return;
-    }
-    delete diagramItem;
+//    if (diagramItem->scene() == nullptr) {
+//        return;
+//    }
+//    delete diagramItem;
 }
 
 /**
@@ -220,9 +222,9 @@ AddClassCommand::AddClassCommand(QGraphicsScene *scene, classParams *params, QUn
     diagramItem = new ClassDiagramItem(params);
     initialStartPosition = QPointF(params->x(), params->y());
     itemCount++;
+//    setText(QObject::tr("Add %1")
+//                    .arg(createCommandString(static_cast<QGraphicsItem *>(diagramItem))));
     scene->update();
-    setText(QObject::tr("Add %1")
-                    .arg(createCommandString(static_cast<QGraphicsItem *>(diagramItem))));
 }
 
 /**
@@ -262,8 +264,8 @@ AddClassConnectionCommand::AddClassConnectionCommand(ClassDiagramItem *fromNode,
 
     classConnection = new ClassConnectionItem(fromNode, toNodes, params, type, maxConnectedElements);
     //initialStartPosition = QPointF(params->x(), params->y());
-    setText(QObject::tr("Connect %1")
-                    .arg(createCommandString(static_cast<ClassConnectionItem *>(classConnection))));
+//    setText(QObject::tr("Connect %1")
+//                    .arg(createCommandString(static_cast<ClassConnectionItem *>(classConnection))));
 
     scene->update();
 }
@@ -307,8 +309,8 @@ AddSequenceConnectionCommand::AddSequenceConnectionCommand(SequenceDiagramItem *
 
     actorConnection = new SequenceConnectionItem(fromNode, toNode, connectionType);
     initialStartPosition = QPointF(100, 100);
-    setText(QObject::tr("Connect %1")
-                    .arg(createCommandString(static_cast<SequenceConnectionItem *>(actorConnection))));
+//    setText(QObject::tr("Connect %1")
+//                    .arg(createCommandString(static_cast<SequenceConnectionItem *>(actorConnection))));
     scene->update();
 
 }

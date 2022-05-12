@@ -36,7 +36,6 @@ SequenceDiagramItem::SequenceDiagramItem(
     QFlags<Qt::TextInteractionFlag> _flags = Qt::TextInteractionFlag::TextEditable |
                                              Qt::TextInteractionFlag::TextSelectableByMouse |
                                              Qt::TextInteractionFlag::TextSelectableByKeyboard;
-    //setPen(QPen(QColor(1, 0, 0, 0)));
 
     _head = new NameObject(this, _flags, QPointF(-3, -40), params->name());
     qreal Pos = (80 - _head->boundingRect().width()) / 2;
