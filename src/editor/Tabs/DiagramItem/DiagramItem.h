@@ -384,6 +384,10 @@ public:
         return _parentClassDiagramItem;
     }
 
+    void setParent(ClassDiagramItem *parent) {
+        _parentClassDiagramItem = parent;
+    }
+
     qreal lineLength() const {return _lineLength;}
 
     void setParent(ClassDiagramItem *parent) {

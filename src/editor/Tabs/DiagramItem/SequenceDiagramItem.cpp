@@ -53,6 +53,7 @@ SequenceDiagramItem::SequenceDiagramItem(
 //    for (auto c: _connections) {
 //        c->trackNodes();
 //    }
+    trackNodes();
     setRect(boundingBox());
 }
 
@@ -94,8 +95,11 @@ void SequenceDiagramItem::addConnection(
         qDebug() << "    --* get this connection from /dev/null :)";
         _removedConnections.remove(connection);
     }
-    _connections.insert(connection);
+    if (!_connections.contains(connection)) {
+        _connections.insert(connection);
+    }
     _lifeLine->addConnection(connection, actorType);
+    trackNodes();
 }
 
 void SequenceDiagramItem::trackNodes() {
@@ -117,4 +121,5 @@ void SequenceDiagramItem::removeConnection(SequenceConnectionItem *connection) {
     _removedConnections.insert(connection);
     _connections.remove(connection);
     _lifeLine->removeConnection(connection);
+    trackNodes();
 }

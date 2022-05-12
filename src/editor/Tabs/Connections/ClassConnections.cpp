@@ -31,6 +31,8 @@ ClassConnectionItem::ClassConnectionItem(ClassDiagramItem *fromNode,
     _single = fromNode == toNode;
     _nodeFrom->addConnection(this);
     _nodeTo->addConnection(this);
+
+    qDebug() << _nodeTo->connections().size();
     _connectionType = type;
     _color = color;
     _order = order;
