@@ -31,7 +31,7 @@ void ItemsBuffer::addRelationItems(Conct conct) {
                                                QString::fromStdString(conct.rightObj),
                                                QString::fromStdString(conct.rightNum),
                                                QString::fromStdString(conct.msg),
-                                               conct.arrow, conct.order);
+                                               conct.arrow, conct.order/*, conct.leftObjId, conct.rightObjId*/);
 
     pushRelationItem(prm);
 }
@@ -41,10 +41,13 @@ void ItemsBuffer::addRelationItems(Conct conct) {
  * @param item
  */
 void ItemsBuffer::fillRelationItems(ClassConnectionItem *item) {
+    // get ID from item
+
     relationsParams *ptr =  new relationsParams(
             item->nodeFrom()->name(), item->getLeftNum()->toPlainText(),
             item->nodeTo()->name(), item->getRightNum()->toPlainText(),
-            item->getMsg()->toPlainText(), item->connectionType(), item->order());
+            item->getMsg()->toPlainText(), item->connectionType(),
+            item->order()/*, (int)reinterpret_cast<uintptr_t>(item->nodeFrom()) % 10000, (int)reinterpret_cast<uintptr_t>(item->nodeTo()) % 10000*/);
 
     pushRelationItem(ptr );
 }
@@ -70,7 +73,7 @@ void ItemsBuffer::addClassItems(Class cls) {
 
     prm = new classParams(cls.coords[0], cls.coords[1], QString::fromStdString(cls.name),
                           QColor(cls.color.r, cls.color.g, cls.color.b, cls.color.a),
-                          cls.width, cls.height, attrs, methods);
+                          cls.width, cls.height, attrs, methods/*, cls.id*/);
 
     pushClassItem(prm);
 }
@@ -96,9 +99,11 @@ void ItemsBuffer::fillClassItems(ClassDiagramItem *item) {
         attrs.push_back(x->toPlainText());
     }
 
+    // GET id items
     ptr = new classParams(item->x() + 40, item->y() + 40,
                           item->_head->toPlainText(), item->color(),
-                          item->width(), item->height(), attrs, methods);
+                          item->width(), item->height(), attrs,
+                          methods/*, (int)reinterpret_cast<uintptr_t>(item) % 10000*/);
     pushClassItem(ptr);
 }
 
@@ -113,7 +118,7 @@ void ItemsBuffer::addActorItems(Actor act) {
 
     a = new actorParams(act.coords[0], act.coords[1],
                         QString::fromStdString(act.name),
-                        QColor(act.color.r, act.color.g, act.color.b, act.color.a));
+                        QColor(act.color.r, act.color.g, act.color.b, act.color.a)/*, act.id*/);
 
     pushActorItem(a);
 }
@@ -125,10 +130,11 @@ void ItemsBuffer::addActorItems(Actor act) {
 void ItemsBuffer::fillMessageItems(SequenceConnectionItem *item) {
     messageParams *ptr;
 
+    // GET ID of item
     ptr = new messageParams(item->x(), item->y(),
                           item->getText()->toPlainText(),
                           item->nodeFrom()->name(), item->nodeTo()->name(),
-                          item->type());
+                          item->type()/*, (int)reinterpret_cast<uintptr_t>(item->nodeFrom()) % 10000, (int)reinterpret_cast<uintptr_t>(item->nodeTo()) % 10000*/);
     pushMessageItem(ptr);
 }
 
@@ -139,7 +145,7 @@ void ItemsBuffer::addMessageItems(Action action) {
                           QString::fromStdString(action.msg),
                           QString::fromStdString(action.from),
                           QString::fromStdString(action.to),
-                          action.type);
+                          action.type/*, action.fromId, action.toId*/);
 
     pushMessageItem(a);
 }
@@ -151,8 +157,11 @@ void ItemsBuffer::addMessageItems(Action action) {
 void ItemsBuffer::fillActorItems(SequenceDiagramItem *item) {
     actorParams *ptr;
 
+    // get id of item
+    //qDebug() << reinterpret_cast<uintptr_t>(item) % 10000 << "addr as int";
     ptr = new actorParams(item->x(), item->y(),
-                          item->_head->toPlainText(), item->color());
+                          item->_head->toPlainText(),
+                          item->color()/*, (int)reinterpret_cast<uintptr_t>(item) % 10000*/);
     pushActorItem(ptr);
 }
 
