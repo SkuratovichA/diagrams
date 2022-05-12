@@ -29,34 +29,24 @@ public:
      */
     SequenceDiagramLifeLine(SequenceDiagramItem *parent, qreal yFrom, qreal height);
 
+    /**
+     * A destructor.
+     */
     ~SequenceDiagramLifeLine() override;
 
 public:
     void trackNodes();
-public:
-    [[nodiscard]] qreal yFrom() const {
-        return _yFrom;
-    }
 
+public:
+    /**
+     * @brief Getter. Returns a height of a lifeline
+     * @return qreal _height
+     */
     [[nodiscard]] qreal height() const {
         return _height;
     }
 
-    [[nodiscard]] qreal defaultActiveRegionLength() const {
-        return _actRegLen;
-    }
-
 public:
-    void setYFrom(qreal yFrom) {
-        _yFrom = yFrom;
-    }
-
-    void setHeight(qreal height) {
-        _height = height;
-    }
-
-public:
-
     /**
      * @brief Add a connection to a list with connections
      * @param connection
