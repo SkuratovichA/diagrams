@@ -41,12 +41,12 @@ void ItemsBuffer::addRelationItems(Conct conct) {
  * @param item
  */
 void ItemsBuffer::fillRelationItems(ClassConnectionItem *item) {
-    relationsParams *ptr =  new relationsParams(
+    relationsParams *ptr = new relationsParams(
             item->nodeFrom()->name(), item->getLeftNum()->toPlainText(),
             item->nodeTo()->name(), item->getRightNum()->toPlainText(),
             item->getMsg()->toPlainText(), item->connectionType(), item->order());
 
-    pushRelationItem(ptr );
+    pushRelationItem(ptr);
 }
 
 /**
@@ -60,11 +60,11 @@ void ItemsBuffer::addClassItems(Class cls) {
     QList<QString> methods;
     QList<QString> attrs;
 
-    for (auto x : cls.attrs) {
+    for (auto x: cls.attrs) {
         attrs.push_back(QString::fromStdString(x.perm + " " + x.type + " " + x.name));
     }
 
-    for (auto x : cls.methods) {
+    for (auto x: cls.methods) {
         methods.push_back(QString::fromStdString(x.perm + " " + x.type + " " + x.name));
     }
 
@@ -98,22 +98,23 @@ void ItemsBuffer::fillClassItems(ClassDiagramItem *item) {
 
     ptr = new classParams(item->x() + 40, item->y() + 40,
                           item->_head->toPlainText(), item->color(),
-                          item->width(), item->height(), attrs, methods);
+                          item->width(), item->height(), attrs,
+                          methods);
     pushClassItem(ptr);
 }
 
 /**
- * Fill the structure actorParams from json to another structure
+ * Fill the structure SequenceDiagramItemParameters from json to another structure
  * for the next object created on the scene.
  *
  * @param act structure with the data
  */
 void ItemsBuffer::addActorItems(Actor act) {
-    actorParams *a;
+    SequenceDiagramItemParameters *a;
 
-    a = new actorParams(act.coords[0], act.coords[1],
-                        QString::fromStdString(act.name),
-                        QColor(act.color.r, act.color.g, act.color.b, act.color.a));
+    a = new SequenceDiagramItemParameters(act.coords[0], act.coords[1],
+                                          QString::fromStdString(act.name),
+                                          QColor(act.color.r, act.color.g, act.color.b, act.color.a));
 
     pushActorItem(a);
 }
@@ -122,11 +123,43 @@ void ItemsBuffer::addActorItems(Actor act) {
  *
  * @param item
  */
-void ItemsBuffer::fillActorItems(SequenceDiagramItem *item) {
-    actorParams *ptr;
+void ItemsBuffer::fillMessageItems(SequenceConnectionItem *item) {
+    messageParams *ptr;
 
-    ptr = new actorParams(item->x(), item->y(),
-                          item->_head->toPlainText(), item->color());
+    // GET ID of item
+    ptr = new messageParams(item->x(), item->y(),
+                            item->getText()->toPlainText(),
+                            item->nodeFrom()->name(), item->nodeTo()->name(),
+                            item->type());
+    pushMessageItem(ptr);
+}
+
+void ItemsBuffer::addMessageItems(Action action) {
+    messageParams *a;
+
+    a = new messageParams(action.coords[0], action.coords[1],
+                          QString::fromStdString(action.msg),
+                          QString::fromStdString(action.from),
+                          QString::fromStdString(action.to),
+                          action.type/*, action.fromId, action.toId*/);
+
+    pushMessageItem(a);
+}
+
+/**
+ *
+ * @param item
+ */
+void ItemsBuffer::fillActorItems(SequenceDiagramItem *item) {
+    SequenceDiagramItemParameters *ptr;
+
+    ptr = new SequenceDiagramItemParameters(item->x(), item->y(),
+                                            item->_head->toPlainText(), item->color());
+    // get id of item
+    //qDebug() << reinterpret_cast<uintptr_t>(item) % 10000 << "addr as int";
+    ptr = new SequenceDiagramItemParameters(item->x(), item->y(),
+                                            item->_head->toPlainText(),
+                                            item->color());
     pushActorItem(ptr);
 }
 

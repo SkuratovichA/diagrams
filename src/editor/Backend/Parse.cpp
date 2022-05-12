@@ -28,7 +28,6 @@ void Program::parseFile(std::string filename) {
             dgrmSeq_t tmp;
             obj_se.fillStructureActor(seq.at("actors"), tmp);
             obj_se.fillStructureAction(seq.at("actions"), tmp);
-            obj_se.fillStructureActivate(seq.at("activates"), tmp);
             this->diagramSequence.push_back(tmp);
         }
     } catch(nlohmann::detail::out_of_range) {
@@ -71,10 +70,8 @@ void Program::fillFile(std::string filename) {
     for (auto& x : this->diagramSequence) {
         j["seq_dgrm"][i]["actors"] = nullptr;
         j["seq_dgrm"][i]["actions"] = nullptr;
-        j["seq_dgrm"][i]["activates"] = nullptr;
         obj_se.addActorToFile(j["seq_dgrm"][i], x.actors);
         obj_se.addActionToFile(j["seq_dgrm"][i], x.actions);
-        obj_se.addActivateToFile(j["seq_dgrm"][i], x.activates);
         i++;
     }
 

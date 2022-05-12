@@ -24,6 +24,7 @@ public:
 
 protected:
     void keyReleaseEvent(QKeyEvent *event) override;
+    void focusOutEvent(QFocusEvent *event) override;
 
 private:
     QGraphicsItem *_parent;
@@ -187,6 +188,7 @@ public:
     SequenceConnectionItem(
             SequenceDiagramItem *nodeFrom,
             SequenceDiagramItem *nodeTo,
+            messageParams *params,
             ConnectionType connectionType
     );
 
@@ -212,22 +214,62 @@ public:
         return _connectionType;
     }
 
-    void setLinEnd() {
-        if (std::abs(cLine.p2().x() - cLine.p1().x()) <= 15) {
-            return;
-        }
+    static QFlags<Qt::TextInteractionFlag> getFlags() {
+        return Qt::TextInteractionFlag::TextEditable |
+               Qt::TextInteractionFlag::TextSelectableByMouse |
+               Qt::TextInteractionFlag::TextSelectableByKeyboard;
+    }
 
-//        linend = cLine.p2().x() < cLine.p1().x() ? cLine.p2() + QPointF(10, 0) :
-//                 cLine.p2() - QPointF(10 ,0);
-//
-//        if (cLine.p2().x() < cLine.p1().x()) {
-//            pUp = QPointF(linend.x() + 13, linend.y() + 8);
-//            pDown = QPointF(linend.x() + 13, linend.y() - 8);
-//        }
-//        else {
-//            pUp = QPointF(linend.x() - 13, linend.y() + 8);
-//            pDown = QPointF(linend.x() - 13, linend.y() - 8);
-//        }
+    qreal widthText() {
+        return text->boundingRect().width();
+    }
+
+    QGraphicsTextItem* getText() {
+        return text;
+    };
+
+    void setLineReplay() {
+        cLine = line();
+
+        if (cLine.p1().x() < cLine.p2().x()) {
+            cLine = QLineF(QPointF(cLine.p1().x() + 10, cLine.p1().y()),
+                           QPointF(cLine.p2().x() - 10, cLine.p2().y()));
+
+            pUp = QPointF(cLine.p1().x() + 15, cLine.p1().y() + 8);
+            pDown = QPointF(cLine.p1().x() + 15, cLine.p1().y() - 8);
+            pEnd = cLine.p1();
+        }
+        else {
+            cLine = QLineF(QPointF(cLine.p1().x() - 10, cLine.p1().y()),
+                           QPointF(cLine.p2().x() + 10, cLine.p2().y()));
+
+            pUp = QPointF(cLine.p1().x() - 15, cLine.p1().y() + 8);
+            pDown = QPointF(cLine.p1().x() - 15, cLine.p1().y() - 8);
+            pEnd = cLine.p1();
+        }
+    }
+
+    void setLineOther() {
+        cLine = line();
+
+        if (cLine.p1().x() < cLine.p2().x()) {
+            cLine = QLineF(QPointF(cLine.p1().x() + 10, cLine.p1().y()),
+                           QPointF(cLine.p2().x() - 10, cLine.p2().y()));
+
+            pUp = QPointF(cLine.p2().x() - 15, cLine.p2().y() + 8);
+            pDown = QPointF(cLine.p2().x() - 15, cLine.p2().y() - 8);
+            pEnd = cLine.p2();
+            posX = pEnd.x();
+        }
+        else {
+            cLine = QLineF(QPointF(cLine.p1().x() - 10, cLine.p1().y()),
+                           QPointF(cLine.p2().x() + 10, cLine.p2().y()));
+
+            pUp = QPointF(cLine.p2().x() + 15, cLine.p2().y() + 8);
+            pDown = QPointF(cLine.p2().x() + 15, cLine.p2().y() - 8);
+            pEnd = cLine.p2();
+            posX = pEnd.x() - 20;
+        }
     }
 
 public:
@@ -250,6 +292,7 @@ private:
     QLineF cLine;
     qreal posX;
     qreal scale = 20;
+    msgText *text;
     QColor _color = QColor(0,0,0,200);
     ConnectionType _connectionType;
     SequenceDiagramItem *_nodeTo;

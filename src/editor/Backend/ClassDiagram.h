@@ -23,6 +23,7 @@ typedef struct attrs {
 class Class {
 public:
     std::vector<double> coords;
+    //int id;
     std::string name;
     Color color;
     std::vector<attrs_t> attrs;
@@ -43,6 +44,8 @@ public:
 
 class Conct {
 public:
+    //int leftObjId;
+    //int rightObjId;
     std::string leftObj;
     std::string leftNum;
     int arrow;

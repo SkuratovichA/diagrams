@@ -26,7 +26,6 @@ SequenceDiagramLifeLine::SequenceDiagramLifeLine(SequenceDiagramItem *parent, qr
     _parent = parent;
     _verticalAgjust = parent->pos().y();
 
-    setFlags(QGraphicsItem::ItemIsSelectable);
     // create a default line
     setZValue(-1.0);
     trackNodes();
@@ -115,16 +114,16 @@ void SequenceDiagramLifeLine::paint(QPainter *painter, const QStyleOptionGraphic
         painter->drawLine(cLine);
     }
 }
-
-/** Reacts on a mouse press event, and selecting the line
- *
- * @param event
- */
-void SequenceDiagramLifeLine::mousePressEvent(QGraphicsSceneMouseEvent *event) {
-    if (event->button() == Qt::RightButton) {
-        setSelected(true);
-    }
-}
+//
+///** Reacts on a mouse press event, and selecting the line
+// *
+// * @param event
+// */
+//void SequenceDiagramLifeLine::mousePressEvent(QGraphicsSceneMouseEvent *event) {
+//    if (event->button() == Qt::RightButton) {
+//        setSelected(true);
+//    }
+//}
 
 /** Tracks nodes and updates the line
  *

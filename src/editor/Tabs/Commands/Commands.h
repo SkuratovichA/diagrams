@@ -58,7 +58,7 @@ private:
  */
 class AddSequenceCommand : public QUndoCommand {
 public:
-    explicit AddSequenceCommand(QGraphicsScene *scene, actorParams *params, ClassDiagramItem *parentClassDiagramItem,
+    explicit AddSequenceCommand(QGraphicsScene *scene, SequenceDiagramItemParameters *params, ClassDiagramItem *parentClassDiagramItem,
                                 QUndoCommand *parent = nullptr);
 
     ~AddSequenceCommand();
@@ -99,6 +99,7 @@ class AddSequenceConnectionCommand : public QUndoCommand {
 public:
     explicit AddSequenceConnectionCommand(SequenceDiagramItem *fromNode,
                                           SequenceDiagramItem *toNode,
+                                          messageParams *params,
                                           ConnectionType connectionType,
                                           QGraphicsScene *scene,
                                           QUndoCommand *parent = nullptr);

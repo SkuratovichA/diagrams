@@ -68,7 +68,6 @@ public:
      * Private functions.
      */
 private:
-    void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
     [[nodiscard]] QPainterPath shape() const override;
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
     [[nodiscard]] QPolygonF lineShaper() const;

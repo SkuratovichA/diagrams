@@ -9,10 +9,13 @@
 #include <QRandomGenerator>
 #include <QWidget>
 #include <QUndoGroup>
+#include <QMessageBox>
 
 #include "TabCanvas.h"
 #include "../../EditorInterface/editorinterface.h"
 #include "SequenceConnectionDialog/sequenceconnectiondialog.h"
+#include <regex>
+
 
 /**
  * A constructor.
@@ -21,7 +24,7 @@
  *
  * @param p parent widget
  * @param parentGroup pointer to the main undo stack
- * to create a local undo stask
+ * to create a local undo stack
  */
 SequenceCanvas::SequenceCanvas(QWidget *parent, QUndoGroup *parentGroup) : TabCanvas(parent, parentGroup) {
     parentInterface = dynamic_cast<editorInterface *>(parent);
@@ -59,6 +62,48 @@ bool SequenceCanvas::createFromFile(dgrmSeq_t seq) {
         editorScene->update();
     }
 
+    QList<SequenceDiagramItem *>items = getItems<SequenceDiagramItem>();
+    for (auto x : seq.actions) {
+        buf.addMessageItems(x);
+    }
+
+    SequenceDiagramItem *from;
+    SequenceDiagramItem *to;
+    for (auto x: buf.messageItems()) {
+        for (auto y: items) {
+            if (x->nameFrom() == y->name()) {
+                from = y;
+            }
+            if (x->nameTo() == y->name()) {
+                to = y;
+            }
+        }
+
+        if (from == nullptr || to == nullptr) {
+            return false;
+        }
+
+        SequenceConnectionItem *item = new SequenceConnectionItem(from, to, x,
+                              static_cast<Connections::ConnectionType>(x->type()));
+        editorScene->addItem(item);
+        editorScene->update();
+    }
+
+    return true;
+}
+
+bool SequenceCanvas::checkIdenticalNames() {
+    QList<SequenceConnectionItem *> itemsCoonnections = getItems<SequenceConnectionItem>();
+
+    for (auto x : itemsCoonnections) {
+        if (!ObjectParams::checkMethod(x) && x->connectionType() != ConnectionType::Create
+                                          && x->connectionType() != ConnectionType::Delete)
+        {
+            QMessageBox::warning(this, "Error", "AHAHAHAHAH i try to find a bug, goodbye");
+            return false;
+        }
+    }
+
     return true;
 }
 
@@ -69,7 +114,6 @@ bool SequenceCanvas::createFromFile(dgrmSeq_t seq) {
 bool SequenceCanvas::getStringRepresentation(Program &prg) {
     //dgrm_seq actors;
     std::vector<Action> actions;
-    std::vector<Activate> activates;
     ItemsBuffer buf;
 
     dgrmSeq_t obj;
@@ -78,17 +122,35 @@ bool SequenceCanvas::getStringRepresentation(Program &prg) {
         buf.fillActorItems(x);
     }
 
-// sequence connections
-//    for (auto x : getItems<SequenceConnectionItem>()) {
-//        buf.fillMessagesItems(x);
-//    }
+    for (auto x : getItems<SequenceConnectionItem>()) {
+        buf.fillMessageItems(x);
+    }
+
+    if (!checkIdenticalNames()) {
+        return false;
+    }
 
     for (auto x : buf.sequenceItems()) {
         Actor act;
         act.name = x->name().toStdString();
         x->fillColor(act.color);
         x->fillCoords(act.coords);
+        //axt.id = x->id();
+
         obj.actors.push_back(act);
+    }
+
+    for (auto x : buf.messageItems()) {
+        Action action;
+        action.msg = x->msg().toStdString();
+        x->fillCoords(action.coords);
+        action.from = x->nameFrom().toStdString();
+        action.to = x->nameTo().toStdString();
+        action.type = x->type();
+        //action.fromId = x->fromId();
+        //action.fromTo = x->fromTo();
+
+        obj.actions.push_back(action);
     }
 
     prg.diagramSequence.push_back(obj);
@@ -188,10 +250,8 @@ void SequenceCanvas::deleteMessage_triggered() {
 void SequenceCanvas::addEntity(ClassDiagramItem *classDiagramItemParent) {
     QPoint point = generateCoords();
 
-    createActor = new actorParams(point.x(), point.y(), classDiagramItemParent->name(),
-                                  classDiagramItemParent->color());
-
-    //qDebug() << point.x() << point.y() << classDiagramItemParent->name() << classDiagramItemParent->color();
+    createActor = new SequenceDiagramItemParameters(point.x(), point.y(), classDiagramItemParent->name(),
+                                                    classDiagramItemParent->color());
     _undoStack->push(
             new AddSequenceCommand(editorScene, createActor, classDiagramItemParent)
     );
@@ -221,9 +281,14 @@ void SequenceCanvas::addConnection() {
     if (index == ConnectionType::Undefined) {
         return;
     }
+
+    paramsMessage = new messageParams(0, 200, "TEXT", nodes.first->name(), nodes.second->name(), index);
+
     _undoStack->push(
-            new AddSequenceConnectionCommand(nodes.first, nodes.second, index, editorScene)
+            new AddSequenceConnectionCommand(nodes.first, nodes.second, paramsMessage, index, editorScene)
     );
+
+    delete paramsMessage;
 }
 
 /**

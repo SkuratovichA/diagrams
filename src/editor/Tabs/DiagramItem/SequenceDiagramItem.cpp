@@ -9,9 +9,7 @@
 #include <QStyleOptionGraphicsItem>
 #include <QInputDialog>
 #include <QGraphicsSceneMouseEvent>
-#include <QDebug>
 #include <QPainter>
-#include <QInputEvent>
 
 /**
  * A constructor.
@@ -23,7 +21,7 @@
  * @param params class with all necessary information to create an object.
  */
 SequenceDiagramItem::SequenceDiagramItem(
-        actorParams *params,
+        SequenceDiagramItemParameters *params,
         ClassDiagramItem *parentClassDiagramItem_)
         : DiagramItem(80,
                       50,
@@ -81,18 +79,26 @@ QVariant SequenceDiagramItem::itemChange(
 }
 
 /**
- * Add a connection to the set of connections for certain item.
+ * Add a connection to the set of connections for a certain item.
  * @param connection message arrow between objects
  */
 void SequenceDiagramItem::addConnection(
         SequenceConnectionItem *connection,
-        ActorType actorType) {
-    qDebug() << __FILE__ << " " << __LINE__;
-    qDebug() << "   adding connection";
-    qDebug() << "   " << connection;
-    if (_removedConnections.contains(connection)) {
-        qDebug() << "    --* get this connection from /dev/null :)";
-        _removedConnections.remove(connection);
+        ActorType actorType,
+        CommandType::CommandType commandType,
+        CommandType::RequestType requestType) {
+    if (commandType == CommandType::Add) {
+        if (requestType == CommandType::Connection) {
+            _removedConnectionsOnAddConnection.remove(connection);
+        } else { // Self
+            _removedConnectionsOnAddSelf.remove(connection);
+        }
+    } else { // Delete
+        if (requestType == CommandType::Connection) {
+            _removedConnectionsOnDeleteConnection.remove(connection);
+        } else { // Self
+            _removedConnectionsOnDeleteSelf.remove(connection);
+        }
     }
     if (!_connections.contains(connection)) {
         _connections.insert(connection);
@@ -108,16 +114,23 @@ void SequenceDiagramItem::trackNodes() {
     _lifeLine->trackNodes();
 }
 
-/**
- * Remove a connection to the set of connections for certain item.
- *
- * @param connection message arrow between objects
- */
-void SequenceDiagramItem::removeConnection(SequenceConnectionItem *connection) {
-    qDebug() << __FILE__ << " " << __LINE__;
-    qDebug() << "   removing connection";
-    qDebug() << "   removing << "<< connection <<"this from " << _connections;
-    _removedConnections.insert(connection);
+void SequenceDiagramItem::removeConnection(
+        SequenceConnectionItem *connection,
+        CommandType::CommandType commandType,
+        CommandType::RequestType requestType) {
+    if (commandType == CommandType::Add) {
+        if (requestType == CommandType::Connection) {
+            _removedConnectionsOnAddConnection.insert(connection);
+        } else { // Self
+            _removedConnectionsOnAddSelf.insert(connection);
+        }
+    } else { // Delete
+        if (requestType == CommandType::Connection) {
+            _removedConnectionsOnDeleteConnection.insert(connection);
+        } else { // self
+            _removedConnectionsOnDeleteSelf.insert(connection);
+        }
+    }
     _connections.remove(connection);
     _lifeLine->removeConnection(connection);
     trackNodes();

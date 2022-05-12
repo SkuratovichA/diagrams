@@ -120,5 +120,6 @@ void NameObject::keyReleaseEvent(QKeyEvent *event) {
     auto *tmp2 = dynamic_cast<SequenceDiagramItem *>(parent());
     qreal midO = tmp1 == nullptr ? tmp2->width() : tmp1->width();
     qreal midW = boundingRect().width();
+    //qDebug() << "tmp1 has coordinates: " << tmp1->x() << tmp1->y();
     setPos((midO - midW) / 2, -40);
 }
