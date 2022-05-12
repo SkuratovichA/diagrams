@@ -11,16 +11,8 @@
 #include <QGraphicsSceneMouseEvent>
 #include <QPainter>
 #include <QInputEvent>
-#include "../Connections/Connections.h"
 
-/**
- * A constructor.
- *
- * This constructor creates an entity for the class diagram.
- * TODO description
- *
- * @param params class with all necessary information to create an object.
- */
+
 ClassDiagramItem::ClassDiagramItem(classParams *params)
         : DiagramItem(params->width(),
                       params->height(),
@@ -39,7 +31,7 @@ ClassDiagramItem::ClassDiagramItem(classParams *params)
     // name of the class
     setPen(QPen(color()));
 
-    _head = new NameObject(this, _flags, QPointF(20, -40), params->name()); // i do not know why coordinates 5, -40
+    _head = new NameObject(this, _flags, QPointF(20, -40), params->name());
     qreal Pos = (params->width() - _head->boundingRect().width()) / 2;
     _head->setPos(Pos, -40);
 
@@ -76,20 +68,10 @@ ClassDiagramItem::ClassDiagramItem(classParams *params)
     setBrush(QBrush(QColor(255, 255, 255, 255)));
 }
 
-/**
- * Add a connection to the set of connections for certain item.
- *
- * @param connection relation arrow between objects
- */
 void ClassDiagramItem::addConnection(ClassConnectionItem *connection) {
     _connections.insert(connection);
 }
 
-/**
- * Remove a connection to the set of connections for certain item.
- *
- * @param connection relation arrow between objects
- */
 void ClassDiagramItem::removeConnection(ClassConnectionItem *connection) {
     _connections.remove(connection);
 }

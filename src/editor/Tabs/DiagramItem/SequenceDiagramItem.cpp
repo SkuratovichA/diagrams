@@ -11,15 +11,7 @@
 #include <QGraphicsSceneMouseEvent>
 #include <QPainter>
 
-/**
- * A constructor.
- *
- * This constructor creates an entity for the sequence diagram.
- * It is a simple rectangle with a child item, which represents
- * the name of the object.
- *
- * @param params class with all necessary information to create an object.
- */
+
 SequenceDiagramItem::SequenceDiagramItem(
         SequenceDiagramItemParameters *params,
         ClassDiagramItem *parentClassDiagramItem_)
@@ -47,23 +39,10 @@ SequenceDiagramItem::SequenceDiagramItem(
 
     _lifeLine = new SequenceDiagramLifeLine(this, 0, _lineLength);
 
-//    for (auto c: _connections) {
-//        c->trackNodes();
-//    }
     trackNodes();
     setRect(boundingBox());
 }
 
-/**
- * Notify custom items that some part of the item's state changes.
- * Reimplementation of this function provides a possibility to move
- * an item only on x axis.
- *
- * @param change what was changed
- * @param value new value of changed item
- *
- * @return new value
- */
 QVariant SequenceDiagramItem::itemChange(
         GraphicsItemChange change,
         const QVariant &value) {
@@ -78,10 +57,6 @@ QVariant SequenceDiagramItem::itemChange(
     return QGraphicsItem::itemChange(change, value);
 }
 
-/**
- * Add a connection to the set of connections for a certain item.
- * @param connection message arrow between objects
- */
 void SequenceDiagramItem::addConnection(
         SequenceConnectionItem *connection,
         ActorType actorType,

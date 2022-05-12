@@ -8,20 +8,10 @@
 #include <QStyleOptionGraphicsItem>
 #include <QInputDialog>
 #include <QGraphicsSceneMouseEvent>
-#include <QDebug>
 #include <QPainter>
 #include <QInputEvent>
 
-/**
- * A constructor.
- *
- * This constructor creates a text connected with its parent.
- *
- * @param p parent item
- * @param text text represented by a string
- * @param pos position of the text
- * @param flags flags for text that make it editable
- */
+
 ClassTextAttr::ClassTextAttr(ClassDiagramItem *p, QString text, QPointF pos,
                              QFlags<Qt::TextInteractionFlag> flags)
         : QGraphicsTextItem(text, p) {
@@ -30,19 +20,8 @@ ClassTextAttr::ClassTextAttr(ClassDiagramItem *p, QString text, QPointF pos,
     _parent = p;
 }
 
-/**
- * A destructor.
- */
-ClassTextAttr::~ClassTextAttr() {
+ClassTextAttr::~ClassTextAttr() {}
 
-}
-
-/**
- * Handle an event of the text editing for object attributes to align it.
- * In the case of entering "Key_Enter" the text editing is ended.
- *
- * @param event key event
- */
 void ClassTextAttr::keyReleaseEvent(QKeyEvent *event) {
     if ((event->key() == Qt::Key_Enter) || (event->key() == Qt::Key_Return)) {
         setPlainText(toPlainText().remove('\n'));
@@ -85,16 +64,6 @@ void ClassTextAttr::keyReleaseEvent(QKeyEvent *event) {
     }
 }
 
-/**
- * A constructor.
- *
- * This constructor creates a text connected with its parent.
- *
- * @param parent parent item
- * @param flags flags for text that make it editable
- * @param pos position of the text
- * @param str text represented by a string
- */
 NameObject::NameObject(QGraphicsItem *parent, QFlags<Qt::TextInteractionFlag> flags, QPointF pos, QString str)
         : QGraphicsTextItem(str, parent) {
     _parent = parent;
@@ -104,12 +73,6 @@ NameObject::NameObject(QGraphicsItem *parent, QFlags<Qt::TextInteractionFlag> fl
     topLevelItem();
 }
 
-/**
- * Handle an event of the text editing for object name to align it.
- * In the case of entering "Key_Enter" the text editing is ended.
- *
- * @param event key event
- */
 void NameObject::keyReleaseEvent(QKeyEvent *event) {
     if ((event->key() == Qt::Key_Enter) || (event->key() == Qt::Key_Return)) {
         setPlainText(toPlainText().remove('\n'));
@@ -120,6 +83,5 @@ void NameObject::keyReleaseEvent(QKeyEvent *event) {
     auto *tmp2 = dynamic_cast<SequenceDiagramItem *>(parent());
     qreal midO = tmp1 == nullptr ? tmp2->width() : tmp1->width();
     qreal midW = boundingRect().width();
-    //qDebug() << "tmp1 has coordinates: " << tmp1->x() << tmp1->y();
     setPos((midO - midW) / 2, -40);
 }
