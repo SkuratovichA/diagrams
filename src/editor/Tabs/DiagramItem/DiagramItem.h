@@ -390,10 +390,6 @@ public:
 
     qreal lineLength() const {return _lineLength;}
 
-    void setParent(ClassDiagramItem *parent) {
-        _parentClassDiagramItem = parent;
-    }
-
 protected:
     QVariant itemChange(GraphicsItemChange change, const QVariant &value) override;
 

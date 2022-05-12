@@ -34,7 +34,17 @@ SequenceConnectionItem::SequenceConnectionItem(SequenceDiagramItem *nodeFrom,
     _nodeTo->addConnection(this, Receiver);
 
     setFlags(QGraphicsItem::ItemIsSelectable | QGraphicsItem::ItemIsMovable | QGraphicsItem::ItemSendsGeometryChanges);
-    text = new msgText(this, getFlags(), 0, 0, params->msg());
+
+    switch (_connectionType) {
+        case Create:
+            text = new msgText(this, QFlags<Qt::TextInteractionFlag>(0), 0, 0, "<<create>>");
+            break;
+        case Delete:
+            text = new msgText(this, QFlags<Qt::TextInteractionFlag>(0), 0, 0, "<<delete>>");
+            break;
+        default:
+            text = new msgText(this, getFlags(), 0, 0, params->msg());
+    }
 
     setZValue(1.0);
     setY(params->y());
