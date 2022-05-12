@@ -308,17 +308,17 @@ public:
     }
 
     void moveLines(int st, long long el) {
-                foreach (QGraphicsLineItem *val, _methodsLines) {
-                val->setPos(0, static_cast<double>(el + st) * rowHeight());
-                st++;
-            }
+        for (QGraphicsLineItem *val : _methodsLines) {
+            val->setPos(0, static_cast<double>(el + st) * rowHeight());
+            st++;
+        }
     }
 
     void moveTexts(int st, long long el) {
-                foreach (ClassTextAttr *val, _methods) {
-                val->setPos(0, static_cast<double>(el + st) * rowHeight() + tabText());
-                st++;
-            }
+        for (ClassTextAttr *val : _methods) {
+            val->setPos(0, static_cast<double>(el + st) * rowHeight() + tabText());
+            st++;
+        }
     }
 
     QGraphicsLineItem *createLine(qreal x, qreal y) {

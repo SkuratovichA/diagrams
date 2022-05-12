@@ -202,17 +202,19 @@ void AddClassConnectionCommand::redo() {
     graphicsScene->update();
 }
 
+/**
+ *
+ */
 AddSequenceConnectionCommand::AddSequenceConnectionCommand(SequenceDiagramItem *nodeFrom,
                                                            SequenceDiagramItem *nodeTo,
+                                                           messageParams *params,
                                                            ConnectionType connectionType,
                                                            QGraphicsScene *scene,
                                                            QUndoCommand *parent)
         : QUndoCommand(parent), graphicsScene(scene) {
 
-    if (nodeFrom->parentClassDiagramItem()->isDeleted() == false &&
-        nodeTo->parentClassDiagramItem()->isDeleted() == false) {
-        actorConnection = new SequenceConnectionItem(nodeFrom, nodeTo, connectionType);
-    }
+    actorConnection = new SequenceConnectionItem(nodeFrom, nodeTo, params, connectionType);
+    initialStartPosition = QPointF(100, 100);
     scene->update();
 }
 

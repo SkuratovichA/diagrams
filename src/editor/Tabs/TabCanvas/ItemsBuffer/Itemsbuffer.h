@@ -28,8 +28,8 @@ public:
     void addRelationItems(Conct conct);
     void fillRelationItems(ClassConnectionItem *item);
 
-    //void addMessageItems(Action action);
-    //void fillMessageItems(Action action);
+    void addMessageItems(Action action);
+    void fillMessageItems(SequenceConnectionItem *item);
 
     QList<classParams *> classItems() {
         return _classItems;
@@ -43,9 +43,9 @@ public:
         return _actorItems;
     }
 
-    //QList<... *> messageItems() {
-    //    return _messageItems;
-    //}
+    QList<messageParams *> messageItems() {
+        return _messageItems;
+    }
 
     void pushClassItem(classParams *item) {
         _classItems.push_back(item);
@@ -59,9 +59,9 @@ public:
         _relationItems.push_back(item);
     }
 
-    //void pushMessageItem(... item) {
-    //    _messageItems.push_back(item);
-    //}
+    void pushMessageItem(messageParams *item) {
+        _messageItems.push_back(item);
+    }
 
     void deleteClassItems() {
         for (auto x : _classItems) {
@@ -84,12 +84,12 @@ public:
         }
     }
 
-    //void deleteMessageItems() {
-    //    for (auto x : _messageItems) {
-    //        _messageItems.pop_front();
-    //        delete x;
-    //    }
-    //}
+    void deleteMessageItems() {
+        for (auto x : _messageItems) {
+            _messageItems.pop_front();
+            delete x;
+        }
+    }
 
 //    QVector<std::string> getNames() {
 //        QVector<std::string> vector;
@@ -103,6 +103,7 @@ private:
     QList<relationsParams *> _relationItems;
     QList<SequenceDiagramItemParameters *> _actorItems;
     //QList<SequenceConnectionItem *> _messageItems;
+    QList<messageParams *> _messageItems;
 };
 
 

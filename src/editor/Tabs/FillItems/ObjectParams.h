@@ -11,11 +11,18 @@
 #include <QWidget>
 #include "../../Backend/Parse.h"
 
+class SequenceConnectionItem;
+
+namespace ObjectParams {
+    bool checkMethod(SequenceConnectionItem *item);
+    QString getMethod(std::string fullText);
+}
+
 class relationsParams {
 public:
     relationsParams(QString leftObj, QString leftNum,
                     QString rightObj, QString rightNum,
-                    QString msg, int type, int order) {
+                    QString msg, int type, int order/*, int leftObjId, int rightObjId*/) {
         _leftObj = leftObj;
         _leftNum = leftNum;
         _rightObj = rightObj;
@@ -23,6 +30,8 @@ public:
         _msg = msg;
         _type = type;
         _order = order;
+//        _leftObjId = leftObjId;
+//        _rightObjId = rightObjId;
     };
 
     QString leftObj() {
@@ -41,6 +50,14 @@ public:
         return _rightNum;
     }
 
+//    int leftObjId() {
+//        return _leftObjId;
+//    }
+//
+//    int rightObjId() {
+//        return _rightObjId;
+//    }
+
     int order() {
         return _order;
     }
@@ -54,6 +71,8 @@ public:
     }
 
 private:
+    //int _leftObjId;
+    //int _rightObjId;
     QString _leftObj;
     QString _leftNum;
     QString _rightObj;
@@ -139,6 +158,48 @@ class SequenceDiagramItemParameters : public objectParams {
 public:
     SequenceDiagramItemParameters(qreal x, qreal y, QString name, QColor color);
     //~SequenceDiagramItemParameters() = default;
+};
+
+class messageParams {
+public:
+    messageParams(qreal x, qreal y, QString msg, QString nameFrom, QString nameTo, int type/*, int fromId, int toId*/);
+
+    qreal x() {
+        return _x;
+    }
+
+    qreal y() {
+        return _y;
+    }
+
+    QString msg() {
+        return _msg;
+    }
+
+    QString nameFrom() {
+        return _nameFrom;
+    }
+
+    QString nameTo() {
+        return _nameTo;
+    }
+
+    void fillCoords(std::vector<double> &v) {
+        v.push_back(x());
+        v.push_back(y());
+    }
+
+    int type() {
+        return _type;
+    }
+
+private:
+    qreal _x;
+    qreal _y;
+    QString _msg;
+    QString _nameFrom;
+    QString _nameTo;
+    int _type;
 };
 
 

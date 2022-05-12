@@ -94,7 +94,8 @@ bool ClassCanvas::createFromFile(dgrmClass_t cls) {
             return false;
         }
 
-        ClassConnectionItem *item = new ClassConnectionItem(from, to, x, static_cast<ClassConnectionItem::ClassConnectionType>(x->type()), x->order());
+        ClassConnectionItem *item = new ClassConnectionItem(from, to, x,
+                        static_cast<ClassConnectionItem::ClassConnectionType>(x->type()), x->order());
         editorScene->addItem(item);
         editorScene->update();
     }
@@ -218,6 +219,7 @@ bool ClassCanvas::getStringRepresentation(Program &prg) {
         tmp.height = x->height();
         x->fillColor(tmp.color);
         x->fillCoords(tmp.coords);
+        //tmp.id = x->id();
 
         if (!x->splitString(tmp.attrs, x->attrs())) {
             qDebug() << "Error with attribute, color it by red color";
@@ -241,6 +243,8 @@ bool ClassCanvas::getStringRepresentation(Program &prg) {
         tmp.msg = x->msg().toStdString();
         tmp.arrow = x->type();
         tmp.order = x->order();
+        //tmp.leftObjId = x->leftObjId();
+        //tmp.rightObjId = x->rightObjId();
 
         prg.diagramClass.concts.push_back(tmp);
     }

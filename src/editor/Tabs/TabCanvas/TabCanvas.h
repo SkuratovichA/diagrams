@@ -338,6 +338,7 @@ public:
     bool getStringRepresentation(Program &prg) override;
     bool createFromFile(dgrmSeq_t seq);
     QPoint generateCoords() const override;
+    bool checkIdenticalNames();
 
 private:
     void createSequenceContextMenu();
@@ -352,6 +353,7 @@ private:
     QAction *createMessage = nullptr;
     QAction *deleteMessage = nullptr;
     SequenceDiagramItemParameters *createActor = nullptr;
+    messageParams *paramsMessage = nullptr;
     editorInterface *parentInterface = nullptr;
 };
 
