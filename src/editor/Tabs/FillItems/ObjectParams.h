@@ -6,6 +6,7 @@
 #define DIAGRAMS_OBJECTPARAMS_H
 
 #include <QString>
+#include <QDebug>
 #include <QList>
 #include <QColor>
 #include <QWidget>
@@ -123,6 +124,7 @@ public:
     }
 
     void fillCoords(std::vector<double> &v) {
+        qDebug() << x() << y();
         v.push_back(x());
         v.push_back(y());
     }

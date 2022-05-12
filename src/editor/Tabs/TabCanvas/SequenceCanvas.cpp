@@ -24,7 +24,7 @@
  *
  * @param p parent widget
  * @param parentGroup pointer to the main undo stack
- * to create a local undo stask
+ * to create a local undo stack
  */
 SequenceCanvas::SequenceCanvas(QWidget *parent, QUndoGroup *parentGroup) : TabCanvas(parent, parentGroup) {
     parentInterface = dynamic_cast<editorInterface *>(parent);
@@ -89,7 +89,6 @@ bool SequenceCanvas::createFromFile(dgrmSeq_t seq) {
         editorScene->update();
     }
 
-
     return true;
 }
 
@@ -100,7 +99,7 @@ bool SequenceCanvas::checkIdenticalNames() {
         if (!ObjectParams::checkMethod(x) && x->connectionType() != ConnectionType::Create
                                           && x->connectionType() != ConnectionType::Delete)
         {
-            QMessageBox::warning(this, "Error", "AHAHAHAHAH");
+            QMessageBox::warning(this, "Error", "AHAHAHAHAH i try to find a bug, goodbye");
             return false;
         }
     }
