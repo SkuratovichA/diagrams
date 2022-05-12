@@ -140,6 +140,8 @@ bool SequenceCanvas::checkIdenticalNames() {
 //        if ()
 
     }
+
+    return true;
 }
 
 /**

@@ -269,3 +269,33 @@ void SequenceConnectionItem::paintDelete(QPainter *painter, const QStyleOptionGr
     painter->drawRect(posX, pEnd.y() - 7, 20, 14);
 }
 
+void msgText::focusOutEvent(QFocusEvent *event) {
+    SequenceConnectionItem *item = dynamic_cast<SequenceConnectionItem *>(this->parent());
+    QString msgMethod;
+    QString classMethod;
+    long long idx;
+    if (item == nullptr) {
+        return;
+    }
+
+    idx = item->getText()->toPlainText().toStdString().find('(');
+    msgMethod = item->getText()->toPlainText().mid(0, idx);
+    for (auto method : item->nodeTo()->parentClassDiagramItem()->methods()) {
+        if (method->toPlainText() == "METHODS") {
+            continue;
+        }
+
+        classMethod = getMethod(method->toPlainText().toStdString());
+
+        if (classMethod == "") {
+            qDebug() << "HUINYA METHOD";
+        }
+        else {
+            qDebug() << classMethod;
+            qDebug() << msgMethod;
+        }
+    }
+
+    this->clearFocus();
+}
+
