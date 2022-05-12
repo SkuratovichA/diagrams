@@ -277,16 +277,6 @@ void msgText::focusOutEvent(QFocusEvent *event) {
     }
 
     ObjectParams::checkMethod(item);
-    hide();
-
-    //this->clearFocus();
-//    setTextInteractionFlags(Qt::NoTextInteraction);
-//
-//    QTextCursor _cursor = textCursor();
-//    _cursor.clearSelection();
-//    setTextCursor(_cursor);
-//
-//    QGraphicsItem::focusOutEvent(event);
-    return QGraphicsTextItem::focusOutEvent(event);
+    QGraphicsTextItem::focusOutEvent(event);
 }
 
