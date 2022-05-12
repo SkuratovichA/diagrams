@@ -13,6 +13,8 @@
 #include "TabCanvas.h"
 #include "../../EditorInterface/editorinterface.h"
 #include "SequenceConnectionDialog/sequenceconnectiondialog.h"
+#include <regex>
+
 
 /**
  * A constructor.
@@ -90,6 +92,56 @@ bool SequenceCanvas::createFromFile(dgrmSeq_t seq) {
     return true;
 }
 
+bool SequenceCanvas::checkIdenticalNames() {
+    QList<SequenceConnectionItem *> itemsCoonnections = getItems<SequenceConnectionItem>();
+    ClassDiagramItem *classItem;
+    std::string::size_type idx;
+    std::string strText;
+    std::vector<std::string> strsWithBr;
+    std::vector<std::string> strsNoBr;
+
+
+
+    for (auto x : itemsCoonnections) {
+        classItem = x->nodeTo()->parentClassDiagramItem();
+
+        for (auto y : classItem->methods()) {
+            if (y->toPlainText() == "METHODS") {
+                continue;
+            }
+
+            strsWithBr.push_back(y->toPlainText().toStdString());
+        }
+//
+//        std::cmatch m;
+//
+//
+//
+//        for (auto y : strsWithBr) {
+//            if (std::regex_search(y.c_str(), m, std::regex("*\\ [*|(]"))) {
+//
+//            }
+////            idx = y.find('(');
+////            qDebug() << QString::fromStdString(y.substr(0, idx));
+//        }
+
+//
+//
+//
+//        idx = x->getText()->toPlainText().toStdString().find('(');
+//        if (idx != std::string::npos) {
+//            strText = x->getText()->toPlainText().toStdString().substr(0, idx);
+//        }
+//        else {
+//            continue;
+//            // maybe fix this shit
+//        }
+//
+//        if ()
+
+    }
+}
+
 /**
  * // TODO
  * @param prg
@@ -107,6 +159,10 @@ bool SequenceCanvas::getStringRepresentation(Program &prg) {
 
     for (auto x : getItems<SequenceConnectionItem>()) {
         buf.fillMessageItems(x);
+    }
+
+    if (!checkIdenticalNames()) {
+        return false;
     }
 
     for (auto x : buf.sequenceItems()) {

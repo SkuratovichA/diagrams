@@ -338,6 +338,7 @@ public:
     bool getStringRepresentation(Program &prg) override;
     bool createFromFile(dgrmSeq_t seq);
     QPoint generateCoords() const override;
+    bool checkIdenticalNames();
 
 private:
     void createSequenceContextMenu();
