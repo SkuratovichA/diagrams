@@ -2,7 +2,7 @@
 // Author: Skuratovich Aliaksandr <xskura01@vutbr.cz>
 // Date: 02.05.2022
 
-#define DEBUG 1
+#define DEBUG 0
 
 #include <QStyleOptionGraphicsItem>
 #include <QPen>
@@ -510,7 +510,9 @@ void ClassConnectionItem::drawLine(QPainter *painter, const QStyleOptionGraphics
     painter->drawPolygon(poly);
 }
 
-void ClassConnectionItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) {
+void ClassConnectionItem::paint(QPainter *painter,
+                                const QStyleOptionGraphicsItem *option,
+                                QWidget *widget) {
 #if DEBUG
     painter->setPen(QPen(QColor(0, 0, 0, 100), 0.5, Qt::DotLine));
     painter->drawPolygon(lineShaper());
