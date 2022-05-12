@@ -20,32 +20,34 @@ typedef struct attrs {
     std::string name;
 } attrs_t;
 
-class Class {
+class Table {
 public:
     std::vector<double> coords;
-    //int id;
     std::string name;
     Color color;
-    std::vector<attrs_t> attrs;
-    std::vector<attrs_t> methods;
     double width;
     double height;
 
     void pushColor(const json el);
-
     void pushName(const json el);
-
     void pushAttrs(const json el, std::vector<attrs_t>& obj);
-
     void pushWidth(const json el);
-
     void pushHeight(const json el);
+};
+
+class Class : public Table {
+public:
+    std::vector<attrs_t> attrs;
+    std::vector<attrs_t> methods;
+};
+
+class Interface : public Table {
+public:
+    std::vector<attrs_t> methods;
 };
 
 class Conct {
 public:
-    //int leftObjId;
-    //int rightObjId;
     std::string leftObj;
     std::string leftNum;
     int arrow;
@@ -60,6 +62,7 @@ public:
 typedef struct dgrm_class {
     std::vector<Class> classes;
     std::vector<Conct> concts;
+    std::vector<Interface> inters;
 } dgrmClass_t;
 
 class DiagramClass {
@@ -68,9 +71,13 @@ public:
 
     void fillStructureClass(const json el, dgrmClass_t& o);
 
+    void fillStructureInterface(const json el, dgrmClass_t& o);
+
     void addConnectToFile(json& j, std::vector<Conct> cn);
 
     void addClassToFile(json& j, std::vector<Class> cl);
+
+    void addInterfaceToFile(json& j, std::vector<Interface> in);
 
     json addAttrs(std::vector<attrs_t> x);
 };

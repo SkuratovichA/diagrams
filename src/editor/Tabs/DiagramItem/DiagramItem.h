@@ -109,7 +109,7 @@ protected:
 class DiagramItem {
 public:
     enum DiagramType {
-        Actor, Class
+        Actor, Class, Interface
     };
 
     explicit DiagramItem(qreal width, qreal height, DiagramType type, QColor color) {
@@ -161,7 +161,14 @@ public:
     }
 
     [[nodiscard]] QString typeStr() const {
-        return type() == Actor ? QString("Actor") : QString("Class");
+        switch (type()) {
+            case Actor:
+                return QString("Actor");
+            case Interface:
+                return QString("Interface");
+            case Class:
+                return QString("Class");
+        }
     }
 
     [[nodiscard]] qreal height() const {
@@ -200,6 +207,24 @@ public:
         return _color;
     }
 
+    QFlags<Qt::TextInteractionFlag> flags() const {
+        return _flags;
+    }
+
+    [[nodiscard]] qsizetype occupiedSockets() const {
+        return _connections.count();
+    }
+
+    [[nodiscard]] QSet<ClassConnectionItem *> connections() const {
+        return _connections;
+    }
+
+    static void setTextFlags(QGraphicsTextItem *item) {
+        item->setTextInteractionFlags(Qt::TextInteractionFlag::TextEditable |
+                                      Qt::TextInteractionFlag::TextSelectableByMouse |
+                                      Qt::TextInteractionFlag::TextSelectableByKeyboard);
+    }
+
     NameObject *_head;
 private:
     qreal _rowHeight;
@@ -210,6 +235,14 @@ private:
     QRectF _boundingBox;
     DiagramType _type;
     QColor _color;
+
+    QFlags<Qt::TextInteractionFlag> _flags;
+    QSet<ClassConnectionItem *> _connections;
+};
+
+class InterfaceItem : public QGraphicsRectItem, public DiagramItem {
+public:
+    explicit InterfaceItem();
 };
 
 class ClassDiagramItem : public QGraphicsRectItem, public DiagramItem {
@@ -228,10 +261,6 @@ public:
 
     QPointF centre() const override {
         return {x() + width() / 2.0, y() + height() / 2.0};
-    }
-
-    [[nodiscard]] qsizetype occupiedSockets() const {
-        return _connections.count();
     }
 
     void setDeleted(bool isDeleted) {
@@ -334,10 +363,6 @@ public:
         return attr;
     }
 
-    QFlags<Qt::TextInteractionFlag> flags() const {
-        return _flags;
-    }
-
     [[nodiscard]] QPointF socket(uint32_t n) const {
         const auto margin = std::min(std::min(height() / 2, width() / 2), 30.0);
         const QPointF points[3] = {QPointF(0, margin), QPointF(-margin, -margin), QPointF(-margin, margin)};
@@ -360,16 +385,6 @@ public:
         return pos() + QPoint(width(), height());
     }
 
-    static void setTextFlags(QGraphicsTextItem *item) {
-        item->setTextInteractionFlags(Qt::TextInteractionFlag::TextEditable |
-                                      Qt::TextInteractionFlag::TextSelectableByMouse |
-                                      Qt::TextInteractionFlag::TextSelectableByKeyboard);
-    }
-
-    [[nodiscard]] QSet<ClassConnectionItem *> connections() const {
-        return _connections;
-    }
-
     void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
 
 protected:
@@ -380,9 +395,6 @@ private:
     QList<ClassTextAttr *> _methods;
     QList<QGraphicsLineItem *> _attrsLines;
     QList<QGraphicsLineItem *> _methodsLines;
-    QFlags<Qt::TextInteractionFlag> _flags;
-
-    QSet<ClassConnectionItem *> _connections;
 
     bool _isDeleted = false; ///< if deleted. Affects SequenceDiagramItem.
 };

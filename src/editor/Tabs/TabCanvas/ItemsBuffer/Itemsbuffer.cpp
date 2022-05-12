@@ -100,7 +100,48 @@ void ItemsBuffer::fillClassItems(ClassDiagramItem *item) {
                           item->_head->toPlainText(), item->color(),
                           item->width(), item->height(), attrs,
                           methods);
+
     pushClassItem(ptr);
+}
+
+void ItemsBuffer::addInterfaceItems(Interface inter) {
+    InterfaceParams *prm;
+    QList<QString> methods;
+
+    for (auto x: inter.methods) {
+        methods.push_back(QString::fromStdString(x.perm + " " + x.type + " " + x.name));
+    }
+
+    prm = new InterfaceParams(inter.coords[0], inter.coords[1], QString::fromStdString(inter.name),
+                          QColor(inter.color.r, inter.color.g, inter.color.b, inter.color.a),
+                          inter.width, inter.height, methods);
+
+    pushInterfaceItem(prm);
+}
+
+/**    for (auto x: inter.attrs) {
+        attrs.push_back(QString::fromStdString(x.perm + " " + x.type + " " + x.name));
+    }
+ *
+ * @param item
+ */
+void ItemsBuffer::fillInterfaceItems(ClassInterfaceItem *item) {
+    InterfaceParams *ptr;
+    QList<QString> methods;
+
+    for (auto x: item->methods()) {
+        if (x->toPlainText() == "METHODS") {
+            continue;
+        }
+
+        methods.push_back(x->toPlainText());
+    }
+
+    ptr = new InterfaceParams(item->x() + 40, item->y() + 40,
+                          item->_head->toPlainText(), item->color(),
+                          item->width(), item->height(), methods);
+
+    pushInterfaceItem(ptr);
 }
 
 /**
@@ -114,7 +155,8 @@ void ItemsBuffer::addActorItems(Actor act) {
 
     a = new SequenceDiagramItemParameters(act.coords[0], act.coords[1],
                                           QString::fromStdString(act.name),
-                                          QColor(act.color.r, act.color.g, act.color.b, act.color.a));
+                                          QColor(act.color.r, act.color.g,
+                                                 act.color.b, act.color.a));
 
     pushActorItem(a);
 }
@@ -129,7 +171,8 @@ void ItemsBuffer::fillMessageItems(SequenceConnectionItem *item) {
     // GET ID of item
     ptr = new messageParams(item->x(), item->y(),
                             item->getText()->toPlainText(),
-                            item->nodeFrom()->name(), item->nodeTo()->name(),
+                            item->nodeFrom()->name(),
+                            item->nodeTo()->name(),
                             item->type());
     pushMessageItem(ptr);
 }
@@ -141,7 +184,7 @@ void ItemsBuffer::addMessageItems(Action action) {
                           QString::fromStdString(action.msg),
                           QString::fromStdString(action.from),
                           QString::fromStdString(action.to),
-                          action.type/*, action.fromId, action.toId*/);
+                          action.type);
 
     pushMessageItem(a);
 }
@@ -155,8 +198,7 @@ void ItemsBuffer::fillActorItems(SequenceDiagramItem *item) {
 
     ptr = new SequenceDiagramItemParameters(item->x(), item->y(),
                                             item->_head->toPlainText(), item->color());
-    // get id of item
-    //qDebug() << reinterpret_cast<uintptr_t>(item) % 10000 << "addr as int";
+
     ptr = new SequenceDiagramItemParameters(item->x(), item->y(),
                                             item->_head->toPlainText(),
                                             item->color());
@@ -170,4 +212,6 @@ void ItemsBuffer::clearBuffer() {
     deleteClassItems();
     deleteActorItems();
     deleteRelationItems();
+    deleteMessageItems();
+    deleteInterfaceItems();
 }

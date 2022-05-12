@@ -11,6 +11,7 @@ class ClassDiagramItem;
 class SequenceDiagramItem;
 class ClassConnectionItem;
 class SequenceConnectionItem;
+class ClassInterfaceItem;
 
 class ItemsBuffer {
 public:
@@ -31,6 +32,9 @@ public:
     void addMessageItems(Action action);
     void fillMessageItems(SequenceConnectionItem *item);
 
+    void addInterfaceItems(Interface inter);
+    void fillInterfaceItems(ClassInterfaceItem *item);
+
     QList<classParams *> classItems() {
         return _classItems;
     }
@@ -47,6 +51,10 @@ public:
         return _messageItems;
     }
 
+    QList<InterfaceParams *> interfaceItems() {
+        return _interfaceItems;
+    }
+
     void pushClassItem(classParams *item) {
         _classItems.push_back(item);
     }
@@ -61,6 +69,10 @@ public:
 
     void pushMessageItem(messageParams *item) {
         _messageItems.push_back(item);
+    }
+
+    void pushInterfaceItem(InterfaceParams *item) {
+        _interfaceItems.push_back(item);
     }
 
     void deleteClassItems() {
@@ -91,19 +103,20 @@ public:
         }
     }
 
-//    QVector<std::string> getNames() {
-//        QVector<std::string> vector;
-//        for (auto x : _classItems) {
-//            vector.push_back(x->name().toStdString());
-//        }
-//    }
+    void deleteInterfaceItems() {
+        for (auto x : _interfaceItems) {
+            _interfaceItems.pop_front();
+            delete x;
+        }
+    }
+
 
 private:
     QList<classParams *> _classItems;
     QList<relationsParams *> _relationItems;
     QList<SequenceDiagramItemParameters *> _actorItems;
-    //QList<SequenceConnectionItem *> _messageItems;
     QList<messageParams *> _messageItems;
+    QList<InterfaceParams *> _interfaceItems;
 };
 
 

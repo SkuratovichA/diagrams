@@ -23,6 +23,7 @@ void Program::parseFile(std::string filename) {
     try {
         obj_cl.fillStructureClass(file.at("class_dgrm").at("class"), this->diagramClass);
         obj_cl.fillStructureConct(file.at("class_dgrm").at("connections"), this->diagramClass);
+        obj_cl.fillStructureConct(file.at("class_dgrm").at("interface"), this->diagramClass);
 
         for (auto& seq : file.at("seq_dgrm")) {
             dgrmSeq_t tmp;
@@ -59,12 +60,13 @@ void Program::fillFile(std::string filename) {
 
     j["class_dgrm"]["class"] = nullptr;
     j["class_dgrm"]["connections"] = nullptr;
+    j["class_dgrm"]["interface"] = nullptr;
 
     obj_cl.addClassToFile(j["class_dgrm"], this->diagramClass.classes);
     obj_cl.addConnectToFile(j["class_dgrm"], this->diagramClass.concts);
+    obj_cl.addInterfaceToFile(j["class_dgrm"], this->diagramClass.inters);
 
     j["seq_dgrm"] = nullptr;
-
 
     int i = 0;
     for (auto& x : this->diagramSequence) {

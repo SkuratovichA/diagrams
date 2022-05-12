@@ -9,7 +9,7 @@
  *
  * @param el node of a json file with color
  */
-void Class::pushColor(const json el) {
+void Table::pushColor(const json el) {
     this->color.r = el.at("r").get<int>();
     this->color.g = el.at("g").get<int>();
     this->color.b = el.at("b").get<int>();
@@ -21,7 +21,7 @@ void Class::pushColor(const json el) {
  *
  * @param el node of a json file with name of class
  */
-void Class::pushName(const json el) {
+void Table::pushName(const json el) {
     this->name = el.get<std::string>();
 }
 
@@ -30,7 +30,7 @@ void Class::pushName(const json el) {
  *
  * @param el node of a json file with width
  */
-void Class::pushWidth(const json el) {
+void Table::pushWidth(const json el) {
     this->width = el.get<double>();
 }
 
@@ -39,7 +39,7 @@ void Class::pushWidth(const json el) {
  *
  * @param el node of a json file with height
  */
-void Class::pushHeight(const json el) {
+void Table::pushHeight(const json el) {
     this->height = el.get<double>();
 }
 
@@ -50,7 +50,7 @@ void Class::pushHeight(const json el) {
  * perm, type and name
  * @param obj vector with attributes
  */
-void Class::pushAttrs(const json el, std::vector<attrs_t>& obj) {
+void Table::pushAttrs(const json el, std::vector<attrs_t>& obj) {
     for(auto x : el) {
         obj.push_back( { .perm = x.at("perm").get<std::string>(),
                          .type = x.at("type").get<std::string>(),
@@ -65,8 +65,6 @@ void Class::pushAttrs(const json el, std::vector<attrs_t>& obj) {
  * for one connection between 2 classes
  */
 void Conct::pushConnection(const json el) {
-    //this->leftObjId = el.at("leftObjId").get<int>();
-    //this->rightObjId() = el.at("rightObjId").get<int>();
     this->leftObj  = el.at("left_obj" ).get<std::string>();
     this->leftNum  = el.at("left_num" ).get<std::string>();
     this->arrow     = el.at("arrow"    ).get<int>();
@@ -92,6 +90,19 @@ void DiagramClass::fillStructureConct(const json el, dgrmClass_t& o) {
     }
 }
 
+void DiagramClass::fillStructureInterface(const json el, dgrmClass_t &o) {
+    for (auto x : el) {
+        Interface tmp;
+        Program::pushCoords(x.at("coords"), tmp.coords);
+        tmp.pushName(x.at("name"));
+        tmp.pushColor(x.at("color"));
+        tmp.pushAttrs(x.at("methods"), tmp.methods);
+        tmp.pushWidth(x.at("width"));
+        tmp.pushHeight(x.at("height"));
+        o.inters.push_back(tmp);
+    }
+}
+
 /**
  * Create elements of Class type, fill necessary items and push to the vector
  * of all classes for one class diagram.
@@ -101,8 +112,6 @@ void DiagramClass::fillStructureConct(const json el, dgrmClass_t& o) {
  * @param o structure of a class diagram
  */
 void DiagramClass::fillStructureClass(const json el, dgrmClass_t& o) {
-    json tmp_ch;
-
     for (auto x : el) {
         Class tmp;
         Program::pushCoords(x.at("coords"), tmp.coords);
@@ -112,7 +121,6 @@ void DiagramClass::fillStructureClass(const json el, dgrmClass_t& o) {
         tmp.pushAttrs(x.at("methods"), tmp.methods);
         tmp.pushWidth(x.at("width"));
         tmp.pushHeight(x.at("height"));
-        //tmp.id = el.at("id").get<int>();
         o.classes.push_back(tmp);
     }
 }
@@ -131,8 +139,6 @@ void DiagramClass::addConnectToFile(json& j, std::vector<Conct> cn) {
         j["connections"][i++] =
         {
             {"left_obj" , x.leftObj },
-            //{"leftObjId", x.leftObjId},
-            //{"rightObjId", x.rightObjId},
             {"left_num" , x.leftNum },
             {"arrow" ,    x.arrow },
             {"right_num", x.rightNum },
@@ -164,7 +170,6 @@ void DiagramClass::addClassToFile(json& j, std::vector<Class> cl) {
                     {"a", x.color.a},
                 }
             },
-            //{"id", x.id},
             {"name" ,   x.name },
             {"coords",
                         {
@@ -173,6 +178,34 @@ void DiagramClass::addClassToFile(json& j, std::vector<Class> cl) {
                 }
             },
             {"attrs" , addAttrs(x.attrs) },
+            {"methods", addAttrs(x.methods) },
+            {"width",   x.width},
+            {"height",  x.height}
+        };
+    }
+}
+
+void DiagramClass::addInterfaceToFile(json& j, std::vector<Interface> cl) {
+    int i = 0;
+
+    for (auto& x : cl) {
+        j["class"][i++] =
+        {
+            {"color" ,
+                {
+                    {"r", x.color.r},
+                    {"g", x.color.g},
+                    {"b", x.color.b},
+                    {"a", x.color.a},
+                }
+            },
+            {"name" ,   x.name },
+            {"coords",
+                {
+                    {"x" , x.coords[0]},
+                    {"y" , x.coords[1]}
+                }
+            },
             {"methods", addAttrs(x.methods) },
             {"width",   x.width},
             {"height",  x.height}
