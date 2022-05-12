@@ -16,7 +16,6 @@
 #include "SequenceConnectionDialog/sequenceconnectiondialog.h"
 #include <regex>
 
-
 /**
  * A constructor.
  *
@@ -51,19 +50,19 @@ QPoint SequenceCanvas::generateCoords() const {
 bool SequenceCanvas::createFromFile(dgrmSeq_t seq) {
     ItemsBuffer buf;
 
-    for (auto x : seq.actors) {
+    for (auto x: seq.actors) {
         buf.addActorItems(x);
     }
 
-    for (auto x : buf.sequenceItems()) {
+    for (auto x: buf.sequenceItems()) {
         SequenceDiagramItem *diagramItem = new SequenceDiagramItem(x);
         editorScene->addItem(diagramItem);
         diagramItem->setPos(x->x(), x->y());
         editorScene->update();
     }
 
-    QList<SequenceDiagramItem *>items = getItems<SequenceDiagramItem>();
-    for (auto x : seq.actions) {
+    QList<SequenceDiagramItem *> items = getItems<SequenceDiagramItem>();
+    for (auto x: seq.actions) {
         buf.addMessageItems(x);
     }
 
@@ -84,7 +83,7 @@ bool SequenceCanvas::createFromFile(dgrmSeq_t seq) {
         }
 
         SequenceConnectionItem *item = new SequenceConnectionItem(from, to, x,
-                              static_cast<Connections::ConnectionType>(x->type()));
+                                                                  static_cast<Connections::ConnectionType>(x->type()));
         editorScene->addItem(item);
         editorScene->update();
     }
@@ -95,11 +94,23 @@ bool SequenceCanvas::createFromFile(dgrmSeq_t seq) {
 bool SequenceCanvas::checkIdenticalNames() {
     QList<SequenceConnectionItem *> itemsCoonnections = getItems<SequenceConnectionItem>();
 
-    for (auto x : itemsCoonnections) {
+    for (auto x: itemsCoonnections) {
         if (!ObjectParams::checkMethod(x) && x->connectionType() != ConnectionType::Create
-                                          && x->connectionType() != ConnectionType::Delete)
-        {
-            QMessageBox::warning(this, "Error", "AHAHAHAHAH i try to find a bug, goodbye");
+            && x->connectionType() != ConnectionType::Delete) {
+            auto methodNames = x->nodeTo()->parentClassDiagramItem()->methods();
+            auto methodsToShow = QString();
+
+            for (auto x: methodNames) {
+                if (x->toPlainText() != "METHODS") {
+                    methodsToShow += x->toPlainText() + "\n";
+                }
+            }
+            QMessageBox::warning(this, "No such method",
+                                 QString("No method with the name \"")
+                                 + x->getText()->toPlainText()
+                                 + QString("\".\n")
+                                 + QString("List of all available methods:\n")
+                                 + methodsToShow);
             return false;
         }
     }
@@ -118,11 +129,11 @@ bool SequenceCanvas::getStringRepresentation(Program &prg) {
 
     dgrmSeq_t obj;
 
-    for (auto x : getItems<SequenceDiagramItem>()) {
+    for (auto x: getItems<SequenceDiagramItem>()) {
         buf.fillActorItems(x);
     }
 
-    for (auto x : getItems<SequenceConnectionItem>()) {
+    for (auto x: getItems<SequenceConnectionItem>()) {
         buf.fillMessageItems(x);
     }
 
@@ -130,7 +141,7 @@ bool SequenceCanvas::getStringRepresentation(Program &prg) {
         return false;
     }
 
-    for (auto x : buf.sequenceItems()) {
+    for (auto x: buf.sequenceItems()) {
         Actor act;
         act.name = x->name().toStdString();
         x->fillColor(act.color);
@@ -140,7 +151,7 @@ bool SequenceCanvas::getStringRepresentation(Program &prg) {
         obj.actors.push_back(act);
     }
 
-    for (auto x : buf.messageItems()) {
+    for (auto x: buf.messageItems()) {
         Action action;
         action.msg = x->msg().toStdString();
         x->fillCoords(action.coords);
