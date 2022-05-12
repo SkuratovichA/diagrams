@@ -11,6 +11,8 @@
  * for one action between 2 actors
  */
 void Action::pushConnection(const json el) {
+    //this->fromId = el.at("fromId").get<int>();
+    //this->toId = el.at("toId").get<int>();
     this->from  = el.at("from" ).get<std::string>();
     this->arrow = el.at("arrow").get<std::string>();
     this->to    = el.at("to"   ).get<std::string>();
@@ -31,6 +33,7 @@ void DiagramSequence::fillStructureActor(const json el, dgrmSeq_t& o) {
         Actor act;
         Program::pushCoords(x.at("coords"), act.coords);
         act.name = x.at("actor").get<std::string>();
+        //act.id = x.at("id").get<int>();
         act.color.r = x.at("color").at("r").get<int>();
         act.color.g = x.at("color").at("g").get<int>();
         act.color.b = x.at("color").at("b").get<int>();
@@ -70,6 +73,7 @@ void DiagramSequence::addActorToFile(json& j, std::vector<Actor> ac) {
         j["actors"][i++] =
         {
             {"actor" ,  x.name },
+            //{"id", x.if},
             {"color",
                 {
                     {"r" , x.color.r},
@@ -102,6 +106,8 @@ void DiagramSequence::addActionToFile(json& j, std::vector<Action> ac) {
         j["actions"][i++] =
         {
             {"from" ,  x.from },
+            //{"fromId", x.fromId},
+            //{"toId", x.toId},
             {"to" , x.to },
             {"arrow" , x.arrow },
             {"msg", x.msg },

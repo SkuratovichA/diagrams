@@ -15,7 +15,7 @@ class relationsParams {
 public:
     relationsParams(QString leftObj, QString leftNum,
                     QString rightObj, QString rightNum,
-                    QString msg, int type, int order) {
+                    QString msg, int type, int order/*, int leftObjId, int rightObjId*/) {
         _leftObj = leftObj;
         _leftNum = leftNum;
         _rightObj = rightObj;
@@ -23,6 +23,8 @@ public:
         _msg = msg;
         _type = type;
         _order = order;
+//        _leftObjId = leftObjId;
+//        _rightObjId = rightObjId;
     };
 
     QString leftObj() {
@@ -41,6 +43,14 @@ public:
         return _rightNum;
     }
 
+//    int leftObjId() {
+//        return _leftObjId;
+//    }
+//
+//    int rightObjId() {
+//        return _rightObjId;
+//    }
+
     int order() {
         return _order;
     }
@@ -54,6 +64,8 @@ public:
     }
 
 private:
+    //int _leftObjId;
+    //int _rightObjId;
     QString _leftObj;
     QString _leftNum;
     QString _rightObj;
@@ -65,7 +77,7 @@ private:
 
 class objectParams {
 public:
-    objectParams(qreal x, qreal y, QString name, QColor color);
+    objectParams(qreal x, qreal y, QString name, QColor color/*, int id*/);
     ~objectParams() = default;
 
     qreal x() const {
@@ -92,6 +104,10 @@ public:
         return _name;
     }
 
+//    int id() {
+//        return _id;
+//    }
+
     void fillColor(Color &c) {
         c.r = color().red();
         c.g = color().green();
@@ -105,6 +121,7 @@ public:
     }
 
 protected:
+    //int id;
     qreal _x;
     qreal _y;
     QColor _color;
@@ -117,7 +134,7 @@ class classParams : public objectParams {
 public:
     classParams(qreal x, qreal y, QString name,
                 QColor color, qreal width, qreal height,
-                QList<QString> attrs, QList<QString> methods);
+                QList<QString> attrs, QList<QString> methods/*, int id*/);
     ~classParams() = default;
 
     QList<QString> attrs() const {
@@ -137,13 +154,13 @@ private:
 
 class actorParams : public objectParams {
 public:
-    actorParams(qreal x, qreal y, QString name, QColor color);
+    actorParams(qreal x, qreal y, QString name, QColor color/*, int id*/);
     //~actorParams() = default;
 };
 
 class messageParams {
 public:
-    messageParams(qreal x, qreal y, QString msg, QString nameFrom, QString nameTo, int type);
+    messageParams(qreal x, qreal y, QString msg, QString nameFrom, QString nameTo, int type/*, int fromId, int toId*/);
 
     qreal x() {
         return _x;
@@ -174,6 +191,14 @@ public:
         return _type;
     }
 
+//    int fromId() {
+//        return _fromId;
+//    }
+
+//    int toId() {
+//        return _toId;
+//    }
+
 
 private:
     qreal _x;
@@ -181,6 +206,8 @@ private:
     QString _msg;
     QString _nameFrom;
     QString _nameTo;
+    //int _fromId;
+    //int _toId;
     int _type;
 };
 

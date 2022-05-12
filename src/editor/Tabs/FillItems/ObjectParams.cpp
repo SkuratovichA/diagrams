@@ -14,12 +14,13 @@
  * @param name
  * @param color
  */
-objectParams::objectParams(qreal x, qreal y, QString name, QColor color)
+objectParams::objectParams(qreal x, qreal y, QString name, QColor color/*, int id*/)
 {
     _x = x;
     _y = y;
     _color = color;
     _name = name;
+//    _id = id;
 };
 
 /**
@@ -35,8 +36,8 @@ objectParams::objectParams(qreal x, qreal y, QString name, QColor color)
  */
 classParams::classParams(qreal x, qreal y, QString name,
                          QColor color, qreal width, qreal height,
-                         QList<QString> attrs, QList<QString> methods)
-        : objectParams(x, y, name, color) {
+                         QList<QString> attrs, QList<QString> methods/*, int id*/)
+        : objectParams(x, y, name, color/*, id*/) {
     _width = width;
     _height = height;
 
@@ -97,15 +98,17 @@ bool classParams::splitString(std::vector<attrs_t> &at, QList<QString> arr) {
  * @param name
  * @param color
  */
-actorParams::actorParams(qreal x, qreal y, QString name, QColor color)
-    : objectParams(x, y, name, color) {
+actorParams::actorParams(qreal x, qreal y, QString name, QColor color/*, int id*/)
+    : objectParams(x, y, name, color/*, id*/) {
 };
 
-messageParams::messageParams(qreal x, qreal y, QString msg, QString nameFrom, QString nameTo, int type) {
+messageParams::messageParams(qreal x, qreal y, QString msg, QString nameFrom, QString nameTo, int type/*, int fromId, int toId*/) {
     _x = x;
     _y = y;
     _msg = msg;
     _nameFrom = nameFrom;
     _nameTo = nameTo;
     _type = type;
+    //_fromId = fromId;
+    //_toId = toId;
 }

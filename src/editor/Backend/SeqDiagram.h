@@ -10,6 +10,7 @@ using json = nlohmann::json;
 
 class Actor {
 public:
+    //int id;
     std::string name;
     Color color;
     std::vector<double> coords;
@@ -17,6 +18,8 @@ public:
 
 class Action {
 public:
+    //int fromId;
+    //int toId;
     std::string from;
     std::string to;
     std::string arrow;

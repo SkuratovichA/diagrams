@@ -65,6 +65,8 @@ void Class::pushAttrs(const json el, std::vector<attrs_t>& obj) {
  * for one connection between 2 classes
  */
 void Conct::pushConnection(const json el) {
+    //this->leftObjId = el.at("leftObjId").get<int>();
+    //this->rightObjId() = el.at("rightObjId").get<int>();
     this->leftObj  = el.at("left_obj" ).get<std::string>();
     this->leftNum  = el.at("left_num" ).get<std::string>();
     this->arrow     = el.at("arrow"    ).get<int>();
@@ -110,6 +112,7 @@ void DiagramClass::fillStructureClass(const json el, dgrmClass_t& o) {
         tmp.pushAttrs(x.at("methods"), tmp.methods);
         tmp.pushWidth(x.at("width"));
         tmp.pushHeight(x.at("height"));
+        //tmp.id = el.at("id").get<int>();
         o.classes.push_back(tmp);
     }
 }
@@ -128,6 +131,8 @@ void DiagramClass::addConnectToFile(json& j, std::vector<Conct> cn) {
         j["connections"][i++] =
         {
             {"left_obj" , x.leftObj },
+            //{"leftObjId", x.leftObjId},
+            //{"rightObjId", x.rightObjId},
             {"left_num" , x.leftNum },
             {"arrow" ,    x.arrow },
             {"right_num", x.rightNum },
@@ -159,6 +164,7 @@ void DiagramClass::addClassToFile(json& j, std::vector<Class> cl) {
                     {"a", x.color.a},
                 }
             },
+            //{"id", x.id},
             {"name" ,   x.name },
             {"coords",
                         {
