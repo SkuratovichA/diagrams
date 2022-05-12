@@ -8,6 +8,9 @@
 
 using json = nlohmann::json;
 
+/**
+ * A class reprensenting a Sequence Diagram Item
+ */
 class Actor {
 public:
     std::string name; ///< name of an actor (classname)
@@ -15,6 +18,9 @@ public:
     std::vector<double> coords; ///< coordinates where the box with the actor is placed
 };
 
+/**
+ * A class representing the sequence diagram connection
+ */
 class Action {
 public:
     std::string from; ///< classname from
