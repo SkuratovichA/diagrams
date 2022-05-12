@@ -272,26 +272,40 @@ void SequenceDiagramLifeLine::addConnection(
 ) {
     switch (connection->connectionType()) {
         case Synchronous:
-            _activeRegions.push_back(actorConnectionPair_t(actorType, connection));
+            if (!_activeRegions.contains(actorConnectionPair_t(actorType, connection))) {
+                _activeRegions.push_back(actorConnectionPair_t(actorType, connection));
+            }
             break;
         case Asynchronous:
-            _async_replyMessages.push_back(actorConnectionPair_t(actorType, connection));
+            if (!_async_replyMessages.contains(actorConnectionPair_t(actorType, connection))) {
+                _async_replyMessages.push_back(actorConnectionPair_t(actorType, connection));
+            }
             break;
         case Reply:
-            _async_replyMessages.push_back(actorConnectionPair_t(actorType, connection));
+            if (!_async_replyMessages.contains(actorConnectionPair_t(actorType, connection))) {
+                _async_replyMessages.push_back(actorConnectionPair_t(actorType, connection));
+            }
             break;
         case Create:
             if (actorType == Receiver) {
-                _createMessages.push_back(connection);
+                if (!_createMessages.contains(connection)) {
+                    _createMessages.push_back(connection);
+                }
             } else { // Caller
-                _async_replyMessages.push_back(actorConnectionPair_t(actorType, connection));
+                if (!_async_replyMessages.contains(actorConnectionPair_t(actorType, connection))) {
+                    _async_replyMessages.push_back(actorConnectionPair_t(actorType, connection));
+                }
             }
             break;
         case Delete:
             if (actorType == Receiver) {
-                _deleteMessages.push_back(connection);
+                if (!_deleteMessages.contains(connection)) {
+                    _deleteMessages.push_back(connection);
+                }
             } else { // Caller
-                _async_replyMessages.push_back(actorConnectionPair_t(actorType, connection));
+                if (!_async_replyMessages.contains(actorConnectionPair_t(actorType, connection))) {
+                    _async_replyMessages.push_back(actorConnectionPair_t(actorType, connection));
+                }
             }
             break;
         default:
