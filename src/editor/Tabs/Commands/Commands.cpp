@@ -40,6 +40,7 @@ DeleteCommand::DeleteCommand(QGraphicsScene *scene, QUndoCommand *parent)
     for (auto x: listItems) {
         if (dynamic_cast<ClassDiagramItem *>(x) != nullptr) {
             auto connections = dynamic_cast<ClassDiagramItem *>(x)->connections();
+            dynamic_cast<ClassDiagramItem *>(x)->setDeleted(true);
             for (auto connection: connections) {
                 scene->removeItem(connection);
             }
@@ -70,10 +71,12 @@ void DeleteCommand::undo() {
         graphicsScene->addItem(x);
         if (dynamic_cast<ClassDiagramItem *>(x) != nullptr) {
             auto connections = dynamic_cast<ClassDiagramItem *>(x)->connections();
+            dynamic_cast<ClassDiagramItem *>(x)->setDeleted(false);
             for (auto connection: connections) {
                 graphicsScene->addItem(connection);
             }
         } else if (dynamic_cast<SequenceDiagramItem *>(x) != nullptr) {
+            // TODO:
             auto connections = dynamic_cast<SequenceDiagramItem *>(x)->getRemovedConnectionsOnDeleteSelf();
             for (auto connection: connections) {
                 auto nodeFrom = connection->nodeFrom();
@@ -99,6 +102,7 @@ void DeleteCommand::redo() {
     for (auto x: listItems) {
         if (dynamic_cast<ClassDiagramItem *>(x) != nullptr) {
             auto connections = dynamic_cast<ClassDiagramItem *>(x)->connections();
+            dynamic_cast<ClassDiagramItem *>(x)->setDeleted(true);
             for (auto connection: connections) {
                 graphicsScene->removeItem(connection);
             }
@@ -159,11 +163,13 @@ AddClassCommand::AddClassCommand(QGraphicsScene *scene, classParams *params, QUn
 AddClassCommand::~AddClassCommand() { }
 
 void AddClassCommand::undo() {
+    dynamic_cast<ClassDiagramItem *>(diagramItem)->setDeleted(true);
     graphicsScene->removeItem(diagramItem);
     graphicsScene->update();
 }
 
 void AddClassCommand::redo() {
+    dynamic_cast<ClassDiagramItem *>(diagramItem)->setDeleted(false);
     graphicsScene->addItem(diagramItem);
     diagramItem->setPos(initialStartPosition);
     graphicsScene->clearSelection();
@@ -183,13 +189,7 @@ AddClassConnectionCommand::AddClassConnectionCommand(ClassDiagramItem *fromNode,
     scene->update();
 }
 
-AddClassConnectionCommand::~AddClassConnectionCommand() {
-//    if (classConnection->scene() != nullptr) {
-//        return;
-//    }
-//    delete classConnection;
-//    "This shit of code causes segfault";
-}
+AddClassConnectionCommand::~AddClassConnectionCommand() {}
 
 void AddClassConnectionCommand::undo() {
     graphicsScene->removeItem(classConnection);

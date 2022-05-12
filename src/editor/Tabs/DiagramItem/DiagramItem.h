@@ -234,6 +234,10 @@ public:
         return _connections.count();
     }
 
+    void setDeleted(bool isDeleted) {
+        _isDeleted = isDeleted;
+    }
+
 public:
     QList<ClassTextAttr *> &methods() {
         return _methods;
@@ -375,6 +379,8 @@ private:
     QFlags<Qt::TextInteractionFlag> _flags;
 
     QSet<ClassConnectionItem *> _connections;
+
+    bool _isDeleted = false; ///< if deleted. Affects SequenceDiagramItem.
 };
 
 /**
