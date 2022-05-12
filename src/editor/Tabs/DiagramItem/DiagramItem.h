@@ -133,6 +133,14 @@ public:
     [[nodiscard]] virtual QPointF centre() const = 0;
 
 public:
+    void setDeleted(bool isDeleted) {
+        _isDeleted = isDeleted;
+    }
+
+    bool isDeleted() const {
+        return _isDeleted;
+    }
+
     [[nodiscard]] qreal rowHeight() const {
         return _rowHeight;
     }
@@ -298,6 +306,7 @@ public:
     QList<ClassTextAttr *> _methods;
     QFlags<Qt::TextInteractionFlag> _flags;
     QSet<ClassConnectionItem *> _connections;
+    bool _isDeleted = false; ///< if deleted. Affects SequenceDiagramItem.
 private:
     qreal _rowHeight;
     qreal _rowWidth;
@@ -312,6 +321,14 @@ private:
 class ClassInterfaceItem : public QGraphicsRectItem, public DiagramItem {
 public:
     explicit ClassInterfaceItem(InterfaceParams *params);
+
+    [[nodiscard]] QString name() const override {
+        return _head->toPlainText();
+    }
+
+    QPointF centre() const override {
+        return {x() + width() / 2.0, y() + height() / 2.0};
+    }
 };
 
 class ClassDiagramItem : public QGraphicsRectItem, public DiagramItem {
@@ -326,14 +343,6 @@ public:
 
     QPointF centre() const override {
         return {x() + width() / 2.0, y() + height() / 2.0};
-    }
-
-    void setDeleted(bool isDeleted) {
-        _isDeleted = isDeleted;
-    }
-
-    bool isDeleted() const {
-        return _isDeleted;
     }
 
 public:
@@ -399,8 +408,6 @@ protected:
 private:
     QList<ClassTextAttr *> _attrs;
     QList<QGraphicsLineItem *> _attrsLines;
-
-    bool _isDeleted = false; ///< if deleted. Affects SequenceDiagramItem.
 };
 
 /**

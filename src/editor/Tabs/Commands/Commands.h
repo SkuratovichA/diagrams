@@ -141,6 +141,22 @@ private:
 //    QPointF initialEndPosition;
 };
 
+class AddInterfaceCommand : public QUndoCommand {
+public:
+    explicit AddInterfaceCommand(QGraphicsScene *scene, InterfaceParams *params, QUndoCommand *parent = nullptr);
+
+    ~AddInterfaceCommand();
+
+    void undo() override;
+    void redo() override;
+
+private:
+    ClassInterfaceItem *diagramItem;
+    QGraphicsScene *graphicsScene;
+    QPointF initialStartPosition;
+    QPointF initialEndPosition;
+};
+
 QString createCommandString(SequenceDiagramItem *item, const QPointF &point);
 
 #endif //DIAGRAMS_COMMANDS_H

@@ -244,3 +244,26 @@ void AddSequenceConnectionCommand::redo() {
     graphicsScene->clearSelection();
     graphicsScene->update();
 }
+
+AddInterfaceCommand::AddInterfaceCommand(QGraphicsScene *scene, InterfaceParams *params, QUndoCommand *parent)
+        : QUndoCommand(parent), graphicsScene(scene) {
+    diagramItem = new ClassInterfaceItem(params);
+    initialStartPosition = QPointF(params->x(), params->y());
+    scene->update();
+}
+
+AddInterfaceCommand::~AddInterfaceCommand() {}
+
+void AddInterfaceCommand::undo() {
+    dynamic_cast<ClassInterfaceItem *>(diagramItem)->setDeleted(true);
+    graphicsScene->removeItem(diagramItem);
+    graphicsScene->update();
+}
+
+void AddInterfaceCommand::redo() {
+    dynamic_cast<ClassInterfaceItem *>(diagramItem)->setDeleted(false);
+    graphicsScene->addItem(diagramItem);
+    diagramItem->setPos(initialStartPosition);
+    graphicsScene->clearSelection();
+    graphicsScene->update();
+}

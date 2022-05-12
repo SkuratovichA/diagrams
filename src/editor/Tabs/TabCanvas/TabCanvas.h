@@ -290,6 +290,7 @@ public slots:
 
 private:
     classParams *createItem;
+    InterfaceParams *createInterface;
     relationsParams *createRelation;
     QMenu *classMenu;
     QMenu *connectionMenu;
