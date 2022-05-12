@@ -29,9 +29,6 @@ ClassDiagramItem::ClassDiagramItem(classParams *params)
 
     QGraphicsLineItem *lineAttr;
     ClassTextAttr *textAttr;
-    _flags = Qt::TextInteractionFlag::TextEditable |
-             Qt::TextInteractionFlag::TextSelectableByMouse |
-             Qt::TextInteractionFlag::TextSelectableByKeyboard;
     setFlags(QGraphicsItem::ItemIsSelectable | QGraphicsItem::ItemIsMovable | QGraphicsItem::ItemSendsGeometryChanges);
 
     int line = 1;
@@ -47,7 +44,7 @@ ClassDiagramItem::ClassDiagramItem(classParams *params)
     textAttr->setFont(QFont("Times", 10, QFont::Bold));
 
     for (auto attr_name: params->attrs()) {
-        lineAttr = createLine(0, rowHeight() * line);
+        lineAttr = createLine(0, rowHeight() * line, this);
         _attrsLines.push_back(lineAttr);
         textAttr = new ClassTextAttr(this, attr_name, QPointF(tabText(), rowHeight() * line + tabText()), _flags);
         _attrs.push_back(textAttr);
@@ -55,7 +52,7 @@ ClassDiagramItem::ClassDiagramItem(classParams *params)
         line++;
     }
 
-    lineAttr = createLine(0, rowHeight() * line);
+    lineAttr = createLine(0, rowHeight() * line, this);
     _methodsLines.push_back(lineAttr);
 
     textAttr = new ClassTextAttr(this, "METHODS", QPointF(tabText(), rowHeight() * line++ + tabText()),
@@ -64,7 +61,43 @@ ClassDiagramItem::ClassDiagramItem(classParams *params)
     _methods.push_back(textAttr);
 
     for (auto method_name: params->methods()) {
-        lineAttr = createLine(0, rowHeight() * line);
+        lineAttr = createLine(0, rowHeight() * line, this);
+        _methodsLines.push_back(lineAttr);
+        textAttr = new ClassTextAttr(this, method_name, QPointF(tabText(), rowHeight() * line + tabText()), _flags);
+        _methods.push_back(textAttr);
+
+        line++;
+    }
+
+    setRect(boundingBox());
+    setBrush(QBrush(QColor(255, 255, 255, 255)));
+}
+
+ClassInterfaceItem::ClassInterfaceItem(InterfaceParams *params)
+        : DiagramItem(params->width(),
+                      params->height(),
+                      DiagramItem::Interface,
+                      params->color())
+{
+    QGraphicsLineItem *lineAttr;
+    ClassTextAttr *textAttr;
+    setFlags(QGraphicsItem::ItemIsSelectable | QGraphicsItem::ItemIsMovable | QGraphicsItem::ItemSendsGeometryChanges);
+    int line = 1;
+
+    // name of the class
+    setPen(QPen(color()));
+
+    _head = new NameObject(this, _flags, QPointF(20, -40), params->name()); // i do not know why coordinates 5, -40
+    qreal Pos = (params->width() - _head->boundingRect().width()) / 2;
+    _head->setPos(Pos, -40);
+
+    textAttr = new ClassTextAttr(this, "METHODS", QPointF(tabText(), rowHeight() * line++ + tabText()),
+                                 Qt::NoTextInteraction);
+    textAttr->setFont(QFont("Times", 10, QFont::Bold));
+    _methods.push_back(textAttr);
+
+    for (auto method_name: params->methods()) {
+        lineAttr = createLine(0, rowHeight() * line, this);
         _methodsLines.push_back(lineAttr);
         textAttr = new ClassTextAttr(this, method_name, QPointF(tabText(), rowHeight() * line + tabText()), _flags);
         _methods.push_back(textAttr);
@@ -81,7 +114,7 @@ ClassDiagramItem::ClassDiagramItem(classParams *params)
  *
  * @param connection relation arrow between objects
  */
-void ClassDiagramItem::addConnection(ClassConnectionItem *connection) {
+void DiagramItem::addConnection(ClassConnectionItem *connection) {
     _connections.insert(connection);
 }
 
@@ -90,7 +123,7 @@ void ClassDiagramItem::addConnection(ClassConnectionItem *connection) {
  *
  * @param connection relation arrow between objects
  */
-void ClassDiagramItem::removeConnection(ClassConnectionItem *connection) {
+void DiagramItem::removeConnection(ClassConnectionItem *connection) {
     _connections.remove(connection);
 }
 

@@ -23,6 +23,8 @@ using namespace Connections;
 QT_BEGIN_NAMESPACE
 class QGraphicsItem;
 
+class DiagramItem;
+
 class QGraphicsScene;
 
 class QGraphicsSceneMouseEvent;
@@ -61,7 +63,7 @@ public:
      * @param pos
      * @param flags
      */
-    ClassTextAttr(ClassDiagramItem *p, QString text, QPointF pos, QFlags<Qt::TextInteractionFlag> flags);
+    ClassTextAttr(QGraphicsItem *p, QString text, QPointF pos, QFlags<Qt::TextInteractionFlag> flags);
 
     /**
      *
@@ -72,7 +74,7 @@ public:
      *
      * @return
      */
-    ClassDiagramItem *parent() {
+    QGraphicsItem *parent() {
         return _parent;
     }
 
@@ -80,7 +82,7 @@ protected:
     void keyReleaseEvent(QKeyEvent *event) override;
 
 private:
-    ClassDiagramItem *_parent;
+    QGraphicsItem *_parent;
 };
 
 class NameObject : public QGraphicsTextItem {
@@ -121,6 +123,9 @@ public:
         _type = type;
         _boundingBox = QRectF(0.0, 0.0, _width, _height);
         _color = color;
+        _flags = Qt::TextInteractionFlag::TextEditable |
+                 Qt::TextInteractionFlag::TextSelectableByMouse |
+                 Qt::TextInteractionFlag::TextSelectableByKeyboard;
     }
 
 public:
@@ -271,6 +276,22 @@ public:
         _methodsLines.push_back(item);
     }
 
+    void addConnection(ClassConnectionItem *connection);
+
+    void removeConnection(ClassConnectionItem *connection);
+
+    QGraphicsLineItem *createLine(qreal x, qreal y, QGraphicsItem *p) {
+        auto line = new QGraphicsLineItem(0, 0, rowWidth(), 0, p);
+        line->setPos(x, y);
+        return line;
+    }
+
+    QGraphicsTextItem *createText(qreal x, qreal y, const QString &text, QGraphicsItem *p) {
+        auto attr = new QGraphicsTextItem(text, p);
+        setTextFlags(attr);
+        attr->setPos(x, y);
+        return attr;
+    }
 
     NameObject *_head;
     QList<QGraphicsLineItem *> _methodsLines;
@@ -290,17 +311,13 @@ private:
 
 class ClassInterfaceItem : public QGraphicsRectItem, public DiagramItem {
 public:
-    explicit ClassInterfaceItem();
+    explicit ClassInterfaceItem(InterfaceParams *params);
 };
 
 class ClassDiagramItem : public QGraphicsRectItem, public DiagramItem {
 public:
     explicit ClassDiagramItem(classParams *params);
     ~ClassDiagramItem() override;
-
-    void addConnection(ClassConnectionItem *connection);
-
-    void removeConnection(ClassConnectionItem *connection);
 
 public:
     [[nodiscard]] QString name() const override {
@@ -350,19 +367,6 @@ public:
 
     void pushAttrLine(QGraphicsLineItem *item) {
         _attrsLines.push_back(item);
-    }
-
-    QGraphicsLineItem *createLine(qreal x, qreal y) {
-        auto line = new QGraphicsLineItem(0, 0, rowWidth(), 0, this);
-        line->setPos(x, y);
-        return line;
-    }
-
-    QGraphicsTextItem *createText(qreal x, qreal y, const QString &text) {
-        auto attr = new QGraphicsTextItem(text, this);
-        setTextFlags(attr);
-        attr->setPos(x, y);
-        return attr;
     }
 
     [[nodiscard]] QPointF socket(uint32_t n) const {

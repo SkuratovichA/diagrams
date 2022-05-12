@@ -261,6 +261,7 @@ public:
 private:
     void createEntityClassContextMenu();
     void createConnectionContextMenu();
+    void createInterfaceContextMenu();
 
 public slots:
     void paste() override;
@@ -284,11 +285,15 @@ public slots:
     void dependency_triggered();
     void orientation_triggered();
 
+    void addMethodInterface_triggered();
+    void rmMethodInterface_triggered();
+
 private:
     classParams *createItem;
     relationsParams *createRelation;
     QMenu *classMenu;
     QMenu *connectionMenu;
+    QMenu *interfaceMenu;
 
     QAction *addMethod;
     QAction *rmMethod;
@@ -301,6 +306,9 @@ private:
     QAction *association;
     QAction *dependency;
     QAction *orientation;
+
+    QAction *addMethodInterface;
+    QAction *rmMethodInterface;
 };
 
 class SequenceCanvas : public TabCanvas {

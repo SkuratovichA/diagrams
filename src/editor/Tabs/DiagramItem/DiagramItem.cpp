@@ -22,7 +22,7 @@
  * @param pos position of the text
  * @param flags flags for text that make it editable
  */
-ClassTextAttr::ClassTextAttr(ClassDiagramItem *p, QString text, QPointF pos,
+ClassTextAttr::ClassTextAttr(QGraphicsItem *p, QString text, QPointF pos,
                              QFlags<Qt::TextInteractionFlag> flags)
         : QGraphicsTextItem(text, p) {
     setTextInteractionFlags(flags);
@@ -52,35 +52,37 @@ void ClassTextAttr::keyReleaseEvent(QKeyEvent *event) {
 
     qreal maxLen = 0;
 
-    for (auto item: parent()->attrs()) {
+    ClassDiagramItem *ptr = dynamic_cast<ClassDiagramItem *>(parent());
+
+    for (auto item: ptr->attrs()) {
         maxLen = item->boundingRect().width() > maxLen ? item->boundingRect().width() : maxLen;
     }
-    for (auto item: parent()->methods()) {
+    for (auto item: ptr->methods()) {
         maxLen = item->boundingRect().width() > maxLen ? item->boundingRect().width() : maxLen;
     }
 
-    if (maxLen + 30 < parent()->width()) {
-        maxLen = parent()->width() - 30;
-    } else if (maxLen + 20 > parent()->width()) {
-        maxLen = parent()->width() + 20;
+    if (maxLen + 30 < ptr->width()) {
+        maxLen = ptr->width() - 30;
+    } else if (maxLen + 20 > ptr->width()) {
+        maxLen = ptr->width() + 20;
     } else {
         return;
     }
 
-    parent()->setRect(0, 0, maxLen, parent()->height());
-    for (auto item: parent()->attrsLines()) {
+    ptr->setRect(0, 0, maxLen, ptr->height());
+    for (auto item: ptr->attrsLines()) {
         item->setLine(0, 0, maxLen, 0);
     }
-    for (auto item: parent()->methodsLines()) {
+    for (auto item: ptr->methodsLines()) {
         item->setLine(0, 0, maxLen, 0);
     }
-    parent()->setWidth(maxLen);
-    parent()->setRowWidth(maxLen);
+    ptr->setWidth(maxLen);
+    ptr->setRowWidth(maxLen);
 
-    qreal midW = parent()->_head->boundingRect().width();
-    qreal midO = parent()->width();
-    parent()->_head->setPos((midO - midW) / 2, -40);
-    for (auto x: this->parent()->connections()) {
+    qreal midW = ptr->_head->boundingRect().width();
+    qreal midO = ptr->width();
+    ptr->_head->setPos((midO - midW) / 2, -40);
+    for (auto x: ptr->connections()) {
         x->trackNodes();
     }
 }

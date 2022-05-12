@@ -167,8 +167,7 @@ void ItemsBuffer::addActorItems(Actor act) {
  */
 void ItemsBuffer::fillMessageItems(SequenceConnectionItem *item) {
     messageParams *ptr;
-
-    // GET ID of item
+    
     ptr = new messageParams(item->x(), item->y(),
                             item->getText()->toPlainText(),
                             item->nodeFrom()->name(),
@@ -176,6 +175,7 @@ void ItemsBuffer::fillMessageItems(SequenceConnectionItem *item) {
                             item->type());
     pushMessageItem(ptr);
 }
+
 
 void ItemsBuffer::addMessageItems(Action action) {
     messageParams *a;

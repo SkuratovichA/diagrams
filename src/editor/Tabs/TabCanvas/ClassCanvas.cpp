@@ -219,7 +219,6 @@ bool ClassCanvas::getStringRepresentation(Program &prg) {
         tmp.height = x->height();
         x->fillColor(tmp.color);
         x->fillCoords(tmp.coords);
-        //tmp.id = x->id();
 
         if (!x->splitString(tmp.attrs, x->attrs())) {
             qDebug() << "Error with attribute, color it by red color";
@@ -243,8 +242,6 @@ bool ClassCanvas::getStringRepresentation(Program &prg) {
         tmp.msg = x->msg().toStdString();
         tmp.arrow = x->type();
         tmp.order = x->order();
-        //tmp.leftObjId = x->leftObjId();
-        //tmp.rightObjId = x->rightObjId();
 
         prg.diagramClass.concts.push_back(tmp);
     }
@@ -288,6 +285,15 @@ void ClassCanvas::createConnectionContextMenu() {
     connectionMenu->addAction(orientation);
 }
 
+void ClassCanvas::createInterfaceContextMenu() {
+    ADD_SIGNAL(addMethodInterface, "Add &Method", "+", "+", this, SLOT(addMethodInterface_triggered()));
+    ADD_SIGNAL(rmMethodInterface, "Delete &Method", "+", "+", this, SLOT(rmMethodInterface_triggered()));
+
+    connectionMenu = new QMenu();
+    connectionMenu->addAction(addMethodInterface);
+    connectionMenu->addAction(rmMethodInterface);
+}
+
 /**
  * Show a context menu with actions for objects.
  *
@@ -320,7 +326,7 @@ void ClassCanvas::addMethod_triggered() {
     // resize item for one row
     item->setRect(0, 0, item->width(), item->height() + item->rowHeight());
 
-    auto line = item->createLine(0, item->height());
+    auto line = item->createLine(0, item->height(), item);
     item->pushMethodLine(line);
 
     auto *text = new ClassTextAttr(item, "+ int example()", QPointF(item->tabText(), item->height() + item->tabText()),
@@ -383,7 +389,7 @@ void ClassCanvas::addAttr_triggered() {
     item->moveTexts(1, inc);
     item->moveLines(1, inc);
 
-    auto line = item->createLine(0, inc * item->rowHeight());
+    auto line = item->createLine(0, inc * item->rowHeight(), item);
     item->pushAttrLine(line);
 
     //auto text = item->createText(item->tabText(), item->rowHeight() * inc + item->tabText(), "+ int word");
@@ -458,6 +464,9 @@ void ClassCanvas::generalization_triggered() {
     editorScene->update();
 }
 
+/**
+ *
+ */
 void ClassCanvas::association_triggered() {
     auto line = selectedObject<ClassConnectionItem>();
     line->setType(ClassConnectionItem::Association);
@@ -480,6 +489,20 @@ void ClassCanvas::orientation_triggered() {
     auto line = selectedObject<ClassConnectionItem>();
     line->changeOrientation();
     editorScene->update();
+}
+
+/**
+ *
+ */
+void ClassCanvas::addMethodInterface_triggered() {
+    return;
+}
+
+/**
+ *
+ */
+void ClassCanvas::rmMethodInterface_triggered() {
+    return;
 }
 
 /**
