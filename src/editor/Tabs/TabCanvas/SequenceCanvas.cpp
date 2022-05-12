@@ -9,6 +9,7 @@
 #include <QRandomGenerator>
 #include <QWidget>
 #include <QUndoGroup>
+#include <QMessageBox>
 
 #include "TabCanvas.h"
 #include "../../EditorInterface/editorinterface.h"
@@ -100,45 +101,13 @@ bool SequenceCanvas::checkIdenticalNames() {
     std::vector<std::string> strsWithBr;
     std::vector<std::string> strsNoBr;
 
-
-
     for (auto x : itemsCoonnections) {
-        classItem = x->nodeTo()->parentClassDiagramItem();
-
-        for (auto y : classItem->methods()) {
-            if (y->toPlainText() == "METHODS") {
-                continue;
-            }
-
-            strsWithBr.push_back(y->toPlainText().toStdString());
+        if (x->getText()->defaultTextColor() == QColor(Qt::black)) {
+            continue;
         }
-//
-//        std::cmatch m;
-//
-//
-//
-//        for (auto y : strsWithBr) {
-//            if (std::regex_search(y.c_str(), m, std::regex("*\\ [*|(]"))) {
-//
-//            }
-////            idx = y.find('(');
-////            qDebug() << QString::fromStdString(y.substr(0, idx));
-//        }
 
-//
-//
-//
-//        idx = x->getText()->toPlainText().toStdString().find('(');
-//        if (idx != std::string::npos) {
-//            strText = x->getText()->toPlainText().toStdString().substr(0, idx);
-//        }
-//        else {
-//            continue;
-//            // maybe fix this shit
-//        }
-//
-//        if ()
-
+        QMessageBox::warning(this, "Error", "AHAHAHAHAH");
+        return false;
     }
 
     return true;
