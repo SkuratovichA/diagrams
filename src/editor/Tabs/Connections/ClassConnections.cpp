@@ -559,28 +559,6 @@ void ClassConnectionItem::drawLine(QPainter *painter, const QStyleOptionGraphics
             poly << linend << arrowP1 << arrowP2;
             break;
         case Generalization:
-#if 0
-            auto commonMethods = QList<QString>();
-            auto methodsFromStrings = QList<QString>();
-
-            for (auto methodFrom: _nodeFrom->methods()) {
-                methodsFromStrings.append(methodFrom->toPlainText());
-            }
-
-            for (auto item: _nodeTo->methods()) {
-                if (methodsFromStrings.contains(item->toPlainText())) {
-                    commonMethods.append(item->toPlainText());
-                }
-            }
-
-            // this fix is so hot that i am horny...
-            for (auto methodFrom: _nodeFrom->methods()) {
-                if (methodFrom->toPlainText() != "METHODS" && commonMethods.contains(methodFrom->toPlainText())) {
-                    methodFrom->setDefaultTextColor(Qt::cyan);
-                }
-            }
-
-#endif
             poly << linend << arrowP1 << arrowP2;
             break;
     }
