@@ -9,8 +9,6 @@
 
 using namespace Connections;
 
-
-
 MoveCommand::MoveCommand(QGraphicsItem *diagramItem, const QPointF &oldPos,
                          QUndoCommand *parent)
         : QUndoCommand(parent), diagramItem(diagramItem), startPos(oldPos), newPos(diagramItem->pos()) {
@@ -76,14 +74,16 @@ void DeleteCommand::undo() {
                 graphicsScene->addItem(connection);
             }
         } else if (dynamic_cast<SequenceDiagramItem *>(x) != nullptr) {
-            // TODO:
-            auto connections = dynamic_cast<SequenceDiagramItem *>(x)->getRemovedConnectionsOnDeleteSelf();
-            for (auto connection: connections) {
-                auto nodeFrom = connection->nodeFrom();
-                auto nodeTo = connection->nodeTo();
-                nodeFrom->addConnection(connection, ActorType::Caller, CommandType::Delete, CommandType::Self);
-                nodeTo->addConnection(connection, ActorType::Receiver, CommandType::Delete, CommandType::Self);
-                graphicsScene->addItem(connection);
+            auto diagramItem = dynamic_cast<SequenceDiagramItem *>(x);
+            if (diagramItem->parentClassDiagramItem()->isDeleted() == false) {
+                auto connections = diagramItem->getRemovedConnectionsOnDeleteSelf();
+                for (auto connection: connections) {
+                    auto nodeFrom = connection->nodeFrom();
+                    auto nodeTo = connection->nodeTo();
+                    nodeFrom->addConnection(connection, ActorType::Caller, CommandType::Delete, CommandType::Self);
+                    nodeTo->addConnection(connection, ActorType::Receiver, CommandType::Delete, CommandType::Self);
+                    graphicsScene->addItem(connection);
+                }
             }
         } else if (dynamic_cast<SequenceConnectionItem *>(x) != nullptr) {
             // remove a connection activity boxes from lifeLine
@@ -106,8 +106,7 @@ void DeleteCommand::redo() {
             for (auto connection: connections) {
                 graphicsScene->removeItem(connection);
             }
-        } else
-        if (dynamic_cast<SequenceDiagramItem *>(x) != nullptr) {
+        } else if (dynamic_cast<SequenceDiagramItem *>(x) != nullptr) {
             auto connections = dynamic_cast<SequenceDiagramItem *>(x)->getRemovedConnectionsOnDeleteSelf();
             for (auto connection: connections) {
                 auto nodeFrom = connection->nodeFrom();
@@ -116,8 +115,7 @@ void DeleteCommand::redo() {
                 nodeTo->removeConnection(connection, CommandType::Delete, CommandType::Self);
                 graphicsScene->removeItem(connection);
             }
-        } else
-        if (dynamic_cast<SequenceConnectionItem *>(x) != nullptr) {
+        } else if (dynamic_cast<SequenceConnectionItem *>(x) != nullptr) {
             // remove a connection activity boxes from lifeLine
             auto connection = dynamic_cast<SequenceConnectionItem *>(x);
             auto nodeFrom = connection->nodeFrom();
@@ -134,6 +132,7 @@ void DeleteCommand::redo() {
 AddSequenceCommand::AddSequenceCommand(QGraphicsScene *scene, SequenceDiagramItemParameters *params,
                                        ClassDiagramItem *parentClassDiagramItem, QUndoCommand *parent)
         : QUndoCommand(parent), graphicsScene(scene) {
+
     diagramItem = new SequenceDiagramItem(params, parentClassDiagramItem);
     initialStartPosition = QPointF(params->x(), params->y());
     scene->update();
@@ -147,8 +146,10 @@ void AddSequenceCommand::undo() {
 }
 
 void AddSequenceCommand::redo() {
-    graphicsScene->addItem(diagramItem);
-    diagramItem->setPos(initialStartPosition);
+    if (diagramItem->parentClassDiagramItem()->isDeleted() == false) {
+        graphicsScene->addItem(diagramItem);
+        diagramItem->setPos(initialStartPosition);
+    }
     graphicsScene->clearSelection();
     graphicsScene->update();
 }
@@ -160,7 +161,7 @@ AddClassCommand::AddClassCommand(QGraphicsScene *scene, classParams *params, QUn
     scene->update();
 }
 
-AddClassCommand::~AddClassCommand() { }
+AddClassCommand::~AddClassCommand() {}
 
 void AddClassCommand::undo() {
     dynamic_cast<ClassDiagramItem *>(diagramItem)->setDeleted(true);
@@ -184,7 +185,6 @@ AddClassConnectionCommand::AddClassConnectionCommand(ClassDiagramItem *fromNode,
                                                      QUndoCommand *parent)
         : QUndoCommand(parent), graphicsScene(scene) {
     auto maxConnectedElements = std::max(fromNode->occupiedSockets(), toNode->occupiedSockets());
-
     classConnection = new ClassConnectionItem(fromNode, toNode, params, type, maxConnectedElements);
     scene->update();
 }
@@ -202,17 +202,18 @@ void AddClassConnectionCommand::redo() {
     graphicsScene->update();
 }
 
-AddSequenceConnectionCommand::AddSequenceConnectionCommand(SequenceDiagramItem *fromNode,
-                                                           SequenceDiagramItem *toNode,
+AddSequenceConnectionCommand::AddSequenceConnectionCommand(SequenceDiagramItem *nodeFrom,
+                                                           SequenceDiagramItem *nodeTo,
                                                            ConnectionType connectionType,
                                                            QGraphicsScene *scene,
                                                            QUndoCommand *parent)
         : QUndoCommand(parent), graphicsScene(scene) {
 
-    actorConnection = new SequenceConnectionItem(fromNode, toNode, connectionType);
-    initialStartPosition = QPointF(100, 100);
+    if (nodeFrom->parentClassDiagramItem()->isDeleted() == false &&
+        nodeTo->parentClassDiagramItem()->isDeleted() == false) {
+        actorConnection = new SequenceConnectionItem(nodeFrom, nodeTo, connectionType);
+    }
     scene->update();
-
 }
 
 AddSequenceConnectionCommand::~AddSequenceConnectionCommand() {}
@@ -220,18 +221,24 @@ AddSequenceConnectionCommand::~AddSequenceConnectionCommand() {}
 void AddSequenceConnectionCommand::undo() {
     auto nodeFrom = actorConnection->nodeFrom();
     auto nodeTo = actorConnection->nodeTo();
-    nodeFrom->removeConnection(actorConnection, CommandType::Add, CommandType::Connection);
-    nodeTo->removeConnection(actorConnection, CommandType::Add, CommandType::Connection);
-    graphicsScene->removeItem(actorConnection);
+    if (nodeFrom->parentClassDiagramItem()->isDeleted() == false &&
+        nodeTo->parentClassDiagramItem()->isDeleted() == false) {
+        nodeFrom->removeConnection(actorConnection, CommandType::Add, CommandType::Connection);
+        nodeTo->removeConnection(actorConnection, CommandType::Add, CommandType::Connection);
+        graphicsScene->removeItem(actorConnection);
+    }
     graphicsScene->update();
 }
 
 void AddSequenceConnectionCommand::redo() {
     auto nodeFrom = actorConnection->nodeFrom();
     auto nodeTo = actorConnection->nodeTo();
-    nodeFrom->addConnection(actorConnection, ActorType::Caller, CommandType::Add, CommandType::Connection);
-    nodeTo->addConnection(actorConnection, ActorType::Receiver, CommandType::Add, CommandType::Connection);
-    graphicsScene->addItem(actorConnection);
+    if (nodeFrom->parentClassDiagramItem()->isDeleted() == false &&
+        nodeTo->parentClassDiagramItem()->isDeleted() == false) {
+        nodeFrom->addConnection(actorConnection, ActorType::Caller, CommandType::Add, CommandType::Connection);
+        nodeTo->addConnection(actorConnection, ActorType::Receiver, CommandType::Add, CommandType::Connection);
+        graphicsScene->addItem(actorConnection);
+    }
     graphicsScene->clearSelection();
     graphicsScene->update();
 }

@@ -43,9 +43,9 @@ editorInterface::editorInterface(
             break;
         case OPEN_FILE:
             filename = QFileDialog::getOpenFileName(parent,
-                               tr("Open a file"),
-                                  QDir::homePath(),
-                                 filenameFilter);
+                                                    tr("Open a file"),
+                                                    QDir::homePath(),
+                                                    filenameFilter);
             openDiagram = true;
             break;
         case NO_FILE:
@@ -89,7 +89,8 @@ void editorInterface::newTabSelected() {
                 auto newName = sequenceItem->name();
                 if (newName != sequenceItem->parentClassDiagramItem()->name()) {
                     sequenceItem->parentClassDiagramItem()->setName(newName);
-                    qreal Pos = (sequenceItem->parentClassDiagramItem()->boundingRect().width() - sequenceItem->parentClassDiagramItem()->width()) / 2;
+                    qreal Pos = (sequenceItem->parentClassDiagramItem()->boundingRect().width() -
+                                 sequenceItem->parentClassDiagramItem()->width()) / 2;
                     sequenceItem->parentClassDiagramItem()->setPos(Pos, -40);
 
                 }
@@ -102,7 +103,8 @@ void editorInterface::newTabSelected() {
                 auto newName = sequenceItem->parentClassDiagramItem()->name();
                 if (newName != sequenceItem->name()) {
                     sequenceItem->setName(newName);
-                    qreal Pos = (sequenceItem->parentClassDiagramItem()->boundingRect().width() - sequenceItem->parentClassDiagramItem()->width()) / 2;
+                    qreal Pos = (sequenceItem->parentClassDiagramItem()->boundingRect().width() -
+                                 sequenceItem->parentClassDiagramItem()->width()) / 2;
                     sequenceItem->parentClassDiagramItem()->setPos(Pos, -40);
                 }
             }
@@ -202,7 +204,7 @@ void editorInterface::createDynamicToolBar() {
 bool editorInterface::getTextRepresentation(Program &prg) {
     auto size = tabWidget->count();
     for (int i = 0; i < size; i++) {
-        if (! reinterpret_cast<TabCanvas *>(tabWidget->widget(i))->getStringRepresentation(prg) ) {
+        if (!reinterpret_cast<TabCanvas *>(tabWidget->widget(i))->getStringRepresentation(prg)) {
             return false;
         }
     }
@@ -216,7 +218,7 @@ void editorInterface::connectItemsDiagrams() {
             0))->getClassStringPairs();
 
     for (auto x: sequenceTab->getItems<SequenceDiagramItem>()) {
-        for (auto y : classStringPairs) {
+        for (auto y: classStringPairs) {
             if (x->name() == y.first->name()) {
                 x->setParent(y.first);
             }
@@ -258,7 +260,7 @@ void editorInterface::writeToFile() {
         return;
     }
 
-    if ( !getTextRepresentation(prg) ) {
+    if (!getTextRepresentation(prg)) {
         return;
     }
 
@@ -388,8 +390,69 @@ void editorInterface::actionAddConnection_triggered() {
  */
 void editorInterface::actionRemove_triggered() {
     if (tabWidget->currentIndex() == 0) {
-        reinterpret_cast<ClassCanvas *>(tabWidget->currentWidget())->removeEntity();
-    } else {
+        // set selected elements as they are deleted
+        for (auto classDiagram: reinterpret_cast<SequenceCanvas *>(tabWidget->currentWidget())->getItems<ClassDiagramItem>()) {
+            if (classDiagram->isSelected()) {
+                classDiagram->setDeleted(true);
+            }
+        }
+        // get count of dependent elements
+        int elementsToDeleteCount = 0;
+        for (int i = 1; i < tabWidget->count(); i++) {
+            auto sequenceTab = reinterpret_cast<SequenceCanvas *>(tabWidget->widget(i));
+            auto sequenceObjects = sequenceTab->getItems<SequenceDiagramItem>();
+            for (auto sequenceObject: sequenceObjects) {
+                auto parentClass = sequenceObject->parentClassDiagramItem();
+                if (parentClass != nullptr && parentClass->isDeleted()) {
+                    elementsToDeleteCount++;
+                }
+            }
+        }
+        // if there are children
+        if (elementsToDeleteCount > 0) {
+            auto text = QString("There are ") + QString::number(elementsToDeleteCount)
+                    + QString(" objects in sequence diagrams\n")
+                    + QString("with the selected class") + QString(elementsToDeleteCount > 1 ? "es" : "")
+                    + QString(".\n\n")
+                    + QString("If you continue, they will automatically be removed.\n\n")
+                    + QString("Proceed?");
+            QMessageBox msgBox;
+            msgBox.setWindowTitle("Class references");
+            msgBox.setText(text);
+            msgBox.setStandardButtons(QMessageBox::Cancel);
+            msgBox.addButton(QMessageBox::Yes);
+            msgBox.setDefaultButton(QMessageBox::Cancel);
+
+            auto decision = msgBox.exec() == QMessageBox::Yes;
+
+            if (decision) {
+                for (int i = 1; i < tabWidget->count(); i++) {
+                    auto sequenceTab = reinterpret_cast<SequenceCanvas *>(tabWidget->widget(i));
+                    auto sequenceObjects = sequenceTab->getItems<SequenceDiagramItem>();
+                    for (auto sequenceObject: sequenceObjects) {
+                        auto parentClass = sequenceObject->parentClassDiagramItem();
+                        if (parentClass != nullptr && parentClass->isDeleted()) {
+                            sequenceObject->setSelected(true);
+                            sequenceTab->removeEntity();
+                        }
+                    }
+                }
+                reinterpret_cast<ClassCanvas *>(tabWidget->currentWidget())->removeEntity();
+            } else {
+                for (auto classDiagram: reinterpret_cast<SequenceCanvas *>(tabWidget->currentWidget())->getItems<ClassDiagramItem>()) {
+                    if (classDiagram->isSelected()) {
+                        classDiagram->setDeleted(false);
+                    }
+                }
+            }
+        }
+            // if there are no children, delete just delete it
+        else {
+            reinterpret_cast<ClassCanvas *>(tabWidget->currentWidget())->removeEntity();
+        }
+    }
+    // just delete class/classes without any questions
+    else {
         reinterpret_cast<SequenceCanvas *>(tabWidget->currentWidget())->removeEntity();
     }
 }

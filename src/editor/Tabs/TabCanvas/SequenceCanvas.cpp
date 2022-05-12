@@ -190,8 +190,6 @@ void SequenceCanvas::addEntity(ClassDiagramItem *classDiagramItemParent) {
 
     createActor = new SequenceDiagramItemParameters(point.x(), point.y(), classDiagramItemParent->name(),
                                                     classDiagramItemParent->color());
-
-    //qDebug() << point.x() << point.y() << classDiagramItemParent->name() << classDiagramItemParent->color();
     _undoStack->push(
             new AddSequenceCommand(editorScene, createActor, classDiagramItemParent)
     );

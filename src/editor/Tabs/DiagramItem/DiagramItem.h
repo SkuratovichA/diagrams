@@ -238,6 +238,10 @@ public:
         _isDeleted = isDeleted;
     }
 
+    bool isDeleted() const {
+        return _isDeleted;
+    }
+
 public:
     QList<ClassTextAttr *> &methods() {
         return _methods;
