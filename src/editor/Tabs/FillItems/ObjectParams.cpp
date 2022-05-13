@@ -46,11 +46,9 @@ bool ObjectParams::checkMethod(SequenceConnectionItem *item) {
         }
         classMethod = getMethod(method->toPlainText().toStdString());
         if (classMethod == "") {
-            qDebug() << "HUINYA METHOD";
+            return false;
         } else if (classMethod == msgMethod) {
             flag = true;
-            qDebug() << classMethod;
-            qDebug() << msgMethod;
         }
     }
 

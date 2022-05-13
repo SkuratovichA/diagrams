@@ -185,10 +185,11 @@ public:
         return QPair<T *, T *>(first, rest);
     }
 
-    /**CHUJ
+    /**
+     * @brief Returns a selected item of a specified type from the scene
      *
-     * @tparam T
-     * @return
+     * @tparam T typename. Must inherit from QGraphicsItem
+     * @return Pointer to the first selected item, otherwise nulllptr
      */
     template<typename T>
     T *selectedObject() {
@@ -196,10 +197,11 @@ public:
         return selectedPair == QPair<T *, T *>() ? nullptr : selectedPair.first;
     }
 
-    /**CHUJ
+    /**
+     * @brief Returns a list of the selected items on the scene
      *
-     * @tparam T
-     * @return
+     * @tparam T typename. Must inherit from QGraphicsItem
+     * @return QList list of the selected items
      */
     template<typename T>
     QList<T *> getItems() {
@@ -213,12 +215,13 @@ public:
         return items;
     }
 
-    /** CHUJ
+    /**
      * @brief Sets Z value
      *
-     * @tparam T
-     * @param items list
-     * @param val
+     * @tparam T typename. Must inherit from QGraphicsItem
+     * @param items list of the selected items for
+     * which the Z value will be changed
+     * @param val number of Z value
      */
     template<typename T>
     void setZvalue(QList<QGraphicsItem *> items, int val) {
@@ -234,7 +237,11 @@ public:
     }
 
     /**
-     * CHUJ
+     * @brief Changes the value depending on the element type
+     *
+     * @param toFront true in a case, if we want to send an object
+     * to the front, otherwise false
+     * @tparam T typename. Must inherit from QGraphicsItem
      */
     template<typename T>
     void _toZchange(bool toFront) {
@@ -252,7 +259,8 @@ public:
     // region Getters, Setters
 public:
     /**
-     * CHUJ
+     * @brief Generates a random rgba color for object
+     * @return Generated color
      */
     QColor color() const {
         srand (time(NULL));
@@ -263,21 +271,24 @@ public:
     }
 
     /**
-     * CHUJ
+     * @brief Getter. Returns undostack of a tab
+     * @return QUndoStack* undostack
      */
     QUndoStack *undoStack() const {
         return _undoStack;
     }
 
     /**
-     * CHUJ
+     * @brief Updates scene after changes
      */
     void updateScene() {
         editorScene->update();
     }
 
     /**
-     * CHUJ
+     * @brief creates a scene with alignment by AlignTop, sets antialiasing
+     * and TextAntialiasing render hints, sets a policy of the context menu,
+     * and sets widget with a scene as central
      */
     void createScene() {
         editorScene = new EditorScene(this);
@@ -300,14 +311,15 @@ public:
 
     /**
      * @brief Generate random [x, y] coordinates ranging from 0 to 1200 with a margin
-     *
      * @return QPoint coordinates on the scene for new item
      */
     virtual QPoint generateCoords() const = 0;
 
-    /** CHUJ
-     * @brief Gets string representation from given Program
-     * @param prg
+    /**
+     * @brief Gets a string representation from given Program
+     *
+     * @param prg Class with information about items
+     * @return true in a case of success, otherwise false
      */
     virtual bool getStringRepresentation(Program &prg) = 0;
 // endregion

@@ -184,12 +184,10 @@ bool ClassCanvas::getStringRepresentation(Program &prg) {
         tmp.type = x->typeClass().toStdString();
 
         if (!x->splitString(tmp.attrs, x->attrs())) {
-            //qDebug() << "Error with attribute, color it by red color";
             return false;
         }
 
         if (!x->splitString(tmp.methods, x->methods())) {
-            //qDebug() << "Error with method, color it by red color";
             return false;
         }
 

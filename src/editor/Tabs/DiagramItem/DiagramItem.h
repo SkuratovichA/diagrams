@@ -367,14 +367,14 @@ public:
 
     /**
      * @brief Setter. Remove or restore an object. Used in sequence diagram checks
-     * @param isDeleted New valueither Actor or Class
+     * @param isDeleted New value either Actor or Class
      */
     void setDeleted(bool isDeleted) {
         _isDeleted = isDeleted;
     }
 
     /**
-     * @brief Getter. If object is deleted, retrn true
+     * @brief Getter. If object is deleted, return true
      * @return boolean
      */
     bool isDeleted() const {
