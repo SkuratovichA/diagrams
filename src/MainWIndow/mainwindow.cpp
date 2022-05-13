@@ -24,6 +24,10 @@ mainWindow::mainWindow(QWidget *parent)
         return;
     }
 
+    QDir d = QFileInfo("../examples/").absoluteDir();
+    QString absolute=d.absolutePath();
+    qDebug() << absolute;
+
     // create a list with examples
     QDirIterator it(directory.path(), QStringList() << "example*.gae", QDir::Files, QDirIterator::Subdirectories);
     it.next();
