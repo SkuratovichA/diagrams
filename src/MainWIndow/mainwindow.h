@@ -1,3 +1,7 @@
+// File: mainwindow.h
+// Author: Skuratovich Aliaksandr <xskura01@vutbr.cz>
+// Date: 24.04.2022
+
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
@@ -14,39 +18,39 @@ class mainWindow : public QMainWindow {
 Q_OBJECT
 
 public:
+    /**
+     * @brief A Constructor.
+     * @param parent A parent object
+     */
     mainWindow(QWidget *parent = nullptr);
+
+    /**
+     * @brief A destructor.
+     */
     ~mainWindow();
 
 private slots:
+    /**
+     * @brief Create a new file.
+     * @details If filename will not be provided - just create a window with a default interface
+     */
     void on_create_clicked();
+
+    /**
+     * @brief Open a file from a given list
+     */
     void on_open_clicked();
 
-    // void newFile();
-
-    // void open();
-    // void save();
-    // void actionSaveAs_triggered();
-    // void about();
-    // void documentWasModified();
-// #ifndef QT_NO_SESSIONMANAGER
-    // void commitData(QSessionManager &);
-// #endif
-
+    /**
+     * @brief Open a canvas with a default template when saving, the path will must be specified
+     */
     void on_pushButton_clicked();
 
 private:
     Ui::mainWindow *ui;
     editorInterface *editor_window;
 
-    // void createActions();
-    // void readSettings();
-    // void writeSettings();
-    // void maybeSave();
-    // bool saveFile(const QString &filename);
-    // QString srtippedName(const QString &fullFileName);
-
     QString curFile;
-//    QPlainTextEdit *diagramEdit;
 };
 
 #endif // MAINWINDOW_H

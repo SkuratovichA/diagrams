@@ -1,25 +1,21 @@
+// File: mainwindow.cpp
+// Author: Skuratovich Aliaksandr <xskura01@vutbr.cz>
+// Date: 24.04.2022
+
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
-#include <QFileDialog>
 #include <QMessageBox>
 #include <QDir>
 #include <filesystem>
 #include <QDirIterator>
 
-/**
- * A constructor.
- *
- * @param parent
- */
 mainWindow::mainWindow(QWidget *parent)
-    : QMainWindow(parent)
-    , ui(new Ui::mainWindow)
-{
+        : QMainWindow(parent), ui(new Ui::mainWindow) {
     ui->setupUi(this);
     setWindowTitle("Diagram");
 
-    QDir directory(QDir::current()); // or you can use root()
+    QDir directory(QDir::current());
     if (directory.isEmpty()) {
         return;
     }
@@ -36,49 +32,31 @@ mainWindow::mainWindow(QWidget *parent)
     editor_window = nullptr;
 }
 
-/**
- * A destructor.
- */
-mainWindow::~mainWindow()
-{
+mainWindow::~mainWindow() {
     delete ui;
 }
 
-/**
- * Create a new file.
- * Filename will not be provided - just create a window with a default interface
- */
-void mainWindow::on_create_clicked()
-{
+void mainWindow::on_create_clicked() {
     try {
         editor_window = new editorInterface(this, nullptr, editorInterface::NO_FILE);
-    } catch (const char* msg) {
+    } catch (const char *msg) {
         QMessageBox::warning(this, "Error", msg);
         return;
     }
     editor_window->show();
 }
 
-/**
- * Open a file from a given list
- */
-void mainWindow::on_open_clicked()
-{
+void mainWindow::on_open_clicked() {
     try {
         editor_window = new editorInterface(this, nullptr, editorInterface::OPEN_FILE);
-    } catch (const char* msg) {
+    } catch (const char *msg) {
         QMessageBox::warning(this, "Error", msg);
         return;
     }
     editor_window->show();
 }
 
-/**
- * Open a canvas with a default template
- * when saving, the path will must be specified
- */
-void mainWindow::on_pushButton_clicked()
-{
+void mainWindow::on_pushButton_clicked() {
     if (ui->listWidget->currentItem() == nullptr) {
         QMessageBox::information(this, "No such file", "pizda");
         return;
@@ -86,7 +64,7 @@ void mainWindow::on_pushButton_clicked()
     QString example_name = ui->listWidget->currentItem()->text();
     try {
         editor_window = new editorInterface(this, example_name, editorInterface::EXAMPLE_FILE);
-    } catch (const char* msg) {
+    } catch (const char *msg) {
         QMessageBox::warning(this, "Error", msg);
         return;
     }
