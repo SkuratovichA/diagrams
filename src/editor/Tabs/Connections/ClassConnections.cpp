@@ -26,8 +26,8 @@ ClassConnectionItem::ClassConnectionItem(ClassDiagramItem *fromNode,
     _nodeFrom = fromNode;
     _nodeTo = toNode;
     _single = fromNode == toNode;
-    _nodeFrom->addConnection(this);
-    _nodeTo->addConnection(this);
+    _nodeFrom->addConnection(this, CommandType::Add, CommandType::Connection);
+    _nodeTo->addConnection(this, CommandType::Add, CommandType::Connection);
 
     _connectionType = type;
     _color = color;
@@ -536,14 +536,7 @@ void ClassConnectionItem::paint(QPainter *painter,
 }
 
 ClassConnectionItem::~ClassConnectionItem() {
-    if (_nodeFrom != nullptr) {
-        _nodeFrom->removeConnection(this);
-    }
-    if (_nodeTo != nullptr) {
-        _nodeTo->removeConnection(this);
-    }
 }
-
 void ClassConnectionItem::mousePressEvent(QGraphicsSceneMouseEvent *event) {
     if (event->button() == Qt::RightButton) {
         setSelected(true);

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="Statistic">
+    <option name="fileTypesIncluded" value="cpp;h" />
+    <option name="excludedDirectories">
+      <list>
+        <option value="$PROJECT_DIR$/test_lexer" />
+        <option value="$PROJECT_DIR$/cmake-build-debug" />
+        <option value="$PROJECT_DIR$/examples" />
+        <option value="$PROJECT_DIR$/icons" />
+        <option value="$PROJECT_DIR$/test_lexer" />
+        <option value="$PROJECT_DIR$/cmake-build-debug" />
+        <option value="$PROJECT_DIR$/examples" />
+        <option value="$PROJECT_DIR$/icons" />
+      </list>
+    </option>
+  </component>
+</project>

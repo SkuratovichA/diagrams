@@ -59,10 +59,10 @@ ClassDiagramItem::ClassDiagramItem(ClassDiagramItemParameters *params)
                                      Qt::NoTextInteraction);
         textAttr->setFont(QFont("Times", 10, QFont::Bold));
         _methods.push_back(textAttr);
-    }
-    else {
+    } else {
         line = 0;
-        textAttr = new ClassTextAttr(this, "<<interface>>", QPointF(tabText(), rowHeight() * line++ + tabText()),Qt::NoTextInteraction);
+        textAttr = new ClassTextAttr(this, "<<interface>>", QPointF(tabText(), rowHeight() * line++ + tabText()),
+                                     Qt::NoTextInteraction);
         textAttr->setFont(QFont("Times", 12, QFont::Bold));
     }
 
@@ -79,11 +79,41 @@ ClassDiagramItem::ClassDiagramItem(ClassDiagramItemParameters *params)
     setBrush(QBrush(QColor(255, 255, 255, 255)));
 }
 
-void ClassDiagramItem::addConnection(ClassConnectionItem *connection) {
+void ClassDiagramItem::addConnection(ClassConnectionItem *connection,
+                                     CommandType::CommandType commandType,
+                                     CommandType::RequestType requestType) {
+    if (commandType == CommandType::Add) {
+        if (requestType == CommandType::Connection) {
+            _removedConnectionsOnAddConnection.remove(connection);
+        } else { // Self
+            _removedConnectionsOnAddSelf.remove(connection);
+        }
+    } else { // Delete
+        if (requestType == CommandType::Connection) {
+            _removedConnectionsOnDeleteConnection.remove(connection);
+        } else { // Self
+            _removedConnectionsOnDeleteSelf.remove(connection);
+        }
+    }
     _connections.insert(connection);
 }
 
-void ClassDiagramItem::removeConnection(ClassConnectionItem *connection) {
+void ClassDiagramItem::removeConnection(ClassConnectionItem *connection,
+                                        CommandType::CommandType commandType,
+                                        CommandType::RequestType requestType) {
+    if (commandType == CommandType::Add) {
+        if (requestType == CommandType::Connection) {
+            _removedConnectionsOnAddConnection.insert(connection);
+        } else { // Self
+            _removedConnectionsOnAddSelf.insert(connection);
+        }
+    } else { // Delete
+        if (requestType == CommandType::Connection) {
+            _removedConnectionsOnDeleteConnection.insert(connection);
+        } else { // self
+            _removedConnectionsOnDeleteSelf.insert(connection);
+        }
+    }
     _connections.remove(connection);
 }
 
@@ -146,7 +176,7 @@ QVariant ClassDiagramItem::itemChange(GraphicsItemChange change, const QVariant 
  * A destructor.
  */
 ClassDiagramItem::~ClassDiagramItem() {
-            foreach (ClassConnectionItem *connection, _connections) {
-            delete connection;
-        }
+//            foreach (ClassConnectionItem *connection, _connections) {
+//            delete connection;
+//        }
 }

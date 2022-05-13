@@ -14,7 +14,6 @@
 #include <QGraphicsSceneMouseEvent>
 #include <QPainter>
 
-
 SequenceDiagramItem::SequenceDiagramItem(
         SequenceDiagramItemParameters *params,
         ClassDiagramItem *parentClassDiagramItem_)
@@ -77,9 +76,7 @@ void SequenceDiagramItem::addConnection(
             _removedConnectionsOnDeleteSelf.remove(connection);
         }
     }
-    if (!_connections.contains(connection)) {
-        _connections.insert(connection);
-    }
+    _connections.insert(connection);
     _lifeLine->addConnection(connection, actorType);
     trackNodes();
 }
