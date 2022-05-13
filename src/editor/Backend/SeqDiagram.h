@@ -11,7 +11,7 @@
 using json = nlohmann::json;
 
 /**
- * A class reprensenting a Sequence Diagram Item
+ * @brief A class reprensenting a Sequence Diagram Item
  */
 class Actor {
 public:
@@ -21,7 +21,7 @@ public:
 };
 
 /**
- * A class representing the sequence diagram connection
+ * @brief A class representing the sequence diagram connection
  */
 class Action {
 public:
@@ -41,13 +41,17 @@ public:
 };
 
 /**
- * Sequence diagram representation.
+ * @brief Sequence diagram representation.
  */
 typedef struct dgrm_seq {
     std::vector<Actor> actors; ///< all actors
     std::vector<Action> actions; ///< all actions
 } dgrmSeq_t;
 
+
+/**
+ * @brief A class representing a sequence diagram item and performs actions such adding/filling SequenceDiagramItem class.
+ */
 class DiagramSequence {
 public:
     /**

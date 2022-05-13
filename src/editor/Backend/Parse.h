@@ -19,7 +19,7 @@
 using json = nlohmann::json;
 
 /**
- * Program representation in json format.
+ * @brief Program representation in json format.
  */
 class Program {
 public:

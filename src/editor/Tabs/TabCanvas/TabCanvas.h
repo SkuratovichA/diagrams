@@ -41,7 +41,7 @@ class editorInterface;
     } while(0)
 
 /**
- * Tab canvas for editing a diagram (either class or a sequence)
+ * @brief Tab canvas for editing a diagram (either class or a sequence)
  */
 class TabCanvas : public QMainWindow {
 Q_OBJECT
@@ -357,7 +357,7 @@ private:
 };
 
 /**
- * CHUJ
+ * @brief Canvas for editing class diagram
  */
 class ClassCanvas : public TabCanvas {
 Q_OBJECT
@@ -538,6 +538,9 @@ private:
     QAction *orientation; ///< Orientation of a relation (connection)
 };
 
+/**
+ * @brief A canvas for editing sequence diagram
+ */
 class SequenceCanvas : public TabCanvas {
 Q_OBJECT
 

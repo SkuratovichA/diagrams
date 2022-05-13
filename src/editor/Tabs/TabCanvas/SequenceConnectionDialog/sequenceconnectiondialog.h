@@ -18,7 +18,7 @@ namespace Ui {
 }
 
 /**
- * Sequence connection dialog to choose one of the given connections
+ * @brief Sequence connection dialog to choose one of the given connections
  */
 class SequenceConnectionDialog : public QDialog {
 Q_OBJECT

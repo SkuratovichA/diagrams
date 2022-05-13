@@ -7,22 +7,28 @@
 
 using json = nlohmann::json;
 
+/**
+ * @brief A class represents a color to then convert it to a QColor
+ */
 class Color {
 public:
-    int r;
-    int g;
-    int b;
-    int a;
+    uint8_t r; ///< red
+    uint8_t g; ///< green
+    uint8_t b; ///< blue
+    uint8_t a; ///< alpha
 };
 
+/**
+ * @brief A structure with attributers for a class
+ */
 typedef struct attrs {
-    std::string perm;
-    std::string type;
-    std::string name;
+    std::string perm; ///< permission
+    std::string type; ///< datatype
+    std::string name; ///< name of the attribute
 } attrs_t;
 
 /**
- * Text (json representation of a class)
+ * @brief Text (json representation of a class)
  */
 class Class {
 public:
@@ -69,7 +75,7 @@ public:
 };
 
 /**
- * Connection representation.
+ * @brief A class representieng a connection.
  */
 class ClassDiagramConnectionRepresentation {
 public:
@@ -95,7 +101,7 @@ typedef struct dgrm_class {
 } dgrmClass_t;
 
 /**
- * Class for a textual representation of a program.
+ * @brief A class for a textual representation of a program.
  */
 class DiagramClass {
 public:

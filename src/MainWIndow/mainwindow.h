@@ -16,6 +16,9 @@ QT_BEGIN_NAMESPACE
 namespace Ui {class mainWindow;}
 QT_END_NAMESPACE
 
+/**
+ * @brief Main window class with a few options for diagrams: create new, open existent, use template
+ */
 class mainWindow : public QMainWindow {
 Q_OBJECT
 

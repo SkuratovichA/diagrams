@@ -15,7 +15,7 @@
 using namespace Connections;
 
 /**
- * Moves an object on the scene with undo/redo commands supported
+ * @brief A class implements a command that moves an object on the scene with undo/redo commands supported
  */
 class MoveCommand : public QUndoCommand {
 public:
@@ -65,7 +65,7 @@ private:
 };
 
 /**
- * A class for supporting deletion of the objects.
+ * @brief A class implements a command for object deletion with undo/redo commands supported.
  */
 class DeleteCommand : public QUndoCommand {
 public:
@@ -108,7 +108,7 @@ private:
 };
 
 /**
- * Command for adding a sequence command with undo/redo commands supported
+ * @brief A class implements a command for adding a sequence command with undo/redo commands supported
  */
 class AddSequenceCommand : public QUndoCommand {
 public:
@@ -146,7 +146,7 @@ private:
 };
 
 /**
- * Command for adding a class to the a graphics scene with undo/redo commands support.
+ * @brief A class implements a command for adding a class to the a graphics scene with undo/redo supported
  */
 class AddClassCommand : public QUndoCommand {
 public:
@@ -180,7 +180,7 @@ private:
 };
 
 /**
- * Command for adding a connection to the sequence diagram with undo/redo commands suppor.
+ * @brief A class implements a command for adding a connection to the sequence diagram with undo/redo supported.
  */
 class AddSequenceConnectionCommand : public QUndoCommand {
 public:
@@ -221,7 +221,7 @@ private:
 };
 
 /**
- * Add a connection command to the class diagram command. Fully supports undo/redo commands.
+ * @brief A class implements a connection command to the class diagram command with undo/redo supported
  */
 class AddClassConnectionCommand : public QUndoCommand {
 public:

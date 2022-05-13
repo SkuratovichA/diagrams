@@ -16,7 +16,7 @@
 class SequenceConnectionItem;
 
 /**
- * Namespace with function for control the correctness of a method
+ * @brief Namespace with function for control the correctness of a method
  */
 namespace ObjectParams {
     bool checkMethod(SequenceConnectionItem *item);
@@ -24,7 +24,7 @@ namespace ObjectParams {
 }
 
 /**
- * Parameters of class diagram connections class
+ * @brief Parameters of class diagram connections class
  */
 class relationsParams {
 public:
@@ -119,7 +119,7 @@ private:
 };
 
 /**
- * Superclass for parameters of class and sequence diagram items
+ * @brief Superclass for parameters of class and sequence diagram items
  */
 class objectParams {
 public:
@@ -216,7 +216,7 @@ protected:
 };
 
 /**
- * Parameters for class diagram item (ClassDiagramItem class)
+ * @brief Parameters for class diagram item (ClassDiagramItem class)
  */
 class ClassDiagramItemParameters : public objectParams {
 public:
@@ -274,7 +274,7 @@ private:
 };
 
 /**
- * Class with parameters for a sequence diagram (SequenceDiagramItem class)
+ * @brief A class with parameters for a sequence diagram (SequenceDiagramItem class)
  */
 class SequenceDiagramItemParameters : public objectParams {
 public:
@@ -291,7 +291,7 @@ public:
 };
 
 /**
- * Parameters for a connection item
+ * @brief Parameters for a connection item
  */
 class messageParams {
 public:

@@ -20,7 +20,9 @@ namespace Ui {
     class editorInterface;
 }
 
-/*! An editorInterface class */
+/**
+ * @brief An editorInterface class. Class provides tabs with diagram editors and different functionality (e.g undo/redo, saving)
+ */
 class editorInterface : public QMainWindow {
 Q_OBJECT
 

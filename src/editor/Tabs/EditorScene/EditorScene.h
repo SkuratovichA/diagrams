@@ -22,7 +22,7 @@ class QGraphicsViewItem;
 QT_END_NAMESPACE
 
 /**
- * Editor scene.
+ * @brief An editor scene class containing all logic of the program
  */
 class EditorScene : public QGraphicsScene {
 Q_OBJECT

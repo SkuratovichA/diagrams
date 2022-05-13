@@ -19,7 +19,8 @@ typedef QPair<ActorType, const SequenceConnectionItem *> actorConnectionPair_t;
 typedef QList<actorConnectionPair_t> ActorTypeConnectionList_t;
 typedef QPair<qreal, qreal> region_t;
 
-/** Implementation of a custom Life Line for an object (actor)
+/** 
+ * @brief Implementation of a custom Life Line for an object (actor)
  */
 class SequenceDiagramLifeLine : public QGraphicsLineItem {
 public:

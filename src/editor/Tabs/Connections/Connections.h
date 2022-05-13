@@ -16,7 +16,7 @@ class ClassDiagramItem;
 class SequenceDiagramItem;
 
 /**
- * Class for a self-exppainding text item.
+ * @brief A class for a self-exppainding text item 
  */
 class msgText : public QGraphicsTextItem {
 public:

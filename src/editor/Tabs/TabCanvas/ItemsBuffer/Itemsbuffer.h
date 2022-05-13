@@ -15,7 +15,7 @@ class ClassConnectionItem;
 class SequenceConnectionItem;
 
 /**
- * Buffer for a clipboard
+ * @brief Buffer for a clipboard
  */
 class ItemsBuffer {
 public:

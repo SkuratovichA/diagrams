@@ -55,7 +55,7 @@ namespace CommandType {
 };
 
 /**
- * Self-expanding text class.
+ * @brief Self-expanding text class.
  */
 class ClassTextAttr : public QGraphicsTextItem {
 public:
@@ -97,7 +97,7 @@ private:
 };
 
 /**
- * Name above the class object
+ * @brief Name above the class object
  */
 class NameObject : public QGraphicsTextItem {
 public:
@@ -148,7 +148,7 @@ protected:
 };
 
 /**
- * An abstract class of a diagram item, which represents.
+ * @brief An abstract class of a diagram item, which represents.
  */
 class DiagramItem {
 public:
@@ -303,7 +303,7 @@ private:
 };
 
 /**
- * One of the two main object in the class diagram editor.
+ * @brief One of the two main object in the class diagram editor.
  */
 class ClassDiagramItem : public QGraphicsRectItem, public DiagramItem {
 public:
@@ -618,7 +618,7 @@ private:
 };
 
 /**
- * SequenceDiagramItem. One of two main object in sequence diagram.
+ * @brief One of two main object in sequence diagram.
  * Inherits from QGraphicsRectItem and DiagramItem
  */
 class SequenceDiagramItem : public QGraphicsRectItem, public DiagramItem {
