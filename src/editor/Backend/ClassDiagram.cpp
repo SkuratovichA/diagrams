@@ -1,10 +1,9 @@
 /** @file ClassDiagram.cpp
- *  @author Skuratovich Aliaksandr <xskura01\@vutbr.cz>
+ *  @author Shchapaniak Andrei <xshcha00\@vutbr.cz>
  *  @date 07.05.2022
  */
 
 #include "Parse.h"
-#include <QDebug>
 
 void Class::pushColor(const json el) {
     this->color.r = el.at("r").get<int>();
@@ -63,9 +62,7 @@ void DiagramClass::fillStructureClass(const json el, dgrmClass_t &o) {
         tmp.pushAttrs(x.at("methods"), tmp.methods);
         tmp.pushWidth(x.at("width"));
         tmp.pushHeight(x.at("height"));
-        qDebug() << "before read type";
         tmp.type = x.at("type").get<std::string>();
-        qDebug() << "after read type";
         o.classes.push_back(tmp);
     }
 }

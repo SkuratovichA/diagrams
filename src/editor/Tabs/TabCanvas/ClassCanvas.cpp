@@ -257,7 +257,6 @@ void ClassCanvas::addMethod_triggered() {
     auto *item = selectedObject<ClassDiagramItem>();
 
     if (item == nullptr) {
-        qDebug() << "No selected item";
         return;
     }
 
@@ -284,16 +283,13 @@ void ClassCanvas::rmMethod_triggered() {
     auto *item = selectedObject<ClassDiagramItem>();
 
     if (item == nullptr) {
-        qDebug() << "No selected item";
         return;
     }
 
     // one default METHODS
     auto size = item->myType() == QString("Interface") ? item->methods().size() + 1 : item->methods().size();
 
-    qDebug() << size << item->myType();
     if (size < 2) {
-        qDebug() << "No methods";
         return;
     }
 
@@ -315,7 +311,6 @@ void ClassCanvas::rmMethod_triggered() {
 void ClassCanvas::addAttr_triggered() {
     auto *item = selectedObject<ClassDiagramItem>();
     if (item == nullptr) {
-        qDebug() << "No selected items";
         return;
     }
     // resize item for one row
@@ -342,13 +337,10 @@ void ClassCanvas::addAttr_triggered() {
 void ClassCanvas::rmAttr_triggered() {
     ClassDiagramItem *item = selectedObject<ClassDiagramItem>();
     if (item == nullptr) {
-        qDebug() << "No selected item";
         return;
     }
     auto size = item->attrs().size();
-    qDebug() << size;
     if (size < 1) {
-        qDebug() << "No methods";
         return;
     }
     // resize item for one row

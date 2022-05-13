@@ -8,7 +8,6 @@
 
 #include <QPen>
 #include <QPainter>
-#include <QDebug>
 
 #define DEBUG 0
 

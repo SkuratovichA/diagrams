@@ -7,8 +7,6 @@
 #include "sequenceconnectiondialog.h"
 #include "ui_sequenceconnectiondialog.h"
 
-#include <QDebug>
-
 using namespace Connections;
 
 SequenceConnectionDialog::SequenceConnectionDialog(QWidget *parent) :

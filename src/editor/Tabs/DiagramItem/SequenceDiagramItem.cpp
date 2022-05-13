@@ -32,7 +32,6 @@ SequenceDiagramItem::SequenceDiagramItem(
 
     _head = new NameObject(this, _flags, QPointF(-3, -40), params->name());
     qreal Pos = (80 - _head->boundingRect().width()) / 2;
-    qDebug() << "position " << Pos;
     _head->setPos(Pos, -40);
     _parentClassDiagramItem = parentClassDiagramItem_;
 
