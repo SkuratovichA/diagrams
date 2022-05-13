@@ -1,6 +1,7 @@
-// File: ClassDiagram.h
-// Author: Shchapaniak Andrei <xshcha00@vutbr.cz>
-// Date: 07.05.2022
+/** @file ClassDiagram.h
+ * @author Shchapaniak Andrei <xshcha00\@vutbr.cz>
+ * @date 07.05.2022
+ */
 
 #pragma once
 

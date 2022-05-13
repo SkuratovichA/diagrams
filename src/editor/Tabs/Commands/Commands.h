@@ -1,6 +1,7 @@
-// File: Commands.h
-// Author: Skuratovich Aliaksandr <xskura01@vutbr.cz>
-// Date: 01.05.2022
+/** @file Commands.h
+ * @author Skuratovich Aliaksandr <xskura01\@vutbr.cz>
+ * @date 01.05.2022
+ */
 
 
 #ifndef DIAGRAMS_COMMANDS_H

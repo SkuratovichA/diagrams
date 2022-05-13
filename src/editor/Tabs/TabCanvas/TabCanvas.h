@@ -1,3 +1,9 @@
+/** @file TabCanvas.h
+ * @author Skuratovich Aliaksandr <xskura01\@vutbr.cz>
+ * @date 07.05.2022
+ */
+
+
 // File: TabCanvas.h
 // Author: Skuratovich Aliaksandr <xskura01@vutbr.cz>
 // Author: Shchapaniak Andrei <xshcha00@vutbr.cz>

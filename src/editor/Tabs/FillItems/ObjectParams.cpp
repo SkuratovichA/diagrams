@@ -1,6 +1,8 @@
-// File: ObjectParams.cpp
-// Author: Shchapaniak Andrei <xshcha00@vutbr.cz>
-// Date: 07.05.2022
+/** @file ObjectParams.cpp
+ * @author Shchapaniak Andrei <xshcha00\@vutbr.cz>
+ * @date 07.05.2022
+ */
+
 
 #include "ObjectParams.h"
 #include <QDebug>

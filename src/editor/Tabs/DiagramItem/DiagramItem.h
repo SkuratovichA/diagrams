@@ -1,7 +1,9 @@
-// File: DiagramItem.h
-// Author: Skuratovich Aliaksandr <xskura01@vutbr.cz>
-// Author: Shchapaniak Andrei <xshcha00@vutbr.cz>
-// Date: 07.05.2022
+/** @file DiagramItem.h
+ * @author Skuratovich Aliaksandr <xskura01\@vutbr.cz>
+ * @author Shchapaniak Andrei <xshcha00\@vutbr.cz>
+ * @date 07.05.2022
+ */
+
 
 #ifndef Object_H
 #define Object_H

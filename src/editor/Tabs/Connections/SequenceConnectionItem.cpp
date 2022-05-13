@@ -1,6 +1,8 @@
-// File: SequenceConnections.cpp
-// Author: Skuratovich Aliaksandr <xskura01@vutbr.cz>
-// Date: 07.05.2022
+/** @file SequenceConnectionItem.cpp
+ * @author Skuratovich Aliaksandr <xskura01\@vutbr.cz>
+ * @date 02.05.2022
+ */
+
 
 #define DEBUG 0
 

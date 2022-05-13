@@ -1,7 +1,9 @@
-// File: EditorScene.h
-// Author: Skuratovich Aliaksandr <xskura01@vutbr.cz>
-// Author: Shchapaniak Andrei <xshcha00@vutbr.cz>
-// Date: 07.05.2022
+/** @file EditorScene.h
+ * @author Skuratovich Aliaksandr <xskura01\@vutbr.cz>
+ * @author Shchapaniak Andrei <xshcha00\@vutbr.cz>
+ * @date 07.05.2022
+ */
+
 
 #ifndef DIAGRAMS_EDITORSCENE_H
 #define DIAGRAMS_EDITORSCENE_H

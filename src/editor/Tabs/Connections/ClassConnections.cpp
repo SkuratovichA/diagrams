@@ -1,6 +1,8 @@
-// File: Connections.cpp
-// Author: Skuratovich Aliaksandr <xskura01@vutbr.cz>
-// Date: 02.05.2022
+/** @file Connections.cpp
+ * @author Skuratovich Aliaksandr <xskura01\@vutbr.cz>
+ * @date 02.05.2022
+ */
+
 
 #define DEBUG 0
 

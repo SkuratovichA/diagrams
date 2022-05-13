@@ -1,6 +1,8 @@
-// File: sequenceconnectiondialog.cpp
-// Author: Skuratovich Aliaksandr <xskura01@vutbr.cz>
-// Date: 07.05.2022
+/** @file sequenceconnectiondialog.cpp
+ * @author Skuratovich Aliaksandr <xskura01\@vutbr.cz>
+ * @date 07.05.2022
+ */
+
 
 #include "sequenceconnectiondialog.h"
 #include "ui_sequenceconnectiondialog.h"

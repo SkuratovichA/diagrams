@@ -1,6 +1,8 @@
-// File: mainwindow.h
-// Author: Skuratovich Aliaksandr <xskura01@vutbr.cz>
-// Date: 24.04.2022
+/** @file mainwindow.h
+ * @author Skuratovich Aliaksandr <xskura01\@vutbr.cz>
+ * @date 30.04.2022
+ */
+
 
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H

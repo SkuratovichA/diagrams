@@ -1,6 +1,9 @@
-// File: SequenceDiagramItem.cpp
-// Author: Skuratovich Aliaksandr <xskura01@vutbr.cz>
-// Date: 07.05.2022
+/** @file SequenceDiagramItem.cpp
+ * @author Skuratovich Aliaksandr <xskura01\@vutbr.cz>
+ * @author Shchapaniak Andrei <xshcha00\@vutbr.cz>
+ * @date 07.05.2022
+ */
+
 
 #include "DiagramItem.h"
 #include "SequenceDiagramLifeLine/SequenceDiagramLifeLine.h"

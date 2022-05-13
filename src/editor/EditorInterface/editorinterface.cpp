@@ -1,7 +1,9 @@
-// File: editorinterface.cpp
-// Author: Skuratovich Aliaksandr <xskura01@vutbr.cz>
-// Author: Shchapaniak Andrei <xshcha00@vutbr.cz>
-// Date: 1.5.2022
+/** @file editorinterface.cpp
+ * @author Skuratovich Aliaksandr <xskura01\@vutbr.cz>
+ * @author Shchapaniak Andrei <xshcha00\@vutbr.cz>
+ * @date 01.05.2022
+ */
+
 
 
 #include "editorinterface.h"

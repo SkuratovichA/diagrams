@@ -1,6 +1,8 @@
-// File: mainwindow.cpp
-// Author: Skuratovich Aliaksandr <xskura01@vutbr.cz>
-// Date: 24.04.2022
+/** @file mainwindow.cpp
+ * @author Skuratovich Aliaksandr <xskura01\@vutbr.cz>
+ * @date 30.04.2022
+ */
+
 
 #include "mainwindow.h"
 #include "ui_mainwindow.h"

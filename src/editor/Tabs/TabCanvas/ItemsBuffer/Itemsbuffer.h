@@ -1,6 +1,8 @@
-// File: Itemsbuffer.h
-// Author: Shchapaniak Andrei <xshcha00@vutbr.cz>
-// Date: 07.05.2022
+/** @file ItemBuffer.h
+ * @author Shchapaniak Andrei <xshcha00\@vutbr.cz>
+ * @date 07.05.2022
+ */
+
 
 #ifndef DIAGRAMS_ITEMSBUFFER_H
 #define DIAGRAMS_ITEMSBUFFER_H

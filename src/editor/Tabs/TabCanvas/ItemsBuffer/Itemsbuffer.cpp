@@ -1,6 +1,7 @@
-// File: Itemsbuffer.cpp
-// Author: Shchapaniak Andrei <xshcha00@vutbr.cz>
-// Date: 07.05.2022
+/** @file ItemBuffer.cpp
+ * @author Shchapaniak Andrei <xshcha00\@vutbr.cz>
+ * @date 07.05.2022
+ */
 
 #include "Itemsbuffer.h"
 #include "../../DiagramItem/DiagramItem.h"

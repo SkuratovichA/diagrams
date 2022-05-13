@@ -1,6 +1,9 @@
-// File: DiagramItem.cpp
-// Author: Shchapaniak Andrei <xshcha00@vutbr.cz>
-// Date: 07.05.2022
+/** @file DiagramItem.cpp
+ * @author Skuratovich Aliaksandr <xskura01\@vutbr.cz>
+ * @author Shchapaniak Andrei <xshcha00\@vutbr.cz>
+ * @date 07.05.2022
+ */
+
 
 #include "DiagramItem.h"
 

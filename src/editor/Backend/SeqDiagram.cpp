@@ -1,6 +1,8 @@
-// File: SeqDiagram.cpp
-// Author: Shchapaniak Andrei <xshcha00@vutbr.cz>
-// Date: 07.05.2022
+/** @file SeqDiagram.cpp
+ * @author Shchapaniak Andrei <xshcha00\@vutbr.cz>
+ * @date 07.05.2022
+ */
+
 
 #include "Parse.h"
 

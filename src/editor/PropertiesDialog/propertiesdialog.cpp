@@ -1,6 +1,7 @@
-// File: propertiesdialog.cpp
-// Author: Skuratovich Aliaksandr <xskura01@vutbr.cz>
-// Date: 7.5.2022
+/** @file propertiesdialog.cpp
+ * @author Skuratovich Aliaksandr <xskura01\@vutbr.cz>
+ * @date 09.05.2022
+ */
 
 #include <QListWidgetItem>
 #include <QMessageBox>

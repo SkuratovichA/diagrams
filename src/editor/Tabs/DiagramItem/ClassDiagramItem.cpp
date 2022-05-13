@@ -1,7 +1,9 @@
-// File: ClassDiagramItem.cpp
-// Author: Skuratovich Aliaksandr <xskura01@vutbr.cz>
-// Author: Shchapaniak Andrei <xshcha00@vutbr.cz>
-// Date: 07.05.2022
+/** @file ClassDiagramItem.cpp
+ * @author Skuratovich Aliaksandr <xskura01\@vutbr.cz>
+ * @author Shchapaniak Andrei <xshcha00\@vutbr.cz>
+ * @date 03.05.2022
+ */
+
 
 #include "DiagramItem.h"
 
@@ -11,7 +13,6 @@
 #include <QGraphicsSceneMouseEvent>
 #include <QPainter>
 #include <QInputEvent>
-
 
 ClassDiagramItem::ClassDiagramItem(ClassDiagramItemParameters *params)
         : DiagramItem(params->width(),
@@ -24,7 +25,9 @@ ClassDiagramItem::ClassDiagramItem(ClassDiagramItemParameters *params)
     _flags = Qt::TextInteractionFlag::TextEditable |
              Qt::TextInteractionFlag::TextSelectableByMouse |
              Qt::TextInteractionFlag::TextSelectableByKeyboard;
-    setFlags(QGraphicsItem::ItemIsSelectable | QGraphicsItem::ItemIsMovable | QGraphicsItem::ItemSendsGeometryChanges);
+    setFlags(QGraphicsItem::ItemIsSelectable |
+             QGraphicsItem::ItemIsMovable |
+             QGraphicsItem::ItemSendsGeometryChanges);
 
     int line = 1;
 

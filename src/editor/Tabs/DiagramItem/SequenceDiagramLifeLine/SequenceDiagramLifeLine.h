@@ -1,6 +1,7 @@
-// File: SequenceDiagramLifeLine.h
-// Author: Skuratovich Aliaksandr <xskura01@vutbr.cz>
-// Date: 07.05.2022
+/** @file SequenceDiagramLifeLine.h
+ * @author Skuratovich Aliaksandr <xskura01\@vutbr.cz>
+ * @date 04.05.2022
+ */
 
 
 #ifndef DIAGRAMS_SEQUENCEDIAGRAMLIFELINE_H
