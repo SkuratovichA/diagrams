@@ -108,7 +108,7 @@ void DeleteCommand::redo() {
                 graphicsScene->removeItem(connection);
             }
         } else if (dynamic_cast<SequenceDiagramItem *>(x) != nullptr) {
-            auto connections = dynamic_cast<SequenceDiagramItem *>(x)->getRemovedConnectionsOnDeleteSelf();
+            auto connections = dynamic_cast<SequenceDiagramItem *>(x)->connections();
             for (auto connection: connections) {
                 auto nodeFrom = connection->nodeFrom();
                 auto nodeTo = connection->nodeTo();
