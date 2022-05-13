@@ -17,6 +17,8 @@ mainWindow::mainWindow(QWidget *parent)
     ui->setupUi(this);
     setWindowTitle("Diagram");
 
+
+
     QDir directory(QDir::current());
     if (directory.isEmpty()) {
         return;
