@@ -37,10 +37,12 @@ editorInterface::editorInterface(
     setAttribute(Qt::WA_DeleteOnClose); // automatically delete itself when window is closed
 
     openDiagram = false;
+    QFile *file;
 
     switch (new_type) {
         case EXAMPLE_FILE:
-            filename = exampleName;
+            file = new QFile("examples/" + exampleName);
+            filename = QFileInfo(*file).absoluteFilePath();
             openDiagram = true;
             break;
         case OPEN_FILE:
