@@ -19,6 +19,7 @@ SequenceCanvas::SequenceCanvas(QWidget *parent, QUndoGroup *parentGroup) : TabCa
     parentInterface = dynamic_cast<editorInterface *>(parent);
     createScene();
     createSequenceContextMenu();
+
 }
 
 QPoint SequenceCanvas::generateCoords() const {

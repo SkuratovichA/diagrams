@@ -48,7 +48,7 @@ public:
         _rightObj = rightObj;
         _rightNum = rightNum;
         _msg = msg;
-        _type = type;
+        _typeConnection = type;
         _order = order;
     };
 
@@ -96,8 +96,8 @@ public:
      * @brief Getter
      * @return type of a connection
      */
-    int type() {
-        return _type;
+    int typeConnection() {
+        return _typeConnection;
     }
 
     /**
@@ -113,7 +113,7 @@ private:
     QString _leftNum; ///< Ordinality of a left object
     QString _rightObj; ///< The object a connection ends at
     QString _rightNum; ///< Ordinality of a right object
-    int _type; ///< Type of a connection
+    int _typeConnection; ///< Type of a connection
     QString _msg; ///< Message above a connection
     int _order; ///< Serial number of a connection - its order
 };
@@ -265,7 +265,7 @@ public:
      * @brief Getter.
      * @return QStraing type
      */
-    QString type() const {
+    QString typeClass() const {
         return _type;
     }
 

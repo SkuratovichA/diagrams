@@ -17,8 +17,8 @@
 ClassDiagramItem::ClassDiagramItem(ClassDiagramItemParameters *params)
         : DiagramItem(params->width(),
                       params->height(),
-                      DiagramItem::Class,
-                      params->color()) {
+                      params->color(),
+                      params->typeClass()) {
 
     QGraphicsLineItem *lineAttr;
     ClassTextAttr *textAttr;
@@ -38,7 +38,7 @@ ClassDiagramItem::ClassDiagramItem(ClassDiagramItemParameters *params)
     qreal Pos = (params->width() - _head->boundingRect().width()) / 2;
     _head->setPos(Pos, -40);
 
-    if (params->type() == "Class") {
+    if (params->typeClass() == "Class") {
         line = 1;
         textAttr = new ClassTextAttr(this, "ATTRIBUTES", QPointF(tabText(), tabText()), Qt::NoTextInteraction);
         textAttr->setFont(QFont("Times", 10, QFont::Bold));

@@ -70,7 +70,7 @@ bool ClassCanvas::createFromFile(dgrmClass_t cls) {
         }
 
         ClassConnectionItem *item = new ClassConnectionItem(from, to, x,
-                                                            static_cast<ClassConnectionItem::ClassConnectionType>(x->type()),
+                                                            static_cast<ClassConnectionItem::ClassConnectionType>(x->typeConnection()),
                                                             x->order());
         editorScene->addItem(item);
         editorScene->update();
@@ -175,7 +175,7 @@ bool ClassCanvas::getStringRepresentation(Program &prg) {
         tmp.height = x->height();
         x->fillColor(tmp.color);
         x->fillCoords(tmp.coords);
-        tmp.type = x->type().toStdString();
+        tmp.type = x->typeClass().toStdString();
 
         if (!x->splitString(tmp.attrs, x->attrs())) {
             qDebug() << "Error with attribute, color it by red color";
@@ -197,7 +197,7 @@ bool ClassCanvas::getStringRepresentation(Program &prg) {
         tmp.rightObj = x->rightObj().toStdString();
         tmp.rightNum = x->rightNum().toStdString();
         tmp.msg = x->msg().toStdString();
-        tmp.arrow = x->type();
+        tmp.arrow = x->typeConnection();
         tmp.order = x->order();
 
         prg.diagramClass.concts.push_back(tmp);
@@ -285,9 +285,9 @@ void ClassCanvas::rmMethod_triggered() {
     }
 
     // one default METHODS
-    auto size = item->type() == QString("Interface") ? item->methods().size() + 1 : item->methods().size();
+    auto size = item->myType() == QString("Interface") ? item->methods().size() + 1 : item->methods().size();
 
-    qDebug() << size << item->typeStr();
+    qDebug() << size << item->myType();
     if (size < 2) {
         qDebug() << "No methods";
         return;
@@ -442,9 +442,11 @@ void ClassCanvas::addEntity() {
                                                 color(),
                                                 120.0, 120.0,
                                                 attrs,
-                                                methods);
+                                                methods,
+                                                type);
+
     _undoStack->push(new AddClassCommand(editorScene, createItem));
-    createItem = new classParams(point.x(), point.y(),
+    createItem = new ClassDiagramItemParameters(point.x(), point.y(),
                                  "NAME",
                                  color(),
                                  120.0, height,

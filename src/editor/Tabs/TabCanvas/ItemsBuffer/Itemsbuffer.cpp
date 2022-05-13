@@ -83,7 +83,7 @@ void ItemsBuffer::fillClassItems(ClassDiagramItem *item) {
                                          item->width(),
                                          item->height(), attrs,
                                          methods,
-                                         item->typeStr());
+                                         item->myType());
     pushClassItem(ptr);
 }
 

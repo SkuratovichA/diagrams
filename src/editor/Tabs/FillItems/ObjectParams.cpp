@@ -73,14 +73,16 @@ objectParams::objectParams(qreal x,
     _name = name;
 };
 
-ClassDiagramItemParameters::ClassDiagramItemParameters(qreal x,
+ClassDiagramItemParameters::ClassDiagramItemParameters::ClassDiagramItemParameters(
+                                                       qreal x,
                                                        qreal y,
                                                        QString name,
                                                        QColor color,
                                                        qreal width,
                                                        qreal height,
                                                        QList<QString> attrs,
-                                                       QList<QString> methods)
+                                                       QList<QString> methods,
+                                                       QString type)
         : objectParams(x, y, name, color) {
     _width = width;
     _height = height;

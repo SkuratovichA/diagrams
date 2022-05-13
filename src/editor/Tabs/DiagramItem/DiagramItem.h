@@ -164,7 +164,7 @@ public:
      * @param type diagram type
      * @param color initial color
      */
-    explicit DiagramItem(qreal width, qreal height, QString type, QColor color) {
+    explicit DiagramItem(qreal width, qreal height, QColor color, QString type) {
         _rowHeight = 30.0;
         _rowWidth = width;
         _textMargin = 2.0;
@@ -225,7 +225,7 @@ public:
      * @brief Getter. Get a diagram type
      * @return DiagramType. One of the Actor, Class
      */
-    [[nodiscard]] QString type() const {
+    [[nodiscard]] QString myType() const {
         return _type;
     }
 
@@ -247,17 +247,6 @@ public:
 
     void setBoundingBox(qreal a, qreal b, qreal c, qreal d) {
         _boundingBox = QRectF(a, b, c, d);
-    }
-
-    [[nodiscard]] QString typeStr() const {
-        switch (type()) {
-            case Actor:
-                return "Actor";
-            case Class:
-                return "Class";
-            case Interface:
-                return "Interface";
-        }
     }
 
     [[nodiscard]] qreal height() const {
@@ -314,16 +303,8 @@ private:
     qreal _height; ///< height of the object
     qreal _width; ///< width of the object
     QRectF _boundingBox; ///< bounding box for an object
-    QString _type; ///< type of an object. Either Actor or Class
+    QString _type; ///< type of an object.
     QColor _color; ///< color of an object
-    qreal _rowHeight;
-    qreal _rowWidth;
-    qreal _tabText;
-    qreal _height;
-    qreal _width;
-    QRectF _boundingBox;
-    QString _type;
-    QColor _color;
 };
 
 /**
@@ -381,8 +362,8 @@ public:
     }
 
     /**
-     * @brief Setter. Remove or restore an object. Used in sequence digrama checks
-     * @param isDeleted New value
+     * @brief Setter. Remove or restore an object. Used in sequence diagram checks
+     * @param isDeleted New valueither Actor or Class
      */
     void setDeleted(bool isDeleted) {
         _isDeleted = isDeleted;

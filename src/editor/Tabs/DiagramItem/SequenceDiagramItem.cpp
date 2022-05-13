@@ -20,8 +20,8 @@ SequenceDiagramItem::SequenceDiagramItem(
         ClassDiagramItem *parentClassDiagramItem_)
         : DiagramItem(80,
                       50,
-                      DiagramItem::Actor,
-                      params->color()) {
+                      params->color(),
+                      "Actor") {
     setFlag(QGraphicsItem::ItemIsSelectable);
     setFlag(QGraphicsItem::ItemIsMovable);
     setFlag(QGraphicsItem::ItemSendsGeometryChanges);
