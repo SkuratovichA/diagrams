@@ -165,6 +165,7 @@ public:
      * @param color initial color
      */
     explicit DiagramItem(qreal width, qreal height, QColor color, QString type) {
+        qDebug() << width << height;
         _rowHeight = 30.0;
         _rowWidth = width;
         _textMargin = 2.0;
@@ -350,6 +351,7 @@ public:
      * @return The centre of the object
      */
     QPointF centre() const override {
+        //qDebug() << width() << height();
         return {x() + width() / 2.0, y() + height() / 2.0};
     }
 
@@ -540,7 +542,12 @@ public:
      * @return QPointF centre of che object
      */
     [[nodiscard]] QPointF socket(uint32_t n) const {
+        if (occupiedSockets() == 1) {
+            return centre();
+        }
+
         const auto margin = std::min(std::min(height() / 2, width() / 2), 30.0);
+        //qDebug() << margin << width() << height();
         const QPointF points[3] = {QPointF(0, margin), QPointF(-margin, -margin), QPointF(-margin, margin)};
         return centre() + points[n % 3];
     }

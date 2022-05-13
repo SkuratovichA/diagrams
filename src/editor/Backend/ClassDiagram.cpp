@@ -4,6 +4,7 @@
  */
 
 #include "Parse.h"
+#include <QDebug>
 
 void Class::pushColor(const json el) {
     this->color.r = el.at("r").get<int>();
@@ -62,7 +63,9 @@ void DiagramClass::fillStructureClass(const json el, dgrmClass_t &o) {
         tmp.pushAttrs(x.at("methods"), tmp.methods);
         tmp.pushWidth(x.at("width"));
         tmp.pushHeight(x.at("height"));
-        tmp.type = el.at("type").get<std::string>();
+        qDebug() << "before read type";
+        tmp.type = x.at("type").get<std::string>();
+        qDebug() << "after read type";
         o.classes.push_back(tmp);
     }
 }

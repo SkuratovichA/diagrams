@@ -27,6 +27,10 @@ QPoint ClassCanvas::generateCoords() const {
 QList<QPair<ClassDiagramItem *, QString>> ClassCanvas::getClassStringPairs() {
     QList<QPair<ClassDiagramItem *, QString>> listPairs;
     for (auto x: getItems<ClassDiagramItem>()) {
+        if (x->myType() == "Interface") {
+            continue;
+        }
+
         QPair<ClassDiagramItem *, QString> pair;
         pair.first = x;
         pair.second = x->_head->toPlainText();
@@ -432,9 +436,9 @@ void ClassCanvas::addEntity() {
         height = 120;
         addAttr->setEnabled(true);
         rmAttr->setEnabled(true);
+        attrs.push_back("+ int name");
     }
 
-    attrs.push_back("+ int name");
     methods.push_back("+ int name()");
 
     createItem = new ClassDiagramItemParameters(point.x(), point.y(),

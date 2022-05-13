@@ -186,8 +186,9 @@ QPair<QPointF, QPointF> ClassConnectionItem::edgePoints() const {
         case 8:
             xTo = _nodeTo->centre().x() - toWidthHalf;
             yTo = -(c + a * xTo) / b; // using analytical geometry, compute the coords
-            if (octant == 1 && yTo > _nodeTo->bottomLeft().y()) {
-                yTo = _nodeTo->centre().y() + toHeightHalf;
+
+            if (yTo < nodeTo()->topLeft().y()) {
+                yTo = _nodeTo->centre().y() - toHeightHalf;
                 xTo = -(c + b * yTo) / a;
             }
 
@@ -217,7 +218,7 @@ QPair<QPointF, QPointF> ClassConnectionItem::edgePoints() const {
 
             xFrom = _nodeFrom->centre().x() - fromWidthHalf;
             yFrom = -(c + a * xFrom) / b;
-            if (yFrom > _nodeFrom->bottomLeft().y()) {
+            if (yFrom < _nodeFrom->topLeft().y()) {
                 yFrom = _nodeFrom->centre().y() - fromHeightHalf;
                 xFrom = -(c + b * yFrom) / a;
             }
