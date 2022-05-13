@@ -328,13 +328,17 @@ public:
      * @brief Add a connection to the set of connections for certain item.
      * @param connection relation arrow between objects
      */
-    void addConnection(ClassConnectionItem *connection);
+    void addConnection(ClassConnectionItem *connection,
+                       CommandType::CommandType commandType,
+                       CommandType::RequestType requestType);
 
     /**
      * @brief Remove a connection to the set of connections for certain item.
      * @param connection relation arrow between objects
      */
-    void removeConnection(ClassConnectionItem *connection);
+    void removeConnection(ClassConnectionItem *connection,
+                          CommandType::CommandType commandType,
+                          CommandType::RequestType requestType);
 
 public:
     /**
@@ -486,11 +490,11 @@ public:
         _attrsLines.push_back(item);
     }
 
-     /**
-      * @brief Move all lines when new attribute or method is added
-      * @param startPosition start position
-      * @param numberOfAttributes number of attributes
-      */
+    /**
+     * @brief Move all lines when new attribute or method is added
+     * @param startPosition start position
+     * @param numberOfAttributes number of attributes
+     */
     void moveLines(int startPosition, long long numberOfAttributes) {
         for (QGraphicsLineItem *val: _methodsLines) {
             val->setPos(0, static_cast<double>(numberOfAttributes + startPosition) * rowHeight());
@@ -600,6 +604,38 @@ public:
     }
 
     /**
+        * @brief Getter. Get connections, that were deleted by an object itself on delete command
+        * @return connections
+        */
+    const QSet<ClassConnectionItem *> &getRemovedConnectionsOnDeleteSelf() const {
+        return _removedConnectionsOnDeleteSelf;
+    }
+
+    /**
+     * @brief Getter. Get connections, that were removed by a connection on delete comand
+     * @return connections
+     */
+    const QSet<ClassConnectionItem *> &getRemovedConnectionsOnDeleteConnection() const {
+        return _removedConnectionsOnDeleteConnection;
+    }
+
+    /**
+     * @brief Getter. Get connections, that were removed by an object itself on undo add command
+     * @return connections
+     */
+    const QSet<ClassConnectionItem *> &getRemovedConnectionsOnAddSelf() const {
+        return _removedConnectionsOnAddSelf;
+    }
+
+    /**
+     * Get connection, that were removed by a connection on undo add command
+     * @return
+     */
+    const QSet<ClassConnectionItem *> &getRemovedConnectionsOnAddConnection() const {
+        return _removedConnectionsOnAddConnection;
+    }
+
+    /**
      * Overriden function. Mouse press event
      * @param event an event
      */
@@ -621,9 +657,13 @@ private:
     QList<QGraphicsLineItem *> _methodsLines; ///< lines separating the class methods
     QFlags<Qt::TextInteractionFlag> _flags; ///< flags for text manipulation
 
-    QSet<ClassConnectionItem *> _connections; ///< class connections
-
     bool _isDeleted = false; ///< if deleted. Affects SequenceDiagramItem.
+
+    QSet<ClassConnectionItem *> _connections = QSet<ClassConnectionItem *>(); ///< connections to track
+    QSet<ClassConnectionItem *> _removedConnectionsOnDeleteSelf = QSet<ClassConnectionItem *>(); ///< see the name
+    QSet<ClassConnectionItem *> _removedConnectionsOnDeleteConnection = QSet<ClassConnectionItem *>(); ///< see the name
+    QSet<ClassConnectionItem *> _removedConnectionsOnAddSelf = QSet<ClassConnectionItem *>(); ///< see the name
+    QSet<ClassConnectionItem *> _removedConnectionsOnAddConnection = QSet<ClassConnectionItem *>(); ///< see the name
 };
 
 /**
