@@ -235,7 +235,7 @@ public:
      */
     explicit AddClassConnectionCommand(ClassDiagramItem *fromNode,
                                        ClassDiagramItem *toNode,
-                                       ClassDiagramConnectionParams *params,
+                                       relationsParams *params,
                                        ClassConnectionItem::ClassConnectionType type,
                                        QGraphicsScene *scene,
                                        QUndoCommand *parent = nullptr);

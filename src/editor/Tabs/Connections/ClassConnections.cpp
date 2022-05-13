@@ -15,7 +15,7 @@
 
 ClassConnectionItem::ClassConnectionItem(ClassDiagramItem *fromNode,
                                          ClassDiagramItem *toNode,
-                                         ClassDiagramConnectionParams *params,
+                                         relationsParams *params,
                                          ClassConnectionType type,
                                          uint32_t order,
                                          QColor color

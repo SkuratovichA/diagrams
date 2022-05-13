@@ -24,7 +24,7 @@ namespace ObjectParams {
 /**
  * Parameters of class diagram connections class
  */
-class ClassDiagramConnectionParams {
+class relationsParams {
 public:
     /**
      * @brief A constructor.
@@ -36,11 +36,11 @@ public:
      * @param type connection type
      * @param order serial number of a connection
      */
-    ClassDiagramConnectionParams(QString leftObj, QString leftNum,
-                                 QString rightObj, QString rightNum,
-                                 QString msg,
-                                 int type,
-                                 int order) {
+    relationsParams(QString leftObj, QString leftNum,
+                    QString rightObj, QString rightNum,
+                    QString msg,
+                    int type,
+                    int order) {
         _leftObj = leftObj;
         _leftNum = leftNum;
         _rightObj = rightObj;

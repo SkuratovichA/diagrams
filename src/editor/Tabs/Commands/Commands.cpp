@@ -179,7 +179,7 @@ void AddClassCommand::redo() {
 
 AddClassConnectionCommand::AddClassConnectionCommand(ClassDiagramItem *fromNode,
                                                      ClassDiagramItem *toNode,
-                                                     ClassDiagramConnectionParams *params,
+                                                     relationsParams *params,
                                                      ClassConnectionItem::ClassConnectionType type,
                                                      QGraphicsScene *scene,
                                                      QUndoCommand *parent)

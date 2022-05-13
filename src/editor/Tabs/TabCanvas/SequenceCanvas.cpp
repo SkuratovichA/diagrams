@@ -3,7 +3,6 @@
 // Author: Shchapaniak Andrei <xshcha00@vutbr.cz>
 // Date: 07.05.2022
 
-#include <QGraphicsView>
 #include <QUndoStack>
 #include <QColor>
 #include <QRandomGenerator>
@@ -15,7 +14,6 @@
 #include "../../EditorInterface/editorinterface.h"
 #include "SequenceConnectionDialog/sequenceconnectiondialog.h"
 #include <regex>
-
 
 SequenceCanvas::SequenceCanvas(QWidget *parent, QUndoGroup *parentGroup) : TabCanvas(parent, parentGroup) {
     parentInterface = dynamic_cast<editorInterface *>(parent);
@@ -64,7 +62,9 @@ bool SequenceCanvas::createFromFile(dgrmSeq_t seq) {
             return false;
         }
 
-        SequenceConnectionItem *item = new SequenceConnectionItem(from, to, x,
+        SequenceConnectionItem *item = new SequenceConnectionItem(from,
+                                                                  to,
+                                                                  x,
                                                                   static_cast<Connections::ConnectionType>(x->type()));
         editorScene->addItem(item);
         editorScene->update();
@@ -77,12 +77,17 @@ bool SequenceCanvas::checkIdenticalNames() {
     QList<SequenceConnectionItem *> itemsCoonnections = getItems<SequenceConnectionItem>();
 
     for (auto x: itemsCoonnections) {
-        if (!ObjectParams::checkMethod(x) && x->connectionType() != ConnectionType::Create
-            && x->connectionType() != ConnectionType::Delete) {
+        auto inconsistentMethod =
+                !ObjectParams::checkMethod(x)
+                && x->connectionType() != ConnectionType::Create
+                && x->connectionType() != ConnectionType::Delete;
+
+        if (inconsistentMethod) {
             auto methodNames = x->nodeTo()->parentClassDiagramItem()->methods();
             auto methodsToShow = QString();
-
+            // get all meethods to print them
             for (auto x: methodNames) {
+                // really shitty condition
                 if (x->toPlainText() != "METHODS") {
                     methodsToShow += x->toPlainText() + "\n";
                 }
@@ -207,10 +212,12 @@ void SequenceCanvas::deleteMessage_triggered() {
 void SequenceCanvas::addEntity(ClassDiagramItem *classDiagramItemParent) {
     QPoint point = generateCoords();
 
-    createActor = new SequenceDiagramItemParameters(point.x(), point.y(), classDiagramItemParent->name(),
+    createActor = new SequenceDiagramItemParameters(point.x(), point.y(),
+                                                    classDiagramItemParent->name(),
                                                     classDiagramItemParent->color());
-    _undoStack->push(
-            new AddSequenceCommand(editorScene, createActor, classDiagramItemParent)
+    _undoStack->push(new AddSequenceCommand(editorScene,
+                                            createActor,
+                                            classDiagramItemParent)
     );
 
     delete createActor;
@@ -225,6 +232,7 @@ void SequenceCanvas::addConnection() {
     auto emptySelect =
             (nodes == QPair<SequenceDiagramItem *, SequenceDiagramItem *>())
             || nodes.first == nodes.second;
+
     if (emptySelect) {
         return;
     }
@@ -236,11 +244,17 @@ void SequenceCanvas::addConnection() {
         return;
     }
 
-    paramsMessage = new messageParams(0, 200, "TEXT", nodes.first->name(), nodes.second->name(), index);
+    paramsMessage = new messageParams(0, 200,
+                                      "TEXT",
+                                      nodes.first->name(),
+                                      nodes.second->name(),
+                                      index);
 
-    _undoStack->push(
-            new AddSequenceConnectionCommand(nodes.first, nodes.second, paramsMessage, index, editorScene)
-    );
+    _undoStack->push(new AddSequenceConnectionCommand(nodes.first,
+                                                      nodes.second,
+                                                      paramsMessage,
+                                                      index,
+                                                      editorScene));
 
     delete paramsMessage;
 }

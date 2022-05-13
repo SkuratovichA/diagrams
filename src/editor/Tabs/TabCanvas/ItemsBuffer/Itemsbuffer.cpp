@@ -14,24 +14,24 @@ ItemsBuffer::~ItemsBuffer() {
 }
 
 void ItemsBuffer::addRelationItems(ClassDiagramConnectionRepresentation conct) {
-    ClassDiagramConnectionParams *prm = new ClassDiagramConnectionParams(QString::fromStdString(conct.leftObj),
-                                                                         QString::fromStdString(conct.leftNum),
-                                                                         QString::fromStdString(conct.rightObj),
-                                                                         QString::fromStdString(conct.rightNum),
-                                                                         QString::fromStdString(conct.msg),
-                                                                         conct.arrow, conct.order);
+    relationsParams *prm = new relationsParams(QString::fromStdString(conct.leftObj),
+                                               QString::fromStdString(conct.leftNum),
+                                               QString::fromStdString(conct.rightObj),
+                                               QString::fromStdString(conct.rightNum),
+                                               QString::fromStdString(conct.msg),
+                                               conct.arrow, conct.order);
 
     pushRelationItem(prm);
 }
 
 void ItemsBuffer::fillRelationItems(ClassConnectionItem *item) {
-    ClassDiagramConnectionParams *ptr = new ClassDiagramConnectionParams(item->nodeFrom()->name(),
-                                                                         item->getLeftNum()->toPlainText(),
-                                                                         item->nodeTo()->name(),
-                                                                         item->getRightNum()->toPlainText(),
-                                                                         item->getMsg()->toPlainText(),
-                                                                         item->connectionType(),
-                                                                         item->order());
+    relationsParams *ptr = new relationsParams(item->nodeFrom()->name(),
+                                               item->getLeftNum()->toPlainText(),
+                                               item->nodeTo()->name(),
+                                               item->getRightNum()->toPlainText(),
+                                               item->getMsg()->toPlainText(),
+                                               item->connectionType(),
+                                               item->order());
 
     pushRelationItem(ptr);
 }

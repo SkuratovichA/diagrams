@@ -59,7 +59,7 @@ public:
     void fillClassItems(ClassDiagramItem *item);
 
     /**
-     * @brief Fill the structure relationParams from json to another structure
+     * @brief Fill the structure relationsParams from json to another structure
      * for the next object created on the scene.
      * @param conct structure with the data
      */
@@ -95,7 +95,7 @@ public:
      * @brief Getter.
      * @return _relationItems
      */
-    QList<ClassDiagramConnectionParams *> relationItems() {
+    QList<relationsParams *> relationItems() {
         return _relationItems;
     }
 
@@ -135,7 +135,7 @@ public:
      * @brief Add class connection parameters to the list _relationItems with these parameters
      * @param item new item
      */
-    void pushRelationItem(ClassDiagramConnectionParams *item) {
+    void pushRelationItem(relationsParams *item) {
         _relationItems.push_back(item);
     }
 
@@ -189,7 +189,7 @@ public:
 
 private:
     QList<ClassDiagramItemParameters *> _classItems; ///< list with the parameters to create classs diagram objects
-    QList<ClassDiagramConnectionParams *> _relationItems; ///< list with the parameters to create relations between classes
+    QList<relationsParams *> _relationItems; ///< list with the parameters to create relations between classes
     QList<SequenceDiagramItemParameters *> _actorItems; ///< list with the parameters to create sequence diagram objects
     QList<messageParams *> _messageItems; ///< list with the messages to create objects of SequenceConnectionItem class
 };

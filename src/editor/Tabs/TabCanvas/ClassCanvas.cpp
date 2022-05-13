@@ -3,7 +3,6 @@
 // Author: Shchapaniak Andrei <xshcha00@vutbr.cz>
 // Date: 07.05.2022
 
-#include <QGraphicsView>
 #include <QUndoStack>
 #include <QColor>
 #include <QRandomGenerator>
@@ -71,7 +70,8 @@ bool ClassCanvas::createFromFile(dgrmClass_t cls) {
         }
 
         ClassConnectionItem *item = new ClassConnectionItem(from, to, x,
-                        static_cast<ClassConnectionItem::ClassConnectionType>(x->type()), x->order());
+                                                            static_cast<ClassConnectionItem::ClassConnectionType>(x->type()),
+                                                            x->order());
         editorScene->addItem(item);
         editorScene->update();
     }
@@ -84,8 +84,8 @@ bool ClassCanvas::checkIdenticalNames() {
                   "with identical names on the scene. The names of these objects have "
                   "been colored red. Change them and try to save again.";
     QList<ClassDiagramItem *> classItems = getItems<ClassDiagramItem>();
-    for (auto x : classItems) {
-        for (auto y : classItems) {
+    for (auto x: classItems) {
+        for (auto y: classItems) {
             if (x->name() != y->name() || x == y) {
                 continue;
             }
@@ -97,7 +97,7 @@ bool ClassCanvas::checkIdenticalNames() {
         }
     }
 
-    for (auto x : classItems) {
+    for (auto x: classItems) {
         x->_head->setDefaultTextColor(Qt::black);
     }
 
@@ -130,8 +130,8 @@ bool ClassCanvas::comparePermissions(QGraphicsTextItem *y, QString str) {
 bool ClassCanvas::checkPermissions() {
     QList<ClassDiagramItem *> classItems = getItems<ClassDiagramItem>();
 
-    for (auto x : classItems) {
-        for (auto y : x->methods()) {
+    for (auto x: classItems) {
+        for (auto y: x->methods()) {
             if (y->toPlainText() == "METHODS") {
                 continue;
             }
@@ -141,7 +141,7 @@ bool ClassCanvas::checkPermissions() {
             }
         }
 
-        for (auto y : x->attrs()) {
+        for (auto y: x->attrs()) {
             if (!comparePermissions(y, "attributes")) {
                 return false;
             }
@@ -151,10 +151,6 @@ bool ClassCanvas::checkPermissions() {
     return true;
 }
 
-/**
- * // TODO
- * @param prg
- */
 bool ClassCanvas::getStringRepresentation(Program &prg) {
     std::vector<Class> objects;
     std::vector<ClassDiagramConnectionRepresentation> connects;
@@ -179,7 +175,6 @@ bool ClassCanvas::getStringRepresentation(Program &prg) {
         tmp.height = x->height();
         x->fillColor(tmp.color);
         x->fillCoords(tmp.coords);
-        //tmp.id = x->id();
 
         if (!x->splitString(tmp.attrs, x->attrs())) {
             qDebug() << "Error with attribute, color it by red color";
@@ -203,8 +198,6 @@ bool ClassCanvas::getStringRepresentation(Program &prg) {
         tmp.msg = x->msg().toStdString();
         tmp.arrow = x->type();
         tmp.order = x->order();
-        //tmp.leftObjId = x->leftObjId();
-        //tmp.rightObjId = x->rightObjId();
 
         prg.diagramClass.concts.push_back(tmp);
     }
@@ -269,7 +262,9 @@ void ClassCanvas::addMethod_triggered() {
     auto line = item->createLine(0, item->height());
     item->pushMethodLine(line);
 
-    auto *text = new ClassTextAttr(item, "+ int example()", QPointF(item->tabText(), item->height() + item->tabText()),
+    auto *text = new ClassTextAttr(item,
+                                   "+ int example()",
+                                   QPointF(item->tabText(), item->height() + item->tabText()),
                                    item->flags());
     item->pushMethod(text);
 
@@ -326,7 +321,6 @@ void ClassCanvas::addAttr_triggered() {
     auto line = item->createLine(0, inc * item->rowHeight());
     item->pushAttrLine(line);
 
-    //auto text = item->createText(item->tabText(), item->rowHeight() * inc + item->tabText(), "+ int word");
     ClassTextAttr *text = new ClassTextAttr(item, "+ int word", QPointF(item->tabText(),
                                                                         item->rowHeight() * inc + item->tabText()),
                                             item->flags());
@@ -415,34 +409,32 @@ void ClassCanvas::addEntity() {
     createItem = new ClassDiagramItemParameters(point.x(), point.y(), "NAME",
                                                 color(), 120.0, 120.0,
                                                 attrs, methods);
-    _undoStack->push(
-            new AddClassCommand(editorScene, createItem)
-    );
+    _undoStack->push(new AddClassCommand(editorScene, createItem));
     delete createItem;
 }
 
-/**
- * // TODO
- */
 void ClassCanvas::addConnection() {
     auto nodes = getSelectedDiagramItems<ClassDiagramItem>();
     auto emptySelect = nodes == QPair<ClassDiagramItem *, ClassDiagramItem *>();
+
     if (emptySelect) {
         return;
     }
 
-
-    createRelation = new relationsParams(nodes.first->name(), "1..n",nodes.second->name(),
-                                         "0..n","MSG",  ClassConnectionItem::Dependency, 0);
-    _undoStack->push(
-            new AddClassConnectionCommand(nodes.first, nodes.second, createRelation, ClassConnectionItem::Dependency,
-                                          editorScene)
+    createRelation = new relationsParams(nodes.first->name(),
+                                         "1..n",
+                                         nodes.second->name(),
+                                         "0..n",
+                                         "MSG",
+                                         ClassConnectionItem::Dependency, 0);
+    _undoStack->push(new AddClassConnectionCommand(nodes.first,
+                                                   nodes.second,
+                                                   createRelation,
+                                                   ClassConnectionItem::Dependency,
+                                                   editorScene)
     );
 }
 
-/**
- * Paste all selected items from the local "copy" buffer to the scene.
- */
 void ClassCanvas::paste() {
     for (auto ptr: buffer->classItems()) {
         auto *diagramItem = new ClassDiagramItem(ptr);
@@ -452,9 +444,6 @@ void ClassCanvas::paste() {
     editorScene->update();
 }
 
-/**
- * Copy all selected items to the local "copy" buffer from the scene.
- */
 void ClassCanvas::copy() {
     ClassDiagramItem *ptr;
     QList<QGraphicsItem *> items = editorScene->selectedItems();
@@ -467,10 +456,6 @@ void ClassCanvas::copy() {
     }
 }
 
-/**
- * Copy all selected items to the local "copy" buffer from the scene
- * and the delete them.
- */
 void ClassCanvas::cut() {
     copy();
     QList<QGraphicsItem *> items = editorScene->selectedItems();
@@ -479,16 +464,10 @@ void ClassCanvas::cut() {
     }
 }
 
-/**
- * Decrease Z value of the selected items and send them to back.
- */
 void ClassCanvas::toBack() {
     _toZchange<ClassCanvas>(false);
 }
 
-/**
- * Increase Z value of the selected items and send them to front.
- */
 void ClassCanvas::toFront() {
     _toZchange<ClassCanvas>(true);
 }
