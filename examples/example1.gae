@@ -1,0 +1,224 @@
+{
+    "class_dgrm": {
+        "class": [
+            {
+                "attrs": [
+                    {
+                        "name": "studentNumber ",
+                        "perm": "+",
+                        "type": "int"
+                    },
+                    {
+                        "name": "averageMark",
+                        "perm": "+",
+                        "type": "int"
+                    }
+                ],
+                "color": {
+                    "a": 180,
+                    "b": 194,
+                    "g": 181,
+                    "r": 235
+                },
+                "coords": {
+                    "x": 197.0,
+                    "y": 497.0
+                },
+                "height": 180.0,
+                "methods": [
+                    {
+                        "name": "isEligibleToEnroll(str) ",
+                        "perm": "+",
+                        "type": "bool"
+                    },
+                    {
+                        "name": "getSeminarsTaken()",
+                        "perm": "+",
+                        "type": "int"
+                    }
+                ],
+                "name": "Student",
+                "type": "Class",
+                "width": 230.0
+            },
+            {
+                "attrs": [
+                    {
+                        "name": "street",
+                        "perm": "+",
+                        "type": "string"
+                    },
+                    {
+                        "name": "city",
+                        "perm": "+",
+                        "type": "string"
+                    },
+                    {
+                        "name": "state",
+                        "perm": "+",
+                        "type": "string"
+                    },
+                    {
+                        "name": "postalCode ",
+                        "perm": "+",
+                        "type": "int"
+                    },
+                    {
+                        "name": "country",
+                        "perm": "+",
+                        "type": "string"
+                    }
+                ],
+                "color": {
+                    "a": 180,
+                    "b": 229,
+                    "g": 21,
+                    "r": 105
+                },
+                "coords": {
+                    "x": 1112.0,
+                    "y": 142.0
+                },
+                "height": 270.0,
+                "methods": [
+                    {
+                        "name": "validate()",
+                        "perm": "-",
+                        "type": "bool"
+                    },
+                    {
+                        "name": "outputAsLabel()",
+                        "perm": "+",
+                        "type": "string"
+                    }
+                ],
+                "name": "Address",
+                "type": "Class",
+                "width": 180.0
+            },
+            {
+                "attrs": [
+                    {
+                        "name": "name",
+                        "perm": "+",
+                        "type": "string"
+                    },
+                    {
+                        "name": "phoneNumber",
+                        "perm": "+",
+                        "type": "string"
+                    },
+                    {
+                        "name": "emailAddress",
+                        "perm": "+",
+                        "type": "string"
+                    }
+                ],
+                "color": {
+                    "a": 180,
+                    "b": 18,
+                    "g": 122,
+                    "r": 135
+                },
+                "coords": {
+                    "x": 533.0,
+                    "y": 155.0
+                },
+                "height": 180.0,
+                "methods": [
+                    {
+                        "name": "purchaseParkingPass()",
+                        "perm": "+",
+                        "type": "void"
+                    }
+                ],
+                "name": "Person",
+                "type": "Class",
+                "width": 230.0
+            },
+            {
+                "attrs": [
+                    {
+                        "name": "salary",
+                        "perm": "~",
+                        "type": "int"
+                    },
+                    {
+                        "name": "staffNumber",
+                        "perm": "#",
+                        "type": "int"
+                    },
+                    {
+                        "name": "yearsOfService",
+                        "perm": "-",
+                        "type": "int"
+                    },
+                    {
+                        "name": "numberOfClasses",
+                        "perm": "+",
+                        "type": "int"
+                    }
+                ],
+                "color": {
+                    "a": 180,
+                    "b": 179,
+                    "g": 135,
+                    "r": 147
+                },
+                "coords": {
+                    "x": 810.0,
+                    "y": 503.0
+                },
+                "height": 180.0,
+                "methods": null,
+                "name": "Professor",
+                "type": "Class",
+                "width": 190.0
+            }
+        ],
+        "connections": [
+            {
+                "arrow": 2,
+                "left_num": "",
+                "left_obj": "Person",
+                "msg": "",
+                "order": 2,
+                "right_num": "",
+                "right_obj": "Professor"
+            },
+            {
+                "arrow": 2,
+                "left_num": "",
+                "left_obj": "Person",
+                "msg": "",
+                "order": 1,
+                "right_num": "",
+                "right_obj": "Student"
+            },
+            {
+                "arrow": 3,
+                "left_num": "0..1",
+                "left_obj": "Person",
+                "msg": "lives at",
+                "order": 0,
+                "right_num": "1",
+                "right_obj": "Address"
+            },
+            {
+                "arrow": 3,
+                "left_num": "1..5",
+                "left_obj": "Professor",
+                "msg": "supervises",
+                "order": 0,
+                "right_num": "0..n",
+                "right_obj": "Student"
+            }
+        ]
+    },
+    "seq_dgrm": [
+        {
+            "actions": null,
+            "actors": null
+        }
+    ]
+}
