@@ -220,9 +220,8 @@ void AddClassConnectionCommand::redo() {
     auto nodeFrom = classConnection->nodeFrom();
     auto nodeTo = classConnection->nodeTo();
 
-        nodeFrom->addConnection(classConnection,  CommandType::Add, CommandType::Connection);
-        nodeTo->addConnection(classConnection, CommandType::Add, CommandType::Connection);
-        graphicsScene->addItem(classConnection);
+    nodeFrom->addConnection(classConnection,  CommandType::Add, CommandType::Connection);
+    nodeTo->addConnection(classConnection, CommandType::Add, CommandType::Connection);
 
     graphicsScene->addItem(classConnection);
     graphicsScene->clearSelection();
