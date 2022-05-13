@@ -173,8 +173,10 @@ public:
                 items.removeFirst();
                 // fallthrough
             case 1:
-                // take the "rest of a list"
                 rest = dynamic_cast<T *>(items.first());
+                if (dynamic_cast<SequenceDiagramItem *>(first) != nullptr && first == rest) {
+                    return QPair<T *, T*>();
+                }
                 break;
             default:
                 items.removeFirst();
