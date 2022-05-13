@@ -62,6 +62,7 @@ void DiagramClass::fillStructureClass(const json el, dgrmClass_t &o) {
         tmp.pushAttrs(x.at("methods"), tmp.methods);
         tmp.pushWidth(x.at("width"));
         tmp.pushHeight(x.at("height"));
+        tmp.type = el.at("type").get<std::string>();
         o.classes.push_back(tmp);
     }
 }
@@ -106,7 +107,8 @@ void DiagramClass::addClassToFile(json &j, std::vector<Class> cl) {
                         {"attrs",   addAttrs(x.attrs)},
                         {"methods", addAttrs(x.methods)},
                         {"width",   x.width},
-                        {"height",  x.height}
+                        {"height",  x.height},
+                        {"type",    x.type}
                 };
     }
 }

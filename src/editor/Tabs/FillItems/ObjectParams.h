@@ -237,7 +237,8 @@ public:
                                qreal width,
                                qreal height,
                                QList<QString> attrs,
-                               QList<QString> methods);
+                               QList<QString> methods,
+                               QString type);
 
     /**
      * @brief A Destructor.
@@ -261,6 +262,14 @@ public:
     }
 
     /**
+     * @brief Getter.
+     * @return QStraing type
+     */
+    QString type() const {
+        return _type;
+    }
+
+    /**
      * @brief Split every string in an arrray
      * @param at positions
      * @param arr array with strings
@@ -271,6 +280,7 @@ public:
 private:
     QList<QString> _attrs; ///< list with class attributes
     QList<QString> _methods; ///< list with class methods
+    QString _type; ///< type of a class diagram
 };
 
 /**

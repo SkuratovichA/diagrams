@@ -306,7 +306,6 @@ public:
      * @param prg
      */
     virtual bool getStringRepresentation(Program &prg) = 0;
-    // endregion
 // endregion
 
 public slots:

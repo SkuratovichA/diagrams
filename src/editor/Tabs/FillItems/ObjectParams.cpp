@@ -84,6 +84,8 @@ ClassDiagramItemParameters::ClassDiagramItemParameters(qreal x,
         : objectParams(x, y, name, color) {
     _width = width;
     _height = height;
+    _type = type;
+
     for (auto val: attrs) {
         _attrs.push_back(val);
     }
