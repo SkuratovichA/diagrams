@@ -10,44 +10,49 @@ CONFIG += c++17
 
 SOURCES += \
         src/main.cpp \
-        src/MainWIndow/mainwindow.cpp \
-        src/editor/EditorInterface/editorinterface.cpp \
-        src/editor/PropertiesDialog/propertiesdialog.cpp \
-        src/editor/Tabs/TabCanvas/ClassCanvas.cpp \
-        src/editor/Tabs/TabCanvas/SequenceConnectionDialog/sequenceconnectiondialog.cpp \
-        src/editor/Tabs/DiagramItem/DiagramItem.cpp \
-        src/editor/Tabs/DiagramItem/EditorScene/EditorScene.cpp \
-        src/editor/Tabs/DiagramItem/Commands/Commands.cpp \
-        src/editor/Tabs/DiagramItem/Connections/Connections.cpp \
-        src/editor/Tabs/TabCanvas/ItemsBuffer/Itemsbuffer.cpp \
-        src/editor/Tabs/DiagramItem/FillItems/ObjectParams.cpp \
-        src/editor/Tabs/TabCanvas/SequenceCanvas.cpp \
-        src/editor/Backend/ClassDiagram.cpp \
         src/editor/Backend/Parse.cpp \
-        src/editor/Backend/SeqDiagram.cpp
+        src/MainWIndow/mainwindow.cpp \
+        src/editor/Backend/SeqDiagram.cpp \
+        src/editor/Backend/ClassDiagram.cpp \
+        src/editor/Tabs/Commands/Commands.cpp \
+        src/editor/Tabs/TabCanvas/ClassCanvas.cpp \
+        src/editor/Tabs/FillItems/ObjectParams.cpp \
+        src/editor/Tabs/DiagramItem/DiagramItem.cpp \
+        src/editor/Tabs/EditorScene/EditorScene.cpp \
+        src/editor/Tabs/TabCanvas/SequenceCanvas.cpp \
+        src/editor/EditorInterface/editorinterface.cpp \
+        src/editor/Tabs/Connections/ClassConnections.cpp \
+        src/editor/PropertiesDialog/propertiesdialog.cpp \
+        src/editor/Tabs/DiagramItem/ClassDiagramItem.cpp \
+        src/editor/Tabs/DiagramItem/SequenceDiagramItem.cpp \
+        src/editor/Tabs/TabCanvas/ItemsBuffer/Itemsbuffer.cpp \
+        src/editor/Tabs/Connections/SequenceConnectionItem.cpp \
+        src/editor/Tabs/TabCanvas/SequenceConnectionDialog/sequenceconnectiondialog.cpp \
+        src/editor/Tabs/DiagramItem/SequenceDiagramLifeLine/SequenceDiagramLifeLine.cpp
 
 HEADERS += \
-        src/MainWIndow/mainwindow.h \
-        src/editor/PropertiesDialog/propertiesdialog.h \
-        src/editor/Tabs/DiagramItem/FillItems/ObjectParams.h \
-        src/editor/Tabs/DiagramItem/DiagramItem.h \
-        src/editor/Tabs/DiagramItem/EditorScene/EditorScene.h \
-        src/editor/Tabs/DiagramItem/Commands/Commands.h \
-        src/editor/Tabs/DiagramItem/Connections/Connections.h \
-        src/editor/EditorInterface/editorinterface.h \
-        src/editor/Tabs/TabCanvas/TabCanvas.h \
-        src/editor/Tabs/TabCanvas/SequenceConnectionDialog/sequenceconnectiondialog.h \
-        src/editor/Tabs/TabCanvas/ItemsBuffer/Itemsbuffer.h \
-        src/editor/Backend/ClassDiagram.h \
         src/editor/Backend/Parse.h \
+        src/editor/Backend/json.hpp \
+        src/MainWIndow/mainwindow.h \
         src/editor/Backend/SeqDiagram.h \
-        src/editor/Backend/json.hpp
+        src/editor/Backend/ClassDiagram.h \
+        src/editor/Tabs/Commands/Commands.h \
+        src/editor/Tabs/TabCanvas/TabCanvas.h \
+        src/editor/Tabs/FillItems/ObjectParams.h \
+        src/editor/Tabs/DiagramItem/DiagramItem.h \
+        src/editor/Tabs/EditorScene/EditorScene.h \
+        src/editor/Tabs/Connections/Connections.h \
+        src/editor/EditorInterface/editorinterface.h \
+        src/editor/PropertiesDialog/propertiesdialog.h \
+        src/editor/Tabs/TabCanvas/ItemsBuffer/Itemsbuffer.h \
+        src/editor/Tabs/TabCanvas/SequenceConnectionDialog/sequenceconnectiondialog.h \
+        src/editor/Tabs/DiagramItem/SequenceDiagramLifeLine/SequenceDiagramLifeLine.h
 
 FORMS += \
+    src/MainWIndow/mainwindow.ui \
     src/editor/EditorInterface/editorinterface.ui \
     src/editor/PropertiesDialog/propertiesdialog.ui \
     src/editor/Tabs/TabCanvas/SequenceConnectionDialog/sequenceconnectiondialog.ui
-    src/MainWIndow/mainwindow.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

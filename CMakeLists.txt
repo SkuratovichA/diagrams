@@ -1,3 +1,7 @@
+# File: mainwindow.h
+# Author: Skuratovich Aliaksandr <xskura01@vutbr.cz>
+# Date: 24.04.2022
+
 cmake_minimum_required(VERSION 3.17)
 project(diagrams)
 
@@ -7,7 +11,7 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
 
-set(CMAKE_PREFIX_PATH "/home/shchepa/Qt/6.2.3/gcc_64/lib/cmake/")
+#set(CMAKE_PREFIX_PATH "/home/shchepa/Qt/6.2.3/gcc_64/lib/cmake/")
 
 find_package(Qt6 COMPONENTS
         Core
@@ -19,41 +23,41 @@ set(CMAKE_CXX_FLAG DEBUG)
 
 add_executable(proj
         src/main.cpp
+        src/editor/Backend/Parse.cpp
         src/MainWIndow/mainwindow.cpp
-        src/editor/EditorInterface/editorinterface.cpp
-        src/editor/PropertiesDialog/propertiesdialog.cpp
+        src/editor/Backend/SeqDiagram.cpp
+        src/editor/Backend/ClassDiagram.cpp
+        src/editor/Tabs/Commands/Commands.cpp
         src/editor/Tabs/TabCanvas/ClassCanvas.cpp
-        src/editor/Tabs/TabCanvas/SequenceConnectionDialog/sequenceconnectiondialog.cpp
+        src/editor/Tabs/FillItems/ObjectParams.cpp
         src/editor/Tabs/DiagramItem/DiagramItem.cpp
         src/editor/Tabs/EditorScene/EditorScene.cpp
-        src/editor/Tabs/Commands/Commands.cpp
-        src/editor/Tabs/Connections/ClassConnections.cpp
-        src/editor/Tabs/TabCanvas/ItemsBuffer/Itemsbuffer.cpp
-        src/editor/Tabs/FillItems/ObjectParams.cpp
         src/editor/Tabs/TabCanvas/SequenceCanvas.cpp
-        src/editor/Backend/ClassDiagram.cpp
-        src/editor/Backend/Parse.cpp
-        src/editor/Backend/SeqDiagram.cpp
-        src/editor/Backend/json.hpp
-        src/editor/Tabs/Connections/SequenceConnectionItem.cpp
+        src/editor/EditorInterface/editorinterface.cpp
+        src/editor/Tabs/Connections/ClassConnections.cpp
+        src/editor/PropertiesDialog/propertiesdialog.cpp
         src/editor/Tabs/DiagramItem/ClassDiagramItem.cpp
         src/editor/Tabs/DiagramItem/SequenceDiagramItem.cpp
+        src/editor/Tabs/TabCanvas/ItemsBuffer/Itemsbuffer.cpp
+        src/editor/Tabs/Connections/SequenceConnectionItem.cpp
+        src/editor/Tabs/TabCanvas/SequenceConnectionDialog/sequenceconnectiondialog.cpp
         src/editor/Tabs/DiagramItem/SequenceDiagramLifeLine/SequenceDiagramLifeLine.cpp
 
+        src/editor/Backend/Parse.h
+        src/editor/Backend/json.hpp
         src/MainWIndow/mainwindow.h
-        src/editor/PropertiesDialog/propertiesdialog.h
+        src/editor/Backend/SeqDiagram.h
+        src/editor/Backend/ClassDiagram.h
+        src/editor/Tabs/Commands/Commands.h
+        src/editor/Tabs/TabCanvas/TabCanvas.h
         src/editor/Tabs/FillItems/ObjectParams.h
         src/editor/Tabs/DiagramItem/DiagramItem.h
         src/editor/Tabs/EditorScene/EditorScene.h
-        src/editor/Tabs/Commands/Commands.h
         src/editor/Tabs/Connections/Connections.h
         src/editor/EditorInterface/editorinterface.h
-        src/editor/Tabs/TabCanvas/TabCanvas.h
-        src/editor/Tabs/TabCanvas/SequenceConnectionDialog/sequenceconnectiondialog.h
+        src/editor/PropertiesDialog/propertiesdialog.h
         src/editor/Tabs/TabCanvas/ItemsBuffer/Itemsbuffer.h
-        src/editor/Backend/ClassDiagram.h
-        src/editor/Backend/Parse.h
-        src/editor/Backend/SeqDiagram.h
+        src/editor/Tabs/TabCanvas/SequenceConnectionDialog/sequenceconnectiondialog.h
         src/editor/Tabs/DiagramItem/SequenceDiagramLifeLine/SequenceDiagramLifeLine.h
         )
 
