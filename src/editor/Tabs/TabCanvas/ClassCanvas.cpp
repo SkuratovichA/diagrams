@@ -440,20 +440,13 @@ void ClassCanvas::addEntity() {
     createItem = new ClassDiagramItemParameters(point.x(), point.y(),
                                                 "NAME",
                                                 color(),
-                                                120.0, 120.0,
+                                                120.0, height,
                                                 attrs,
                                                 methods,
                                                 type);
 
     _undoStack->push(new AddClassCommand(editorScene, createItem));
-    createItem = new ClassDiagramItemParameters(point.x(), point.y(),
-                                 "NAME",
-                                 color(),
-                                 120.0, height,
-                                 attrs,
-                                 methods,
-                                 type);
-    _undoStack->push(new AddClassCommand(editorScene, createItem));
+
     delete createItem;
 }
 

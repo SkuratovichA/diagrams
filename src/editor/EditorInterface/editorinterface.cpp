@@ -80,6 +80,10 @@ editorInterface::~editorInterface() {
 }
 
 void editorInterface::newTabSelected() {
+    copyAction->setEnabled(true);
+    cutAction->setEnabled(true);
+    pasteAction->setEnabled(true);
+
     if (prevWidget != nullptr) {
         // moved from the sequence canvas, hence, there is a need to update all class connecitons
         auto previousSequenceCanvas = dynamic_cast<SequenceCanvas *>(prevWidget);
@@ -110,6 +114,12 @@ void editorInterface::newTabSelected() {
 
     undoStack->setActiveStack(reinterpret_cast<TabCanvas *>(tabWidget->currentWidget())->undoStack());
     prevWidget = tabWidget->currentWidget();
+    if (tabWidget->currentIndex() != 0) {
+        copyAction->setEnabled(false);
+        cutAction->setEnabled(false);
+        pasteAction->setEnabled(false);
+    }
+
     dynamic_cast<TabCanvas *>(tabWidget->currentWidget())->updateScene();
 }
 
