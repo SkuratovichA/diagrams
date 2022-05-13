@@ -142,6 +142,8 @@ void SequenceConnectionItem::paint(QPainter *painter,
 void SequenceConnectionItem::paintSynchronous(QPainter *painter,
                                               const QStyleOptionGraphicsItem *option,
                                               QWidget *widget) {
+    Q_UNUSED(option);
+    Q_UNUSED(widget);
     QPolygonF arrowHead;
     setLineNonReply();
 
@@ -160,6 +162,8 @@ void SequenceConnectionItem::paintSynchronous(QPainter *painter,
 void SequenceConnectionItem::paintAsynchronous(QPainter *painter,
                                                const QStyleOptionGraphicsItem *option,
                                                QWidget *widget) {
+    Q_UNUSED(option);
+    Q_UNUSED(widget);
     QPolygonF arrowHead;
     setLineNonReply();
 
@@ -177,6 +181,8 @@ void SequenceConnectionItem::paintAsynchronous(QPainter *painter,
 void SequenceConnectionItem::paintReply(QPainter *painter,
                                         const QStyleOptionGraphicsItem *option,
                                         QWidget *widget) {
+    Q_UNUSED(option);
+    Q_UNUSED(widget);
     QPolygonF arrowHead;
     setLineReplay();
 
@@ -195,6 +201,8 @@ void SequenceConnectionItem::paintReply(QPainter *painter,
 void SequenceConnectionItem::paintCreate(QPainter *painter,
                                          const QStyleOptionGraphicsItem *option,
                                          QWidget *widget) {
+    Q_UNUSED(option);
+    Q_UNUSED(widget);
     setLineNonReply();
 
     if (std::abs(cLine.p1().x() - cLine.p2().x()) < 15) {
@@ -210,6 +218,8 @@ void SequenceConnectionItem::paintCreate(QPainter *painter,
 void SequenceConnectionItem::paintDelete(QPainter *painter,
                                          const QStyleOptionGraphicsItem *option,
                                          QWidget *widget) {
+    Q_UNUSED(option);
+    Q_UNUSED(widget);
     setLineNonReply();
 
     if (std::abs(cLine.p1().x() - cLine.p2().x()) < 15) {

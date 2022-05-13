@@ -46,6 +46,8 @@ void SequenceDiagramLifeLine::paint(QPainter *painter, const QStyleOptionGraphic
     painter->setPen(QPen(QColor(255, 0, 0, 100), 0.5, Qt::DotLine));
     painter->drawPolygon(lineShaper());
 #endif
+    Q_UNUSED(option);
+    Q_UNUSED(widget);
 
     auto clr = _parent->color();
     clr.setAlpha(_parent->color().alpha() / 2);
@@ -131,7 +133,7 @@ QList<region_t> SequenceDiagramLifeLine::getSynchronousRegionsAsIntervals(
               }
     );
     auto pairs = QList<region_t>();
-    for (uint32_t i = 0; i < a.size(); i++) {
+    for (int i = 0; i < a.size(); i++) {
         if (i % 2 == 0) {
             // add an adjustment if type is caller.
             pairs.push_back(region_t(a[i].second->y() - _actRegLen / 2 * (a[i].first == Caller), _height));
@@ -202,7 +204,7 @@ void SequenceDiagramLifeLine::updateActiveRegions() {
             _mergedActiveRegions[i].second = std::max(_mergedActiveRegions[i + 1].second,
                                                       _mergedActiveRegions[i].second);
             auto first = _mergedActiveRegions.size();
-            _mergedActiveRegions.remove(i + 1);
+            _mergedActiveRegions.removeAt(i + 1);
             assert (_mergedActiveRegions.size() != first);
             // dont increase the counter
             continue;
@@ -215,7 +217,7 @@ void SequenceDiagramLifeLine::updateActiveRegions() {
             break;
         }
         if (_mergedActiveRegions[i].first < startPosition || _mergedActiveRegions[i].first > deletePosition) {
-            _mergedActiveRegions.remove(i);
+            _mergedActiveRegions.removeAt(i);
         } else {
             if (_mergedActiveRegions[i].second > deletePosition) {
                 _mergedActiveRegions[i].second = deletePosition;
@@ -272,7 +274,7 @@ void SequenceDiagramLifeLine::addConnection(
     }
 }
 
-void SequenceDiagramLifeLine::removeConnection(const SequenceConnectionItem *connection) {
+void SequenceDiagramLifeLine::removeConnection(SequenceConnectionItem *connection) {
     auto callerC = actorConnectionPair_t(Caller, connection);
     auto receiverC = actorConnectionPair_t(Receiver, connection);
     auto list = {&_activeRegions, &_async_replyMessages};

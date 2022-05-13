@@ -14,7 +14,7 @@
 #include <QApplication>
 #include <QSet>
 #include <QKeyEvent>
-#include <QRandomGenerator>
+//#include <QRandomGenerator>
 #include <QGraphicsPolygonItem>
 
 #include "../Connections/Connections.h"
@@ -357,7 +357,7 @@ public:
      * @brief Getter. Number of occupied sockets
      * @return number of connections the class already has
      */
-    [[nodiscard]] qsizetype occupiedSockets() const {
+    [[nodiscard]] std::size_t occupiedSockets() const { // qsizetype
         return _connections.count();
     }
 

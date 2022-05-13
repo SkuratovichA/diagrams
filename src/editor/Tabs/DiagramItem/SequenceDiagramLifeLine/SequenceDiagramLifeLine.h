@@ -63,7 +63,7 @@ public:
      * @brief Remove connectiono from a list with with connections
      * @param connection connection of class SequenceConnectionItem to remove
      */
-    void removeConnection(const SequenceConnectionItem *connection);
+    void removeConnection(SequenceConnectionItem *connection);
 
 private:
     /**

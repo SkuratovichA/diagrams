@@ -57,6 +57,7 @@ public:
             QWidget *parent = nullptr,
             QUndoGroup *parentGroup = nullptr
     ) {
+        Q_UNUSED(parent);
         _undoStack = new QUndoStack(parentGroup);
         buffer = new ItemsBuffer();
     }
@@ -252,9 +253,10 @@ public:
      * CHUJ
      */
     QColor color() const {
-        return {QRandomGenerator::global()->bounded(256),
-                QRandomGenerator::global()->bounded(256),
-                QRandomGenerator::global()->bounded(256),
+        srand (time(NULL));
+        return {rand()%255,
+                rand()%255,
+                rand()%255,
                 180};
     }
 

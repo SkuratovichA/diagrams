@@ -29,7 +29,7 @@ public:
      * @brief A constructor.
      * @param parent parent object
      */
-    explicit SequenceConnectionDialog(QWidget *parent = nullptr);
+    SequenceConnectionDialog(QWidget *parent = nullptr);
 
     /**
      * @brief A Destructor

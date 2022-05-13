@@ -430,7 +430,6 @@ QPainterPath ClassConnectionItem::shape() const {
 void ClassConnectionItem::drawLine(QPainter *painter, const QStyleOptionGraphicsItem *option) const {
     painter->setPen(QPen(_color, 2, Qt::SolidLine));
     painter->setRenderHint(QPainter::Antialiasing, true);
-    auto points = edgePoints();
     QPolygonF poly;
     poly.clear();
     auto cLine = line();
@@ -519,20 +518,10 @@ void ClassConnectionItem::paint(QPainter *painter,
     painter->setPen(QPen(QColor(0, 0, 0, 100), 0.5, Qt::DotLine));
     painter->drawPolygon(lineShaper());
 #endif
+    Q_UNUSED(widget);
     drawLine(painter, option);
     QPointF pText = (_nodeTo->socket(order()) + _nodeFrom->socket(order())) / 2;
-    QPair<QPointF, QPointF> ep = edgePoints();
-
     qreal widthText = getMsg()->boundingRect().width();
-    qreal widthLeft = getLeftNum()->boundingRect().width();
-    qreal widthRight = getRightNum()->boundingRect().width();
-
-    QPointF pLeft = QPointF(
-            ep.first.x() + _nodeFrom->width() + 20,
-            _nodeFrom->pos().y() + _nodeFrom->height() / 2.0 + 20);
-    QPointF pRight = QPointF(
-            _nodeTo->pos().x() - 20,
-            _nodeTo->pos().y() + _nodeTo->height() / 2.0 + 20);
 
     if (_single) {
         leftSetPos(QPointF(_nodeTo->pos().x() + _nodeTo->width() - 86,

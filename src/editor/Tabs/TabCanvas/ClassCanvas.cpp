@@ -5,11 +5,12 @@
 
 
 #include <QColor>
-#include <QRandomGenerator>
+//#include <QRandomGenerator>
 #include <QWidget>
 #include <QUndoGroup>
 #include <QMessageBox>
-
+#include <time.h>
+#include <stdlib.h>
 #include "TabCanvas.h"
 
 class editorInterface;
@@ -21,7 +22,8 @@ ClassCanvas::ClassCanvas(QWidget *parent, QUndoGroup *parentGroup) : TabCanvas(p
 }
 
 QPoint ClassCanvas::generateCoords() const {
-    return QPoint(QRandomGenerator::global()->bounded(600), QRandomGenerator::global()->bounded(600));
+    srand (time(NULL));
+    return QPoint(rand()%600, rand()%600);
 }
 
 QList<QPair<ClassDiagramItem *, QString>> ClassCanvas::getClassStringPairs() {
@@ -57,8 +59,8 @@ bool ClassCanvas::createFromFile(dgrmClass_t cls) {
         buf.addRelationItems(x);
     }
 
-    ClassDiagramItem *from;
-    ClassDiagramItem *to;
+    ClassDiagramItem *from = nullptr;
+    ClassDiagramItem *to = nullptr;
     for (auto x: buf.relationItems()) {
         for (auto y: items) {
             if (x->leftObj() == y->name()) {
@@ -182,12 +184,12 @@ bool ClassCanvas::getStringRepresentation(Program &prg) {
         tmp.type = x->typeClass().toStdString();
 
         if (!x->splitString(tmp.attrs, x->attrs())) {
-            qDebug() << "Error with attribute, color it by red color";
+            //qDebug() << "Error with attribute, color it by red color";
             return false;
         }
 
         if (!x->splitString(tmp.methods, x->methods())) {
-            qDebug() << "Error with method, color it by red color";
+            //qDebug() << "Error with method, color it by red color";
             return false;
         }
 
@@ -401,49 +403,52 @@ void ClassCanvas::addEntity() {
     QList<QString> attrs;
     QList<QString> methods;
     QPoint point = generateCoords();
-    QString type;
-    qreal height;
 
     auto text = QString("What type of object do you want to create?");
     QMessageBox msgBox;
-    QHBoxLayout *lay = new QHBoxLayout();
+
     QPushButton *interfaceButton = msgBox.addButton(tr("Interface"), QMessageBox::AcceptRole);
-    QPushButton *classButton = msgBox.addButton(tr("Class"), QMessageBox::AcceptRole);
-    msgBox.setStandardButtons(QMessageBox::Cancel);
-    //lay->addWidget(reinterpret_cast<QWidget *>(interfaceButton));
-    //lay->addWidget(reinterpret_cast<QWidget *>(classButton));
-    //setLayout(lay);
+    QPushButton *classButton = msgBox.addButton(tr("Class"), QMessageBox::RejectRole);
+    msgBox.setStandardButtons(QMessageBox::Escape);
     msgBox.setWindowTitle("Entity");
     msgBox.setText(text);
 
     msgBox.exec();
     if (reinterpret_cast<QPushButton *>(msgBox.clickedButton()) == interfaceButton) {
-        height = 60;
-        type = "Interface";
         addAttr->setEnabled(false);
         rmAttr->setEnabled(false);
+        methods.push_back("+ int name()");
+
+        createItem = new ClassDiagramItemParameters(point.x(), point.y(),
+                                                    "NAME",
+                                                    color(),
+                                                    120.0, 60.0,
+                                                    attrs,
+                                                    methods,
+                                                    "Interface");
+
+        _undoStack->push(new AddClassCommand(editorScene, createItem));
+
+        delete createItem;
     }
-    else {
-        type = "Class";
-        height = 120;
+    else if (msgBox.clickedButton()== msgBox.escapeButton()){;}
+    else if (reinterpret_cast<QPushButton *>(msgBox.clickedButton()) == classButton) {
         addAttr->setEnabled(true);
         rmAttr->setEnabled(true);
+        methods.push_back("+ int name()");
         attrs.push_back("+ int name");
+        createItem = new ClassDiagramItemParameters(point.x(), point.y(),
+                                                    "NAME",
+                                                    color(),
+                                                    120.0, 120.0,
+                                                    attrs,
+                                                    methods,
+                                                    "Class");
+
+        _undoStack->push(new AddClassCommand(editorScene, createItem));
+
+        delete createItem;
     }
-
-    methods.push_back("+ int name()");
-
-    createItem = new ClassDiagramItemParameters(point.x(), point.y(),
-                                                "NAME",
-                                                color(),
-                                                120.0, height,
-                                                attrs,
-                                                methods,
-                                                type);
-
-    _undoStack->push(new AddClassCommand(editorScene, createItem));
-
-    delete createItem;
 }
 
 void ClassCanvas::addConnection() {

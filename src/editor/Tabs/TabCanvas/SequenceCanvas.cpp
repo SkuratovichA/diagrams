@@ -5,7 +5,6 @@
 
 
 #include <QColor>
-#include <QRandomGenerator>
 #include <QWidget>
 #include <QUndoGroup>
 #include <QMessageBox>
@@ -23,7 +22,8 @@ SequenceCanvas::SequenceCanvas(QWidget *parent, QUndoGroup *parentGroup) : TabCa
 }
 
 QPoint SequenceCanvas::generateCoords() const {
-    auto x = QRandomGenerator::global()->bounded(600) + 20;
+    srand(time(NULL));
+    auto x = std::rand()%600 + 20;
     auto y = 100;
     return QPoint(x, y);
 }
@@ -47,8 +47,8 @@ bool SequenceCanvas::createFromFile(dgrmSeq_t seq) {
         buf.addMessageItems(x);
     }
 
-    SequenceDiagramItem *from;
-    SequenceDiagramItem *to;
+    SequenceDiagramItem *from = nullptr;
+    SequenceDiagramItem *to = nullptr;
     for (auto x: buf.messageItems()) {
         for (auto y: items) {
             if (x->nameFrom() == y->name()) {
@@ -225,8 +225,8 @@ void SequenceCanvas::addEntity(ClassDiagramItem *classDiagramItemParent) {
 }
 
 void SequenceCanvas::addConnection() {
-    auto scd = SequenceConnectionDialog(this);
-    scd.exec();
+    auto scd = new SequenceConnectionDialog(this);
+    scd->exec();
 
     auto nodes = getSelectedDiagramItems<SequenceDiagramItem>();
 
@@ -240,7 +240,7 @@ void SequenceCanvas::addConnection() {
     if (nodes.first == nullptr || nodes.second == nullptr) {
         return;
     }
-    auto index = scd.messageType();
+    auto index = scd->messageType();
     if (index == ConnectionType::Undefined) {
         return;
     }

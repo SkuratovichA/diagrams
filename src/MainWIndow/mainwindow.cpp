@@ -9,7 +9,7 @@
 
 #include <QMessageBox>
 #include <QDir>
-#include <filesystem>
+//#include <filesystem>
 #include <QDirIterator>
 
 mainWindow::mainWindow(QWidget *parent)
@@ -25,7 +25,7 @@ mainWindow::mainWindow(QWidget *parent)
     }
 
     // create a list with examples
-    QDirIterator it(directory.path(), QStringList() << "example*.json", QDir::Files, QDirIterator::Subdirectories);
+    QDirIterator it(directory.path(), QStringList() << "example*.gae", QDir::Files, QDirIterator::Subdirectories);
     it.next();
     do {
         auto *item = new QListWidgetItem(it.fileName());
