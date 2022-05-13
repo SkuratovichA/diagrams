@@ -109,10 +109,10 @@ protected:
 class DiagramItem {
 public:
     enum DiagramType {
-        Actor, Class
+        Actor, Class, Interface
     };
 
-    explicit DiagramItem(qreal width, qreal height, DiagramType type, QColor color) {
+    explicit DiagramItem(qreal width, qreal height, QString type, QColor color) {
         _rowHeight = 30.0;
         _rowWidth = width;
         _tabText = 2.0;
@@ -161,7 +161,14 @@ public:
     }
 
     [[nodiscard]] QString typeStr() const {
-        return type() == Actor ? QString("Actor") : QString("Class");
+        switch (type()) {
+            case Actor:
+                return "Actor";
+            case Class:
+                return "Class";
+            case Interface:
+                return "Interface";
+        }
     }
 
     [[nodiscard]] qreal height() const {
@@ -208,7 +215,7 @@ private:
     qreal _height;
     qreal _width;
     QRectF _boundingBox;
-    DiagramType _type;
+    QString _type;
     QColor _color;
 };
 

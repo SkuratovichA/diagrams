@@ -97,10 +97,11 @@ objectParams::objectParams(qreal x, qreal y, QString name, QColor color)
  */
 classParams::classParams(qreal x, qreal y, QString name,
                          QColor color, qreal width, qreal height,
-                         QList<QString> attrs, QList<QString> methods)
+                         QList<QString> attrs, QList<QString> methods, QString type)
         : objectParams(x, y, name, color) {
     _width = width;
     _height = height;
+    _type = type;
 
     for (auto val: attrs) {
         _attrs.push_back(val);

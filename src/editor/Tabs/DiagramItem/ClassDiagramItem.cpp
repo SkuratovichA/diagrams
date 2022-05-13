@@ -34,7 +34,7 @@ ClassDiagramItem::ClassDiagramItem(classParams *params)
              Qt::TextInteractionFlag::TextSelectableByKeyboard;
     setFlags(QGraphicsItem::ItemIsSelectable | QGraphicsItem::ItemIsMovable | QGraphicsItem::ItemSendsGeometryChanges);
 
-    int line = 1;
+    int line;
 
     // name of the class
     setPen(QPen(color()));
@@ -43,25 +43,33 @@ ClassDiagramItem::ClassDiagramItem(classParams *params)
     qreal Pos = (params->width() - _head->boundingRect().width()) / 2;
     _head->setPos(Pos, -40);
 
-    textAttr = new ClassTextAttr(this, "ATTRIBUTES", QPointF(tabText(), tabText()), Qt::NoTextInteraction);
-    textAttr->setFont(QFont("Times", 10, QFont::Bold));
+    if (params->type() == "Class") {
+        line = 1;
+        textAttr = new ClassTextAttr(this, "ATTRIBUTES", QPointF(tabText(), tabText()), Qt::NoTextInteraction);
+        textAttr->setFont(QFont("Times", 10, QFont::Bold));
 
-    for (auto attr_name: params->attrs()) {
+        for (auto attr_name: params->attrs()) {
+            lineAttr = createLine(0, rowHeight() * line);
+            _attrsLines.push_back(lineAttr);
+            textAttr = new ClassTextAttr(this, attr_name, QPointF(tabText(), rowHeight() * line + tabText()), _flags);
+            _attrs.push_back(textAttr);
+
+            line++;
+        }
+
         lineAttr = createLine(0, rowHeight() * line);
-        _attrsLines.push_back(lineAttr);
-        textAttr = new ClassTextAttr(this, attr_name, QPointF(tabText(), rowHeight() * line + tabText()), _flags);
-        _attrs.push_back(textAttr);
+        _methodsLines.push_back(lineAttr);
 
-        line++;
+        textAttr = new ClassTextAttr(this, "METHODS", QPointF(tabText(), rowHeight() * line++ + tabText()),
+                                     Qt::NoTextInteraction);
+        textAttr->setFont(QFont("Times", 10, QFont::Bold));
+        _methods.push_back(textAttr);
     }
-
-    lineAttr = createLine(0, rowHeight() * line);
-    _methodsLines.push_back(lineAttr);
-
-    textAttr = new ClassTextAttr(this, "METHODS", QPointF(tabText(), rowHeight() * line++ + tabText()),
-                                 Qt::NoTextInteraction);
-    textAttr->setFont(QFont("Times", 10, QFont::Bold));
-    _methods.push_back(textAttr);
+    else {
+        line = 0;
+        textAttr = new ClassTextAttr(this, "<<interface>>", QPointF(tabText(), rowHeight() * line++ + tabText()),Qt::NoTextInteraction);
+        textAttr->setFont(QFont("Times", 12, QFont::Bold));
+    }
 
     for (auto method_name: params->methods()) {
         lineAttr = createLine(0, rowHeight() * line);

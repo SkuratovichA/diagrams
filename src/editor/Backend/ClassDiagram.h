@@ -32,6 +32,7 @@ public:
     std::vector<attrs_t> methods; ///< class methods
     double width; ///< class width
     double height; ///< class height
+    std::string type; ///< type of the object
 
     /**
      * @brief Set values to the structure Color from json file using RGB colors.

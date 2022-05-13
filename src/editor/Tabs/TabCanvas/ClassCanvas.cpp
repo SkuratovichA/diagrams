@@ -219,7 +219,7 @@ bool ClassCanvas::getStringRepresentation(Program &prg) {
         tmp.height = x->height();
         x->fillColor(tmp.color);
         x->fillCoords(tmp.coords);
-        //tmp.id = x->id();
+        tmp.type = x->type().toStdString();
 
         if (!x->splitString(tmp.attrs, x->attrs())) {
             qDebug() << "Error with attribute, color it by red color";
@@ -243,8 +243,6 @@ bool ClassCanvas::getStringRepresentation(Program &prg) {
         tmp.msg = x->msg().toStdString();
         tmp.arrow = x->type();
         tmp.order = x->order();
-        //tmp.leftObjId = x->leftObjId();
-        //tmp.rightObjId = x->rightObjId();
 
         prg.diagramClass.concts.push_back(tmp);
     }
@@ -346,7 +344,9 @@ void ClassCanvas::rmMethod_triggered() {
     }
 
     // one default METHODS
-    auto size = item->methods().size();
+    auto size = item->type() == QString("Interface") ? item->methods().size() + 1 : item->methods().size();
+
+    qDebug() << size << item->typeStr();
     if (size < 2) {
         qDebug() << "No methods";
         return;
@@ -489,13 +489,41 @@ void ClassCanvas::addEntity() {
     QList<QString> attrs;
     QList<QString> methods;
     QPoint point = generateCoords();
+    QString type;
+    qreal height;
+
+    auto text = QString("What type of object do you want to create?");
+    QMessageBox msgBox;
+    QHBoxLayout *lay = new QHBoxLayout();
+    QPushButton *interfaceButton = msgBox.addButton(tr("Interface"), QMessageBox::AcceptRole);
+    QPushButton *classButton = msgBox.addButton(tr("Class"), QMessageBox::AcceptRole);
+    msgBox.setStandardButtons(QMessageBox::Cancel);
+    //lay->addWidget(reinterpret_cast<QWidget *>(interfaceButton));
+    //lay->addWidget(reinterpret_cast<QWidget *>(classButton));
+    //setLayout(lay);
+    msgBox.setWindowTitle("Entity");
+    msgBox.setText(text);
+
+    msgBox.exec();
+    if (reinterpret_cast<QPushButton *>(msgBox.clickedButton()) == interfaceButton) {
+        height = 60;
+        type = "Interface";
+        addAttr->setEnabled(false);
+        rmAttr->setEnabled(false);
+    }
+    else {
+        type = "Class";
+        height = 120;
+        addAttr->setEnabled(true);
+        rmAttr->setEnabled(true);
+    }
 
     attrs.push_back("+ int name");
     methods.push_back("+ int name()");
 
     createItem = new classParams(point.x(), point.y(), "NAME",
-                                 color(), 120.0, 120.0,
-                                 attrs, methods);
+                                 color(), 120.0, height,
+                                 attrs, methods, type);
     _undoStack->push(
             new AddClassCommand(editorScene, createItem)
     );

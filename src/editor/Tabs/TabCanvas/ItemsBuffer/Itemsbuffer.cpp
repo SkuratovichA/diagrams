@@ -70,7 +70,7 @@ void ItemsBuffer::addClassItems(Class cls) {
 
     prm = new classParams(cls.coords[0], cls.coords[1], QString::fromStdString(cls.name),
                           QColor(cls.color.r, cls.color.g, cls.color.b, cls.color.a),
-                          cls.width, cls.height, attrs, methods);
+                          cls.width, cls.height, attrs, methods, QString::fromStdString(cls.type));
 
     pushClassItem(prm);
 }
@@ -99,7 +99,7 @@ void ItemsBuffer::fillClassItems(ClassDiagramItem *item) {
     ptr = new classParams(item->x() + 40, item->y() + 40,
                           item->_head->toPlainText(), item->color(),
                           item->width(), item->height(), attrs,
-                          methods);
+                          methods, item->typeStr());
     pushClassItem(ptr);
 }
 

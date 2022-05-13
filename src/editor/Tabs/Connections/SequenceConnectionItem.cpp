@@ -275,4 +275,3 @@ void msgText::focusOutEvent(QFocusEvent *event) {
     ObjectParams::checkMethod(item);
     QGraphicsTextItem::focusOutEvent(event);
 }
-

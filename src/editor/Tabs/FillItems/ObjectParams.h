@@ -22,7 +22,7 @@ class relationsParams {
 public:
     relationsParams(QString leftObj, QString leftNum,
                     QString rightObj, QString rightNum,
-                    QString msg, int type, int order/*, int leftObjId, int rightObjId*/) {
+                    QString msg, int type, int order) {
         _leftObj = leftObj;
         _leftNum = leftNum;
         _rightObj = rightObj;
@@ -30,8 +30,6 @@ public:
         _msg = msg;
         _type = type;
         _order = order;
-//        _leftObjId = leftObjId;
-//        _rightObjId = rightObjId;
     };
 
     QString leftObj() {
@@ -50,14 +48,6 @@ public:
         return _rightNum;
     }
 
-//    int leftObjId() {
-//        return _leftObjId;
-//    }
-//
-//    int rightObjId() {
-//        return _rightObjId;
-//    }
-
     int order() {
         return _order;
     }
@@ -71,8 +61,6 @@ public:
     }
 
 private:
-    //int _leftObjId;
-    //int _rightObjId;
     QString _leftObj;
     QString _leftNum;
     QString _rightObj;
@@ -136,7 +124,8 @@ class classParams : public objectParams {
 public:
     classParams(qreal x, qreal y, QString name,
                 QColor color, qreal width, qreal height,
-                QList<QString> attrs, QList<QString> methods);
+                QList<QString> attrs,
+                QList<QString> methods, QString type);
     ~classParams() = default;
 
     QList<QString> attrs() const {
@@ -147,17 +136,21 @@ public:
         return _methods;
     }
 
+    QString type() const {
+        return _type;
+    }
+
     bool splitString(std::vector<attrs_t> &at, QList<QString> arr);
 
 private:
     QList<QString> _attrs;
     QList<QString> _methods;
+    QString _type;
 };
 
 class SequenceDiagramItemParameters : public objectParams {
 public:
     SequenceDiagramItemParameters(qreal x, qreal y, QString name, QColor color);
-    //~SequenceDiagramItemParameters() = default;
 };
 
 class messageParams {

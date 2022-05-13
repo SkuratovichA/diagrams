@@ -205,15 +205,11 @@ public:
 public:
     virtual QPoint generateCoords() const = 0;
     virtual bool getStringRepresentation(Program &prg) = 0;
-    // endregion
 // endregion
 
 public slots:
 
     void moveEntity(QGraphicsItem *movedItem, const QPointF &startPosition) {
-        //qDebug() << "<" << __FILE__;
-        //qDebug() << "movindg item: " << movedItem << " from the starting position: " << startPosition;
-        //qDebug(">");
         _undoStack->push(new MoveCommand(movedItem, startPosition));
     }
 

@@ -147,8 +147,6 @@ bool SequenceCanvas::getStringRepresentation(Program &prg) {
         action.from = x->nameFrom().toStdString();
         action.to = x->nameTo().toStdString();
         action.type = x->type();
-        //action.fromId = x->fromId();
-        //action.fromTo = x->fromTo();
 
         obj.actions.push_back(action);
     }
