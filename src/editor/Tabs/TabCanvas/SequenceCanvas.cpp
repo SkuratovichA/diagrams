@@ -14,8 +14,10 @@
 #include "SequenceConnectionDialog/sequenceconnectiondialog.h"
 #include <regex>
 
-SequenceCanvas::SequenceCanvas(QWidget *parent, QUndoGroup *parentGroup) : TabCanvas(parent, parentGroup) {
+SequenceCanvas::SequenceCanvas(QWidget *parent, QUndoGroup *parentGroup,
+                               QWidget *cl) : TabCanvas(parent, parentGroup) {
     parentInterface = dynamic_cast<editorInterface *>(parent);
+    classD = cl;
     createScene();
     createSequenceContextMenu();
 
@@ -261,18 +263,35 @@ void SequenceCanvas::addConnection() {
 }
 
 void SequenceCanvas::paste() {
+    ClassDiagramItem *p = nullptr;
+    //qDebug() << "paste";
+    QList<QPair<ClassDiagramItem *, QString>> classStringPairs =
+            reinterpret_cast<ClassCanvas *>(classD)->getClassStringPairs();
     for (auto ptr: buffer->sequenceItems()) {
-        auto *diagramItem = new SequenceDiagramItem(ptr);
-        diagramItem->setPos(ptr->x(), ptr->y());
-        editorScene->addItem(diagramItem);
+        for (auto el : classStringPairs) {
+            if (el.second == ptr->name()) {
+                p = el.first;
+                break;
+            }
+        }
+        //qDebug() << "vnitr" << p->name();
+        if (p != nullptr) {
+            _undoStack->push(new AddSequenceCommand(editorScene, ptr, p));
+            //qDebug() << "vnitr";
+        }
+        //auto *diagramItem = new SequenceDiagramItem(ptr);
+        //diagramItem->setPos(ptr->x(), ptr->y());
+        //editorScene->addItem(diagramItem);
     }
     editorScene->update();
 }
 
 void SequenceCanvas::copy() {
+    //qDebug() << "uuuuuuuuuuu";
     SequenceDiagramItem *ptr;
     QList<QGraphicsItem *> items = editorScene->selectedItems();
     buffer->clearBuffer();
+    //qDebug() << "uuuuuuuuuuu";
     for (auto val: items) {
         ptr = dynamic_cast<SequenceDiagramItem *>(val);
         if (ptr != nullptr) {
@@ -283,10 +302,12 @@ void SequenceCanvas::copy() {
 
 void SequenceCanvas::cut() {
     copy();
-    QList<QGraphicsItem *> items = editorScene->selectedItems();
-    for (auto val: items) {
-        editorScene->removeItem(val);
-    }
+    _undoStack->push(new DeleteCommand(editorScene));
+//    QList<QGraphicsItem *> items = editorScene->selectedItems();
+//    for (auto val: items) {
+//
+//        editorScene->removeItem(val);
+//    }
 }
 
 void SequenceCanvas::toBack() {

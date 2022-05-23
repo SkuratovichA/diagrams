@@ -116,11 +116,11 @@ void editorInterface::newTabSelected() {
 
     undoStack->setActiveStack(reinterpret_cast<TabCanvas *>(tabWidget->currentWidget())->undoStack());
     prevWidget = tabWidget->currentWidget();
-    if (tabWidget->currentIndex() != 0) {
-        copyAction->setEnabled(false);
-        cutAction->setEnabled(false);
-        pasteAction->setEnabled(false);
-    }
+//    if (tabWidget->currentIndex() != 0) {
+//        copyAction->setEnabled(false);
+//        cutAction->setEnabled(false);
+//        pasteAction->setEnabled(false);
+//    }
 
     dynamic_cast<TabCanvas *>(tabWidget->currentWidget())->updateScene();
 }
@@ -136,7 +136,7 @@ void editorInterface::createTabs() {
     tabWidget = new QTabWidget(this);
     connect(tabWidget, SIGNAL(currentChanged(int)), this, SLOT(newTabSelected()));
     tabWidget->addTab(new ClassCanvas(this, undoStack), "class Diagram");
-    tabWidget->addTab(new SequenceCanvas(this, undoStack), "sequence Diagram");
+    tabWidget->addTab(new SequenceCanvas(this, undoStack, tabWidget->widget(0)), "sequence Diagram");
 }
 
 void editorInterface::createDynamicToolBar() {
@@ -293,7 +293,7 @@ void editorInterface::actionSaveAs_triggered() {
 }
 
 void editorInterface::actionNewTab_triggered() {
-    tabWidget->addTab(new SequenceCanvas(this, undoStack), "sequence Diagram editor");
+    tabWidget->addTab(new SequenceCanvas(this, undoStack, tabWidget->widget(0)), "sequence Diagram editor");
 }
 
 void editorInterface::actionDeleteTab_triggered() {

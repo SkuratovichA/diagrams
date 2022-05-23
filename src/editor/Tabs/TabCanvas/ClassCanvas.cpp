@@ -221,6 +221,10 @@ void ClassCanvas::createEntityClassContextMenu() {
     classMenu->addAction(rmMethod);
     classMenu->addAction(addAttr);
     classMenu->addAction(rmAttr);
+
+    interfaceMenu = new QMenu();
+    interfaceMenu->addAction(addMethod);
+    interfaceMenu->addAction(rmMethod);
 }
 
 void ClassCanvas::createConnectionContextMenu() {
@@ -247,7 +251,12 @@ void ClassCanvas::showContextMenu(const QPoint &pos) {
     }
 
     if (dynamic_cast<ClassDiagramItem *>(a.first()) != nullptr) {
-        classMenu->exec(this->mapToGlobal(pos));
+        if (dynamic_cast<ClassDiagramItem *>(a.first())->myType() == "Class") {
+            classMenu->exec(this->mapToGlobal(pos));
+        }
+        else {
+            interfaceMenu->exec(this->mapToGlobal(pos));
+        }
     } else {
         connectionMenu->exec(this->mapToGlobal(pos));
     }
@@ -410,13 +419,10 @@ void ClassCanvas::addEntity() {
     msgBox.setStandardButtons(QMessageBox::Escape);
     msgBox.setWindowTitle("Entity");
     msgBox.setText(text);
+    methods.push_back("+ int name()");
 
     msgBox.exec();
     if (reinterpret_cast<QPushButton *>(msgBox.clickedButton()) == interfaceButton) {
-        addAttr->setEnabled(false);
-        rmAttr->setEnabled(false);
-        methods.push_back("+ int name()");
-
         createItem = new ClassDiagramItemParameters(point.x(), point.y(),
                                                     "NAME",
                                                     color(),
@@ -431,9 +437,6 @@ void ClassCanvas::addEntity() {
     }
     else if (msgBox.clickedButton()== msgBox.escapeButton()){;}
     else if (reinterpret_cast<QPushButton *>(msgBox.clickedButton()) == classButton) {
-        addAttr->setEnabled(true);
-        rmAttr->setEnabled(true);
-        methods.push_back("+ int name()");
         attrs.push_back("+ int name");
         createItem = new ClassDiagramItemParameters(point.x(), point.y(),
                                                     "NAME",
@@ -473,9 +476,11 @@ void ClassCanvas::addConnection() {
 
 void ClassCanvas::paste() {
     for (auto ptr: buffer->classItems()) {
-        auto *diagramItem = new ClassDiagramItem(ptr);
-        diagramItem->setPos(ptr->x(), ptr->y());
-        editorScene->addItem(diagramItem);
+//        auto *diagramItem = new ClassDiagramItem(ptr);
+//        diagramItem->setPos(ptr->x(), ptr->y());
+//        editorScene->addItem(diagramItem);
+
+        _undoStack->push(new AddClassCommand(editorScene, ptr));
     }
     editorScene->update();
 }
@@ -494,10 +499,11 @@ void ClassCanvas::copy() {
 
 void ClassCanvas::cut() {
     copy();
-    QList<QGraphicsItem *> items = editorScene->selectedItems();
-    for (auto val: items) {
-        editorScene->removeItem(val);
-    }
+    _undoStack->push(new DeleteCommand(editorScene));
+//    QList<QGraphicsItem *> items = editorScene->selectedItems();
+//    for (auto val: items) {
+//        editorScene->removeItem(val);
+//    }
 }
 
 void ClassCanvas::toBack() {

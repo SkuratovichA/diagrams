@@ -4,221 +4,371 @@
             {
                 "attrs": [
                     {
-                        "name": "studentNumber ",
-                        "perm": "+",
+                        "name": "numberOfLoans ",
+                        "perm": "-",
                         "type": "int"
                     },
                     {
-                        "name": "averageMark",
-                        "perm": "+",
+                        "name": "activeLoans",
+                        "perm": "-",
                         "type": "int"
                     }
                 ],
                 "color": {
                     "a": 180,
-                    "b": 194,
-                    "g": 181,
-                    "r": 235
+                    "b": 144,
+                    "g": 73,
+                    "r": 217
                 },
                 "coords": {
-                    "x": 197.0,
-                    "y": 497.0
+                    "x": 1245.0,
+                    "y": 340.0
                 },
                 "height": 180.0,
                 "methods": [
                     {
-                        "name": "isEligibleToEnroll(str) ",
+                        "name": "isAvailable(LibMaterial m)",
                         "perm": "+",
                         "type": "bool"
                     },
                     {
-                        "name": "getSeminarsTaken()",
+                        "name": "makeLoan(User u, LibMaterial m)",
                         "perm": "+",
-                        "type": "int"
+                        "type": "void"
                     }
                 ],
-                "name": "Student",
+                "name": "LoanService",
                 "type": "Class",
-                "width": 230.0
+                "width": 300.0
             },
             {
                 "attrs": [
                     {
-                        "name": "street",
-                        "perm": "+",
+                        "name": "name",
+                        "perm": "-",
                         "type": "string"
                     },
                     {
-                        "name": "city",
-                        "perm": "+",
-                        "type": "string"
+                        "name": "surname",
+                        "perm": "-",
+                        "type": "strig"
                     },
                     {
-                        "name": "state",
-                        "perm": "+",
-                        "type": "string"
-                    },
-                    {
-                        "name": "postalCode ",
-                        "perm": "+",
-                        "type": "int"
-                    },
-                    {
-                        "name": "country",
-                        "perm": "+",
+                        "name": "id",
+                        "perm": "-",
                         "type": "string"
                     }
                 ],
                 "color": {
                     "a": 180,
-                    "b": 229,
-                    "g": 21,
-                    "r": 105
+                    "b": 114,
+                    "g": 173,
+                    "r": 89
                 },
                 "coords": {
-                    "x": 1112.0,
-                    "y": 142.0
+                    "x": 469.0,
+                    "y": 307.0
                 },
-                "height": 270.0,
+                "height": 210.0,
                 "methods": [
                     {
-                        "name": "validate()",
-                        "perm": "-",
-                        "type": "bool"
+                        "name": "loans()",
+                        "perm": "+",
+                        "type": "list"
                     },
                     {
-                        "name": "outputAsLabel()",
+                        "name": "activeBooking()",
                         "perm": "+",
-                        "type": "string"
+                        "type": "list"
                     }
                 ],
-                "name": "Address",
+                "name": "User",
                 "type": "Class",
                 "width": 180.0
             },
             {
                 "attrs": [
                     {
-                        "name": "name",
-                        "perm": "+",
+                        "name": "id",
+                        "perm": "-",
                         "type": "string"
                     },
                     {
-                        "name": "phoneNumber",
-                        "perm": "+",
-                        "type": "string"
+                        "name": "available ",
+                        "perm": "-",
+                        "type": "bool"
                     },
                     {
-                        "name": "emailAddress",
-                        "perm": "+",
+                        "name": "author",
+                        "perm": "-",
                         "type": "string"
                     }
                 ],
                 "color": {
                     "a": 180,
-                    "b": 18,
-                    "g": 122,
-                    "r": 135
+                    "b": 115,
+                    "g": 111,
+                    "r": 204
                 },
                 "coords": {
-                    "x": 533.0,
-                    "y": 155.0
+                    "x": 836.0,
+                    "y": 586.0
                 },
                 "height": 180.0,
                 "methods": [
                     {
-                        "name": "purchaseParkingPass()",
+                        "name": "changeState()",
                         "perm": "+",
                         "type": "void"
                     }
                 ],
-                "name": "Person",
+                "name": "LibMaterial",
                 "type": "Class",
-                "width": 230.0
+                "width": 180.0
             },
             {
                 "attrs": [
                     {
-                        "name": "salary",
-                        "perm": "~",
-                        "type": "int"
-                    },
-                    {
-                        "name": "staffNumber",
-                        "perm": "#",
-                        "type": "int"
-                    },
-                    {
-                        "name": "yearsOfService",
+                        "name": "duration",
                         "perm": "-",
-                        "type": "int"
-                    },
-                    {
-                        "name": "numberOfClasses",
-                        "perm": "+",
                         "type": "int"
                     }
                 ],
                 "color": {
                     "a": 180,
-                    "b": 179,
-                    "g": 135,
-                    "r": 147
+                    "b": 220,
+                    "g": 24,
+                    "r": 202
                 },
                 "coords": {
-                    "x": 810.0,
-                    "y": 503.0
+                    "x": 1119.0,
+                    "y": 858.0
                 },
-                "height": 180.0,
+                "height": 90.0,
                 "methods": null,
-                "name": "Professor",
+                "name": "Video",
                 "type": "Class",
-                "width": 190.0
+                "width": 120.0
+            },
+            {
+                "attrs": [
+                    {
+                        "name": "numPage",
+                        "perm": "-",
+                        "type": "int"
+                    }
+                ],
+                "color": {
+                    "a": 180,
+                    "b": 130,
+                    "g": 247,
+                    "r": 107
+                },
+                "coords": {
+                    "x": 584.0,
+                    "y": 850.0
+                },
+                "height": 90.0,
+                "methods": null,
+                "name": "Text",
+                "type": "Class",
+                "width": 140.0
+            },
+            {
+                "attrs": [
+                    {
+                        "name": "duration",
+                        "perm": "-",
+                        "type": "int"
+                    }
+                ],
+                "color": {
+                    "a": 180,
+                    "b": 42,
+                    "g": 97,
+                    "r": 119
+                },
+                "coords": {
+                    "x": 846.0,
+                    "y": 861.0
+                },
+                "height": 90.0,
+                "methods": null,
+                "name": "Audio",
+                "type": "Class",
+                "width": 120.0
             }
         ],
         "connections": [
             {
-                "arrow": 2,
-                "left_num": "",
-                "left_obj": "Person",
+                "arrow": 3,
+                "left_num": "1",
+                "left_obj": "LoanService",
                 "msg": "",
-                "order": 2,
-                "right_num": "",
-                "right_obj": "Professor"
+                "order": 0,
+                "right_num": "0..n",
+                "right_obj": "User"
             },
             {
-                "arrow": 2,
+                "arrow": 3,
                 "left_num": "",
-                "left_obj": "Person",
+                "left_obj": "LibMaterial",
                 "msg": "",
                 "order": 1,
                 "right_num": "",
-                "right_obj": "Student"
+                "right_obj": "LoanService"
             },
             {
-                "arrow": 3,
-                "left_num": "0..1",
-                "left_obj": "Person",
-                "msg": "lives at",
-                "order": 0,
-                "right_num": "1",
-                "right_obj": "Address"
+                "arrow": 2,
+                "left_num": "",
+                "left_obj": "LibMaterial",
+                "msg": "",
+                "order": 1,
+                "right_num": "",
+                "right_obj": "Text"
             },
             {
-                "arrow": 3,
-                "left_num": "1..5",
-                "left_obj": "Professor",
-                "msg": "supervises",
-                "order": 0,
-                "right_num": "0..n",
-                "right_obj": "Student"
+                "arrow": 2,
+                "left_num": "",
+                "left_obj": "LibMaterial",
+                "msg": "",
+                "order": 2,
+                "right_num": "",
+                "right_obj": "Audio"
+            },
+            {
+                "arrow": 2,
+                "left_num": "",
+                "left_obj": "LibMaterial",
+                "msg": "",
+                "order": 3,
+                "right_num": "",
+                "right_obj": "Video"
             }
         ]
     },
     "seq_dgrm": [
         {
-            "actions": null,
-            "actors": null
+            "actions": [
+                {
+                    "arrow": "",
+                    "coords": {
+                        "x": 0.0,
+                        "y": 839.0
+                    },
+                    "from": "User",
+                    "msg": "<<delete>>",
+                    "to": "LibMaterial",
+                    "type": 4
+                },
+                {
+                    "arrow": "",
+                    "coords": {
+                        "x": 0.0,
+                        "y": 779.0
+                    },
+                    "from": "User",
+                    "msg": "<<delete>>",
+                    "to": "LoanService",
+                    "type": 4
+                },
+                {
+                    "arrow": "",
+                    "coords": {
+                        "x": 0.0,
+                        "y": 437.0
+                    },
+                    "from": "LoanService",
+                    "msg": "changeState",
+                    "to": "LibMaterial",
+                    "type": 0
+                },
+                {
+                    "arrow": "",
+                    "coords": {
+                        "x": 0.0,
+                        "y": 74.0
+                    },
+                    "from": "User",
+                    "msg": "<<create>>",
+                    "to": "LoanService",
+                    "type": 3
+                },
+                {
+                    "arrow": "",
+                    "coords": {
+                        "x": 0.0,
+                        "y": 207.0
+                    },
+                    "from": "User",
+                    "msg": "makeLoan",
+                    "to": "LoanService",
+                    "type": 1
+                },
+                {
+                    "arrow": "",
+                    "coords": {
+                        "x": 0.0,
+                        "y": 309.0
+                    },
+                    "from": "User",
+                    "msg": "isAvailable",
+                    "to": "LoanService",
+                    "type": 2
+                },
+                {
+                    "arrow": "",
+                    "coords": {
+                        "x": 0.0,
+                        "y": 107.0
+                    },
+                    "from": "User",
+                    "msg": "<<create>>",
+                    "to": "LibMaterial",
+                    "type": 3
+                }
+            ],
+            "actors": [
+                {
+                    "actor": "User",
+                    "color": {
+                        "a": 180,
+                        "b": 114,
+                        "g": 173,
+                        "r": 89
+                    },
+                    "coords": {
+                        "x": 39.0,
+                        "y": 0.0
+                    }
+                },
+                {
+                    "actor": "LibMaterial",
+                    "color": {
+                        "a": 180,
+                        "b": 115,
+                        "g": 111,
+                        "r": 204
+                    },
+                    "coords": {
+                        "x": 937.0,
+                        "y": 0.0
+                    }
+                },
+                {
+                    "actor": "LoanService",
+                    "color": {
+                        "a": 180,
+                        "b": 144,
+                        "g": 73,
+                        "r": 217
+                    },
+                    "coords": {
+                        "x": 678.0,
+                        "y": 0.0
+                    }
+                }
+            ]
         }
     ]
 }

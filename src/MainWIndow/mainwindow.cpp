@@ -9,7 +9,6 @@
 
 #include <QMessageBox>
 #include <QDir>
-//#include <filesystem>
 #include <QDirIterator>
 
 mainWindow::mainWindow(QWidget *parent)

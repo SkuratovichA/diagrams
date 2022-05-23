@@ -12,7 +12,7 @@ void Program::parseFile(std::string filename) {
     try {
         f >> file;
     } catch (nlohmann::detail::parse_error) {
-        std::cout << "EEEEE chuska, bad format of the file!![]" << std::endl;
+        std::cout << "Bad format of the file!" << std::endl;
         return;
     }
 
@@ -27,9 +27,9 @@ void Program::parseFile(std::string filename) {
             this->diagramSequence.push_back(tmp);
         }
     } catch (nlohmann::detail::out_of_range) {
-        std::cout << "The user is dolbaeb, menya ne ebet!" << std::endl;
+        std::cout << "Out of range of json file" << std::endl;
     } catch (nlohmann::detail::type_error) {
-        std::cout << "Omg, Maks, eto ty? Shto za hyinu in the file ty napisal..." << std::endl;
+        std::cout << "Type error of json file" << std::endl;
     }
 }
 

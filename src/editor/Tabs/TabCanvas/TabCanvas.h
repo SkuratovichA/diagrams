@@ -539,6 +539,7 @@ private:
     relationsParams *createRelation; ///< Parameters for creating a relation
     QMenu *classMenu; ///< Class menu
     QMenu *connectionMenu; ///< Connection menu
+    QMenu *interfaceMenu;
 
     QAction *addMethod; ///< Action for method addition
     QAction *rmMethod; ///< Action for method removal
@@ -569,7 +570,7 @@ public:
      * @param parentGroup pointer to the main undo stack
      * to create a local undo stack
      */
-    SequenceCanvas(QWidget *parent = nullptr, QUndoGroup *parentGroup = nullptr);
+    SequenceCanvas(QWidget *parent = nullptr, QUndoGroup *parentGroup = nullptr, QWidget *cl = nullptr);
 
 public slots:
 
@@ -687,6 +688,7 @@ private:
     SequenceDiagramItemParameters *createActor = nullptr; ///< Parameters to create a sequence connection
     messageParams *paramsMessage = nullptr; ///< Parameters of a sequence connection (message)
     editorInterface *parentInterface = nullptr; ///< Parent editor interface
+    QWidget *classD;
 };
 
 #endif // TABCANVAS_H
