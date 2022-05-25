@@ -78,6 +78,8 @@ bool ClassCanvas::createFromFile(dgrmClass_t cls) {
         ClassConnectionItem *item = new ClassConnectionItem(from, to, x,
                                                             static_cast<ClassConnectionItem::ClassConnectionType>(x->typeConnection()),
                                                             x->order());
+
+        //qDebug() << from->connections().size() << from->name() << (void*)from << (void*)to;
         editorScene->addItem(item);
         editorScene->update();
     }
@@ -476,10 +478,6 @@ void ClassCanvas::addConnection() {
 
 void ClassCanvas::paste() {
     for (auto ptr: buffer->classItems()) {
-//        auto *diagramItem = new ClassDiagramItem(ptr);
-//        diagramItem->setPos(ptr->x(), ptr->y());
-//        editorScene->addItem(diagramItem);
-
         _undoStack->push(new AddClassCommand(editorScene, ptr));
     }
     editorScene->update();
@@ -500,10 +498,6 @@ void ClassCanvas::copy() {
 void ClassCanvas::cut() {
     copy();
     _undoStack->push(new DeleteCommand(editorScene));
-//    QList<QGraphicsItem *> items = editorScene->selectedItems();
-//    for (auto val: items) {
-//        editorScene->removeItem(val);
-//    }
 }
 
 void ClassCanvas::toBack() {

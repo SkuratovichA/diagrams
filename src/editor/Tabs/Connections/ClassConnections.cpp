@@ -29,6 +29,8 @@ ClassConnectionItem::ClassConnectionItem(ClassDiagramItem *fromNode,
     _nodeFrom->addConnection(this, CommandType::Add, CommandType::Connection);
     _nodeTo->addConnection(this, CommandType::Add, CommandType::Connection);
 
+    //qDebug() << _nodeFrom->connections();
+
     _connectionType = type;
     _color = color;
     _order = order;

@@ -111,9 +111,12 @@ void DeleteCommand::undo() {
 }
 
 void DeleteCommand::redo() {
+    //qDebug() << listItems.size();
     for (auto x: listItems) {
         if (dynamic_cast<ClassDiagramItem *>(x) != nullptr) {
             auto connections = dynamic_cast<ClassDiagramItem *>(x)->connections();
+            //qDebug() << connections << connections.size();
+            //qDebug() << dynamic_cast<ClassDiagramItem *>(x)->name() << (void*)dynamic_cast<ClassDiagramItem *>(x);
             dynamic_cast<ClassDiagramItem *>(x)->setDeleted(true);
             for (auto connection: connections) {
                 auto nodeFrom = connection->nodeFrom();
@@ -139,6 +142,11 @@ void DeleteCommand::redo() {
             nodeFrom->removeConnection(connection, CommandType::Delete, CommandType::Connection);
             nodeTo->removeConnection(connection, CommandType::Delete, CommandType::Connection);
             graphicsScene->removeItem(connection);
+        } else {
+            auto nodeFrom = dynamic_cast<ClassConnectionItem *>(x)->nodeFrom();
+            auto nodeTo = dynamic_cast<ClassConnectionItem *>(x)->nodeTo();
+            nodeFrom->removeConnection(dynamic_cast<ClassConnectionItem *>(x), CommandType::Delete, CommandType::Connection);
+            nodeTo->removeConnection(dynamic_cast<ClassConnectionItem *>(x), CommandType::Delete, CommandType::Connection);
         }
         graphicsScene->removeItem(x);
     }

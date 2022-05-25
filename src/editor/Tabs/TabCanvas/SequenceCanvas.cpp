@@ -148,8 +148,6 @@ bool SequenceCanvas::getStringRepresentation(Program &prg) {
 
     prg.diagramSequence.push_back(obj);
 
-    // add for sequence diagram
-
     return true;
 }
 
@@ -264,7 +262,6 @@ void SequenceCanvas::addConnection() {
 
 void SequenceCanvas::paste() {
     ClassDiagramItem *p = nullptr;
-    //qDebug() << "paste";
     QList<QPair<ClassDiagramItem *, QString>> classStringPairs =
             reinterpret_cast<ClassCanvas *>(classD)->getClassStringPairs();
     for (auto ptr: buffer->sequenceItems()) {
@@ -274,24 +271,17 @@ void SequenceCanvas::paste() {
                 break;
             }
         }
-        //qDebug() << "vnitr" << p->name();
         if (p != nullptr) {
             _undoStack->push(new AddSequenceCommand(editorScene, ptr, p));
-            //qDebug() << "vnitr";
         }
-        //auto *diagramItem = new SequenceDiagramItem(ptr);
-        //diagramItem->setPos(ptr->x(), ptr->y());
-        //editorScene->addItem(diagramItem);
     }
     editorScene->update();
 }
 
 void SequenceCanvas::copy() {
-    //qDebug() << "uuuuuuuuuuu";
     SequenceDiagramItem *ptr;
     QList<QGraphicsItem *> items = editorScene->selectedItems();
     buffer->clearBuffer();
-    //qDebug() << "uuuuuuuuuuu";
     for (auto val: items) {
         ptr = dynamic_cast<SequenceDiagramItem *>(val);
         if (ptr != nullptr) {
@@ -303,11 +293,6 @@ void SequenceCanvas::copy() {
 void SequenceCanvas::cut() {
     copy();
     _undoStack->push(new DeleteCommand(editorScene));
-//    QList<QGraphicsItem *> items = editorScene->selectedItems();
-//    for (auto val: items) {
-//
-//        editorScene->removeItem(val);
-//    }
 }
 
 void SequenceCanvas::toBack() {
